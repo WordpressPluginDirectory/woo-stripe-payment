@@ -1,15 +1,15 @@
-# Copyright (C) 2023 Payment Plugins, support@paymentplugins.com
+# Copyright (C) 2024 Payment Plugins, support@paymentplugins.com
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.54\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.55\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-12-20T07:58:01+00:00\n"
+"POT-Creation-Date: 2024-01-01T19:34:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -438,7 +438,7 @@ msgstr ""
 #: templates/cc-forms/bootstrap.php:16
 #: templates/cc-forms/minimalist.php:30
 #: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:19
-#: packages/blocks/build/commons.js:2410
+#: packages/blocks/build/commons.js:2412
 msgid "Exp"
 msgstr ""
 
@@ -885,19 +885,19 @@ msgid "Main Page"
 msgstr ""
 
 #: includes/admin/views/html-main-navigation.php:15
-#: includes/admin/views/html-welcome-page.php:17
+#: includes/admin/views/html-welcome-page.php:16
 #: includes/class-wc-stripe-install.php:44
 msgid "Settings"
 msgstr ""
 
 #: includes/admin/views/html-main-navigation.php:18
-#: includes/admin/views/html-welcome-page.php:31
+#: includes/admin/views/html-welcome-page.php:30
 #: includes/class-wc-stripe-install.php:45
 msgid "Documentation"
 msgstr ""
 
 #: includes/admin/views/html-main-navigation.php:21
-#: includes/admin/views/html-welcome-page.php:49
+#: includes/admin/views/html-welcome-page.php:48
 msgid "Support"
 msgstr ""
 
@@ -981,43 +981,43 @@ msgstr ""
 msgid "%1$sNote:%2$s Payment methods will be deleted from your WordPress site and within Stripe."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:23
+#: includes/admin/views/html-welcome-page.php:22
 msgid "Connect your Stripe account, enable payment methods, and customize the plugin settings to fit your business needs."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:38
+#: includes/admin/views/html-welcome-page.php:37
 msgid "Want in depth documentation?"
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:40
+#: includes/admin/views/html-welcome-page.php:39
 msgid "Our config guide and API docs are a great place to start."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:55
+#: includes/admin/views/html-welcome-page.php:54
 msgid "Have a question?"
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:57
+#: includes/admin/views/html-welcome-page.php:56
 msgid "Our support team is ready to assist you."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:66
+#: includes/admin/views/html-welcome-page.php:65
 msgid "Payment Plugins for PayPal WooCommerce"
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:73
+#: includes/admin/views/html-welcome-page.php:72
 msgid "Offering PayPal on your site can increase conversion rates by up to 28%."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:75
+#: includes/admin/views/html-welcome-page.php:74
 msgid "Our PayPal plugin is the highest rated available for WooCommerce."
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:79
+#: includes/admin/views/html-welcome-page.php:78
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/views/html-welcome-page.php:81
+#: includes/admin/views/html-welcome-page.php:80
 msgid "Install Now"
 msgstr ""
 
@@ -1042,7 +1042,7 @@ msgstr ""
 msgid "Payment authorization failed. Please select another payment method."
 msgstr ""
 
-#: includes/class-wc-stripe-rest-api.php:45
+#: includes/class-wc-stripe-rest-api.php:44
 msgid "%1$s is an invalid controller name."
 msgstr ""
 
@@ -1146,10 +1146,6 @@ msgstr ""
 msgid "Invalid order id provided"
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-signup.php:67
-msgid "It's on its way! Please check your emails."
-msgstr ""
-
 #: includes/controllers/class-wc-stripe-controller-source.php:51
 #: includes/controllers/class-wc-stripe-controller-source.php:71
 msgid "Error updating source."
@@ -1241,19 +1237,19 @@ msgid "This option determines whether the customer's funds are captured immediat
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:153
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:78
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:91
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:189
 msgid "Message Sections"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:156
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:81
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:94
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:192
 msgid "Checkout page"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:157
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:82
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:95
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:193
 #: includes/gateways/settings/applepay-settings.php:66
 #: includes/gateways/settings/googlepay-settings.php:85
@@ -1262,7 +1258,7 @@ msgid "Product Page"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:158
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:83
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:96
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:194
 #: includes/gateways/settings/applepay-settings.php:67
 #: includes/gateways/settings/googlepay-settings.php:86
@@ -1271,7 +1267,7 @@ msgid "Cart Page"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:159
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:85
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:98
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:195
 msgid "Shop/Category Page"
 msgstr ""
@@ -1306,10 +1302,10 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:219
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:272
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:326
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:145
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:204
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:274
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:345
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:158
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:217
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:287
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:358
 #: includes/gateways/settings/googlepay-settings.php:133
 msgid "White"
 msgstr ""
@@ -1386,19 +1382,19 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:251
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:304
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:218
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:288
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:231
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:301
 msgid "Message Location"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:255
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:222
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:235
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:207
 msgid "Below Total"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:256
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:223
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:236
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:208
 msgid "Below Checkout Button"
 msgstr ""
@@ -1406,9 +1402,9 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:259
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:313
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:366
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:226
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:297
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:367
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:239
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:310
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:380
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:211
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:223
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:234
@@ -1416,15 +1412,15 @@ msgid "This option controls the location in which the messaging for the payment 
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:308
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:292
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:305
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:218
 msgid "Above Price"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:309
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:362
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:293
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:363
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:306
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:376
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:219
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:230
 msgid "Below Price"
@@ -1432,15 +1428,15 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:310
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:363
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:294
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:364
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:307
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:377
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:220
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:231
 msgid "Below Add to Cart"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-affirm.php:358
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:359
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:372
 msgid "Shop/Category Location"
 msgstr ""
 
@@ -1449,9 +1445,9 @@ msgid "and cart/product total is between %1$s and %2$s."
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:28
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:529
-#: packages/blocks/assets/js/payment-methods/local-payment/afterpay.js:106
-#: packages/blocks/build/commons.js:4613
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:542
+#: packages/blocks/assets/js/payment-methods/local-payment/afterpay.js:104
+#: packages/blocks/build/commons.js:4654
 msgid "Afterpay"
 msgstr ""
 
@@ -1463,149 +1459,170 @@ msgstr ""
 msgid "Afterpay gateway that integrates with your Stripe account."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:84
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:77
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:117
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:176
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:246
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:317
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:177
+#: includes/gateways/settings/googlepay-settings.php:111
+msgid "Icon"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:80
+msgid "Afterpay black"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:81
+msgid "Afterpay black on mint"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:82
+msgid "Clearpay black"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:83
+msgid "Clearpay black on mint"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:87
+msgid "This is the icon style that appears next to the gateway on the checkout page. If you have messaging enabled on the checkout page, that will override the icon."
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:97
 #: includes/gateways/settings/applepay-settings.php:68
 #: includes/gateways/settings/googlepay-settings.php:87
 #: includes/gateways/settings/payment-request-settings.php:66
 msgid "Mini Cart"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:88
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:101
 msgid "These are the additional sections where the Afterpay messaging will be enabled. You can control individual products via the Edit product page."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:104
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:163
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:233
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:304
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:177
-#: includes/gateways/settings/googlepay-settings.php:111
-msgid "Icon"
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:108
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:167
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:237
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:308
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:121
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:180
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:250
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:321
 msgid "Black on mint"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:109
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:168
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:238
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:309
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:122
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:181
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:251
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:322
 msgid "Black on white"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:110
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:169
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:239
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:310
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:123
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:182
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:252
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:323
 msgid "Mint on black"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:111
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:170
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:240
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:311
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:124
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:183
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:253
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:324
 msgid "White on black"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:114
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:173
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:243
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:314
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:127
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:186
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:256
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:327
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:185
 msgid "This is the icon style that appears next to the gateway on the checkout page."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:117
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:176
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:246
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:317
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:130
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:189
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:259
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:330
 msgid "Intro text"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:128
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:140
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:187
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:199
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:257
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:269
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:328
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:340
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:141
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:153
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:200
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:212
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:270
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:282
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:341
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:353
 msgid "Modal link style"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:132
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:191
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:261
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:332
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:145
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:204
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:274
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:345
 msgid "More info text"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:133
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:192
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:262
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:333
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:146
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:205
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:275
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:346
 msgid "Circled info icon"
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:134
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:193
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:263
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:334
-msgid "Learn more text"
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:136
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:195
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:265
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:336
-msgid "This is the style of the Afterpay info link."
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:144
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:203
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:273
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:344
-msgid "Mint"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:147
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:206
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:276
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:347
+msgid "Learn more text"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:149
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:208
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:278
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:349
+msgid "This is the style of the Afterpay info link."
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:157
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:216
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:286
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:357
+msgid "Mint"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:160
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:219
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:289
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:360
 msgid "This is the theme color for the Afterpay info modal."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:152
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:211
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:281
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:352
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:165
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:224
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:294
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:365
 msgid "Show interest free"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:155
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:214
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:284
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:355
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:168
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:227
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:297
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:368
 msgid "If enabled, the Afterpay message will contain the interest free text."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:535
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:548
 msgid "Stripe accounts in the following countries can accept Afterpay payments with local currency settlement"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:542
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:555
 msgid "Store currency must be %s for Afterpay to show because your Stripe account is registered in %s. This is a requirement of Afterpay."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:547
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:560
 msgid "You can accept payments from customers in the same country that you registered your Stripe account in."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:555
+#: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:568
 msgid ""
 "You can accept payments from customers in the same country that you registered your Stripe account in. Payments must also match the local \n"
 "\t\t\tcurrency of the Stripe account country."
@@ -2087,18 +2104,6 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-wechat.php:28
 msgid "WeChat gateway that integrates with your Stripe account."
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-wechat.php:43
-msgid "QRCode Size"
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-wechat.php:46
-msgid "This option controls the width and height in pixels of the QRCode."
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-wechat.php:93
-msgid "Scan the QR code using your WeChat app. Once scanned click the Place Order button."
 msgstr ""
 
 #: includes/gateways/settings/ach-settings.php:6
@@ -2954,22 +2959,22 @@ msgstr ""
 msgid "A review has been closed for charge %1$s. Reason: %2$s."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:34
+#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:23
 #: templates/checkout/wechat.php:7
 msgid "Click %1$s to initiate the WeChat payment."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:35
+#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:24
 #: templates/checkout/wechat.php:8
 msgid "A QR code will render on this page."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:36
+#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:25
 #: templates/checkout/wechat.php:9
 msgid "Scan the QR code and authenticate the payment using your WeChat Pay app"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:37
+#: packages/blocks/src/Payments/Gateways/WeChatPayment.php:26
 #: templates/checkout/wechat.php:10
 msgid "After you authenticate, stay on this page until it redirects to the order received page."
 msgstr ""
@@ -3043,8 +3048,8 @@ msgstr ""
 #: templates/cc-forms/simple.php:12
 #: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:13
 #: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:19
-#: packages/blocks/build/commons.js:2404
-#: packages/blocks/build/commons.js:2553
+#: packages/blocks/build/commons.js:2406
+#: packages/blocks/build/commons.js:2555
 msgid "Card Number"
 msgstr ""
 
@@ -3054,8 +3059,8 @@ msgstr ""
 #: templates/cc-forms/simple.php:26
 #: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:24
 #: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:40
-#: packages/blocks/build/commons.js:2415
-#: packages/blocks/build/commons.js:2574
+#: packages/blocks/build/commons.js:2417
+#: packages/blocks/build/commons.js:2576
 msgid "CVV"
 msgstr ""
 
@@ -3075,7 +3080,7 @@ msgstr ""
 
 #: templates/cc-forms/simple.php:20
 #: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:31
-#: packages/blocks/build/commons.js:2565
+#: packages/blocks/build/commons.js:2567
 msgid "Expiration"
 msgstr ""
 
@@ -3101,31 +3106,31 @@ msgstr ""
 
 #: templates/checkout/blik.php:9
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:159
-#: packages/blocks/build/commons.js:4907
+#: packages/blocks/build/commons.js:4985
 msgid "Request your 6-digit code from your banking application."
 msgstr ""
 
 #: templates/checkout/blik.php:10
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:160
-#: packages/blocks/build/commons.js:4908
+#: packages/blocks/build/commons.js:4986
 msgid "Enter the code into the input fields below. Click %1$s once you have entered the code."
 msgstr ""
 
 #: templates/checkout/blik.php:11
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:161
-#: packages/blocks/build/commons.js:4909
+#: packages/blocks/build/commons.js:4987
 msgid "You will receive a notification on your mobile device asking you to authorize the payment."
 msgstr ""
 
 #: templates/checkout/blik.php:15
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/input-codes.js:59
-#: packages/blocks/build/commons.js:4992
+#: packages/blocks/build/commons.js:5070
 msgid "Please enter your 6 digit BLIK code."
 msgstr ""
 
 #: templates/checkout/blik.php:31
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/timer.js:22
-#: packages/blocks/build/commons.js:5052
+#: packages/blocks/build/commons.js:5130
 msgid "Your transaction will expire in:"
 msgstr ""
 
@@ -3135,25 +3140,25 @@ msgstr ""
 
 #: templates/checkout/boleto.php:17
 #: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:60
-#: packages/blocks/build/commons.js:5121
+#: packages/blocks/build/commons.js:5199
 msgid "Test mode values"
 msgstr ""
 
 #: templates/checkout/boleto.php:27
 #: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:70
-#: packages/blocks/build/commons.js:5131
+#: packages/blocks/build/commons.js:5209
 msgid "Accepted formats"
 msgstr ""
 
 #: templates/checkout/boleto.php:29
 #: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:73
-#: packages/blocks/build/commons.js:5134
+#: packages/blocks/build/commons.js:5212
 msgid "XXX.XXX.XXX-XX or XXXXXXXXXXX"
 msgstr ""
 
 #: templates/checkout/boleto.php:32
 #: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:77
-#: packages/blocks/build/commons.js:5138
+#: packages/blocks/build/commons.js:5216
 msgid "XX.XXX.XXX/XXXX-XX or XXXXXXXXXXXXXX"
 msgstr ""
 
@@ -3161,31 +3166,27 @@ msgstr ""
 msgid "OR"
 msgstr ""
 
-#: templates/checkout/klarna-v2.php:12
-msgid "Test mode sms"
-msgstr ""
-
 #: templates/checkout/konbini-instructions.php:10
 #: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:89
-#: packages/blocks/build/commons.js:5767
+#: packages/blocks/build/commons.js:5879
 msgid "Click %1$s and you will be presented with your Konbini payment code and confirmation number."
 msgstr ""
 
 #: templates/checkout/konbini-instructions.php:13
 #: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:91
-#: packages/blocks/build/commons.js:5769
+#: packages/blocks/build/commons.js:5881
 msgid "Your order email will contain a link to your Konbini voucher which has your payment code and confirmation number."
 msgstr ""
 
 #: templates/checkout/konbini-instructions.php:16
 #: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:94
-#: packages/blocks/build/commons.js:5772
+#: packages/blocks/build/commons.js:5884
 msgid "At the convenience store, provide the payment code and confirmation number to the payment machine or cashier."
 msgstr ""
 
 #: templates/checkout/konbini-instructions.php:19
 #: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:97
-#: packages/blocks/build/commons.js:5775
+#: packages/blocks/build/commons.js:5887
 msgid "After the payment is complete, keep the receipt for your records."
 msgstr ""
 
@@ -3193,14 +3194,14 @@ msgstr ""
 #: templates/checkout/promptpay-instructions.php:10
 #: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:85
 #: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:87
-#: packages/blocks/build/commons.js:6150
-#: packages/blocks/build/commons.js:6268
+#: packages/blocks/build/commons.js:6262
+#: packages/blocks/build/commons.js:6380
 msgid "Click %1$s and you will be shown a QR code."
 msgstr ""
 
 #: templates/checkout/paynow-instructions.php:13
 #: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:87
-#: packages/blocks/build/commons.js:6152
+#: packages/blocks/build/commons.js:6264
 msgid "Scan the QR code using an app from participating banks and participating non-bank financial institutions."
 msgstr ""
 
@@ -3208,14 +3209,14 @@ msgstr ""
 #: templates/checkout/promptpay-instructions.php:16
 #: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:90
 #: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:92
-#: packages/blocks/build/commons.js:6155
-#: packages/blocks/build/commons.js:6273
+#: packages/blocks/build/commons.js:6267
+#: packages/blocks/build/commons.js:6385
 msgid "The authentication process may take several moments. Once confirmed, you will be redirected to the order received page."
 msgstr ""
 
 #: templates/checkout/promptpay-instructions.php:13
 #: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:89
-#: packages/blocks/build/commons.js:6270
+#: packages/blocks/build/commons.js:6382
 msgid "Scan the QR code using a payment app that supports PromptPay."
 msgstr ""
 
@@ -3243,43 +3244,43 @@ msgid "ACH payment has been cancelled"
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/credit-card/components/custom-card-form.js:83
-#: packages/blocks/build/commons.js:2509
+#: packages/blocks/build/commons.js:2511
 msgid "%s is not a valid blocks Stripe custom form. Please choose another custom form option in the Credit Card Settings."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:83
-#: packages/blocks/build/commons.js:4831
+#: packages/blocks/build/commons.js:4909
 msgid "Please enter your 6-digit BLIK code."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:29
-#: packages/blocks/build/commons.js:5090
+#: packages/blocks/build/commons.js:5168
 msgid "Please enter a valid CPF/CNPJ value"
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-after-process-local-payment.js:51
-#: packages/blocks/build/commons.js:5344
+#: packages/blocks/build/commons.js:5422
 msgid "Payment has been cancelled."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-create-source.js:73
 #: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-validate-checkout.js:12
-#: packages/blocks/build/commons.js:5446
-#: packages/blocks/build/commons.js:5490
+#: packages/blocks/build/commons.js:5524
+#: packages/blocks/build/commons.js:5568
 msgid "Please enter your payment info before proceeding."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:54
-#: packages/blocks/build/commons.js:6119
+#: packages/blocks/build/commons.js:6231
 msgid "PayNow payment cancelled."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:57
-#: packages/blocks/build/commons.js:6122
+#: packages/blocks/build/commons.js:6234
 msgid "PayNow payment expired. Please try again."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:54
-#: packages/blocks/build/commons.js:6235
+#: packages/blocks/build/commons.js:6347
 msgid "PromptPay payment cancelled."
 msgstr ""

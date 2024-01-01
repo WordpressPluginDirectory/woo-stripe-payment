@@ -35,16 +35,16 @@ export const useCreateSource = (
 
     const getSourceArgsInternal = useCallback(() => {
         const {billing} = currentValues.current;
-        const {cartTotal, currency, billingData} = billing;
+        const {cartTotal, currency, billingAddress} = billing;
         let args = getDefaultSourceArgs({
             type: getData('paymentType'),
             amount: cartTotal.value,
-            billingData,
+            billingAddress,
             currency: currency.code,
             returnUrl: getData('returnUrl')
         });
         if (getSourceArgs) {
-            args = getSourceArgs(args, {billingData});
+            args = getSourceArgs(args, {billingAddress});
         }
         return args;
     }, []);

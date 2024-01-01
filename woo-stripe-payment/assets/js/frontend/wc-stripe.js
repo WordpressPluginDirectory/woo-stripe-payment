@@ -486,7 +486,7 @@
             this.populate_shipping_fields(data.shippingAddress);
         }
 
-        if (data.paymentMethod.billing_details.address) {
+        if (data.paymentMethod.billing_details.address && !this.skipBillingAddress) {
             this.populate_billing_fields(data.paymentMethod.billing_details.address);
         }
     };
@@ -1734,6 +1734,7 @@
             this.paymentRequest.canMakePayment().then(function (result) {
                 if (result && !result.applePay && result.googlePay && paymentRequest === this.paymentRequest) {
                     this.can_pay = true;
+
                     this.create_button();
                     $(this.container).show();
                     resolve(result);

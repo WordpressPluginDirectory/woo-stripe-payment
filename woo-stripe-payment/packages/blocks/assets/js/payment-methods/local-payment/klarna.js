@@ -1,11 +1,12 @@
 import {useState, useEffect} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
-import {getSettings, initStripe, isTestMode} from "../util";
+import {getSettings, initStripe, isCartPage} from "../util";
 import {LocalPaymentIntentContent} from './local-payment-method';
 import {OffsiteNotice, PaymentMethod, PaymentMethodLabel} from "../../components/checkout";
 import {canMakePayment} from "./local-payment-method";
-import {__} from "@wordpress/i18n";
 import {PaymentMethodMessagingElement, Elements} from "@stripe/react-stripe-js";
+import {registerPlugin} from '@wordpress/plugins';
+import {ExperimentalOrderMeta, TotalsWrapper} from '@woocommerce/blocks-checkout';
 
 const getData = getSettings('stripe_klarna_data');
 
@@ -73,8 +74,8 @@ if (getData()) {
             icons={getData('icon')}/>,
         ariaLabel: 'Klarna',
         placeOrderButtonLabel: getData('placeOrderButtonLabel'),
-        canMakePayment: canMakePayment(getData, ({settings, billingData, cartTotals}) => {
-            const {country} = billingData;
+        canMakePayment: canMakePayment(getData, ({settings, billingAddress, cartTotals}) => {
+            const {country} = billingAddress;
             const {currency_code: currency} = cartTotals;
             const requiredParams = settings('requiredParams');
             const amount = parseInt(cartTotals.total_price);
@@ -99,4 +100,37 @@ if (getData()) {
             features: getData('features')
         }
     })
+}
+
+if (isCartPage() && getData('cartEnabled')) {
+    const KlarnaCartMessage = ({cart}) => {
+        const {cartTotals} = cart;
+        const options = {
+            amount: parseInt(cartTotals.total_price),
+            currency: cartTotals.currency_code,
+            paymentMethodTypes: ['klarna'],
+            ...getData('messageOptions')
+        };
+        return (
+            <TotalsWrapper>
+                <div className={'wc-block-components-totals-item wc-stripe-cart-message-container stripe_klarna'}>
+                    <PaymentMethodMessagingElement options={options}/>
+                </div>
+            </TotalsWrapper>
+        )
+    }
+    const render = () => {
+        const Component = (props) => (
+            <Elements stripe={initStripe} options={getData('elementOptions')}>
+                <KlarnaCartMessage {...props}/>
+            </Elements>
+        );
+
+        return (
+            <ExperimentalOrderMeta>
+                <Component/>
+            </ExperimentalOrderMeta>
+        )
+    }
+    registerPlugin('wc-stripe-blocks-klarna', {render, scope: 'woocommerce-checkout'});
 }

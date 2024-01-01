@@ -19,11 +19,11 @@ export const usePaymentRequest = ({getData, publishableKey, merchantInfo, billin
 
     const buildPaymentRequest = useCallback(() => {
         const {billing, shippingData} = currentData.current;
-        const {billingData} = billing;
+        const {billingAddress} = billing;
         const {shippingRates} = shippingData;
         let options = {
             ...{
-                emailRequired: isEmpty(billingData.email),
+                emailRequired: isEmpty(billingAddress.email),
                 merchantInfo,
                 allowedPaymentMethods: [{
                     ...{
@@ -50,7 +50,7 @@ export const usePaymentRequest = ({getData, publishableKey, merchantInfo, billin
         options.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
         options.allowedPaymentMethods[0].parameters.billingAddressParameters = {
             format: 'FULL',
-            phoneNumberRequired: isFieldRequired(shippingData.needsShipping ? 'shipping-phone' : 'phone', billingData.country) && isEmpty(billingData.phone)
+            phoneNumberRequired: isFieldRequired(shippingData.needsShipping ? 'shipping-phone' : 'phone', billingAddress.country) && isEmpty(billingAddress.phone)
         };
         if (options.shippingAddressRequired) {
             options.callbackIntents = [...options.callbackIntents, ...['SHIPPING_ADDRESS', 'SHIPPING_OPTION']];

@@ -448,6 +448,8 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 					}
 				} elseif ( $intent['confirmation_method'] != $this->payment_method->get_confirmation_method( $order ) ) {
 					$intent = false;
+				} elseif ( ! empty( $intent['customer'] ) && wc_stripe_get_customer_id( $order->get_customer_id() ) !== $intent['customer'] ) {
+					$intent = false;
 				}
 			}
 

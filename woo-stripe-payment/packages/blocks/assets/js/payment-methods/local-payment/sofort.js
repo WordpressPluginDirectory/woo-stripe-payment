@@ -5,8 +5,8 @@ import {PaymentMethodLabel, PaymentMethod} from "../../components/checkout";
 
 const getData = getSettings('stripe_sofort_data');
 
-const getConfirmationArgs = (billingData) => {
-    return {sofort: {country: billingData.country}};
+const getConfirmationArgs = (billingAddress) => {
+    return {sofort: {country: billingAddress.country}};
 }
 
 if (getData()) {

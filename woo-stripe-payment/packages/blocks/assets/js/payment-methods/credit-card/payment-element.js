@@ -52,8 +52,8 @@ const CardElement = ({options, ...props}) => {
     const installmentsActive = getData('installmentsActive')
     const elements = useElements();
     const stripe = useStripe();
-    const {billing: {billingData}, eventRegistration, emitResponse, shouldSavePayment} = props;
-    const {email} = billingData;
+    const {billing: {billingAddress}, eventRegistration, emitResponse, shouldSavePayment} = props;
+    const {email} = billingAddress;
     const {onCheckoutFail} = eventRegistration;
     const {noticeContexts} = emitResponse;
     const name = getData('name');
@@ -62,7 +62,7 @@ const CardElement = ({options, ...props}) => {
     }, []);
 
     const {createPaymentMethod, addPaymentMethodData} = useDeferredPaymentIntent({
-        billingData,
+        billingAddress,
         eventRegistration,
         emitResponse,
         shouldSavePayment,

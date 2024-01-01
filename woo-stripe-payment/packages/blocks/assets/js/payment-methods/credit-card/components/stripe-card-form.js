@@ -16,13 +16,13 @@ const StripeCardForm = ({getData, billing, onChange: eventChange, onComplete}) =
         return {
             ...{
                 value: {
-                    postalCode: billing?.billingData?.postcode
+                    postalCode: billing?.billingAddress?.postcode
                 },
                 hidePostalCode: isFieldRequired('postcode'),
                 iconStyle: 'default'
             }, ...getData('cardOptions')
         };
-    }, [billing.billingData]);
+    }, [billing.billingAddress]);
     return (
         <div className='wc-stripe-inline-form'>
             <CardElement options={cardOptions} onChange={onChange}/>

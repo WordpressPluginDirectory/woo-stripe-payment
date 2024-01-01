@@ -1,11 +1,12 @@
 import {useState, useEffect} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
-import {getSettings, initStripe} from "../util";
+import {getSettings, initStripe, isCartPage} from "../util";
 import {LocalPaymentIntentContent} from './local-payment-method';
 import {OffsiteNotice, PaymentMethod, PaymentMethodLabel} from "../../components/checkout";
 import {canMakePayment} from "./local-payment-method";
 import {AfterpayClearpayMessageElement, Elements} from "@stripe/react-stripe-js";
 import {__} from '@wordpress/i18n';
+import {registerPlugin} from '@wordpress/plugins';
 import {ExperimentalOrderMeta, TotalsWrapper} from '@woocommerce/blocks-checkout';
 
 const getData = getSettings('stripe_afterpay_data');
@@ -41,7 +42,7 @@ const AfterpayPaymentMethodLabel = ({title, getData, ...props}) => {
     const [options, setOptions] = useState({
         amount: getData('cartTotal'),
         currency: getData('currency'),
-        isCartEligible: getData('msgOptions').isEligible
+        isCartEligible: true
     });
     useEffect(() => {
         const updateOptions = e => setOptions(e.detail.options);
@@ -66,7 +67,7 @@ const AfterpayPaymentMethodLabel = ({title, getData, ...props}) => {
                 <Elements stripe={initStripe} options={getData('elementOptions')}>
                     <div className='wc-stripe-blocks-afterpay__label'>
                         <AfterpayClearpayMessageElement options={{
-                            ...getData('msgOptions'),
+                            ...getData('checkoutMessageOptions'),
                             ...options
                         }}/>
                     </div>
@@ -74,21 +75,18 @@ const AfterpayPaymentMethodLabel = ({title, getData, ...props}) => {
             </div>
         </div>
     )
-        ;
 }
 
 const AfterpayPaymentMethod = ({content, billing, shippingData, ...props}) => {
     const Content = content;
-    const {cartTotal, currency, billingData: {country}} = billing;
-    const {needsShipping} = shippingData
+    const {cartTotal, currency, billingAddress: {country}} = billing;
     const total = parseInt(cartTotal.value) / 10 ** currency.minorUnit;
-    const isCartEligible = isAvailable({total, currency: currency.code, country});
     return (
         <>
             <div className='wc-stripe-blocks-payment-method-content'>
-                {isCartEligible && <div className="wc-stripe-blocks-afterpay-offsite__container">
+                <div className="wc-stripe-blocks-afterpay-offsite__container">
                     <OffsiteNotice paymentText={getData('title')} buttonText={getData('placeOrderButtonLabel')}/>
-                </div>}
+                </div>
                 <Content {...{...props, billing, shippingData}}/>
             </div>
         </>
@@ -105,9 +103,9 @@ if (getData()) {
             getData={getData}/>,
         ariaLabel: __('Afterpay', 'woo-stripe-payment'),
         placeOrderButtonLabel: getData('placeOrderButtonLabel'),
-        canMakePayment: canMakePayment(getData, ({settings, cartTotals, billingData}) => {
+        canMakePayment: canMakePayment(getData, ({settings, cartTotals, billingAddress}) => {
             const {currency_code: currency, currency_minor_unit, total_price} = cartTotals;
-            const {country} = billingData;
+            const {country} = billingAddress;
             const total = parseInt(total_price) / (10 ** currency_minor_unit);
             const available = isAvailable({total, currency, country});
             dispatchAfterpayChange({
@@ -131,4 +129,41 @@ if (getData()) {
             features: getData('features')
         }
     });
+}
+
+if (isCartPage() && getData('cartEnabled')) {
+
+    const AfterpayCartMessage = ({cart}) => {
+        const {billingAddress} = cart;
+        const {currency_code: currency, currency_minor_unit, total_price} = cart.cartTotals;
+        const {country} = billingAddress;
+        const total = parseInt(total_price) / (10 ** currency_minor_unit);
+        const available = isAvailable({total, currency, country});
+        if (available) {
+            return (
+                <TotalsWrapper>
+                    <div className={'wc-block-components-totals-item wc-stripe-cart-message-container stripe_afterpay'}>
+                        <AfterpayClearpayMessageElement options={{
+                            ...getData('cartMessageOptions'),
+                            ...{amount: parseInt(total_price), currency, isCartEligible: true}
+                        }}/>
+                    </div>
+                </TotalsWrapper>
+            )
+        }
+    }
+
+    const render = (props) => {
+        const Component = (props) => (
+            <Elements stripe={initStripe} options={getData('elementOptions')}>
+                <AfterpayCartMessage {...props}/>
+            </Elements>
+        );
+        return (
+            <ExperimentalOrderMeta>
+                <Component/>
+            </ExperimentalOrderMeta>
+        )
+    }
+    registerPlugin('wc-stripe-blocks-afterpay', {render, scope: 'woocommerce-checkout'});
 }

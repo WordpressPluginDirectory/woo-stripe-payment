@@ -28,7 +28,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 		$this->tab_title          = __( 'Afterpay', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Afterpay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Afterpay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/afterpay.svg' );;
+		$this->icon               = stripe_wc()->assets_url( 'img/afterpay.svg' );
 		parent::__construct();
 		$this->template_name = 'afterpay.php';
 		add_filter( 'woocommerce_gateway_icon', array( $this, 'get_woocommerce_gateway_icon' ), 10, 2 );
@@ -72,6 +72,19 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 				'desc_tip'    => true,
 				'description' => __( 'This option determines whether the customer\'s funds are captured immediately or authorized and can be captured at a later date.',
 					'woo-stripe-payment' ),
+			),
+			'icon'                        => array(
+				'title'       => __( 'Icon', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'options'     => array(
+					'afterpay'            => __( 'Afterpay black', 'woo-stripe-payment' ),
+					'afterpay_mint_black' => __( 'Afterpay black on mint', 'woo-stripe-payment' ),
+					'clearpay_black'      => __( 'Clearpay black', 'woo-stripe-payment' ),
+					'clearpay_mint_black' => __( 'Clearpay black on mint', 'woo-stripe-payment' )
+				),
+				'default'     => 'afterpay',
+				'desc_tip'    => true,
+				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page. If you have messaging enabled on the checkout page, that will override the icon.', 'woo-stripe-payment' ),
 			),
 			'payment_sections'            => array(
 				'type'        => 'multiselect',
@@ -409,7 +422,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 		$asset_data->add( $this->id, [
 			'supportedCurrencies' => $this->currencies,
 			'requiredParams'      => $this->get_required_parameters(),
-			'msgOptions'          => $this->get_afterpay_message_options( 'shop' ),
+			'messageOptions'      => $this->get_afterpay_message_options( 'shop' ),
 			'hideIneligible'      => wc_string_to_bool( $this->get_option( 'hide_ineligible' ) ),
 			'elementOptions'      => $this->get_element_options()
 		] );
@@ -477,7 +490,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 	public function get_localized_params( $context = 'checkout' ) {
 		$params                      = parent::get_localized_params();
 		$params['currencies']        = $this->currencies;
-		$params['msg_options']       = $this->get_afterpay_message_options( $context );
+		$params['messageOptions']    = $this->get_afterpay_message_options( $context );
 		$params['supported_locales'] = $this->get_supported_locales();
 		$params['requirements']      = $this->get_required_parameters();
 		$params['hide_ineligible']   = $this->is_active( 'hide_ineligible' ) ? 'yes' : 'no';

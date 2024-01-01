@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay, ideal, sepa, sofo
 Requires at least: 3.0.1
 Tested up to: 6.4
 Requires PHP: 5.6
-Stable tag: 3.3.54
+Stable tag: 3.3.55
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,11 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.55 - 01/01/24 =
+* Added - Support for Afterpay, Affirm, and Klarna messaging on the Cart Block
+* Added - Clearpay icon so merchants can choose which icon appears on checkout page if they're not relying on the messaging element
+* Fixed - Afterpay message settings being ignored after version 3.3.53 release
+* Updated - Replaced deprecated Checkout Block names now that Checkout block is part of WooCommerce core
 = 3.3.54 - 12/20/23 =
 * Fixed - WooCommerce defaults gateway options to an empty string which can trigger a PHP exception in PHP 8.0+ if in_array is called with a string rather than an array.
 = 3.3.53 - 12/19/23 =

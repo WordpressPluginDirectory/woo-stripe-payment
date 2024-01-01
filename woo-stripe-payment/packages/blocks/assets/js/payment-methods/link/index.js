@@ -1,8 +1,7 @@
-import {useEffect, useState} from '@wordpress/element';
-import {Elements, useStripe, useElements, PaymentElement} from "@stripe/react-stripe-js";
+import {Elements, PaymentElement} from "@stripe/react-stripe-js";
 import {registerExpressPaymentMethod} from '@woocommerce/blocks-registry';
 import {useLink, useLinkIcon} from './hooks';
-import {getSettings, initStripe as loadStripe, canMakePayment} from "../util";
+import {getSettings, initStripe as loadStripe} from "../util";
 
 const getData = getSettings('stripe_link_checkout_data');
 
@@ -41,10 +40,11 @@ const LinkCheckout = (
         emitResponse,
         ...props
     }) => {
-    const {billingData} = billing;
-    const {email} = billingData;
+    const {billingAddress} = billing;
+    const {email} = billingAddress;
     const iconEnabled = getData('linkIconEnabled');
     const linkIcon = getData('linkIcon');
+
     useLink({
         email,
         eventRegistration,
@@ -52,8 +52,10 @@ const LinkCheckout = (
         onSubmit,
         onError,
         activePaymentMethod,
-        emitResponse
+        emitResponse,
+        paymentStatus: props.paymentStatus
     });
+
     useLinkIcon({enabled: linkIcon, email, icon: linkIcon});
 
     const options = {

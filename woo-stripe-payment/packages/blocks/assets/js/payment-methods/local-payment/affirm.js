@@ -1,15 +1,26 @@
 import {useState, useEffect} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
-import {getSettings, initStripe} from "../util";
+import {getSettings, initStripe, isCartPage} from "../util";
 import {LocalPaymentIntentContent} from './local-payment-method';
 import {PaymentMethod, OffsiteNotice, PaymentMethodLabel} from "../../components/checkout";
 import {AffirmMessageElement, Elements} from "@stripe/react-stripe-js";
+import {registerPlugin} from '@wordpress/plugins';
+import {ExperimentalOrderMeta, TotalsWrapper} from '@woocommerce/blocks-checkout';
 
 const getData = getSettings('stripe_affirm_data');
 
-let msgOptions = {
-    amount: getData('cartTotals')?.value,
-    currency: getData('currency')
+const isAvailable = ({amount, billingCountry = null, currency}) => {
+    const requirements = getData('requirements');
+    const accountCountry = getData('accountCountry');
+
+    if (!billingCountry) {
+        return currency in requirements
+            && 5000 <= amount && amount <= 3000000;
+    }
+
+    return currency in requirements
+        && accountCountry === billingCountry
+        && 5000 <= amount && amount <= 3000000;
 }
 
 const dispatchAffirmChange = (options) => {
@@ -84,9 +95,7 @@ if (getData()) {
                 amount: amount,
                 currency: currency_code
             });
-            return currency_code in requirements
-                && accountCountry === billingAddress.country
-                && 5000 <= amount && amount <= 3000000;
+            return isAvailable({amount, billingCountry: billingAddress.country, currency: currency_code});
         },
         content: <PaymentMethod
             content={AffirmPaymentMethod}
@@ -99,4 +108,40 @@ if (getData()) {
             features: getData('features')
         }
     })
+}
+
+if (isCartPage() && getData('cartEnabled')) {
+    const AffirmCartMessage = ({cart}) => {
+        const {cartTotals} = cart;
+        const options = {
+            amount: parseInt(cartTotals.total_price),
+            currency: cartTotals.currency_code,
+            ...getData('cartMessageOptions')
+        };
+        if (isAvailable({amount: parseInt(cartTotals.total_price), currency: cartTotals.currency_code})) {
+            return (
+                <TotalsWrapper>
+                    <div className={'wc-block-components-totals-item wc-stripe-cart-message-container stripe_affirm'}>
+                        <AffirmMessageElement options={options}/>
+                    </div>
+                </TotalsWrapper>
+            )
+        }
+        return null;
+    }
+    const render = () => {
+        const Component = (props) => {
+            return (
+                <Elements stripe={initStripe} options={getData('elementOptions')}>
+                    <AffirmCartMessage {...props}/>
+                </Elements>
+            )
+        }
+        return (
+            <ExperimentalOrderMeta>
+                <Component/>
+            </ExperimentalOrderMeta>
+        )
+    }
+    registerPlugin('wc-stripe-blocks-affirm', {render, scope: 'woocommerce-checkout'});
 }

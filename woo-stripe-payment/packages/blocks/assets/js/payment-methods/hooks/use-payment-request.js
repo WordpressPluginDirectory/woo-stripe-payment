@@ -25,7 +25,7 @@ export const usePaymentRequest = (
     }) => {
 
     const {shippingAddress, needsShipping, shippingRates} = shippingData;
-    const {billingData, cartTotalItems, currency, cartTotal} = billing;
+    const {cartTotalItems, currency, cartTotal} = billing;
     const [paymentRequest, setPaymentRequest] = useState(null);
     const paymentRequestOptions = useRef({});
     const currentShipping = useRef(shippingData)
@@ -47,7 +47,7 @@ export const usePaymentRequest = (
                     pending: true
                 },
                 requestPayerName: true,
-                requestPayerEmail: isFieldRequired('email'),
+                requestPayerEmail: true,
                 requestPayerPhone: isFieldRequired(needsShipping ? 'shipping-phone' : 'phone'),
                 requestShipping: needsShipping,
                 displayItems: getDisplayItems(cartTotalItems, currency)
@@ -115,16 +115,25 @@ export const usePaymentRequest = (
     }, []);
 
     const onPaymentMethodReceived = useCallback((paymentResponse) => {
+        const {shippingAddress} = currentShipping.current;
+        const billing = currentBilling.current;
         const {paymentMethod, payerName = null, payerEmail = null, payerPhone = null} = paymentResponse;
-        // set address data
-        let billingData = {payerName, payerEmail, payerPhone};
+
         if (paymentMethod?.billing_details.address) {
-            billingData = toCartAddress(paymentMethod.billing_details.address, billingData);
+            exportedValues.billingAddress = {...billing.billingAddress, ...toCartAddress(paymentMethod.billing_details.address, {payerName})};
+            if (!exportedValues.billingAddress.email && payerEmail) {
+                exportedValues.billingAddress.email = payerEmail;
+            }
+            if (!exportedValues.billingAddress.phone && payerPhone) {
+                exportedValues.billingAddress.phone = payerPhone;
+            }
         }
-        exportedValues.billingData = billingData;
 
         if (paymentResponse.shippingAddress) {
-            exportedValues.shippingAddress = toCartAddress(paymentResponse.shippingAddress, {payerPhone});
+            exportedValues.shippingAddress = {...shippingAddress, ...toCartAddress(paymentResponse.shippingAddress)};
+            if (!exportedValues.shippingAddress.phone && payerPhone) {
+                exportedValues.shippingAddress.phone = payerPhone;
+            }
         }
 
         // set payment method

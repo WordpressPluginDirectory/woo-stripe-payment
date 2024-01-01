@@ -478,12 +478,12 @@ export const cartContainsSubscription = () => {
     return data && data.subscription;
 }
 
-export const getDefaultSourceArgs = ({type, amount, billingData, currency, returnUrl}) => {
+export const getDefaultSourceArgs = ({type, amount, billingAddress, currency, returnUrl}) => {
     return {
         type,
         amount,
         currency,
-        owner: getBillingDetailsFromAddress(billingData),
+        owner: getBillingDetailsFromAddress(billingAddress),
         redirect: {
             return_url: returnUrl
         }

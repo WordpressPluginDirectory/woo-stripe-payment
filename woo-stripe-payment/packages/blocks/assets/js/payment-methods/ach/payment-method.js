@@ -35,7 +35,7 @@ const ACHPaymentContent = (
         onCheckoutSuccess,
         emitResponse,
         paymentMethod: getData('name'),
-        billingAddress: billing.billingData
+        billingAddress: billing.billingAddress
     });
     return (
         <div className={'wc-stripe-ach__container'}>

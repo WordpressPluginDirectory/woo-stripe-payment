@@ -41,16 +41,20 @@ export const usePaymentsClient = (
     });
 
     const setAddressData = useCallback((paymentData) => {
-        let billingAddress;
+        let billingAddress = {};
+        const {shippingAddress} = currentShipping.current;
         if (paymentData?.paymentMethodData?.info?.billingAddress) {
             billingAddress = paymentData.paymentMethodData.info.billingAddress;
-            exportedValues.billingData = currentBilling.current.billingData = toCartAddress(billingAddress, {
-                email: paymentData.email,
-                phoneNumber: billingAddress.phoneNumber,
+            exportedValues.billingAddress = currentBilling.current.billingAddress = toCartAddress(billingAddress, {
+                email: paymentData.email || currentBilling.current.billingAddress.email,
+                phoneNumber: billingAddress.phoneNumber || currentBilling.current.billingAddress.phone,
             });
         }
         if (paymentData?.shippingAddress) {
-            exportedValues.shippingAddress = toCartAddress({...paymentData.shippingAddress, phoneNumber: billingAddress?.phoneNumber});
+            exportedValues.shippingAddress = toCartAddress(paymentData.shippingAddress);
+            if (exportedValues?.billingAddress?.phone && !shippingAddress.phone) {
+                exportedValues.shippingAddress.phone = exportedValues.billingAddress.phone;
+            }
         }
     }, []);
 
@@ -72,7 +76,7 @@ export const usePaymentsClient = (
             let result = await stripe.createPaymentMethod({
                 type: 'card',
                 card: {token: data.id},
-                billing_details: getBillingDetailsFromAddress(currentBilling.current.billingData)
+                billing_details: getBillingDetailsFromAddress(currentBilling.current.billingAddress)
             });
 
             if (result.error) {

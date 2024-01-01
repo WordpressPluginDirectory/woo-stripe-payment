@@ -6,7 +6,7 @@ import {ensureErrorResponse, StripeError} from "../../util";
 export const useAfterProcessLocalPayment = (
     {
         getData,
-        billingData,
+        billingAddress,
         eventRegistration,
         emitResponse,
         activePaymentMethod,
@@ -16,11 +16,11 @@ export const useAfterProcessLocalPayment = (
 ) => {
     const stripe = useStripe();
     const {onCheckoutSuccess, onCheckoutFail} = eventRegistration;
-    const currentBillingData = useRef(billingData);
+    const currentBillingAddress = useRef(billingAddress);
     const currentPaymentMethodArgs = useRef(getPaymentMethodArgs);
     useEffect(() => {
-        currentBillingData.current = billingData;
-    }, [billingData]);
+        currentBillingAddress.current = billingAddress;
+    }, [billingAddress]);
 
     useEffect(() => {
         currentPaymentMethodArgs.current = getPaymentMethodArgs;
@@ -36,7 +36,7 @@ export const useAfterProcessLocalPayment = (
                         let result = await stripe[confirmationMethod](client_secret, {
                             payment_method: {
                                 billing_details,
-                                ...currentPaymentMethodArgs.current(currentBillingData.current)
+                                ...currentPaymentMethodArgs.current(currentBillingAddress.current)
                             },
                             return_url,
                             ...confirmation_args

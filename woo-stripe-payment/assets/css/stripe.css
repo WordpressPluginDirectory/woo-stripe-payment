@@ -426,6 +426,12 @@ li.payment_method_stripe_afterpay label:first-of-type img {
     height: 20px;
 }
 
+li.payment_method_stripe_afterpay label:first-of-type img[src$="afterpay_mint_black.svg"],
+li.payment_method_stripe_afterpay label:first-of-type img[src$="clearpay_mint_black.svg"] {
+    width: 92px;
+    height: 32px;
+}
+
 li.payment_method_stripe_blik label:first-of-type img {
     width: 64px;
 }
@@ -645,7 +651,7 @@ ul.payment_methods li.payment_method_stripe_fpx img {
     max-height: 25px;
 }
 
-ul.payment_methods li.payment_method_stripe_klarna img {
+ul.payment_methods li.payment_method_stripe_klarna img[src*="klarna"] {
     max-width: 72px;
     width: 72px;
     max-height: 20px;
@@ -806,7 +812,7 @@ ul.payment_methods li[class*=payment_method] input[name=payment_method] {
     float: none;
 }
 
-ul.payment_methods li[class*=payment_method] > input[name=payment_method] + label {
+ul.payment_methods li[class*=payment_method_stripe_] > input[name=payment_method] + label {
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;

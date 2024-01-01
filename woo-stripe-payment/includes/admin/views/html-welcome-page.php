@@ -4,7 +4,6 @@
  *
  */
 $user      = wp_get_current_user();
-$signed_up = get_option( 'wc_stripe_admin_signup', false );
 ?>
 <div class="wc-stripe-main__page">
     <div class="wc-stripe-main__container">

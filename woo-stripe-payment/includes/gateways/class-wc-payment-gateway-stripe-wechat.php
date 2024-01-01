@@ -36,66 +36,6 @@ class WC_Payment_Gateway_Stripe_WeChat extends WC_Payment_Gateway_Stripe_Local_P
 		$this->form_fields['allowed_countries']['default'] = 'all';
 	}
 
-	public function get_local_payment_settings() {
-		return array_merge( parent::get_local_payment_settings(), array(
-			'qr_size' => array(
-				'type'              => 'input',
-				'title'             => __( 'QRCode Size', 'woo-stripe-payment' ),
-				'default'           => '128',
-				'desc_tip'          => true,
-				'description'       => __( 'This option controls the width and height in pixels of the QRCode.', 'woo-stripe-payment' ),
-				'sanitize_callback' => function ( $value ) {
-					if ( ! is_numeric( $value ) ) {
-						$value = 128;
-					}
-
-					return $value;
-				}
-			)
-		) );
-	}
-
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see WC_Payment_Gateway_Stripe_Local_Payment::get_source_redirect_url()
-	 */
-	public function get_source_redirect_url( $source, $order ) {
-		if ( wc_stripe_mode() == 'live' ) {
-			return sprintf(
-				'#qrcode=%s',
-				base64_encode(
-					wp_json_encode(
-						array(
-							'code'     => $source->wechat->qr_code_url,
-							'redirect' => $this->get_return_url( $order ),
-						)
-					)
-				)
-			);
-		}
-		// test code
-		// 'code' => 'weixin:\/\/wxpay\/bizpayurl?pr=tMih4Jo'
-
-		// in test mode just return the redirect url
-		return $source->wechat->qr_code_url;
-	}
-
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see WC_Payment_Gateway_Stripe_Local_Payment::get_localized_params()
-	 */
-	public function get_localized_params() {
-		$data               = parent::get_localized_params();
-		$data['qr_message'] = __( 'Scan the QR code using your WeChat app. Once scanned click the Place Order button.', 'woo-stripe-payment' );
-		$data['qr_size']    = $this->get_option( 'qr_size', 128 );
-
-		return $data;
-	}
-
 	public function get_payment_intent_confirmation_args( $intent, $order ) {
 		return array(
 			'payment_method_options' => array(

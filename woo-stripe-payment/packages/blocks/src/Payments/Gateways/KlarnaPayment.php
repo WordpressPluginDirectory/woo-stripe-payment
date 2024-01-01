@@ -26,7 +26,8 @@ class KlarnaPayment extends AbstractStripeLocalPayment {
 			'cartTotals'      => [
 				'value' => wc_stripe_add_number_precision( $cart_total, $currency )
 			],
-			'paymentSections' => $this->get_setting( 'payment_sections', [] )
+			'paymentSections' => $this->get_setting( 'payment_sections', [] ),
+			'cartEnabled'     => \in_array( 'cart', $this->get_setting( 'payment_sections', [] ) )
 		), parent::get_payment_method_data() );
 	}
 

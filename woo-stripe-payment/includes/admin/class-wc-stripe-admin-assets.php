@@ -92,7 +92,6 @@ class WC_Stripe_Admin_Assets {
 		}
 		if ( $screen_id === 'woocommerce_page_wc-stripe-main' ) {
 			wp_enqueue_style( 'wc-stripe-admin-main-style' );
-			wp_enqueue_script( 'wc-stripe-main-script', $js_path . 'admin/main.js', array( 'jquery' ), stripe_wc()->version, true );
 			if ( isset( $_GET['section'] ) ) {
 				if ( $_GET['section'] === 'support' ) {
 					wp_enqueue_script( 'wc-stripe-help-widget' );

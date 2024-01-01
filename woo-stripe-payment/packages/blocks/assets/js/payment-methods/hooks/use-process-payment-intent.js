@@ -29,7 +29,7 @@ export const useProcessPaymentIntent = (
         exportedValues = {},
         getPaymentMethodArgs = () => ({})
     }) => {
-    const {billingData} = billing;
+    const {billingAddress} = billing;
     const {shippingAddress} = shippingData;
     const [paymentMethod, setPaymentMethod] = useState(null);
     const stripe = useStripe();
@@ -46,10 +46,10 @@ export const useProcessPaymentIntent = (
     const getCreatePaymentMethodArgs = useCallback(() => {
         const args = {
             type: paymentType,
-            billing_details: getBillingDetailsFromAddress(exportedValues?.billingData ? exportedValues.billingData : billingData)
+            billing_details: getBillingDetailsFromAddress(exportedValues?.billingAddress ? exportedValues.billingAddress : billingAddress)
         }
         return {...args, ...currentPaymentMethodArgs.current()};
-    }, [billingData, paymentType, getPaymentMethodArgs]);
+    }, [billingAddress, paymentType, getPaymentMethodArgs]);
 
     const getSuccessResponse = useCallback((paymentMethodId, shouldSavePayment) => {
         const response = {
@@ -61,31 +61,19 @@ export const useProcessPaymentIntent = (
                 }
             }
         }
-        const isOlderVersion = generalData('isOlderVersion');
-        if (exportedValues?.billingData) {
-            if (isOlderVersion) {
-                response.meta.billingData = {
-                    ...DEFAULT_BILLING_ADDRESS,
-                    ...exportedValues.billingData
-                };
-            } else {
-                response.meta.billingAddress = {
-                    ...DEFAULT_BILLING_ADDRESS,
-                    ...exportedValues.billingData
-                };
-            }
+        if (exportedValues?.billingAddress) {
+            response.meta.billingAddress = {
+                ...DEFAULT_BILLING_ADDRESS,
+                ...exportedValues.billingAddress
+            };
         }
         if (exportedValues?.shippingAddress) {
-            if (isOlderVersion) {
-                response.meta.shippingData = {address: exportedValues.shippingAddress};
-            } else {
-                response.meta.shippingAddress = {
-                    ...DEFAULT_SHIPPING_ADDRESS, ...exportedValues.shippingAddress
-                }
+            response.meta.shippingAddress = {
+                ...DEFAULT_SHIPPING_ADDRESS, ...exportedValues.shippingAddress
             }
         }
         return response;
-    }, [billingData, shippingAddress]);
+    }, [billingAddress, shippingAddress]);
 
     useEffect(() => {
         if (paymentMethod && typeof paymentMethod === 'string') {
@@ -142,7 +130,7 @@ export const useProcessPaymentIntent = (
         return () => unsubscribeProcessingPayment();
     }, [
         paymentMethod,
-        billingData,
+        billingAddress,
         onPaymentSetup,
         stripe,
         setupIntent,

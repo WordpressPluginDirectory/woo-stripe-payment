@@ -23,6 +23,7 @@
 
     ApplePay.prototype.canMakePayment = function () {
         wc_stripe.ApplePay.prototype.canMakePayment.apply(this, arguments).then(function () {
+            this.skipBillingAddress = this.is_valid_address(this.get_address_object('billing'), 'billing', ['email', 'phone']);
             if (this.banner_enabled()) {
                 var $button = $(this.params.button);
                 $button.addClass('banner-checkout');

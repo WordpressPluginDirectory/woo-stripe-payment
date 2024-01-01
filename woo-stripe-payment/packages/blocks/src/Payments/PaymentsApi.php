@@ -243,7 +243,6 @@ class PaymentsApi {
 				],
 				'version'        => $this->config->get_version(),
 				'blocksVersion'  => \Automattic\WooCommerce\Blocks\Package::get_version(),
-				'isOlderVersion' => \version_compare( \Automattic\WooCommerce\Blocks\Package::get_version(), '9.5.0', '<' ),
 				'routes'         => array(
 					'process/payment'       => \WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'checkout/payment' ) ),
 					'create/setup_intent'   => \WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->payment_intent->rest_uri( 'setup-intent' ) ),

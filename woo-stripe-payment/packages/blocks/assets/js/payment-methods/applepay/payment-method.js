@@ -1,7 +1,7 @@
 import {useCallback} from '@wordpress/element';
 import {registerExpressPaymentMethod} from '@woocommerce/blocks-registry';
 import {getSettings, initStripe as loadStripe, canMakePayment, isCartPage, isCheckoutPage} from "../util";
-import {Elements, PaymentRequestButtonElement, useStripe} from "@stripe/react-stripe-js";
+import {Elements, useStripe} from "@stripe/react-stripe-js";
 import ErrorBoundary from "../error-boundary";
 import {
     usePaymentRequest,
@@ -45,7 +45,9 @@ const ApplePayButton = (
     const [error] = useStripeError();
     const canPay = (result) => result != null && result.applePay;
     const exportedValues = useExportedValues();
+
     useExpressBreakpointWidth({payment_method: getData('name'), width: 375});
+
     const {setPaymentMethod} = useProcessPaymentIntent({
         getData,
         billing,

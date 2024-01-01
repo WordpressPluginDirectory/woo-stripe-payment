@@ -7,11 +7,11 @@ import {useProcessCheckoutError} from "../hooks";
 /**
  * Return true if the local payment method can be used.
  * @param settings
- * @returns {function({billingData: *, [p: string]: *}): *}
+ * @returns {function({billingAddress: *, [p: string]: *}): *}
  */
-export const canMakePayment = (settings, callback = false) => ({billingData, cartTotals, ...props}) => {
+export const canMakePayment = (settings, callback = false) => ({billingAddress, cartTotals, ...props}) => {
     const {currency_code} = cartTotals;
-    const {country} = billingData;
+    const {country} = billingAddress;
     const countries = settings('countries');
     const type = settings('allowedCountries');
     const supports = settings('features');
@@ -35,7 +35,7 @@ export const canMakePayment = (settings, callback = false) => ({billingData, car
             }
         }
         if (callback && canMakePayment) {
-            canMakePayment = callback({settings, billingData, cartTotals, ...props});
+            canMakePayment = callback({settings, billingAddress, cartTotals, ...props});
         }
     }
     return canMakePayment;
@@ -108,15 +108,15 @@ export const LocalPaymentIntentMethod = (
         ...props
     }) => {
     const elements = useElements();
-    const {billingData} = billing;
+    const {billingAddress} = billing;
     const {onPaymentSetup, onCheckoutFail} = eventRegistration;
-    const getPaymentMethodArgs = useCallback((billingData) => {
+    const getPaymentMethodArgs = useCallback((billingAddress) => {
         if (component) {
             return {
                 [getData('paymentType')]: elements.getElement(component)
             }
         } else if (callback) {
-            return callback(billingData);
+            return callback(billingAddress);
         }
         return {};
     }, [
@@ -134,7 +134,7 @@ export const LocalPaymentIntentMethod = (
 
     useAfterProcessLocalPayment({
         getData,
-        billingData,
+        billingAddress,
         eventRegistration,
         emitResponse,
         activePaymentMethod,

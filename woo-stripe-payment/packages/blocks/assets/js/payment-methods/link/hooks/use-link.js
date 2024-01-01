@@ -24,6 +24,7 @@ export const useLink = (
         onError,
         activePaymentMethod,
         emitResponse,
+        paymentStatus,
         ...props
     }) => {
     const [link, setLink] = useState();
@@ -34,8 +35,8 @@ export const useLink = (
     const {onPaymentSetup} = eventRegistration;
 
     useEffect(() => {
-        currentData.current = {...currentData.current, onClick, onSubmit, onError};
-    }, [onClick, onSubmit, onError]);
+        currentData.current = {...currentData.current, email, onClick, onSubmit, onError, paymentStatus};
+    }, [email, onClick, onSubmit, onError, paymentStatus.isProcessing]);
 
     useEffect(() => {
         if (stripe && elements && !link) {
@@ -55,8 +56,8 @@ export const useLink = (
     }, [link]);
 
     useEffect(() => {
-        const {oldEmail = ''} = currentData.current;
-        if (link && oldEmail !== email) {
+        const {oldEmail = '', paymentStatus} = currentData.current;
+        if (link && oldEmail !== email && !paymentStatus.isProcessing) {
             link.launch({email});
         }
         currentData.current.oldEmail = email;
@@ -71,7 +72,6 @@ export const useLink = (
             });
             link.on('authenticated', event => {
                 currentData.current.onClick();
-                //currentData.current.onError('This is a test');
             })
         }
     }, [link]);
@@ -83,30 +83,21 @@ export const useLink = (
             }
             const response = {meta: {}};
             const {shippingAddress = null, billingAddress = null} = linkData.current.value;
-            const isOlderVersion = generalData('isOlderVersion');
             let billing_details;
             if (billingAddress) {
                 const address = toCartAddress({...billingAddress.address, recipient: billingAddress.name});
                 billing_details = getBillingDetailsFromAddress(address);
-                if (isOlderVersion) {
-                    response.meta.billingData = address;
-                } else {
-                    response.meta.billingAddress = {
-                        ...DEFAULT_BILLING_ADDRESS,
-                        ...address,
-                        email: currentData.current.email
-                    };
-                }
+                response.meta.billingAddress = {
+                    ...DEFAULT_BILLING_ADDRESS,
+                    ...address,
+                    email: currentData.current.email
+                };
             }
             if (shippingAddress) {
                 const address = toCartAddress({...shippingAddress.address, recipient: shippingAddress.name});
-                if (isOlderVersion) {
-                    response.meta.shippingData = {address};
-                } else {
-                    response.meta.shippingAddress = {
-                        ...DEFAULT_SHIPPING_ADDRESS,
-                        ...address
-                    }
+                response.meta.shippingAddress = {
+                    ...DEFAULT_SHIPPING_ADDRESS,
+                    ...address
                 }
             }
             // update the payment intent
@@ -130,7 +121,8 @@ export const useLink = (
                 console.log(error);
                 currentData.current.onError(getErrorMessage(error));
                 return {
-                    type: emitResponse.responseTypes.ERROR
+                    type: emitResponse.responseTypes.FAIL,
+                    ...response
                 }
             }
         });

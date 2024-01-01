@@ -34,6 +34,7 @@ const GooglePayButton = (
     const {onPaymentSetup} = eventRegistration;
     const exportedValues = useExportedValues();
     const width = getData('buttonStyle').buttonType === 'long' ? 390 : 375;
+
     const {setPaymentMethod} = useProcessPaymentIntent({
         getData,
         billing,

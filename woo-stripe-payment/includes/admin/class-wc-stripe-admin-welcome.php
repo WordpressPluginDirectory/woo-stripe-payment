@@ -6,18 +6,7 @@ class WC_Stripe_Admin_Welcome {
 
 	public static function output() {
 		wp_enqueue_script( 'updates' );
-		$data = rawurlencode( wp_json_encode( array(
-			'routes' => array(
-				'signup' => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->signup->rest_uri( 'contact' ) )
-			)
-		) ) );
-		wp_add_inline_script(
-			'wc-stripe-main-script',
-			"var wcStripeSignupParams = wcStripeSignupParams || JSON.parse( decodeURIComponent( '"
-			. esc_js( $data )
-			. "' ) );",
-			'before'
-		);
+
 		$slug      = self::PAYPAL_SLUG;
 		$installed = self::is_paypal_installed();
 		$plugins   = (object) array(

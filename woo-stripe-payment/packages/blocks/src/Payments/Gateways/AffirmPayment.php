@@ -14,19 +14,26 @@ class AffirmPayment extends \PaymentPlugins\Blocks\Stripe\Payments\AbstractStrip
 		}
 		$currency = get_woocommerce_currency();
 		$data     = array_merge( $data, [
-			'cartTotals'      => [
+			'cartTotals'         => [
 				'value' => wc_stripe_add_number_precision( $cart_total, $currency )
 			],
-			'currency'        => $currency,
-			'requirements'    => $this->payment_gateway->get_payment_method_requirements(),
-			'accountCountry'  => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
-			'messageOptions'  => [
+			'currency'           => $currency,
+			'requirements'       => $this->payment_gateway->get_payment_method_requirements(),
+			'accountCountry'     => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
+			'messageOptions'     => [
 				'logoColor' => $this->get_setting( "checkout_logo_color", 'primary' ),
 				'fontColor' => $this->get_setting( "checkout_font_color", 'black' ),
 				'fontSize'  => $this->get_setting( "checkout_font_size", '1em' ),
 				'textAlign' => $this->get_setting( "checkout_text_align", 'start' ),
 			],
-			'paymentSections' => $this->get_setting( 'payment_sections', [] )
+			'cartMessageOptions' => [
+				'logoColor' => $this->get_setting( "cart_logo_color", 'primary' ),
+				'fontColor' => $this->get_setting( "cart_font_color", 'black' ),
+				'fontSize'  => $this->get_setting( "cart_font_size", '1em' ),
+				'textAlign' => $this->get_setting( "cart_text_align", 'start' ),
+			],
+			'paymentSections'    => $this->get_setting( 'payment_sections', [] ),
+			'cartEnabled'        => \in_array( 'cart', $this->get_setting( 'payment_sections', [] ) )
 		] );
 
 
