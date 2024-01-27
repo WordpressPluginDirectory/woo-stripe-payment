@@ -42,19 +42,21 @@ const LinkCheckout = (
     }) => {
     const {billingAddress} = billing;
     const {email} = billingAddress;
-    const iconEnabled = getData('linkIconEnabled');
+    const popupEnabled = getData('popupEnabled');
     const linkIcon = getData('linkIcon');
 
-    useLink({
-        email,
-        eventRegistration,
-        onClick,
-        onSubmit,
-        onError,
-        activePaymentMethod,
-        emitResponse,
-        paymentStatus: props.paymentStatus
-    });
+    if (popupEnabled) {
+        useLink({
+            email,
+            eventRegistration,
+            onClick,
+            onSubmit,
+            onError,
+            activePaymentMethod,
+            emitResponse,
+            paymentStatus: props.paymentStatus
+        });
+    }
 
     useLinkIcon({enabled: linkIcon, email, icon: linkIcon});
 

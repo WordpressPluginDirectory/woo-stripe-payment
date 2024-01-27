@@ -19,6 +19,8 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 
 	public $synchronous = false;
 
+	protected $supports_save_payment_method = true;
+
 	public function __construct() {
 		$this->id                 = 'stripe_ach';
 		$this->tab_title          = __( 'ACH', 'woo-stripe-payment' );

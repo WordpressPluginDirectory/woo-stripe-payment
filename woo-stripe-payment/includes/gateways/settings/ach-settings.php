@@ -68,6 +68,15 @@ return array(
 		'description' => __( 'This is the status of the order once payment is complete. If <b>Default</b> is selected, then WooCommerce will set the order status automatically based on internal logic which states if a product is virtual and downloadable then status is set to complete. Products that require shipping are set to Processing. Default is the recommended setting as it allows standard WooCommerce code to process the order status.',
 			'woo-stripe-payment' ),
 	),
+	'save_card_enabled' => array(
+		'type'        => 'checkbox',
+		'value'       => 'yes',
+		'default'     => 'yes',
+		'title'       => __( 'Allow Save Payment', 'woo-stripe-payment' ),
+		'desc_tip'    => false,
+		'description' => __( 'If enabled, a checkbox will be available on the checkout page allowing your customers to save their payment method. The payment methods are stored securely in Stripe\'s vault and never touch your server. Note: if the cart contains a subscription, there will be no checkbox because the payment method will be saved automatically.',
+			'woo-stripe-payment' ),
+	),
 	'fee'               => array(
 		'title'       => __( 'ACH Fee', 'woo-stripe-payment' ),
 		'type'        => 'ach_fee',

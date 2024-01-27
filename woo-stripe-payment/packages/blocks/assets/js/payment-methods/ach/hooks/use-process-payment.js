@@ -9,7 +9,7 @@ export const useProcessPayment = (
         onCheckoutSuccess,
         emitResponse,
         paymentMethod,
-        billingAddress
+        billingAddress,
 
     }) => {
     const stripe = useStripe();
@@ -65,7 +65,11 @@ export const useProcessPayment = (
                     let result = await apiFetch({
                         url: getRoute('process/payment'),
                         method: 'POST',
-                        data: {order_id, order_key, stripe_ach_token_key: response.paymentIntent.payment_method}
+                        data: {
+                            order_id,
+                            order_key,
+                            stripe_ach_token_key: response.paymentIntent.payment_method
+                        }
                     });
                     if (result.messages) {
                         throw result.messages;

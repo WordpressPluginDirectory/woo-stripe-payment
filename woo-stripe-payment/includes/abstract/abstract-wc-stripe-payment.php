@@ -237,8 +237,7 @@ abstract class WC_Stripe_Payment {
 			'user_id'    => $order->get_user_id(),
 			'ip_address' => $order->get_customer_ip_address(),
 			'user_agent' => isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : 'unavailable',
-			'partner'    => 'PaymentPlugins',
-			'created'    => time()
+			'partner'    => 'PaymentPlugins'
 		);
 		$webhook_id = stripe_wc()->api_settings->get_option( 'webhook_id_' . wc_stripe_mode() );
 		if ( $webhook_id ) {

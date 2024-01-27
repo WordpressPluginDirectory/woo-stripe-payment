@@ -133,7 +133,7 @@ registerPaymentMethod({
     edit: <PaymentMethod content={CreditCardContent} getData={getData}/>,
     supports: {
         showSavedCards: getData('showSavedCards'),
-        showSaveOption: true,
+        showSaveOption: getData('showSaveOption'),
         features: getData('features')
     }
 })

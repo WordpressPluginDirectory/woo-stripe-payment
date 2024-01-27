@@ -1,10 +1,10 @@
-import {useState} from '@wordpress/element';
+import {useEffect} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
 import {Elements} from '@stripe/react-stripe-js';
-import {getSettings, initStripe as loadStripe} from '../util';
+import {ensureSuccessResponse, getSettings, initStripe as loadStripe} from '../util';
 import {PaymentMethodLabel, PaymentMethod} from '../../components/checkout';
 import SavedCardComponent from '../saved-card-component';
-import {useCreateLinkToken, useInitializePlaid, useProcessPayment} from './hooks';
+import {useProcessPayment} from './hooks';
 import {useProcessCheckoutError} from "../hooks";
 
 const getData = getSettings('stripe_ach_data');
@@ -16,6 +16,7 @@ const ACHPaymentContent = (
         emitResponse,
         onSubmit,
         billing,
+        shouldSavePayment,
         ...props
     }) => {
     const {
@@ -37,6 +38,20 @@ const ACHPaymentContent = (
         paymentMethod: getData('name'),
         billingAddress: billing.billingAddress
     });
+
+    useEffect(() => {
+        const unsubscribe = onPaymentSetup(() => {
+            return ensureSuccessResponse(emitResponse.responseTypes, {
+                meta: {
+                    paymentMethodData: {
+                        [`${getData('name')}_save_source_key`]: shouldSavePayment,
+                    }
+                }
+            });
+        });
+        return unsubscribe;
+    }, [onPaymentSetup, shouldSavePayment]);
+
     return (
         <div className={'wc-stripe-ach__container'}>
             <Mandate text={getData('mandateText')}/>
@@ -75,7 +90,7 @@ registerPaymentMethod({
     placeOrderButtonLabel: getData('placeOrderButtonLabel'),
     supports: {
         showSavedCards: getData('showSavedCards'),
-        showSaveOption: false,
+        showSaveOption: getData('showSaveOption'),
         features: getData('features')
     }
 })

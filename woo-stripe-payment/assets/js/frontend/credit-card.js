@@ -235,7 +235,7 @@
                             }
                             this.confirmedSetupIntent = result.setupIntent;
                             this.on_setup_intent_received(result.setupIntent);
-                        }.bind(this)).catch(function () {
+                        }.bind(this)).catch(function (error) {
                             this.unblock();
                         }.bind(this));
                     }.bind(this));
@@ -340,7 +340,7 @@
         }
         this.create_card_element();
         this.handle_create_account_change();
-        if (this.has_gateway_data() && this.can_create_setup_intent() && !this.client_secret && !this.is_payment_element_enabled()) {
+        if (this.has_gateway_data() && this.can_create_setup_intent() && !this.client_secret) {
             this.create_setup_intent();
         }
     }

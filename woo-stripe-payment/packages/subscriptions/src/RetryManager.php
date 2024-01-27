@@ -37,23 +37,36 @@ class RetryManager {
 	 */
 	public function should_retry( $order, $client, $result, $params ) {
 		$data = $result->get_error_data();
-		if ( $this->has_retries() && isset( $data['param'], $params['customer'], $params['payment_method'] ) && 'payment_method' === $data['param'] ) {
-			// check if the payment method's customer doesn't match the customer associated with the subscription
-			$payment_method = $client->paymentMethods->retrieve( $params['payment_method'] );
-			if ( ! is_wp_error( $payment_method ) ) {
-				if ( $payment_method->customer !== $params['customer'] ) {
-					$order->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, $payment_method->customer );
-					$order->save();
-					$subscription = wc_get_order( $order->get_meta( '_subscription_renewal' ) );
-					if ( $subscription ) {
-						$subscription->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, $payment_method->customer );
-						$subscription->save();
-					}
-					wc_stripe_log_info( sprintf( 'Retrying payment for renewal order %s. Reason: %s', $order->get_id(), $result->get_error_message() ) );
-					$this->retries += 1;
+		if ( $this->has_retries() ) {
+			if ( isset( $data['param'], $params['customer'], $params['payment_method'] ) && 'payment_method' === $data['param'] ) {
+				// check if the payment method's customer doesn't match the customer associated with the subscription
+				$payment_method = $client->paymentMethods->retrieve( $params['payment_method'] );
+				if ( ! is_wp_error( $payment_method ) ) {
+					if ( $payment_method->customer !== $params['customer'] ) {
+						$order->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, $payment_method->customer );
+						$order->save();
+						$subscription = wc_get_order( $order->get_meta( '_subscription_renewal' ) );
+						if ( $subscription ) {
+							$subscription->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, $payment_method->customer );
+							$subscription->save();
+						}
+						wc_stripe_log_info( sprintf( 'Retrying payment for renewal order %s. Reason: %s', $order->get_id(), $result->get_error_message() ) );
+						$this->retries += 1;
 
-					return true;
+						return true;
+					}
 				}
+			} elseif ( isset( $data['type'], $data['message'] ) && $data['type'] === 'invalid_request_error' && strpos( $data['message'], 'payment_method_types for this PaymentIntent to include "link"' ) !== false ) {
+				$this->retries += 1;
+				add_filter( 'wc_stripe_payment_intent_args', function ( $args ) {
+					if ( \is_array( $args['payment_method_types'] ) && ! \in_array( 'link', $args['payment_method_types'] ) ) {
+						$args['payment_method_types'][] = 'link';
+					}
+
+					return $args;
+				}, 10 );
+
+				return true;
 			}
 		}
 

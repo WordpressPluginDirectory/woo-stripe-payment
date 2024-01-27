@@ -145,6 +145,18 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 					)
 				)
 			),
+			'link_popup'             => array(
+				'title'             => __( 'Display Link popup if customer is eligible for Link.', 'woo-stripe-payment' ),
+				'type'              => 'checkbox',
+				'default'           => 'no',
+				'value'             => 'yes',
+				'description'       => __( 'After the customer enters their billing email, if the customer can use Link, a popup will appear.', 'woo-stripe-payment' ),
+				'custom_attributes' => array(
+					'data-show-if' => array(
+						'link_enabled' => true
+					)
+				)
+			),
 			'link_autoload'          => array(
 				'title'             => __( 'Launch link on page load', 'woo-stripe-payment' ),
 				'type'              => 'checkbox',
@@ -153,7 +165,8 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description'       => __( 'If enabled and the email address is already populated, the plugin will attempt to launch Link  on the checkout page.', 'woo-stripe-payment' ),
 				'custom_attributes' => array(
 					'data-show-if' => array(
-						'link_enabled' => true
+						'link_enabled' => true,
+						'link_popup'   => true
 					)
 				)
 			),

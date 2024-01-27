@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay, ideal, sepa, sofo
 Requires at least: 3.0.1
 Tested up to: 6.4
 Requires PHP: 5.6
-Stable tag: 3.3.55
+Stable tag: 3.3.56
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,15 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.56 - 01/26/24 =
+* Fixed - Stripe payment form not submitting if 100% off coupon used on subscription.
+* Fixed - Compatibility with CheckoutWC side-cart and GPay
+* Added - Add Link to payment_method_types array if needed on recurring payment
+* Added - Option on Advanced Settings page where the Link popup can be enabled/disabled
+* Added - Disable pay for order by phone if order is not created yet.
+[https://wordpress.org/support/topic/conflict-with-sequential-order-numbers-and-admin-phone-order-feature/](https://wordpress.org/support/topic/conflict-with-sequential-order-numbers-and-admin-phone-order-feature/)
+* Added - Option to save ACH payment method on checkout page
+* Updated - Removed the "created" key from payment intent metadata since it's redundant. The Payment Intent object already has the creation time as a property.
 = 3.3.55 - 01/01/24 =
 * Added - Support for Afterpay, Affirm, and Klarna messaging on the Cart Block
 * Added - Clearpay icon so merchants can choose which icon appears on checkout page if they're not relying on the messaging element

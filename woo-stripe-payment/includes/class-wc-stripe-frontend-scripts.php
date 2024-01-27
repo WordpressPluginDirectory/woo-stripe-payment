@@ -60,7 +60,6 @@ class WC_Stripe_Frontend_Scripts {
 			foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
 				if ( $gateway instanceof WC_Payment_Gateway_Stripe && $gateway->is_available() && $gateway->mini_cart_enabled() ) {
 					$gateway->enqueue_frontend_scripts( 'mini_cart' );
-					break;
 				}
 			}
 		}

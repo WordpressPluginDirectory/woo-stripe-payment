@@ -116,6 +116,25 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 		$update_subscription = false;
 		$subscription        = null;
 		$args                = $this->get_payment_intent_args( $order );
+		$intent_id           = $order->get_meta( WC_Stripe_Constants::PAYMENT_INTENT_ID );
+
+		// if the renewal order already has an intent_id, this could be a duplicate request. If the intent has already succeeded,
+		// don't continue with the payment.
+		if ( $intent_id ) {
+			$intent = $this->gateway->mode( $order )->paymentIntents->retrieve( $intent_id );
+			if ( ! is_wp_error( $intent ) ) {
+				if ( in_array( $intent->status, array( 'succeeded', 'requires_capture', 'processing' ) ) ) {
+					if ( isset( $intent->metadata['order_id'] ) && absint( $intent->metadata['order_id'] ) === $order->get_id() ) {
+						$charge = isset( $intent->charges->data[0] ) ? $intent->charges->data[0] : null;
+
+						return (object) array(
+							'complete_payment' => true,
+							'charge'           => $charge,
+						);
+					}
+				}
+			}
+		}
 
 		// unset in case 3rd party code adds this attribute.
 		unset( $args['setup_future_usage'] );

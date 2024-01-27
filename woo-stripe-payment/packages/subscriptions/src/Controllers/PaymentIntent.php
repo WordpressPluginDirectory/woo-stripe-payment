@@ -39,6 +39,8 @@ class PaymentIntent {
 				$bool = true;
 			} elseif ( $this->request->is_order_pay_with_free_trial() ) {
 				$bool = true;
+			} elseif ( $this->request->is_checkout_with_free_coupon() ) {
+				$bool = true;
 			}
 		}
 

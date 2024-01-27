@@ -19,6 +19,15 @@ class FrontendRequests {
 		return false;
 	}
 
+	public function is_checkout_with_free_coupon() {
+		if ( WC()->cart ) {
+			return is_checkout() && ! is_checkout_pay_page() && WC()->cart->get_total( 'edit' ) == 0
+			       && \WC_Subscriptions_Cart::cart_contains_subscription();
+		}
+
+		return false;
+	}
+
 	public function is_order_pay_with_free_trial() {
 		if ( is_checkout_pay_page() ) {
 			global $wp;

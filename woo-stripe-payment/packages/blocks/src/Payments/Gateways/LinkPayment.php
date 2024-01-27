@@ -37,7 +37,7 @@ class LinkPayment extends AbstractStripePayment {
 	}
 
 	public function add_stripe_params( $data ) {
-		if ( $this->link->is_active() ) {
+		if ( $this->link->is_active() && $this->link->is_popup_enabled() ) {
 			$data['stripeParams']['betas'][] = 'link_autofill_modal_beta_1';
 		}
 
@@ -48,6 +48,7 @@ class LinkPayment extends AbstractStripePayment {
 		return [
 			'name'            => $this->name,
 			'launchLink'      => $this->link->is_autoload_enabled(),
+			'popupEnabled'    => $this->link->is_popup_enabled(),
 			'linkIconEnabled' => $this->link->is_icon_enabled(),
 			'linkIcon'        => $this->link->is_icon_enabled()
 				? \wc_stripe_get_template_html( "link/link-icon-{$this->link->get_settings()->get_option('link_icon')}.php" )

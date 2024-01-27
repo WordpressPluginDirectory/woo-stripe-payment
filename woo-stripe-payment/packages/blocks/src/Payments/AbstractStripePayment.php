@@ -70,7 +70,7 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 		return array(
 			'name'                   => $this->get_name(),
 			'title'                  => $this->get_setting( 'title_text' ),
-			'showSaveOption'         => \in_array( 'tokenization', $this->get_supported_features() ),
+			'showSaveOption'         => \in_array( 'tokenization', $this->get_supported_features() ) && wc_string_to_bool( $this->get_setting( 'save_card_enabled', true ) ),
 			'showSavedCards'         => \in_array( 'tokenization', $this->get_supported_features() ),
 			'features'               => $this->get_supported_features(),
 			'expressCheckoutEnabled' => $this->is_express_checkout_enabled(),

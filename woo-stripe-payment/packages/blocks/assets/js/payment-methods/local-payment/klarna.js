@@ -111,13 +111,17 @@ if (isCartPage() && getData('cartEnabled')) {
             paymentMethodTypes: ['klarna'],
             ...getData('messageOptions')
         };
-        return (
-            <TotalsWrapper>
-                <div className={'wc-block-components-totals-item wc-stripe-cart-message-container stripe_klarna'}>
-                    <PaymentMethodMessagingElement options={options}/>
-                </div>
-            </TotalsWrapper>
-        )
+
+        if (options.currency?.length) {
+            return (
+                <TotalsWrapper>
+                    <div className={'wc-block-components-totals-item wc-stripe-cart-message-container stripe_klarna'}>
+                        <PaymentMethodMessagingElement options={options}/>
+                    </div>
+                </TotalsWrapper>
+            )
+        }
+        return null;
     }
     const render = () => {
         const Component = (props) => (

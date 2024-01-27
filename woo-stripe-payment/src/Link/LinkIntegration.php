@@ -68,6 +68,7 @@ class LinkIntegration {
 		add_filter( 'wc_stripe_localize_script_wc-stripe', [ $this, 'add_script_params' ], 10, 2 );
 		add_filter( 'wc_stripe_payment_intent_args', [ $this, 'add_payment_method_type' ], 10, 2 );
 		add_filter( 'wc_stripe_create_setup_intent_params', [ $this, 'add_setup_intent_params' ], 10, 2 );
+		add_filter( 'wc_stripe_setup_intent_params', [ $this, 'add_setup_intent_params_v2' ], 10, 3 );
 		add_filter( 'woocommerce_checkout_fields', [ $this, 'add_billing_email_priority' ] );
 		add_filter( 'wc_stripe_payment_intent_confirmation_args', [ $this, 'add_confirmation_args' ], 10, 3 );
 	}
@@ -110,6 +111,7 @@ class LinkIntegration {
 			$icon = $this->settings->get_option( 'link_icon', 'dark' );
 			$this->data_api->print_data( self::DATA_KEY, [
 				'launchLink'      => $this->is_autoload_enabled(),
+				'popupEnabled'    => $this->is_popup_enabled(),
 				'linkIconEnabled' => $this->is_icon_enabled(),
 				'linkIcon'        => $this->is_icon_enabled() ? wc_stripe_get_template_html( "link/link-icon-{$icon}.php" ) : null,
 				'elementOptions'  => array_merge( PaymentIntent::instance()->get_element_options(), [
@@ -123,7 +125,9 @@ class LinkIntegration {
 
 	public function add_script_params( $data, $name ) {
 		if ( $name === 'wc_stripe_params_v3' ) {
-			$data['stripeParams']['betas'][] = 'link_autofill_modal_beta_1';
+			if ( $this->is_popup_enabled() ) {
+				$data['stripeParams']['betas'][] = 'link_autofill_modal_beta_1';
+			}
 		}
 
 		return $data;
@@ -155,6 +159,10 @@ class LinkIntegration {
 		return $this->settings->is_active( 'link_autoload' );
 	}
 
+	public function is_popup_enabled() {
+		return $this->settings->is_active( 'link_popup' );
+	}
+
 	public function is_icon_enabled() {
 		return 'no' !== $this->settings->get_option( 'link_icon', 'dark' );
 	}
@@ -169,24 +177,7 @@ class LinkIntegration {
 	public function add_confirmation_args( $args, $intent, $order ) {
 		if ( isset( $intent->payment_method->type ) ) {
 			if ( $intent->payment_method->type === 'link' ) {
-				$ip_address = $order->get_customer_ip_address();
-				$user_agent = $order->get_customer_user_agent();
-				if ( ! $ip_address ) {
-					$ip_address = \WC_Geolocation::get_external_ip_address();
-				}
-				if ( ! $user_agent ) {
-					$user_agent = 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' );
-				}
-				$args['mandate_data'] = [
-					'customer_acceptance' => [
-						'type'   => 'online',
-						'online' => [
-							'ip_address' => $ip_address,
-							'user_agent' => $user_agent
-						]
-					]
-				];
-
+				$this->add_mandate_data( $args, $order );
 				/**
 				 * Stripe does not support the ability to capture authorized payments when level3 data is passed,
 				 * so we need to unset level3 if it has been previously added during payment intent creation.
@@ -212,6 +203,37 @@ class LinkIntegration {
 		}
 
 		return $args;
+	}
+
+	public function add_setup_intent_params_v2( $args, $order, $payment_method ) {
+		if ( \in_array( $payment_method->id, $this->supported_payment_methods ) ) {
+			if ( $this->is_active() ) {
+				$args['payment_method_types'][] = 'link';
+				$this->add_mandate_data( $args, $order );
+			}
+		}
+
+		return $args;
+	}
+
+	private function add_mandate_data( &$args, $order ) {
+		$ip_address = $order->get_customer_ip_address();
+		$user_agent = $order->get_customer_user_agent();
+		if ( ! $ip_address ) {
+			$ip_address = \WC_Geolocation::get_external_ip_address();
+		}
+		if ( ! $user_agent ) {
+			$user_agent = 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' );
+		}
+		$args['mandate_data'] = [
+			'customer_acceptance' => [
+				'type'   => 'online',
+				'online' => [
+					'ip_address' => $ip_address,
+					'user_agent' => $user_agent
+				]
+			]
+		];
 	}
 
 }
