@@ -408,6 +408,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 	public function enqueue_cart_scripts( $scripts ) {
 		$scripts->assets_api->register_script( 'wc-stripe-afterpay-cart', 'assets/build/afterpay-message.js' );
 		wp_enqueue_script( 'wc-stripe-afterpay-cart' );
+		$this->enqueue_payment_method_styles();
 		$scripts->localize_script( 'wc-stripe-afterpay-cart', $this->get_localized_params( 'cart' ) );
 	}
 

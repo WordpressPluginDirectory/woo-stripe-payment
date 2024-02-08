@@ -328,7 +328,7 @@
                     var options = JSON.parse(window.atob(decodeURIComponent(data.fragments['.wc-stripe-element-options'])));
                     // if mode has changed, update elements
                     if (this.params.elementOptions.mode !== options.mode) {
-                        this.params.elementOptions.mode = options.mode;
+                        this.params.elementOptions = Object.assign(this.params.elementOptions, options);
                         this.params.cardFormType = 'payment';
                         this.elements = this.create_stripe_elements();
                         this.setup_card();

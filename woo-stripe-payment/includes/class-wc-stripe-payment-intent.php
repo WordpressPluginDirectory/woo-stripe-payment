@@ -300,8 +300,15 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 		$this->add_level3_order_data( $args, $order );
 
 		$args['capture_method'] = $this->get_payment_method_charge_type();
+
+		$args['payment_method_types'][] = $this->payment_method->get_payment_method_type();
+
 		if ( ( $statement_descriptor = stripe_wc()->advanced_settings->get_option( 'statement_descriptor' ) ) ) {
-			$args['statement_descriptor'] = WC_Stripe_Utils::sanitize_statement_descriptor( $statement_descriptor );
+			if ( \in_array( 'card', $args['payment_method_types'] ) ) {
+				$args['statement_descriptor_suffix'] = WC_Stripe_Utils::sanitize_statement_descriptor( $statement_descriptor );
+			} else {
+				$args['statement_descriptor'] = WC_Stripe_Utils::sanitize_statement_descriptor( $statement_descriptor );
+			}
 		}
 		if ( $new ) {
 			$args['confirmation_method'] = $this->payment_method->get_confirmation_method( $order );
@@ -342,8 +349,6 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 		) {
 			$args['setup_future_usage'] = 'off_session';
 		}
-
-		$args['payment_method_types'][] = $this->payment_method->get_payment_method_type();
 
 		// if there is a payment method attached already, then ensure the payment_method_type
 		// associated with that attached payment_method is included.

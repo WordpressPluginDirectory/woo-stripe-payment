@@ -253,6 +253,7 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	public function enqueue_cart_scripts( $scripts ) {
 		$scripts->assets_api->register_script( 'wc-stripe-klarna-cart', 'assets/build/klarna-message.js' );
 		wp_enqueue_script( 'wc-stripe-klarna-cart' );
+		$this->enqueue_payment_method_styles();
 		$scripts->localize_script( 'wc-stripe-klarna-cart', $this->get_localized_params() );
 	}
 

@@ -56,7 +56,7 @@ return array(
 		'value'       => '',
 		'default'     => 'type_ending_in',
 		'desc_tip'    => true,
-		'description' => __( 'This option allows you to customize how the credit card will display for your customers on orders, subscriptions, etc.' ),
+		'description' => __( 'This option allows you to customize how the payment method will display for your customers on orders, subscriptions, etc.' ),
 	),
 	'order_status'      => array(
 		'type'        => 'select',

@@ -1,0 +1,27 @@
+{
+  "apiVersion": 2,
+  "name": "wc-stripe/link-block",
+  "version": "1.0.0",
+  "title": "Stripe Link block",
+  "category": "woocommerce",
+  "description": "Adds a Stripe Link integration to the checkout block",
+  "supports": {
+    "html": false,
+    "align": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "parent": [
+    "woocommerce/checkout-fields-block"
+  ],
+  "attributes": {
+    "lock": {
+      "type": "object",
+      "default": {
+        "remove": true,
+        "move": true
+      }
+    }
+  },
+  "textdomain": "woo-stripe-payment"
+}
