@@ -260,6 +260,17 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 	public function can_update_payment_intent( $order, $intent = null ) {
 		$result = true;
 		if ( ! $this->update_payment_intent && ( defined( WC_Stripe_Constants::WOOCOMMERCE_STRIPE_ORDER_PAY ) || ! is_checkout() || defined( WC_Stripe_Constants::REDIRECT_HANDLER ) || defined( WC_Stripe_Constants::PROCESSING_PAYMENT ) ) ) {
+			if ( defined( WC_Stripe_Constants::WOOCOMMERCE_STRIPE_ORDER_PAY ) ) {
+				/**
+				 * The order is being paid for via the pay for order page. This intent likely requires_payment_method because
+				 * the initial payment attempt failed. Make sure the intent is updated with the payment method being used in this request.
+				 */
+				if ( $intent && $intent->status === 'requires_payment_method' ) {
+					$this->set_update_payment_intent( true );
+
+					return $this->can_update_payment_intent( $order, $intent );
+				}
+			}
 			$result = false;
 		} else {
 			$intent = ! $intent ? $order->get_meta( WC_Stripe_Constants::PAYMENT_INTENT ) : $intent;

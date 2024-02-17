@@ -608,13 +608,13 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param WC_Order $order
 	 */
 	public function capture_charge( $amount, $order ) {
-		$result = $this->gateway->mode( wc_stripe_order_mode( $order ) )->charges->retrieve( $order->get_transaction_id() );
+		$charge = $this->gateway->mode( wc_stripe_order_mode( $order ) )->charges->retrieve( $order->get_transaction_id() );
 
-		if ( is_wp_error( $result ) ) {
+		if ( is_wp_error( $charge ) ) {
 			return;
 		} else {
-			if ( ! $result->captured ) {
-				$result = $this->payment_object->capture_charge( $amount, $order, $result );
+			if ( ! $charge->captured ) {
+				$result = $this->payment_object->capture_charge( $amount, $order, $charge );
 
 				if ( ! is_wp_error( $result ) ) {
 					remove_action( 'woocommerce_order_status_completed', 'wc_stripe_order_status_completed' );
@@ -631,6 +631,13 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 					);
 				} else {
 					$order->add_order_note( sprintf( __( 'Error capturing charge in Stripe. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
+
+					/**
+					 * @var WC_Order                   $order
+					 * @var \Stripe\Charge             $charge
+					 * @Var \WC_Payment_Gateway_Stripe $this
+					 */
+					$result = apply_filters( 'wc_stripe_capture_charge_failed', $result, $order, $amount, $this );
 				}
 			}
 		}

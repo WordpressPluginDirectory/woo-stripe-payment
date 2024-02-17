@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay, ideal, sepa, sofo
 Requires at least: 3.0.1
 Tested up to: 6.4
 Requires PHP: 5.6
-Stable tag: 3.3.57
+Stable tag: 3.3.58
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,9 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.58 - 02/16/24 =
+* Added - Filter wc_stripe_capture_charge_failed so merchants can perform custom actions after a failed capture of an authorized payment
+* Fixed - On pay for order page, resolved error if card triggered insufficient funds error and then customer used a saved card instead
 = 3.3.57 - 02/07/24 =
 * Updated - Improved compatibility with FunnelKit order bump when cart total is $0
 * Updated - For card payments, replaced "statement_descriptor" property with "statement_descriptor_suffix". [Stripe announcement](https://support.stripe.com/questions/use-of-the-statement-descriptor-parameter-on-paymentintents-for-card-charges)
