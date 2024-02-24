@@ -20,6 +20,7 @@ const stripe = loadStripe(publishableKey, params);
 
 
 const getData = getSettings('stripe_cc_data');
+const i18n = getData('i18n');
 
 const isSetupCard = total => 0 >= total;
 
@@ -100,6 +101,7 @@ const CardElement = ({options, ...props}) => {
         <>
             <PaymentElement options={elementOptions} onChange={onChange}/>
             {installmentsActive && <Installments
+                i18n={i18n}
                 paymentMethodName={getData('name')}
                 stripe={stripe}
                 cardFormComplete={formComplete}

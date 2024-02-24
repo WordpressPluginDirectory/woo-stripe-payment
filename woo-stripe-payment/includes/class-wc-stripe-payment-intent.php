@@ -340,6 +340,7 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 				 * The statement_descriptor can't be updated when the intent's status is requires_action
 				 */
 				unset( $args['statement_descriptor'] );
+				unset( $args['statement_descriptor_suffix'] );
 			}
 		}
 

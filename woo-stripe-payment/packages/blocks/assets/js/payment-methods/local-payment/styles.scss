@@ -148,6 +148,16 @@
       }
     }
 
+    &.stripe_swish {
+      img {
+        &.wc-block-components-payment-method-icon--stripe_swish {
+          height: 28px;
+          width: 90px;
+          max-height: 28px;
+        }
+      }
+    }
+
     .wc-stripe-affirm-message-container,
     .wc-stripe-afterpay-message-container {
       display: flex;

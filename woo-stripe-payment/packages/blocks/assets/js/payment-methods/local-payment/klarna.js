@@ -20,7 +20,7 @@ const KlarnaPaymentMethod = (props) => {
     return (
         <>
             <LocalPaymentIntentContent {...props}/>
-            <OffsiteNotice paymentText={getData('title')} buttonText={getData('placeOrderButtonLabel')}/>
+            <OffsiteNotice text={getData('i18n').offsite}/>
         </>
     )
 }

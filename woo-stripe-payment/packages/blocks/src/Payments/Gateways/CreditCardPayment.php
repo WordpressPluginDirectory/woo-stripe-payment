@@ -97,4 +97,20 @@ class CreditCardPayment extends AbstractStripePayment {
 		return $this->get_setting( 'form_type' ) === 'payment';
 	}
 
+	protected function get_script_translations() {
+		return [
+			'labels'           => [
+				'number' => __( 'Card Number', 'woo-stripe-payment' ),
+				'exp'    => __( 'Expiration', 'woo-stripe-payment' ),
+				'cvv'    => __( 'CVV', 'woo-stripe-payment' )
+			],
+			'unsupported_form' => __( 'Unsupported custom form. Please choose another custom form option in the Credit Card Settings.', 'woo-stripe-payment' ),
+			'installments'     => [
+				'pay'           => __( 'Pay in installments:', 'woo-stripe-payment' ),
+				'loading'       => __( 'Loading installments...', 'woo-stripe-payment' ),
+				'complete_form' => __( 'Fill out card form for eligibility.', 'woo-stripe-payment' )
+			]
+		];
+	}
+
 }

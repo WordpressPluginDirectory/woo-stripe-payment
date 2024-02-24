@@ -36,7 +36,8 @@ abstract class AbstractStripeLocalPayment extends AbstractStripePayment {
 			'isAdmin'               => is_admin(),
 			'returnUrl'             => $this->get_source_return_url(),
 			'paymentType'           => $this->payment_method->local_payment_type,
-			'locale'                => str_replace( '_', '-', substr( get_locale(), 0, 5 ) )
+			'locale'                => str_replace( '_', '-', substr( get_locale(), 0, 5 ) ),
+			'i18n'                  => $this->get_script_translations()
 		);
 	}
 
@@ -52,6 +53,18 @@ abstract class AbstractStripeLocalPayment extends AbstractStripePayment {
 		return add_query_arg( array(
 			'_stripe_local_payment' => $this->name
 		), wc_get_checkout_url() );
+	}
+
+	protected function get_script_translations() {
+		return [
+			'offsite'           => sprintf(
+				__( 'After clicking "%1$s", you will be redirected to %2$s to complete your purchase securely', 'woo-stripe-payment' ),
+				$this->payment_method->order_button_text,
+				$this->payment_method->get_title()
+			),
+			'empty_data'        => __( 'Please enter your payment info before proceeding.', 'woo-stripe-payment' ),
+			'payment_cancelled' => __( 'Payment has been cancelled.', 'woo-stripe-payment' )
+		];
 	}
 
 }

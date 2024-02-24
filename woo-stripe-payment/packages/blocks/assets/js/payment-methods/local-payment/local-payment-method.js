@@ -128,7 +128,8 @@ export const LocalPaymentIntentMethod = (
             emitResponse,
             component,
             shouldSavePayment,
-            paymentMethodName: getData('name')
+            paymentMethodName: getData('name'),
+            msg: getData('i18n').empty_data
         }
     );
 

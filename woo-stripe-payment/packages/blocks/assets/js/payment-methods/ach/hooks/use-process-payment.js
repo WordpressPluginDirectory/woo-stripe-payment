@@ -1,14 +1,15 @@
 import {useEffect, useRef, useCallback} from '@wordpress/element';
 import {useStripe} from '@stripe/react-stripe-js';
-import {ensureSuccessResponse, ensureErrorResponse, isNextActionRequired, handleCardAction, getRoute, StripeError} from "../../util";
+import {ensureSuccessResponse, ensureErrorResponse, isNextActionRequired, getRoute, getSettings} from "../../util";
 import apiFetch from "@wordpress/api-fetch";
-import {__} from '@wordpress/i18n';
+
+const getData = getSettings('stripe_ach_data');
+const i18n = getData('i18n');
 
 export const useProcessPayment = (
     {
         onCheckoutSuccess,
         emitResponse,
-        paymentMethod,
         billingAddress,
 
     }) => {
@@ -84,7 +85,7 @@ export const useProcessPayment = (
             } else if (response.paymentIntent.status === 'requires_payment_method') {
                 return {
                     type: emitResponse.responseTypes.FAIL,
-                    message: __('ACH payment has been cancelled', 'woo-stripe-payment'),
+                    message: i18n.ach_payment_cancelled,
                     messageContext: emitResponse.noticeContexts.PAYMENTS,
                     retry: true
                 }

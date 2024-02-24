@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from '@wordpress/element';
 import {ensureErrorResponse} from "../../util";
-import {__} from "@wordpress/i18n";
 
 export const useValidateCheckout = (
     {
@@ -9,7 +8,7 @@ export const useValidateCheckout = (
         component = null,
         shouldSavePayment = false,
         paymentMethodName = '',
-        msg = __('Please enter your payment info before proceeding.', 'woo-stripe-payment')
+        msg = ''
     }) => {
     const [isValid, setIsValid] = useState(false);
     const currentData = useRef({});
@@ -37,7 +36,6 @@ export const useValidateCheckout = (
     }, [
         subscriber,
         isValid,
-        setIsValid,
         component
     ]);
     return {isValid, setIsValid};

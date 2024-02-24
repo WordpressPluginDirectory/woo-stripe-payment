@@ -1,6 +1,5 @@
 import {useState, useEffect, useRef} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
-import {sprintf, __} from '@wordpress/i18n';
 import {
     ensureErrorResponse,
     ensureSuccessResponse,
@@ -14,8 +13,10 @@ import {canMakePayment} from "../local-payment-method";
 import {Elements, useStripe} from "@stripe/react-stripe-js";
 import InputCodes from "./input-codes";
 import Timer from './timer';
+import {useProcessCheckoutError} from "../../hooks";
 
 const getData = getSettings('stripe_blik_data');
+const i18n = getData('i18n');
 
 const BLIKPaymentMethod = (props) => {
     return (
@@ -32,8 +33,9 @@ const PaymentMethodContent = (props) => {
     const {emitResponse} = props;
     const {
         onPaymentSetup,
+        onCheckoutFail,
         onCheckoutSuccess,
-        onCheckoutValidationBeforeProcessing
+        onCheckoutValidation
     } = eventRegistration;
     const [codes, setCodes] = useState([]);
     const stripe = useStripe();
@@ -52,6 +54,12 @@ const PaymentMethodContent = (props) => {
         }, {});
         return response;
     }
+
+    useProcessCheckoutError({
+        emitResponse,
+        subscriber: onCheckoutFail,
+        messageContext: emitResponse.noticeContexts.PAYMENTS
+    });
 
     useEffect(() => {
         const unsubscribe = onPaymentSetup(() => {
@@ -74,24 +82,21 @@ const PaymentMethodContent = (props) => {
     ])
 
     useEffect(() => {
-        const unsubscribe = onCheckoutValidationBeforeProcessing(() => {
+        const unsubscribe = onCheckoutValidation(() => {
             const {activePaymentMethod} = currentData.current;
             if (getData('name') === activePaymentMethod) {
                 if (codes.length < 6) {
-                    return ensureErrorResponse(
-                        emitResponse.responseTypes,
-                        __('Please enter your 6-digit BLIK code.', 'woo-stripe-payment'),
-                        {
-                            messageContext: emitResponse.noticeContexts.PAYMENTS
-                        }
-                    );
+                    return {
+                        errorMessage: i18n.enter_blik_code,
+                        context: emitResponse.noticeContexts.PAYMENTS
+                    }
                 }
             }
         });
         return unsubscribe;
     }, [
         codes,
-        onCheckoutValidationBeforeProcessing
+        onCheckoutValidation
     ]);
 
     useEffect(() => {
@@ -147,8 +152,8 @@ const PaymentMethodContent = (props) => {
     return (
         <>
             <Instructions/>
-            {!showTimer && <InputCodes onComplete={codes => setCodes(codes)}/>}
-            {showTimer && <Timer onTimeout={() => setShowTimer(false)}/>}
+            {!showTimer && <InputCodes onComplete={codes => setCodes(codes)} i18n={getData('i18n')}/>}
+            {showTimer && <Timer onTimeout={() => setShowTimer(false)} i18n={getData('i18n')}/>}
         </>
     )
 }
@@ -156,9 +161,9 @@ const PaymentMethodContent = (props) => {
 const Instructions = () => {
     return (
         <ol>
-            <li>{__('Request your 6-digit code from your banking application.', 'woo-stripe-payment')}</li>
-            <li dangerouslySetInnerHTML={{__html: sprintf(__('Enter the code into the input fields below. Click %1$s once you have entered the code.', 'woo-stripe-payment'), '<b>' + getData('placeOrderButtonLabel') + '</b>')}}/>
-            <li>{__('You will receive a notification on your mobile device asking you to authorize the payment.', 'woo-stripe-payment')}</li>
+            <li>{getData('i18n').step1}</li>
+            <li dangerouslySetInnerHTML={{__html: getData('i18n').step2}}/>
+            <li>{getData('i18n').step3}</li>
         </ol>
     )
 }

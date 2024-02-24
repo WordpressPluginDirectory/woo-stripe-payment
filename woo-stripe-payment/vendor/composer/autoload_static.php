@@ -109,6 +109,7 @@ class ComposerStaticInit9b549001b71377fbb03ee2f7f7624534
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PromptPayPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/PromptPayPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SepaPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SepaPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SofortPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SofortPayment.php',
+        'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SwishPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SwishPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\WeChatPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/WeChatPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\MagicPaymentMethod' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/MagicPaymentMethod.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\PaymentsApi' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/PaymentsApi.php',

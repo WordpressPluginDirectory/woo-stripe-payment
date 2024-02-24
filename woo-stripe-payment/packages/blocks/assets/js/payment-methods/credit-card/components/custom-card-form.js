@@ -1,7 +1,6 @@
 import {getCreditCardForm} from "../../util";
 import {cloneElement, useRef, useCallback, useEffect, useState} from '@wordpress/element';
 import {useElements, CardNumberElement, CardExpiryElement, CardCvcElement} from '@stripe/react-stripe-js';
-import {sprintf, __} from '@wordpress/i18n';
 import {useBreakpointWidth} from "../../hooks";
 
 const classes = {
@@ -80,7 +79,7 @@ const CustomCardForm = (
     if (!CardForm) {
         return (
             <div className='wc-stripe-custom-form-error'>
-                <p>{sprintf(__('%s is not a valid blocks Stripe custom form. Please choose another custom form option in the Credit Card Settings.', 'woo-stripe-payment'), getData('customFormLabels')[id])}</p>
+                <p>{getData('i18n').unsupported_form}</p>
             </div>
         )
     }
@@ -90,7 +89,8 @@ const CustomCardForm = (
                 postalCodeEnabled,
                 options,
                 onChange,
-                CardIcon: <CardIcon type={cardType} src={getCardIconSrc(cardType)}/>
+                CardIcon: <CardIcon type={cardType} src={getCardIconSrc(cardType)}/>,
+                i18n: getData('i18n')
             })}
         </div>
     )

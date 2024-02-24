@@ -4,7 +4,7 @@ import {PaymentMethod, PaymentMethodLabel} from "../../components/checkout";
 import {canMakePayment} from "./local-payment-method";
 import {ensureErrorResponse, getBillingDetailsFromAddress, getSettings, initStripe as loadStripe, isNextActionRequired, StripeError} from "../util";
 import {Elements, useStripe} from "@stripe/react-stripe-js";
-import {__, sprintf} from '@wordpress/i18n';
+import {useProcessCheckoutError} from "../hooks";
 
 const getData = getSettings('stripe_promptpay_data');
 
@@ -20,7 +20,8 @@ const PaymentMethodContent = (props) => {
     const {eventRegistration, billing, activePaymentMethod} = props;
     const {emitResponse} = props;
     const {
-        onCheckoutSuccess
+        onCheckoutSuccess,
+        onCheckoutFail
     } = eventRegistration;
 
     const currentData = useRef({billing, activePaymentMethod});
@@ -32,6 +33,11 @@ const PaymentMethodContent = (props) => {
         billing,
         activePaymentMethod
     ]);
+
+    useProcessCheckoutError({
+        emitResponse,
+        subscriber: onCheckoutFail
+    });
 
     useEffect(() => {
         const unsubscribe = onCheckoutSuccess(async ({redirectUrl}) => {
@@ -51,7 +57,7 @@ const PaymentMethodContent = (props) => {
                             throw new StripeError(result.error);
                         }
                         if (result.paymentIntent.status === 'requires_action') {
-                            throw __('PromptPay payment cancelled.', 'woo-stripe-payment');
+                            throw getData('i18n').payment_cancelled;
                         }
                         if (result.paymentIntent.status === 'requires_payment_method') {
                             throw {
@@ -84,13 +90,9 @@ const PaymentMethodContent = (props) => {
 const Instructions = () => {
     return (
         <ol>
-            <li dangerouslySetInnerHTML={{__html: sprintf(__('Click %1$s and you will be shown a QR code.', 'woo-stripe-payment'), '<b>' + getData('placeOrderButtonLabel') + '</b>')}}/>
-            <li>
-                {sprintf(__('Scan the QR code using a payment app that supports PromptPay.', 'woo-stripe-payment'))}
-            </li>
-            <li>
-                {sprintf(__('The authentication process may take several moments. Once confirmed, you will be redirected to the order received page.', 'woo-stripe-payment'))}
-            </li>
+            <li dangerouslySetInnerHTML={{__html: getData('i18n').step1}}></li>
+            <li>{getData('i18n').step2}</li>
+            <li>{getData('i18n').step3}</li>
         </ol>
     )
 }

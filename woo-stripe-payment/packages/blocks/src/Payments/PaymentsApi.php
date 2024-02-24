@@ -11,11 +11,6 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use \PaymentPlugins\Blocks\Stripe\Assets\Api as AssetsApi;
 use PaymentPlugins\Blocks\Stripe\Config;
 use PaymentPlugins\Blocks\Stripe\Package;
-use PaymentPlugins\Blocks\Stripe\Payments\Gateways\AffirmPayment;
-use PaymentPlugins\Blocks\Stripe\Payments\Gateways\BlikPayment;
-use PaymentPlugins\Blocks\Stripe\Payments\Gateways\KonbiniPayment;
-use PaymentPlugins\Blocks\Stripe\Payments\Gateways\PayNowPayment;
-use PaymentPlugins\Blocks\Stripe\Payments\Gateways\PromptPayPayment;
 use PaymentPlugins\Stripe\Controllers\PaymentIntent;
 use PaymentPlugins\Stripe\Installments\InstallmentController;
 use PaymentPlugins\Stripe\Link\LinkIntegration;
@@ -135,19 +130,22 @@ class PaymentsApi {
 			return $instance;
 		} );
 		$this->container->register( Gateways\AffirmPayment::class, function ( Container $container ) {
-			return new AffirmPayment( $container->get( AssetsApi::class ) );
+			return new Gateways\AffirmPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\BlikPayment::class, function ( Container $container ) {
-			return new BlikPayment( $container->get( AssetsApi::class ) );
+			return new Gateways\BlikPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\KonbiniPayment::class, function ( Container $container ) {
-			return new KonbiniPayment( $container->get( AssetsApi::class ) );
+			return new Gateways\KonbiniPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\PayNowPayment::class, function ( Container $container ) {
-			return new PayNowPayment( $container->get( AssetsApi::class ) );
+			return new Gateways\PayNowPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\PromptPayPayment::class, function ( Container $container ) {
-			return new PromptPayPayment( $container->get( AssetsApi::class ) );
+			return new Gateways\PromptPayPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\SwishPayment::class, function ( Container $container ) {
+			return new Gateways\SwishPayment( $container->get( AssetsApi::class ) );
 		} );
 	}
 
@@ -187,7 +185,8 @@ class PaymentsApi {
 			Gateways\BlikPayment::class,
 			Gateways\KonbiniPayment::class,
 			Gateways\PayNowPayment::class,
-			Gateways\PromptPayPayment::class
+			Gateways\PromptPayPayment::class,
+			Gateways\SwishPayment::class
 		);
 
 		foreach ( $payment_methods as $clazz ) {

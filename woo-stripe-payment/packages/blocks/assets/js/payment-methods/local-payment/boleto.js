@@ -1,5 +1,4 @@
 import {useState, useEffect, useCallback} from '@wordpress/element';
-import {__} from '@wordpress/i18n';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
 import classnames from 'classnames';
 import {ensureErrorResponse, ensureSuccessResponse, getSettings, isTestMode} from "../util";
@@ -26,7 +25,7 @@ const BoletoPaymentMethodContainer = ({eventRegistration, ...props}) => {
             if (!taxId) {
                 return ensureErrorResponse(
                     props.emitResponse.responseTypes,
-                    __('Please enter a valid CPF/CNPJ value', 'woo-stripe-payment'),
+                    getData('i18n').cpf_notice,
                     {
                         messageContext: props.emitResponse.noticeContexts.PAYMENTS
                     }
@@ -53,11 +52,11 @@ const BoletoPaymentMethodContainer = ({eventRegistration, ...props}) => {
                     onChange={e => setTaxId(e.target.value)}
                     onFocus={() => setIsActive(true)}
                     onBlur={() => setIsActive(false)}/>
-                <label htmlFor='wc-stripe-boleto-tax_id'>{__(' CPF / CNPJ', ' woo-stripe-payment')}</label>
+                <label htmlFor='wc-stripe-boleto-tax_id'>{getData('i18n').tax_id_label}</label>
             </div>
             {isTestMode() &&
                 <div className='wc-stripe-boleto__description'>
-                    <p>{__('Test mode values', 'woo-stripe-payment')}</p>
+                    <p>{getData('i18n').test_desc}</p>
                     <div>
                         <label>CPF:</label>&nbsp;<span>000.000.000-00</span>
                     </div>
@@ -67,14 +66,14 @@ const BoletoPaymentMethodContainer = ({eventRegistration, ...props}) => {
                 </div>}
             {!isTestMode() &&
                 <div className="wc-stripe-boleto__description">
-                    <p>{__('Accepted formats', 'woo-stripe-payment')}</p>
+                    <p>{getData('i18n').formats}</p>
                     <div>
                         <label>CPF:</label>&nbsp;
-                        <span>{__('XXX.XXX.XXX-XX or XXXXXXXXXXX', 'woo-stripe-payment')}</span>
+                        <span>{getData('i18n').cpf_format}</span>
                     </div>
                     <div>
                         <label>CNPJ:</label>&nbsp;
-                        <span>{__('XX.XXX.XXX/XXXX-XX or XXXXXXXXXXXXXX', 'woo-stripe-payment')}</span>
+                        <span>{getData('i18n').cnpj_format}</span>
                     </div>
                 </div>}
             <LocalPaymentIntentContent callback={callback} {...{...props, ...{eventRegistration}}}/>

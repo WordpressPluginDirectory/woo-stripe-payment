@@ -2,11 +2,12 @@ import {useState, useRef, useEffect} from '@wordpress/element';
 import {__} from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import classnames from 'classnames';
-import {StripeError, getRoute} from "../../../payment-methods/util";
+import {getRoute} from "../../../payment-methods/util";
 import './style.scss';
 
 export const Installments = (
     {
+        i18n,
         paymentMethodName,
         cardFormComplete = false,
         addPaymentMethodData = null,
@@ -50,10 +51,11 @@ export const Installments = (
     return (
         <div className='wc-stripe-installments__container'>
             <label className={'wc-stripe-installments__label'}>
-                {__('Pay in installments:', 'woo-stripe-payment')}
+                {i18n.installments.pay}
                 <Loader loading={loading}/>
             </label>
             <InstallmentOptions
+                i18n={i18n}
                 installment={installment}
                 onChange={onInstallmentSelected}
                 installments={installments}
@@ -62,13 +64,13 @@ export const Installments = (
     )
 }
 
-const InstallmentOptions = ({installment, installments, onChange, isLoading}) => {
+const InstallmentOptions = ({installment, installments, onChange, isLoading, i18n}) => {
     let OPTIONS = null;
     if (isLoading) {
-        OPTIONS = <option value="" disabled>{__('Loading installments...', 'woo-stripe-payment')}</option>
+        OPTIONS = <option value="" disabled>{i18n.installments.loading}</option>
     } else {
         if (installments === null) {
-            OPTIONS = <option value="" disabled>{__('Fill out card form for eligibility.', 'woo-stripe-payment')}</option>
+            OPTIONS = <option value="" disabled>{i18n.installments.complete_form}</option>
         } else {
             OPTIONS = Object.keys(installments).map(id => {
                 return <option key={id} value={id} dangerouslySetInnerHTML={{__html: installments[id].text}}/>

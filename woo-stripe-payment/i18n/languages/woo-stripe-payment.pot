@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.58\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.59\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-16T21:24:35+00:00\n"
+"POT-Creation-Date: 2024-02-23T22:03:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -437,8 +437,6 @@ msgstr ""
 #: includes/admin/meta-boxes/views/html-charge-data-subview.php:56
 #: templates/cc-forms/bootstrap.php:16
 #: templates/cc-forms/minimalist.php:30
-#: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:19
-#: packages/blocks/build/commons.js:2431
 msgid "Exp"
 msgstr ""
 
@@ -1458,8 +1456,6 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:28
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:543
-#: packages/blocks/assets/js/payment-methods/local-payment/afterpay.js:104
-#: packages/blocks/build/commons.js:4701
 msgid "Afterpay"
 msgstr ""
 
@@ -1821,8 +1817,7 @@ msgid "Credit card gateway that integrates with your Stripe account."
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-cc.php:88
-#: packages/blocks/assets/js/components/checkout/installments/index.js:68
-#: packages/blocks/build/commons.js:1907
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:110
 msgid "Loading installments..."
 msgstr ""
 
@@ -2104,6 +2099,18 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-sofort.php:31
 msgid "Sofort gateway that integrates with your Stripe account."
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-swish.php:25
+msgid "Swish"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-swish.php:26
+msgid "Swish (Stripe) by Payment Plugins"
+msgstr ""
+
+#: includes/gateways/class-wc-payment-gateway-stripe-swish.php:27
+msgid "Swish gateway that integrates with your Stripe account."
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-wechat.php:25
@@ -2979,6 +2986,162 @@ msgstr ""
 msgid "A review has been closed for charge %1$s. Reason: %2$s."
 msgstr ""
 
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:61
+msgid "After clicking \"%1$s\", you will be redirected to %2$s to complete your purchase securely"
+msgstr ""
+
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:65
+msgid "Please enter your payment info before proceeding."
+msgstr ""
+
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:66
+msgid "Payment has been cancelled."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/ACHPayment.php:38
+msgid "ACH payment has been cancelled"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BlikPayment.php:17
+#: templates/checkout/blik.php:15
+msgid "Please enter your 6 digit BLIK code."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BlikPayment.php:18
+#: templates/checkout/blik.php:31
+msgid "Your transaction will expire in:"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BlikPayment.php:19
+#: templates/checkout/blik.php:9
+msgid "Request your 6-digit code from your banking application."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BlikPayment.php:21
+#: templates/checkout/blik.php:10
+msgid "Enter the code into the input fields below. Click %1$s once you have entered the code."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BlikPayment.php:24
+#: templates/checkout/blik.php:11
+msgid "You will receive a notification on your mobile device asking you to authorize the payment."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BoletoPayment.php:17
+msgid "Please enter a valid CPF/CNPJ value"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BoletoPayment.php:19
+#: templates/checkout/boleto.php:17
+msgid "Test mode values"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BoletoPayment.php:20
+#: templates/checkout/boleto.php:27
+msgid "Accepted formats"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BoletoPayment.php:21
+#: templates/checkout/boleto.php:29
+msgid "XXX.XXX.XXX-XX or XXXXXXXXXXX"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/BoletoPayment.php:22
+#: templates/checkout/boleto.php:32
+msgid "XX.XXX.XXX/XXXX-XX or XXXXXXXXXXXXXX"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:103
+#: templates/cc-forms/bootstrap.php:10
+#: templates/cc-forms/inline.php:9
+#: templates/cc-forms/minimalist.php:26
+#: templates/cc-forms/simple.php:12
+msgid "Card Number"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:104
+#: templates/cc-forms/simple.php:20
+msgid "Expiration"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:105
+#: templates/cc-forms/bootstrap.php:20
+#: templates/cc-forms/inline.php:17
+#: templates/cc-forms/minimalist.php:34
+#: templates/cc-forms/simple.php:26
+msgid "CVV"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:107
+msgid "Unsupported custom form. Please choose another custom form option in the Credit Card Settings."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:109
+#: templates/installment-plans.php:13
+msgid "Pay in installments:"
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:111
+#: templates/installment-plans.php:8
+msgid "Fill out card form for eligibility."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/KonbiniPayment.php:18
+#: templates/checkout/konbini-instructions.php:10
+msgid "Click %1$s and you will be presented with your Konbini payment code and confirmation number."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/KonbiniPayment.php:21
+#: templates/checkout/konbini-instructions.php:13
+msgid "Your order email will contain a link to your Konbini voucher which has your payment code and confirmation number."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/KonbiniPayment.php:22
+#: templates/checkout/konbini-instructions.php:16
+msgid "At the convenience store, provide the payment code and confirmation number to the payment machine or cashier."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/KonbiniPayment.php:23
+#: templates/checkout/konbini-instructions.php:19
+msgid "After the payment is complete, keep the receipt for your records."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PayNowPayment.php:17
+msgid "PayNow payment cancelled."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PayNowPayment.php:18
+msgid "PayNow payment expired. Please try again."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PayNowPayment.php:20
+#: packages/blocks/src/Payments/Gateways/PromptPayPayment.php:13
+#: templates/checkout/paynow-instructions.php:10
+#: templates/checkout/promptpay-instructions.php:10
+msgid "Click %1$s and you will be shown a QR code."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PayNowPayment.php:23
+#: templates/checkout/paynow-instructions.php:13
+msgid "Scan the QR code using an app from participating banks and participating non-bank financial institutions."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PayNowPayment.php:24
+#: packages/blocks/src/Payments/Gateways/PromptPayPayment.php:15
+#: templates/checkout/paynow-instructions.php:16
+#: templates/checkout/promptpay-instructions.php:16
+msgid "The authentication process may take several moments. Once confirmed, you will be redirected to the order received page."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PromptPayPayment.php:14
+#: templates/checkout/promptpay-instructions.php:13
+msgid "Scan the QR code using a payment app that supports PromptPay."
+msgstr ""
+
+#: packages/blocks/src/Payments/Gateways/PromptPayPayment.php:16
+msgid "PromptPay payment cancelled."
+msgstr ""
+
 #: packages/blocks/src/Payments/Gateways/WeChatPayment.php:23
 #: templates/checkout/wechat.php:7
 msgid "Click %1$s to initiate the WeChat payment."
@@ -3062,28 +3225,6 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: templates/cc-forms/bootstrap.php:10
-#: templates/cc-forms/inline.php:9
-#: templates/cc-forms/minimalist.php:26
-#: templates/cc-forms/simple.php:12
-#: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:13
-#: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:19
-#: packages/blocks/build/commons.js:2425
-#: packages/blocks/build/commons.js:2574
-msgid "Card Number"
-msgstr ""
-
-#: templates/cc-forms/bootstrap.php:20
-#: templates/cc-forms/inline.php:17
-#: templates/cc-forms/minimalist.php:34
-#: templates/cc-forms/simple.php:26
-#: packages/blocks/assets/js/payment-methods/credit-card/components/bootstrap/index.js:24
-#: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:40
-#: packages/blocks/build/commons.js:2436
-#: packages/blocks/build/commons.js:2595
-msgid "CVV"
-msgstr ""
-
 #: templates/cc-forms/bootstrap.php:25
 #: templates/cc-forms/inline.php:22
 #: templates/cc-forms/simple.php:35
@@ -3096,12 +3237,6 @@ msgstr ""
 
 #: templates/cc-forms/minimalist.php:39
 msgid "Postal"
-msgstr ""
-
-#: templates/cc-forms/simple.php:20
-#: packages/blocks/assets/js/payment-methods/credit-card/components/simple/index.js:31
-#: packages/blocks/build/commons.js:2586
-msgid "Expiration"
 msgstr ""
 
 #: templates/checkout/ach.php:10
@@ -3124,185 +3259,16 @@ msgstr ""
 msgid "when required"
 msgstr ""
 
-#: templates/checkout/blik.php:9
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:159
-#: packages/blocks/build/commons.js:5032
-msgid "Request your 6-digit code from your banking application."
-msgstr ""
-
-#: templates/checkout/blik.php:10
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:160
-#: packages/blocks/build/commons.js:5033
-msgid "Enter the code into the input fields below. Click %1$s once you have entered the code."
-msgstr ""
-
-#: templates/checkout/blik.php:11
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:161
-#: packages/blocks/build/commons.js:5034
-msgid "You will receive a notification on your mobile device asking you to authorize the payment."
-msgstr ""
-
-#: templates/checkout/blik.php:15
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/input-codes.js:59
-#: packages/blocks/build/commons.js:5117
-msgid "Please enter your 6 digit BLIK code."
-msgstr ""
-
-#: templates/checkout/blik.php:31
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/timer.js:22
-#: packages/blocks/build/commons.js:5177
-msgid "Your transaction will expire in:"
-msgstr ""
-
 #: templates/checkout/boleto.php:12
 msgid "Enter your CPF/CNPJ"
-msgstr ""
-
-#: templates/checkout/boleto.php:17
-#: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:60
-#: packages/blocks/build/commons.js:5246
-msgid "Test mode values"
-msgstr ""
-
-#: templates/checkout/boleto.php:27
-#: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:70
-#: packages/blocks/build/commons.js:5256
-msgid "Accepted formats"
-msgstr ""
-
-#: templates/checkout/boleto.php:29
-#: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:73
-#: packages/blocks/build/commons.js:5259
-msgid "XXX.XXX.XXX-XX or XXXXXXXXXXX"
-msgstr ""
-
-#: templates/checkout/boleto.php:32
-#: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:77
-#: packages/blocks/build/commons.js:5263
-msgid "XX.XXX.XXX/XXXX-XX or XXXXXXXXXXXXXX"
 msgstr ""
 
 #: templates/checkout/checkout-banner.php:17
 msgid "OR"
 msgstr ""
 
-#: templates/checkout/konbini-instructions.php:10
-#: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:89
-#: packages/blocks/build/commons.js:5930
-msgid "Click %1$s and you will be presented with your Konbini payment code and confirmation number."
-msgstr ""
-
-#: templates/checkout/konbini-instructions.php:13
-#: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:91
-#: packages/blocks/build/commons.js:5932
-msgid "Your order email will contain a link to your Konbini voucher which has your payment code and confirmation number."
-msgstr ""
-
-#: templates/checkout/konbini-instructions.php:16
-#: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:94
-#: packages/blocks/build/commons.js:5935
-msgid "At the convenience store, provide the payment code and confirmation number to the payment machine or cashier."
-msgstr ""
-
-#: templates/checkout/konbini-instructions.php:19
-#: packages/blocks/assets/js/payment-methods/local-payment/konbini.js:97
-#: packages/blocks/build/commons.js:5938
-msgid "After the payment is complete, keep the receipt for your records."
-msgstr ""
-
-#: templates/checkout/paynow-instructions.php:10
-#: templates/checkout/promptpay-instructions.php:10
-#: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:85
-#: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:87
-#: packages/blocks/build/commons.js:6313
-#: packages/blocks/build/commons.js:6431
-msgid "Click %1$s and you will be shown a QR code."
-msgstr ""
-
-#: templates/checkout/paynow-instructions.php:13
-#: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:87
-#: packages/blocks/build/commons.js:6315
-msgid "Scan the QR code using an app from participating banks and participating non-bank financial institutions."
-msgstr ""
-
-#: templates/checkout/paynow-instructions.php:16
-#: templates/checkout/promptpay-instructions.php:16
-#: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:90
-#: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:92
-#: packages/blocks/build/commons.js:6318
-#: packages/blocks/build/commons.js:6436
-msgid "The authentication process may take several moments. Once confirmed, you will be redirected to the order received page."
-msgstr ""
-
-#: templates/checkout/promptpay-instructions.php:13
-#: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:89
-#: packages/blocks/build/commons.js:6433
-msgid "Scan the QR code using a payment app that supports PromptPay."
-msgstr ""
-
-#: templates/installment-plans.php:8
-#: packages/blocks/assets/js/components/checkout/installments/index.js:71
-#: packages/blocks/build/commons.js:1910
-msgid "Fill out card form for eligibility."
-msgstr ""
-
-#: templates/installment-plans.php:13
-#: packages/blocks/assets/js/components/checkout/installments/index.js:53
-#: packages/blocks/build/commons.js:1892
-msgid "Pay in installments:"
-msgstr ""
-
 #: templates/offsite-notice.php:12
-#: packages/blocks/assets/js/components/checkout/offsite-notice/index.js:16
-#: packages/blocks/build/commons.js:1954
 msgid "After clicking \"%1$s\", you will be redirected to %2$s to complete your purchase securely."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/ach/hooks/use-process-payment.js:87
-#: packages/blocks/build/commons.js:2109
-msgid "ACH payment has been cancelled"
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/credit-card/components/custom-card-form.js:83
-#: packages/blocks/build/commons.js:2530
-msgid "%s is not a valid blocks Stripe custom form. Please choose another custom form option in the Credit Card Settings."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/blik/blik.js:83
-#: packages/blocks/build/commons.js:4956
-msgid "Please enter your 6-digit BLIK code."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/boleto.js:29
-#: packages/blocks/build/commons.js:5215
-msgid "Please enter a valid CPF/CNPJ value"
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-after-process-local-payment.js:51
-#: packages/blocks/build/commons.js:5469
-msgid "Payment has been cancelled."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-create-source.js:73
-#: packages/blocks/assets/js/payment-methods/local-payment/hooks/use-validate-checkout.js:12
-#: packages/blocks/build/commons.js:5571
-#: packages/blocks/build/commons.js:5615
-msgid "Please enter your payment info before proceeding."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:54
-#: packages/blocks/build/commons.js:6282
-msgid "PayNow payment cancelled."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/paynow.js:57
-#: packages/blocks/build/commons.js:6285
-msgid "PayNow payment expired. Please try again."
-msgstr ""
-
-#: packages/blocks/assets/js/payment-methods/local-payment/promptpay.js:54
-#: packages/blocks/build/commons.js:6398
-msgid "PromptPay payment cancelled."
 msgstr ""
 
 #: packages/blocks/assets/js/payment-methods/link/block.json

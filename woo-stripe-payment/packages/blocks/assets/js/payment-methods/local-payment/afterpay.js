@@ -5,7 +5,6 @@ import {LocalPaymentIntentContent} from './local-payment-method';
 import {OffsiteNotice, PaymentMethod, PaymentMethodLabel} from "../../components/checkout";
 import {canMakePayment} from "./local-payment-method";
 import {AfterpayClearpayMessageElement, Elements} from "@stripe/react-stripe-js";
-import {__} from '@wordpress/i18n';
 import {registerPlugin} from '@wordpress/plugins';
 import {ExperimentalOrderMeta, TotalsWrapper} from '@woocommerce/blocks-checkout';
 
@@ -85,7 +84,7 @@ const AfterpayPaymentMethod = ({content, billing, shippingData, ...props}) => {
         <>
             <div className='wc-stripe-blocks-payment-method-content'>
                 <div className="wc-stripe-blocks-afterpay-offsite__container">
-                    <OffsiteNotice paymentText={getData('title')} buttonText={getData('placeOrderButtonLabel')}/>
+                    <OffsiteNotice text={getData('i18n').offsite}/>
                 </div>
                 <Content {...{...props, billing, shippingData}}/>
             </div>
@@ -101,7 +100,7 @@ if (getData()) {
             paymentMethod={getData('name')}
             icons={getData('icon')}
             getData={getData}/>,
-        ariaLabel: __('Afterpay', 'woo-stripe-payment'),
+        ariaLabel: getData('title'),
         placeOrderButtonLabel: getData('placeOrderButtonLabel'),
         canMakePayment: canMakePayment(getData, ({settings, cartTotals, billingAddress}) => {
             const {currency_code: currency, currency_minor_unit, total_price} = cartTotals;

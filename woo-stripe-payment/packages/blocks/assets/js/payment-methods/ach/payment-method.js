@@ -35,7 +35,6 @@ const ACHPaymentContent = (
     useProcessPayment({
         onCheckoutSuccess,
         emitResponse,
-        paymentMethod: getData('name'),
         billingAddress: billing.billingAddress
     });
 
@@ -54,7 +53,7 @@ const ACHPaymentContent = (
 
     return (
         <div className={'wc-stripe-ach__container'}>
-            <Mandate text={getData('mandateText')}/>
+            <Mandate text={getData('i18n').mandate_text}/>
         </div>
     )
 }

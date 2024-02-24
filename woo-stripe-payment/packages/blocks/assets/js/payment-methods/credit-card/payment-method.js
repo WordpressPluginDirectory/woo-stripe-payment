@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback, useMemo} from '@wordpress/element';
+import {useEffect, useState, useCallback} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
 import {
     initStripe as loadStripe,
@@ -111,6 +111,7 @@ const CreditCardElement = (
         <div className='wc-stripe-card-container'>
             <Tag {...{getData, billing, onChange}} onComplete={setFormComplete}/>
             {getData('installmentsActive') && <Installments
+                i18n={getData('i18n')}
                 paymentMethodName={getData('name')}
                 cardFormComplete={formComplete}
                 addPaymentMethodData={addPaymentMethodData}

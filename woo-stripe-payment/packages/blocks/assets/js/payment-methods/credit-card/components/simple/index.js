@@ -1,10 +1,9 @@
 import './style.scss';
 import {registerCreditCardForm} from "@paymentplugins/stripe/util";
 import {CardNumberElement, CardExpiryElement, CardCvcElement} from '@stripe/react-stripe-js';
-import {__} from "@wordpress/i18n";
-import {useEffect, useCallback, useRef} from '@wordpress/element';
+import {useEffect} from '@wordpress/element';
 
-const SimpleForm = ({CardIcon, options, onChange}) => {
+const SimpleForm = ({CardIcon, options, onChange, i18n}) => {
     useEffect(() => {
     }, []);
     return (
@@ -16,7 +15,7 @@ const SimpleForm = ({CardIcon, options, onChange}) => {
                                            options={options['cardNumber']}
                                            onChange={onChange(CardNumberElement)}/>
                         <label htmlFor="stripe-card-number"
-                               data-tid="">{__('Card Number', 'woo-stripe-payment')}</label>
+                               data-tid="">{i18n.labels.number}</label>
                         <div className="baseline"></div>
                         {CardIcon}
                     </div>
@@ -28,7 +27,7 @@ const SimpleForm = ({CardIcon, options, onChange}) => {
                         <CardExpiryElement id="stripe-exp" className="input empty" options={options['cardExpiry']}
                                            onChange={onChange(CardExpiryElement)}/>
                         <label htmlFor="stripe-exp"
-                               data-tid="">{__('Expiration', 'woo-stripe-payment')}</label>
+                               data-tid="">{i18n.labels.exp}</label>
                         <div className="baseline"></div>
                     </div>
                 </div>
@@ -37,7 +36,7 @@ const SimpleForm = ({CardIcon, options, onChange}) => {
                         <CardCvcElement id="stripe-cvv" className="input empty" options={options['cardCvc']}
                                         onChange={onChange(CardCvcElement)}/>
                         <label htmlFor="stripe-cvv"
-                               data-tid="">{__('CVV', 'woo-stripe-payment')}</label>
+                               data-tid="">{i18n.labels.cvv}</label>
                         <div className="baseline"></div>
                     </div>
                 </div>
@@ -50,4 +49,4 @@ registerCreditCardForm({
     id: 'simple',
     component: <SimpleForm/>,
     breakpoint: 375
-})
+});

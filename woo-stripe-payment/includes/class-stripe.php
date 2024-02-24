@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.58';
+	public $version = '3.3.59';
 
 	/**
 	 *
@@ -243,6 +243,7 @@ class WC_Stripe_Manager {
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-konbini.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-paynow.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-promptpay.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-swish.php';
 
 		// tokens
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/abstract/abstract-wc-payment-token-stripe.php';
@@ -308,7 +309,8 @@ class WC_Stripe_Manager {
 				'WC_Payment_Gateway_Stripe_BLIK',
 				'WC_Payment_Gateway_Stripe_Konbini',
 				'WC_Payment_Gateway_Stripe_PayNow',
-				'WC_Payment_Gateway_Stripe_PromptPay'
+				'WC_Payment_Gateway_Stripe_PromptPay',
+				'WC_Payment_Gateway_Stripe_Swish'
 			)
 		);
 

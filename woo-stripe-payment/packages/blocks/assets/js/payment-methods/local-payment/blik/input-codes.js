@@ -1,7 +1,6 @@
-import {useState, useCallback, useRef} from '@wordpress/element';
-import {__} from '@wordpress/i18n';
+import {useCallback, useRef} from '@wordpress/element';
 
-export const InputCodes = ({onComplete}) => {
+export const InputCodes = ({onComplete, i18n}) => {
     const keyCode = useRef();
     const refs = useRef([]);
     const setRef = useCallback(idx => node => {
@@ -56,7 +55,7 @@ export const InputCodes = ({onComplete}) => {
     return (
         <div className={'wc-stripe-blik-codes-container'}>
             <p>
-                {__('Please enter your 6 digit BLIK code.', 'woo-stripe-payment')}
+                {i18n.enter_blik_code}
             </p>
             <div className={'wc-stripe-blik-codes'}>
                 {[...Array(6).keys()].map(idx => {

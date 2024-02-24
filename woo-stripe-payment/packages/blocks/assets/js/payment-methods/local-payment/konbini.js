@@ -4,7 +4,6 @@ import {ensureErrorResponse, getBillingDetailsFromAddress, getSettings, initStri
 import {PaymentMethod, PaymentMethodLabel} from "../../components/checkout";
 import {canMakePayment} from "./local-payment-method";
 import {Elements, useStripe} from "@stripe/react-stripe-js";
-import {sprintf, __} from '@wordpress/i18n';
 
 const getData = getSettings('stripe_konbini_data');
 
@@ -86,16 +85,10 @@ const PaymentMethodContent = (props) => {
 const Instructions = () => {
     return (
         <ol>
-            <li dangerouslySetInnerHTML={{__html: sprintf(__('Click %1$s and you will be presented with your Konbini payment code and confirmation number.', 'woo-stripe-payment'), '<b>' + getData('placeOrderButtonLabel') + '</b>')}}/>
-            <li>
-                {sprintf(__('Your order email will contain a link to your Konbini voucher which has your payment code and confirmation number.', 'woo-stripe-payment'))}
-            </li>
-            <li>
-                {sprintf(__('At the convenience store, provide the payment code and confirmation number to the payment machine or cashier.', 'woo-stripe-payment'))}
-            </li>
-            <li>
-                {sprintf(__('After the payment is complete, keep the receipt for your records.', 'woo-stripe-payment'))}
-            </li>
+            <li dangerouslySetInnerHTML={{__html: getData('i18n').step1}}/>
+            <li>{getData('i18n').step2}</li>
+            <li>{getData('i18n').step3}</li>
+            <li>{getData('i18n').step4}</li>
         </ol>
     )
 }

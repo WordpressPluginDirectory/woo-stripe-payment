@@ -1,7 +1,6 @@
 import {useState, useEffect} from '@wordpress/element';
-import {__} from '@wordpress/i18n';
 
-export const Timer = ({onTimeout}) => {
+export const Timer = ({onTimeout, i18n}) => {
     const [count, setCount] = useState(60);
     useEffect(() => {
         let count = 60;
@@ -19,7 +18,7 @@ export const Timer = ({onTimeout}) => {
     return (
         <div className='wc-stripe-blik-timer-container'>
             <div>
-                <p>{__('Your transaction will expire in:', 'woo-stripe-payment')}&nbsp;</p>
+                <p>{i18n.timer_msg}&nbsp;</p>
                 <div className={'wc-stripe-blik-timer'}>
                     <span className={'timer'}>{count}s</span>
                 </div>

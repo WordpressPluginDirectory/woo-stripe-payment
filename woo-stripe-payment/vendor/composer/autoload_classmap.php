@@ -41,6 +41,7 @@ return array(
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PromptPayPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/PromptPayPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SepaPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SepaPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SofortPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SofortPayment.php',
+    'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SwishPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SwishPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\WeChatPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/WeChatPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\MagicPaymentMethod' => $baseDir . '/packages/blocks/src/Payments/MagicPaymentMethod.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\PaymentsApi' => $baseDir . '/packages/blocks/src/Payments/PaymentsApi.php',

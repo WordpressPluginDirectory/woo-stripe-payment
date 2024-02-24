@@ -1,26 +1,11 @@
-import {useEffect, useRef, useState, useCallback} from '@wordpress/element';
 import {registerPaymentMethod} from '@woocommerce/blocks-registry';
 import {
     getSettings,
-    initStripe as loadStripe,
-    getDefaultSourceArgs,
-    isAddressValid,
-    StripeError,
-    isTestMode,
-    ensureSuccessResponse,
-    getErrorMessage,
-    storeInCache,
-    getFromCache,
-    deleteFromCache
+    initStripe as loadStripe
 } from "../util";
 import {PaymentMethodLabel, PaymentMethod} from "../../components/checkout";
 import {canMakePayment, LocalPaymentIntentContent} from "./local-payment-method";
 import {Elements} from "@stripe/react-stripe-js";
-import {useValidateCheckout} from "./hooks";
-import {__} from '@wordpress/i18n';
-//import QRCode from 'QRCode';
-import {useStripe} from "@stripe/react-stripe-js";
-import {useStripeError} from "../hooks";
 
 const getData = getSettings('stripe_wechat_data');
 

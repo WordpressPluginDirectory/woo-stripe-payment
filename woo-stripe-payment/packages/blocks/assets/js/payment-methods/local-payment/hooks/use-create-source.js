@@ -6,7 +6,6 @@ import {
     StripeError
 } from "../../util";
 import {useStripe, useElements} from "@stripe/react-stripe-js";
-import {__} from '@wordpress/i18n';
 
 export const useCreateSource = (
     {
@@ -70,7 +69,7 @@ export const useCreateSource = (
                 if (element) {
                     // validate the element
                     if (!isValid) {
-                        throw __('Please enter your payment info before proceeding.', 'woo-stripe-payment');
+                        throw getData('i18n').empty_data;
                     }
                     result = await stripe.createSource(elements.getElement(element), getSourceArgsInternal());
                 } else {

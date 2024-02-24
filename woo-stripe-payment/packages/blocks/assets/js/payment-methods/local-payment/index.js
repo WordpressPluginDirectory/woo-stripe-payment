@@ -20,3 +20,4 @@ import './blik';
 import './konbini';
 import './paynow';
 import './promptpay';
+import './swish';

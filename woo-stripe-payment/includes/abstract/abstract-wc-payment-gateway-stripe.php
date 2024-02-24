@@ -611,7 +611,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 		$charge = $this->gateway->mode( wc_stripe_order_mode( $order ) )->charges->retrieve( $order->get_transaction_id() );
 
 		if ( is_wp_error( $charge ) ) {
-			return;
+			return $charge;
 		} else {
 			if ( ! $charge->captured ) {
 				$result = $this->payment_object->capture_charge( $amount, $order, $charge );
@@ -639,10 +639,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 					 */
 					$result = apply_filters( 'wc_stripe_capture_charge_failed', $result, $order, $amount, $this );
 				}
+
+				return $result;
 			}
 		}
-
-		return $result;
 	}
 
 	/**

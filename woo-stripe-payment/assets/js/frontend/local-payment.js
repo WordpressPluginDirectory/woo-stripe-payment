@@ -243,7 +243,7 @@
                         payment_intent_client_secret: result.paymentIntent.client_secret
                     });
                 } else if (result.paymentIntent.status === 'requires_action' || result.paymentIntent.status === 'requires_payment_method') {
-                    if (['stripe_promptpay'].indexOf(this.gateway_id) > -1) {
+                    if (['stripe_promptpay', 'stripe_swish'].indexOf(this.gateway_id) > -1) {
                         this.get_form().unblock().removeClass('processing');
                         return;
                     }
@@ -472,27 +472,11 @@
         window.addEventListener('hashchange', this.hashChange.bind(this));
     }
 
-    /*WeChat.prototype.hashChange = function (e) {
-        if (this.is_gateway_selected()) {
-            var match = window.location.hash.match(/qrcode=(.*)/);
-            if (match) {
-                history.pushState({}, '', window.location.pathname);
-                this.qrcode = JSON.parse(window.atob(decodeURIComponent(match[1])));
-                this.get_form().unblock().removeClass('processing').addClass('wechat');
-                var qrCode = new QRCode('wc_stripe_local_payment_stripe_wechat', {
-                    text: this.qrcode.code,
-                    width: parseInt(this.params.qr_size),
-                    height: parseInt(this.params.qr_size),
-                    colorDark: '#424770',
-                    colorLight: '#f8fbfd',
-                    correctLevel: QRCode.CorrectLevel.H,
-                });
-                $('#wc_stripe_local_payment_stripe_wechat').append('<p class="qrcode-message">' + this.params.qr_message + '</p>');
-                this.payment_token_received = true;
-                this.show_place_order();
-            }
-        }
-    }*/
+    function Swish(params) {
+        this.confirmation_method = 'confirmSwishPayment';
+        LocalPayment.call(this, params);
+        window.addEventListener('hashchange', this.hashChange.bind(this));
+    }
 
     WeChat.prototype.processConfirmation = function (obj) {
         if (obj.type === 'payment_intent') {
@@ -677,6 +661,8 @@
 
     PromptPay.prototype = $.extend({}, LocalPayment.prototype, PromptPay.prototype);
 
+    Swish.prototype = $.extend({}, LocalPayment.prototype, Swish.prototype);
+
     /**
      * Local payment types that require JS integration
      * @type {Object}
@@ -702,7 +688,8 @@
         'blik': BLIK,
         'konbini': Konbini,
         'paynow': PayNow,
-        'promptpay': PromptPay
+        'promptpay': PromptPay,
+        'swish': Swish
     }
 
     for (var i in wc_stripe_local_payment_params.gateways) {

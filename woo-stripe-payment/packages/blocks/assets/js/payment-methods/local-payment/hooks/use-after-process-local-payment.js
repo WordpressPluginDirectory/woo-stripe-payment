@@ -1,6 +1,5 @@
 import {useEffect, useRef} from '@wordpress/element';
 import {useStripe} from "@stripe/react-stripe-js";
-import {__} from '@wordpress/i18n';
 import {ensureErrorResponse, StripeError} from "../../util";
 
 export const useAfterProcessLocalPayment = (
@@ -45,10 +44,10 @@ export const useAfterProcessLocalPayment = (
                             throw new StripeError(result.error);
                         }
                         if (result.paymentIntent.status === 'requires_action') {
-                            if (activePaymentMethod === 'stripe_wechat') {
+                            if (['stripe_wechat', 'stripe_swish'].includes(activePaymentMethod)) {
                                 return ensureErrorResponse(
                                     emitResponse.responseTypes,
-                                    __('Payment has been cancelled.', 'woo-stripe-payment'),
+                                    getData('i18n').payment_cancelled,
                                     {
                                         messageContext: emitResponse.noticeContexts.PAYMENTS
                                     }

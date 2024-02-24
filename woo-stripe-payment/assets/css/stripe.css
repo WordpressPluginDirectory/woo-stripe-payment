@@ -726,6 +726,12 @@ ul.payment_methods li.payment_method_stripe_oxxo img {
     max-height: 24px;
 }
 
+ul.payment_methods li.payment_method_stripe_swish img {
+    max-width: 90px;
+    width: 90px;
+    max-height: 28px;
+}
+
 #wc-stripe-card-element {
     width: 100%;
 }

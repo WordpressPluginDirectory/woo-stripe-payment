@@ -31,4 +31,14 @@ class ACHPayment extends AbstractStripePayment {
 		), parent::get_payment_method_data() );
 	}
 
+	protected function get_script_translations() {
+		return array_merge(
+			parent::get_script_translations(),
+			[
+				'ach_payment_cancelled' => __( 'ACH payment has been cancelled', 'woo-stripe-payment' ),
+				'mandate_text'          => $this->payment_method->get_mandate_text()
+			]
+		);
+	}
+
 }
