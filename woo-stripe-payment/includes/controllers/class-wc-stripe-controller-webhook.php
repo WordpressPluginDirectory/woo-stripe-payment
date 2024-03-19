@@ -62,6 +62,8 @@ class WC_Stripe_Controller_Webhook extends WC_Stripe_Rest_Controller {
 			$type = $event->type;
 			$type = str_replace( '.', '_', $type );
 
+			define( WC_Stripe_Constants::WOOCOMMERCE_STRIPE_PROCESSING_WEBHOOK, true );
+
 			// allow functionality to hook in to the event action
 			do_action( 'wc_stripe_webhook_' . $type, $event->data->object, $request, $event );
 

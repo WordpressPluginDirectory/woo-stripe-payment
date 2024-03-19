@@ -54,7 +54,7 @@ const CardElement = ({options, ...props}) => {
     const elements = useElements();
     const stripe = useStripe();
     const {billing: {billingAddress}, eventRegistration, emitResponse, shouldSavePayment} = props;
-    const {email} = billingAddress;
+    const {email, phone, first_name, last_name} = billingAddress;
     const {onCheckoutFail} = eventRegistration;
     const {noticeContexts} = emitResponse;
     const name = getData('name');
@@ -89,7 +89,9 @@ const CardElement = ({options, ...props}) => {
     const elementOptions = {
         defaultValues: {
             billingDetails: {
-                email
+                name: `${first_name} ${last_name}`,
+                email,
+                phone
             }
         },
         fields: {

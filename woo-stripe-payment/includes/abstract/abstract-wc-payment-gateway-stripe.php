@@ -582,12 +582,13 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order  = wc_get_order( $order_id );
-		$result = $this->payment_object->process_refund( $order, $amount );
+		$result = $this->payment_object->process_refund( $order, $amount, $reason );
 
 		if ( ! is_wp_error( $result ) ) {
 			$order->add_order_note(
 				sprintf(
-					__( 'Order refunded in Stripe. Amount: %s', 'woo-stripe-payment' ),
+					__( 'Order refunded in Stripe. Refund ID: %s. Amount: %s', 'woo-stripe-payment' ),
+					$result->id,
 					wc_price(
 						$amount,
 						array(

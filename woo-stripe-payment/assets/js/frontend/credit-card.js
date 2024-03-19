@@ -17,7 +17,7 @@
         this.handle_create_account_change();
         $(document.body).on('change', '[name="stripe_cc_saved_method_key"]', this.maybe_initialize_installments.bind(this));
         $(document.body).on('wc_stripe_saved_method_' + this.gateway_id, this.maybe_initialize_installments.bind(this));
-        $(document.body).on('change', '[name="billing_email"], [name="billing_phone"]', this.handle_email_change.bind(this));
+        $(document.body).on('change', '[name="billing_email"], [name="billing_phone"], [name="billing_first_name"], [name="billing_last_name"]', this.handle_checkout_field_change.bind(this));
     }
 
     var elementClasses = {
@@ -83,11 +83,12 @@
             if (this.is_payment_element_enabled()) {
                 this.card = this.elements.create('payment', {
                     fields: {
-                        billingDetails: this.is_current_page('checkout') ? {address: 'never'} : 'auto'
+                        billingDetails: this.is_current_page('checkout') ? {address: 'never', name: 'auto', email: 'auto', phone: 'auto'} : 'auto'
                     },
                     wallets: {applePay: 'never', googlePay: 'never'},
                     defaultValues: {
                         billingDetails: {
+                            name: this.fields.get('billing_first_name') + ' ' + this.fields.get('billing_last_name'),
                             email: this.fields.get('billing_email'),
                             phone: this.fields.get('billing_phone')
                         }
@@ -274,7 +275,11 @@
                                 } else {
                                     this.on_token_received(result.paymentMethod);
                                 }
+                            }.bind(this)).catch(function (error) {
+                                return this.submit_card_error(error);
                             }.bind(this))
+                        }.bind(this)).catch(function (error) {
+                            return this.submit_card_error(error);
                         }.bind(this));
                     }
                 }
@@ -627,11 +632,12 @@
         }
     }
 
-    CC.prototype.handle_email_change = function () {
+    CC.prototype.handle_checkout_field_change = function () {
         if (this.is_payment_element_enabled() && this.card) {
             this.card.update({
                 defaultValues: {
                     billingDetails: {
+                        name: $('#billing_first_name').val() + ' ' + $('#billing_last_name').val(),
                         email: $('#billing_email').val(),
                         phone: $('#billing_phone').val()
                     }

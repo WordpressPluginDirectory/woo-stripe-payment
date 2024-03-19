@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.59\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.60\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-23T22:03:51+00:00\n"
+"POT-Creation-Date: 2024-03-18T16:53:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -153,123 +153,122 @@ msgid "Error saving payment method. Reason: %s"
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:590
-#: includes/wc-stripe-webhook-functions.php:235
-msgid "Order refunded in Stripe. Amount: %s"
+msgid "Order refunded in Stripe. Refund ID: %s. Amount: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:629
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:630
 msgid "Order amount captured in Stripe. Amount: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:633
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:634
 msgid "Error capturing charge in Stripe. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:661
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:662
 msgid "Error voiding charge. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:663
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:664
 msgid "Charge voided in Stripe."
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:843
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:844
 msgid "n/a"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:883
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:884
 msgid "Save payment method"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1093
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1094
 msgid "Attempt to save payment method failed. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1121
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1122
 msgid "We were not able to save your payment method. To prevent billing issues with your subscription, please add a payment method to the subscription."
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1123
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1124
 msgid "We were not able to save your payment method. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1157
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1158
 msgid "Payment Method Token"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1161
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1162
 msgid "Stripe Customer ID"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1181
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1182
 msgid "Recurring payment for order failed. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1198
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1199
 msgid "Renewal payment initiated in Stripe. Waiting for the payment to clear."
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1202
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1203
 msgid "Recurring payment captured in Stripe. Payment method: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1206
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1207
 msgid "Recurring payment authorized in Stripe. Payment method: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1212
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1441
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1213
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1442
 msgid "Customer must manually complete payment for payment method %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1246
-#: includes/abstract/abstract-wc-stripe-payment.php:276
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1247
+#: includes/abstract/abstract-wc-stripe-payment.php:277
 msgid "Order %1$s from %2$s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1423
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1424
 msgid "Pre-order payment for order failed. Reason: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1430
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1431
 msgid "Pre-order payment initiated in Stripe. Waiting for the payment to clear."
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1434
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1435
 msgid "Pre-order payment captured in Stripe. Payment method: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1438
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1439
 msgid "Pre-order payment authorized in Stripe. Payment method: %s"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1511
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1512
 msgid "Cannot process payment"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1519
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1520
 msgid "Increase your conversion rate by offering %1$s on your Product and Cart pages, or at the top of the checkout page. <br/><strong>Note:</strong> you can control which products display %s by going to the product edit page."
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1655
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1686
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1656
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1687
 msgid "Shipping"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1663
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1689
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1664
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1690
 msgid "Discount"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1666
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1667
 msgid "Tax"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1696
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1697
 msgid "Fees"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1890
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1891
 msgid "Error saving payment method for subscription. Reason: %s"
 msgstr ""
 
@@ -293,7 +292,7 @@ msgstr ""
 msgid "Transaction Id cannot be empty."
 msgstr ""
 
-#: includes/abstract/abstract-wc-stripe-payment.php:343
+#: includes/abstract/abstract-wc-stripe-payment.php:344
 #: includes/traits/wc-stripe-payment-traits.php:113
 msgid "Error processing payment. Reason: %s"
 msgstr ""
@@ -1165,19 +1164,19 @@ msgstr ""
 msgid "You do not have permission to update this source."
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-webhook.php:70
+#: includes/controllers/class-wc-stripe-controller-webhook.php:72
 msgid "Invalid signature received. Verify that your webhook secret is correct. Error: %s"
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-webhook.php:72
+#: includes/controllers/class-wc-stripe-controller-webhook.php:74
 msgid "Invalid signature received. Verify that your webhook secret is correct."
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-webhook.php:74
+#: includes/controllers/class-wc-stripe-controller-webhook.php:76
 msgid "Error processing webhook. Message: %s Exception: %s"
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-webhook.php:91
+#: includes/controllers/class-wc-stripe-controller-webhook.php:93
 msgid "Stripe sends webhook notifications via the http POST method. You cannot test the webhook using a browser."
 msgstr ""
 
@@ -1817,7 +1816,7 @@ msgid "Credit card gateway that integrates with your Stripe account."
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-cc.php:88
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:110
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:114
 msgid "Loading installments..."
 msgstr ""
 
@@ -1826,7 +1825,7 @@ msgid "Only the Stripe payment form and inline form can be used while Link is en
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-cc.php:311
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:44
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:48
 msgid "Save Card"
 msgstr ""
 
@@ -2970,6 +2969,10 @@ msgstr ""
 msgid "payment_intent.succeeded webhook received. Payment has been completed."
 msgstr ""
 
+#: includes/wc-stripe-webhook-functions.php:235
+msgid "Order refunded in Stripe. Amount: %s"
+msgstr ""
+
 #: includes/wc-stripe-webhook-functions.php:281
 msgid "A dispute has been created for charge %1$s. Dispute status: %2$s."
 msgstr ""
@@ -3051,7 +3054,7 @@ msgstr ""
 msgid "XX.XXX.XXX/XXXX-XX or XXXXXXXXXXXXXX"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:103
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:107
 #: templates/cc-forms/bootstrap.php:10
 #: templates/cc-forms/inline.php:9
 #: templates/cc-forms/minimalist.php:26
@@ -3059,12 +3062,12 @@ msgstr ""
 msgid "Card Number"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:104
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:108
 #: templates/cc-forms/simple.php:20
 msgid "Expiration"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:105
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:109
 #: templates/cc-forms/bootstrap.php:20
 #: templates/cc-forms/inline.php:17
 #: templates/cc-forms/minimalist.php:34
@@ -3072,16 +3075,16 @@ msgstr ""
 msgid "CVV"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:107
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:111
 msgid "Unsupported custom form. Please choose another custom form option in the Credit Card Settings."
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:109
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:113
 #: templates/installment-plans.php:13
 msgid "Pay in installments:"
 msgstr ""
 
-#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:111
+#: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:115
 #: templates/installment-plans.php:8
 msgid "Fill out card form for eligibility."
 msgstr ""

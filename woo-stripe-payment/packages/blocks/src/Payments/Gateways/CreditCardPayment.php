@@ -22,6 +22,10 @@ class CreditCardPayment extends AbstractStripePayment {
 	 */
 	private $payment_intent_ctrl;
 
+	public function is_active() {
+		return wc_string_to_bool( $this->get_setting( 'enabled', 'yes' ) );
+	}
+
 	public function get_payment_method_script_handles() {
 		$this->assets_api->register_script( 'wc-stripe-block-credit-card', 'build/wc-stripe-credit-card.js' );
 

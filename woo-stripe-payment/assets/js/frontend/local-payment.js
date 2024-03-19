@@ -14,6 +14,8 @@
         }
 
         this.maybe_hide_gateway();
+
+        this.process_redirect_params();
     }
 
     LocalPayment.prototype = $.extend({}, wc_stripe.BaseGateway.prototype, wc_stripe.CheckoutGateway.prototype);
@@ -21,6 +23,10 @@
 
     LocalPayment.prototype.initialize = function () {
         this.mount_button();
+    }
+
+    LocalPayment.prototype.process_redirect_params = function () {
+        this.hashChange(null);
     }
 
     LocalPayment.prototype.elementType = null;

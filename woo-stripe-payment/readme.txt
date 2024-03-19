@@ -1,10 +1,10 @@
 === Payment Plugins for Stripe WooCommerce ===
 Contributors: mr.clayton
-Tags: stripe, klarna, credit card, apple pay, google pay
+Tags: stripe, ach, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.3.59
+Stable tag: 3.3.60
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,12 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.60 - 03/18/24 =
+* Added - Order button text translations added to the wpml-config.xml file.
+* Added - Refund reason in the refund metadata. https://wordpress.org/support/topic/metadata-in-refunds/
+* Added - Stripe refund ID in order notes when a refund is processed
+* Fixed - Fullname is required error message encountered with Link using checkout shortcode.
+* Fixed - Ensure ACH payments use the order_status option if it's not set to default. https://wordpress.org/support/topic/the-order-status-feature-in-general-settings-doesnt-work/
 = 3.3.59 - 02/23/24 =
 * Added - Support for the Swish payment method popular in Sweden
 * Updated - Translations used by the checkout blog integration. Translations used in the checkout shortcode will now work on the cart block and checkout block

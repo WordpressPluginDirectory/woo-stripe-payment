@@ -669,8 +669,8 @@ function wc_stripe_api_options( $options ) {
  * @package Stripe/Functions
  */
 function wc_stripe_payment_complete_order_status( $order_status, $order_id, $order = null ) {
-	if ( is_checkout() && $order && $order->get_payment_method() ) {
-		$gateway = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ];
+	if ( ( is_checkout() || wc_stripe_is_processing_webhook() ) && $order && $order->get_payment_method() ) {
+		$gateway = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ] ?? null;
 		if ( $gateway instanceof WC_Payment_Gateway_Stripe && 'default' !== $gateway->get_option( 'order_status', 'default' ) ) {
 			$order_status = $gateway->get_option( 'order_status' );
 		}
@@ -1372,4 +1372,12 @@ function wc_stripe_get_site_locale() {
 	}
 
 	return apply_filters( 'wc_stripe_get_site_locale', $locale );
+}
+
+/**
+ * @since 3.3.60
+ * @return bool
+ */
+function wc_stripe_is_processing_webhook() {
+	return defined( WC_Stripe_Constants::WOOCOMMERCE_STRIPE_PROCESSING_WEBHOOK );
 }

@@ -103,4 +103,9 @@ class WC_Stripe_Constants {
 	 */
 	const STRIPE_MANDATE = '_stripe_mandate';
 
+	/**
+	 * @since 3.3.60
+	 */
+	const WOOCOMMERCE_STRIPE_PROCESSING_WEBHOOK = 'WOOCOMMERCE_STRIPE_PROCESSING_WEBHOOK';
+
 }

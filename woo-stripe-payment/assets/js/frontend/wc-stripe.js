@@ -2018,7 +2018,7 @@
                 }
             },
             get: function get(prefix) {
-                return this.fields.get(prefix + '_first_name') + ' ' + this.fields.get(prefix + '_last_name');
+                return this.get('first_name', prefix) + ' ' + this.get('last_name', prefix);
             }
         };
     };

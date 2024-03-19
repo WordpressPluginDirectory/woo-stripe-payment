@@ -135,7 +135,7 @@ abstract class WC_Stripe_Payment {
 	 *
 	 * @throws Exception
 	 */
-	public function process_refund( $order, $amount = null ) {
+	public function process_refund( $order, $amount = null, $reason = '' ) {
 		$charge = $order->get_transaction_id();
 		try {
 			if ( empty( $charge ) ) {
@@ -155,7 +155,8 @@ abstract class WC_Stripe_Payment {
 				'amount'   => wc_stripe_add_number_precision( $amount, $order->get_currency() ),
 				'metadata' => array(
 					'order_id'    => $order->get_id(),
-					'created_via' => 'woocommerce'
+					'created_via' => 'woocommerce',
+					'reason'      => substr( $reason, 0, 500 )
 				),
 				'expand'   => stripe_wc()->advanced_settings->is_fee_enabled() ? array( 'charge.balance_transaction', 'charge.refunds.data.balance_transaction' ) : array()
 			), $this, $order, $amount );
@@ -166,9 +167,9 @@ abstract class WC_Stripe_Payment {
 				/**
 				 * @since 3.3.35
 				 */
-				do_action( 'wc_stripe_process_refund_success', $order );
+				do_action( 'wc_stripe_process_refund_success', $order, $result );
 
-				return true;
+				return $result;
 			}
 
 			return $result;
