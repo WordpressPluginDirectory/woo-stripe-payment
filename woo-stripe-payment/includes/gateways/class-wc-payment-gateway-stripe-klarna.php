@@ -52,8 +52,8 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 
 	public function __construct() {
 		$this->local_payment_type = 'klarna';
-		$this->currencies         = array( 'AUD', 'CAD', 'CHF', 'DKK', 'EUR', 'GBP', 'NOK', 'NZD', 'PLN', 'SEK', 'DKK', 'USD' );
-		$this->countries          = $this->limited_countries = array( 'AT', 'AU', 'BE', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'IE', 'IT', 'NL', 'NO', 'NZ', 'PL', 'PT', 'SE', 'US' );
+		$this->currencies         = array( 'AUD', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'NOK', 'NZD', 'PLN', 'SEK', 'DKK', 'USD' );
+		$this->countries          = $this->limited_countries = array( 'AT', 'AU', 'BE', 'CA', 'CH', 'CZ', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'IE', 'IT', 'NL', 'NO', 'NZ', 'PL', 'PT', 'SE', 'US' );
 		$this->id                 = 'stripe_klarna';
 		$this->tab_title          = __( 'Klarna', 'woo-stripe-payment' );
 		$this->token_type         = 'Stripe_Local';
@@ -84,7 +84,8 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 			'GBP' => array( 'GB' ),
 			'PLN' => array( 'PL' ),
 			'CHF' => array( 'CH' ),
-			'NZD' => array( 'NZ' )
+			'NZD' => array( 'NZ' ),
+			'CZK' => array( 'CZ' )
 		), $this );
 	}
 
@@ -277,15 +278,8 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	public function get_localized_params() {
 		return array_merge( parent::get_localized_params(), array(
 			'messageOptions' => array(
-				'countryCode'        => stripe_wc()->account_settings->get_account_country(),
-				'paymentMethodTypes' => array( 'klarna' ),
-				'appearance'         => array(
-					'rules' => array(
-						'.p-MessagingPartnerLogo' => array(
-							'height' => '1.9em'
-						)
-					)
-				)
+				'countryCode'        => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
+				'paymentMethodTypes' => array( 'klarna' )
 			)
 		) );
 	}

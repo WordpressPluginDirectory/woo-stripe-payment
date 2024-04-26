@@ -14,7 +14,7 @@ class FrontendScripts {
 
 	public function initialize() {
 		$this->register_scripts();
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wc_stripe_product_before_payment_methods', [ $this, 'enqueue_scripts' ] );
 	}
 
 	private function register_scripts() {
@@ -22,9 +22,7 @@ class FrontendScripts {
 	}
 
 	public function enqueue_scripts() {
-		if ( is_product() ) {
-			\wp_enqueue_script( 'wc-stripe-product-addons' );
-		}
+		\wp_enqueue_script( 'wc-stripe-product-addons' );
 	}
 
 }

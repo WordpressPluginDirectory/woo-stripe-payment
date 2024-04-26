@@ -107,6 +107,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 				'button_size_mode'   => 'fill',
 				'button_locale'      => $this->get_payment_button_locale(),
 				'button_shape'       => $this->get_option( 'button_shape', 'rect' ),
+				'button_radius'      => $this->get_option( 'button_radius', 4 ),
 				'total_price_label'  => __( 'Total', 'woo-stripe-payment' ),
 				'routes'             => array( 'payment_data' => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->googlepay->rest_uri( 'shipping-data' ) ) ),
 				'messages'           => array( 'invalid_amount' => __( 'Please update you product quantity before using Google Pay.', 'woo-stripe-payment' ) )
@@ -188,7 +189,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 	 * @return string|void
 	 */
 	protected function get_formatted_shipping_label( $price, $rate, $incl_tax ) {
-		$label = sprintf( '%s: %s %s', esc_attr( $rate->get_label() ), number_format( $price, 2 ), get_woocommerce_currency() );
+		$label = sprintf( '%s: %s %s', esc_attr( $rate->get_label() ), wc_format_decimal( $price, 2 ), get_woocommerce_currency() );
 		if ( $incl_tax ) {
 			if ( $rate->get_shipping_tax() > 0 && ! wc_prices_include_tax() ) {
 				$label .= ' ' . WC()->countries->inc_tax_or_vat();

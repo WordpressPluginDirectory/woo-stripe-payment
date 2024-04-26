@@ -150,17 +150,20 @@ return array(
 		'default'     => 'buy',
 		'description' => __( 'The button style of the GPay button.', 'woo-stripe-payment' ),
 	),
-	/*'button_shape'     => array(
-		'title'       => __( 'Button Shape', 'woo-stripe-payment' ),
-		'type'        => 'select',
-		'class'       => 'gpay-button-option gpay-button-shape',
-		'default'     => 'rect',
-		'options'     => array(
-			'rect' => __( 'Rectangle', 'woo-stripe-payment' ),
-			'pill' => __( 'Pill shape', 'woo-stripe-payment' ),
-		),
-		'description' => __( 'The button shape', 'woo-stripe-payment' ),
-	),*/
+	'button_radius'    => array(
+		'title'             => __( 'Button Radius', 'woo-stripe-payment' ),
+		'type'              => 'number',
+		'class'             => 'gpay-button-option button-radius',
+		'default'           => '4',
+		'description'       => __( 'The border radius of the button.', 'woo-stripe-payment' ),
+		'sanitize_callback' => function ( $value ) {
+			if ( ! preg_match( '/^[\d]+$/', $value ) ) {
+				$value = 0;
+			}
+
+			return absint( $value );
+		}
+	),
 	'button_render'    => array(
 		'type'        => 'button_demo',
 		'title'       => __( 'Button Design', 'woo-stripe-payment' ),

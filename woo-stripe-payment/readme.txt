@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.3.60
+Stable tag: 3.3.61
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,12 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.61 - 04/25/24 =
+* Added - Klarna support for CZK
+* Added - WC Tested to 8.8
+* Added - GPay button radius option
+* Fixed - Only load the WooCommerce Product Add-On script if payment buttons are enabled on product pages
+* Fixed - [https://wordpress.org/support/topic/fatal-error-after-updated-to-latest-version/](https://wordpress.org/support/topic/fatal-error-after-updated-to-latest-version/)
 = 3.3.60 - 03/18/24 =
 * Added - Order button text translations added to the wpml-config.xml file.
 * Added - Refund reason in the refund metadata. https://wordpress.org/support/topic/metadata-in-refunds/

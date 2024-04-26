@@ -197,7 +197,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 					'woo-stripe-payment' )
 			),
 			'dispute_created_status' => array(
-				'title'             => __( 'Disputed Created Order Status', 'woo-stripe-payment' ),
+				'title'             => __( 'Dispute Created Order Status', 'woo-stripe-payment' ),
 				'type'              => 'select',
 				'default'           => 'wc-on-hold',
 				'options'           => wc_get_order_statuses(),

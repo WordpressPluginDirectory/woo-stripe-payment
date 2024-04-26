@@ -10,11 +10,13 @@ class PaymentsApi {
 		add_filter( 'cartflows_offer_supported_payment_gateways', array( $this, 'add_payment_gateways' ) );
 		add_filter( 'wc_stripe_force_save_payment_method', array( $this, 'maybe_force_save_payment_method' ), 10, 3 );
 		add_filter( 'cartflows_offer_js_localize', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wcf_after_order_bump_process', function () {
+			add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'get_order_bump_fragments' ) );
+		} );
 	}
 
 	public function add_payment_gateways( $supported_gateways ) {
-		$ids = array( 'stripe_cc', 'stripe_googlepay', 'stripe_applepay', 'stripe_payment_request' );
-		foreach ( $ids as $id ) {
+		foreach ( $this->get_supported_gateway_ids() as $id ) {
 			$supported_gateways[ $id ] = array(
 				'path'  => dirname( __FILE__ ) . '/PaymentGateways/BasePaymentGateway.php',
 				'class' => '\PaymentPlugins\CartFlows\Stripe\PaymentGateways\BasePaymentGateway'
@@ -22,6 +24,10 @@ class PaymentsApi {
 		}
 
 		return $supported_gateways;
+	}
+
+	private function get_supported_gateway_ids() {
+		return array( 'stripe_cc', 'stripe_googlepay', 'stripe_applepay', 'stripe_payment_request' );
 	}
 
 	/**
@@ -80,6 +86,20 @@ class PaymentsApi {
 			'stripe_googlepay',
 			'stripe_payment_request'
 		) );
+	}
+
+	public function get_order_bump_fragments( $data ) {
+		$payment_gateways = WC()->payment_gateways()->payment_gateways();
+		foreach ( $this->get_supported_gateway_ids() as $id ) {
+			$gateway = $payment_gateways[ $id ] ?? null;
+			if ( $gateway ) {
+				ob_start();
+				$gateway->output_display_items( 'checkout' );
+				$data[ '.woocommerce_' . $id . '_gateway_data' ] = ob_get_clean();
+			}
+		}
+
+		return $data;
 	}
 
 }

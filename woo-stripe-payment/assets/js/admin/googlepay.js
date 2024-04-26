@@ -28,13 +28,10 @@
             onClick: function () {
             },
             buttonColor: $('.button-color').val(),
-            buttonType: $('.button-style').val()
+            buttonType: $('.button-style').val(),
+            buttonRadius: $('.button-radius').val()
         }));
         $('#gpay-button').append(this.$button);
-
-        /* if ($('.gpay-button-shape').val() === 'pill') {
-             this.$button.find('button').css('border-radius', '100px');
-         }*/
     }
 
     new Settings();

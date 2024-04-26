@@ -46,13 +46,12 @@ class PaymentIntent {
 
 	public function get_element_options() {
 		$params = array(
-			'mode'                 => 'payment',
-			'payment_method_types' => $this->get_payment_method_types()
+			'mode'                  => 'payment',
+			'paymentMethodCreation' => 'manual',
+			'payment_method_types'  => $this->get_payment_method_types()
 		);
 		if ( $this->is_setup_intent_needed() ) {
 			$params['mode'] = 'setup';
-		} else {
-			$params['paymentMethodCreation'] = 'manual';
 		}
 
 		return $params;

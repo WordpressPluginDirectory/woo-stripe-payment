@@ -30,6 +30,7 @@ class GooglePayPayment extends AbstractStripePayment {
 				'buttonColor'    => $this->payment_method->get_option( 'button_color' ),
 				'buttonType'     => $this->payment_method->get_option( 'button_style' ),
 				'buttonSizeMode' => 'fill',
+				'buttonRadius'   => (int) $this->payment_method->get_option( 'button_radius', 4 ),
 				'buttonLocale'   => $this->payment_method->get_payment_button_locale()
 			),
 			'buttonShape'       => $this->payment_method->get_option( 'button_shape', 'rect' ),

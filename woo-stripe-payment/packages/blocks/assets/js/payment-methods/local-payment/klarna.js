@@ -7,6 +7,7 @@ import {canMakePayment} from "./local-payment-method";
 import {PaymentMethodMessagingElement, Elements} from "@stripe/react-stripe-js";
 import {registerPlugin} from '@wordpress/plugins';
 import {ExperimentalOrderMeta, TotalsWrapper} from '@woocommerce/blocks-checkout';
+import {SilentErrorBoundary} from "../../components/shared";
 
 const getData = getSettings('stripe_klarna_data');
 
@@ -57,9 +58,11 @@ const KlarnaPaymentMethodLabel = ({title, paymentMethod, icons, components}) => 
         <div className={'wc-stripe-label-container'}>
             <Label text={title}/>
             <div className={'wc-stripe-klarna-message-container'}>
-                <Elements stripe={initStripe} options={getData('elementOptions')}>
-                    <PaymentMethodMessagingElement options={options}/>
-                </Elements>
+                <SilentErrorBoundary>
+                    <Elements stripe={initStripe} options={getData('elementOptions')}>
+                        <PaymentMethodMessagingElement options={options}/>
+                    </Elements>
+                </SilentErrorBoundary>
             </div>
         </div>
     )
@@ -125,9 +128,11 @@ if (isCartPage() && getData('cartEnabled')) {
     }
     const render = () => {
         const Component = (props) => (
-            <Elements stripe={initStripe} options={getData('elementOptions')}>
-                <KlarnaCartMessage {...props}/>
-            </Elements>
+            <SilentErrorBoundary>
+                <Elements stripe={initStripe} options={getData('elementOptions')}>
+                    <KlarnaCartMessage {...props}/>
+                </Elements>
+            </SilentErrorBoundary>
         );
 
         return (

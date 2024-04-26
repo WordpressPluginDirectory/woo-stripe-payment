@@ -66,7 +66,8 @@ class Api {
 	public function register_script( $handle, $relative_path, $deps = array() ) {
 		$src = $this->get_asset_url( $relative_path );
 		// check if there is an assets.php file
-		$path = $this->get_path( str_replace( '.js', '.asset.php', $relative_path ) );
+		$path    = $this->get_path( str_replace( '.js', '.asset.php', $relative_path ) );
+		$version = $this->config->get_version();
 
 		$default_deps = array( $this->commons_script_name );
 		if ( ! in_array( $handle, $default_deps ) ) {
@@ -78,8 +79,9 @@ class Api {
 			if ( isset( $dependency['dependencies'] ) ) {
 				$deps = wp_parse_args( $deps, $dependency['dependencies'] );
 			}
+			$version = $dependency['version'] ?? $version;
 		}
-		wp_register_script( $handle, $src, $deps, $this->config->get_version(), true );
+		wp_register_script( $handle, $src, $deps, $version, true );
 
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			wp_set_script_translations( $handle, 'woo-stripe-payment' );

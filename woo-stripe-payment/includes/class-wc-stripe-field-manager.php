@@ -77,21 +77,23 @@ class WC_Stripe_Field_Manager {
 		$is_subscription = wcs_stripe_active() && WC_Subscriptions_Product::is_subscription( $product );
 		$is_preorder     = wc_stripe_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product );
 
-		foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $id => $gateway ) {
-			/**
-			 *
-			 * @var WC_Payment_Gateway_Stripe $gateway
-			 */
-			if ( $gateway->supports( 'wc_stripe_product_checkout' ) && ! $product->is_type( 'external' ) ) {
-				if ( ( $is_subscription && ! $gateway->supports( 'subscriptions' ) ) || ( $is_preorder && ! $gateway->supports( 'pre-orders' ) ) ) {
-					continue;
-				}
-				$option = new WC_Stripe_Product_Gateway_Option( $product, $gateway );
-				if ( $option->enabled() ) {
-					if ( isset( $ordering[ $gateway->id ] ) ) {
-						$gateways[ $ordering[ $gateway->id ] ] = $gateway;
-					} else {
-						$gateways[] = $gateway;
+		if ( ! $product->is_type( 'external' ) ) {
+			foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $id => $gateway ) {
+				/**
+				 *
+				 * @var WC_Payment_Gateway_Stripe $gateway
+				 */
+				if ( $gateway->supports( 'wc_stripe_product_checkout' ) && ! $product->is_type( 'external' ) ) {
+					if ( ( $is_subscription && ! $gateway->supports( 'subscriptions' ) ) || ( $is_preorder && ! $gateway->supports( 'pre-orders' ) ) ) {
+						continue;
+					}
+					$option = new WC_Stripe_Product_Gateway_Option( $product, $gateway );
+					if ( $option->enabled() ) {
+						if ( isset( $ordering[ $gateway->id ] ) ) {
+							$gateways[ $ordering[ $gateway->id ] ] = $gateway;
+						} else {
+							$gateways[] = $gateway;
+						}
 					}
 				}
 			}

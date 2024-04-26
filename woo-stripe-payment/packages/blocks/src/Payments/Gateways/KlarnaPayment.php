@@ -21,7 +21,7 @@ class KlarnaPayment extends AbstractStripeLocalPayment {
 			'currency'        => $currency,
 			'requiredParams'  => $this->payment_method->get_required_parameters(),
 			'messageOptions'  => array(
-				'countryCode' => stripe_wc()->account_settings->get_account_country()
+				'countryCode' => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() )
 			),
 			'cartTotals'      => [
 				'value' => wc_stripe_add_number_precision( $cart_total, $currency )

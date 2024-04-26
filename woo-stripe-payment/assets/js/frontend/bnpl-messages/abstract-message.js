@@ -36,7 +36,7 @@ class AbstractMessage {
                 this.msgElement = this.gateway?.elements?.create(this.getElementType(), this.getMessageOptions());
             }
         } catch (error) {
-            //console.log(error);
+            console.log(error);
         }
         return this.msgElement;
     }

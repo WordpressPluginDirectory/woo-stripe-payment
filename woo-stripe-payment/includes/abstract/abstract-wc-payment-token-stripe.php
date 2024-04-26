@@ -191,4 +191,8 @@ abstract class WC_Payment_Token_Stripe extends WC_Payment_Token {
 		return '';
 	}
 
+	public function get_display_name( $deprecated = '' ) {
+		return $this->get_payment_method_title();
+	}
+
 }

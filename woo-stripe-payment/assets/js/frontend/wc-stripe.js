@@ -1605,7 +1605,8 @@
             onClick: this.start.bind(this),
             buttonColor: this.params.button_color,
             buttonType: this.params.button_style,
-            buttonSizeMode: this.params.button_size_mode
+            buttonSizeMode: this.params.button_size_mode,
+            buttonRadius: parseInt(this.params.button_radius)
         };
         if (this.params.button_locale !== null) {
             options.buttonLocale = this.params.button_locale;
