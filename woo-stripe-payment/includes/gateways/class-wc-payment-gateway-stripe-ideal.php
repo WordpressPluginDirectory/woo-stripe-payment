@@ -8,14 +8,16 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
 /**
  *
  * @package Stripe/Gateways
- * @author PaymentPlugins
+ * @author  PaymentPlugins
  *
  */
 class WC_Payment_Gateway_Stripe_Ideal extends WC_Payment_Gateway_Stripe_Local_Payment {
 
+	use WC_Stripe_Local_Payment_Intent_Trait;
+
 	protected $payment_method_type = 'ideal';
 
-	use WC_Stripe_Local_Payment_Intent_Trait;
+	public $token_type = 'Stripe_Sepa';
 
 	public function __construct() {
 		$this->local_payment_type = 'ideal';
@@ -28,4 +30,36 @@ class WC_Payment_Gateway_Stripe_Ideal extends WC_Payment_Gateway_Stripe_Local_Pa
 		$this->icon               = stripe_wc()->assets_url( 'img/ideal.svg' );
 		parent::__construct();
 	}
+
+	public function init_supports() {
+		$this->supports = array(
+			'tokenization',
+			'products',
+			'subscriptions',
+			'add_payment_method',
+			'subscription_cancellation',
+			'multiple_subscriptions',
+			'subscription_amount_changes',
+			'subscription_date_changes',
+			'default_credit_card_form',
+			'refunds',
+			'pre-orders',
+			'subscription_payment_method_change_admin',
+			'subscription_reactivation',
+			'subscription_suspension',
+			'subscription_payment_method_change_customer',
+		);
+	}
+
+	public function get_payment_element_options() {
+		return array_merge(
+			parent::get_payment_element_options(),
+			array(
+				'terms' => array(
+					'ideal' => 'auto'
+				)
+			)
+		);
+	}
+
 }

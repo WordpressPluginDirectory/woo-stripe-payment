@@ -8,12 +8,20 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
 /**
  *
  * @package Stripe/Gateways
- * @author PaymentPlugins
+ * @author  PaymentPlugins
  *
  */
 class WC_Payment_Gateway_Stripe_Multibanco extends WC_Payment_Gateway_Stripe_Local_Payment {
 
-	use WC_Stripe_Local_Payment_Charge_Trait;
+	use WC_Stripe_Local_Payment_Intent_Trait;
+
+	use WC_Stripe_Voucher_Payment_Trait;
+
+	protected $payment_method_type = 'multibanco';
+
+	public $synchronous = false;
+
+	public $is_voucher_payment = true;
 
 	public function __construct() {
 		$this->local_payment_type = 'multibanco';
@@ -28,4 +36,5 @@ class WC_Payment_Gateway_Stripe_Multibanco extends WC_Payment_Gateway_Stripe_Loc
 		$this->icon               = stripe_wc()->assets_url( 'img/multibanco.svg' );
 		parent::__construct();
 	}
+
 }

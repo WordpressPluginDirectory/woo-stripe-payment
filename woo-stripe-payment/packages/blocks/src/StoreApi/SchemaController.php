@@ -14,7 +14,7 @@ class SchemaController {
 	public function __construct( ExtendSchema $extend_schema, PaymentsApi $payments_api ) {
 		$this->extend_schema = $extend_schema;
 		$this->payments_api  = $payments_api;
-		//add_action( 'init', [ $this, 'initialize' ], 20 );
+		add_action( 'init', [ $this, 'initialize' ], 20 );
 	}
 
 	public function initialize() {

@@ -24,7 +24,7 @@ class PaymentsApi {
 	private $assets_registry;
 
 	/**
-	 * @var Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry
+	 * @var PaymentMethodRegistry
 	 */
 	private $payment_method_registry;
 
@@ -50,6 +50,7 @@ class PaymentsApi {
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_with_context' ), 10, 2 );
 		add_action( 'wc_stripe_blocks_enqueue_styles', array( $this, 'enqueue_payment_styles' ) );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_editor_styles' ] );
+		add_filter( 'woocommerce_saved_payment_methods_list', [ $this, 'transform_payment_method_type' ], 99 );
 	}
 
 	private function add_payment_methods() {
@@ -147,6 +148,28 @@ class PaymentsApi {
 		$this->container->register( Gateways\SwishPayment::class, function ( Container $container ) {
 			return new Gateways\SwishPayment( $container->get( AssetsApi::class ) );
 		} );
+		$this->container->register( Gateways\AmazonPayPayment::class, function ( Container $container ) {
+			return new Gateways\AmazonPayPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\CashAppPayment::class, function ( $container ) {
+			return new Gateways\CashAppPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\RevolutPayment::class, function ( $container ) {
+			return new Gateways\RevolutPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\ZipPayment::class, function ( $container ) {
+			return new Gateways\ZipPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\MobilePayPayment::class, function ( $container ) {
+			return new Gateways\MobilePayPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\UniversalPayment::class, function ( Container $container ) {
+			return new Gateways\UniversalPayment(
+				$container->get( AssetsApi::class ),
+				PaymentIntent::instance(),
+				InstallmentController::instance()
+			);
+		} );
 	}
 
 	/**
@@ -186,7 +209,13 @@ class PaymentsApi {
 			Gateways\KonbiniPayment::class,
 			Gateways\PayNowPayment::class,
 			Gateways\PromptPayPayment::class,
-			Gateways\SwishPayment::class
+			Gateways\SwishPayment::class,
+			Gateways\AmazonPayPayment::class,
+			Gateways\UniversalPayment::class,
+			Gateways\CashAppPayment::class,
+			Gateways\RevolutPayment::class,
+			Gateways\ZipPayment::class,
+			Gateways\MobilePayPayment::class
 		);
 
 		foreach ( $payment_methods as $clazz ) {
@@ -201,7 +230,7 @@ class PaymentsApi {
 	private function add_payment_method_to_registry( $clazz, $registry ) {
 		$instance = $this->container->get( $clazz );
 		$registry->register( $instance );
-		$this->payment_methods[] = $instance;
+		$this->payment_methods[ $instance->get_name() ] = $instance;
 	}
 
 	/**
@@ -238,7 +267,10 @@ class PaymentsApi {
 				'stripeParams'   => [
 					'stripeAccount' => wc_stripe_get_account_id(),
 					'apiVersion'    => '2020-08-27',
-					'betas'         => []
+					'betas'         => [
+						'deferred_intent_blik_beta_1',
+						'disable_deferred_intent_client_validation_beta_1'
+					]
 				],
 				'version'        => $this->config->get_version(),
 				'blocksVersion'  => \Automattic\WooCommerce\Blocks\Package::get_version(),
@@ -293,6 +325,40 @@ class PaymentsApi {
 	 */
 	public function get_payment_methods() {
 		return $this->payment_methods;
+	}
+
+	/**
+	 * Blocks only recognize payment tokens of type 'cc' therefore it's necessary to map
+	 * the 'stripe_cc' list entry to 'cc'.
+	 *
+	 * @param $list
+	 *
+	 * @return mixed
+	 */
+	public function transform_payment_method_type( $list ) {
+		$universal_payment_method = $this->payment_method_registry->get_registered( 'stripe_upm' );
+		if ( ! isset( $list['cc'] ) ) {
+			$list['cc'] = [];
+		}
+		foreach ( $list as $type => $items ) {
+			$payment_method = null;
+			foreach ( $items as $item ) {
+				$payment_method = $this->payment_methods[ $item['method']['gateway'] ] ?? null;
+				if ( $payment_method ) {
+					if ( $payment_method->is_active() ) {
+						$list['cc'][] = $item;
+					} elseif ( $universal_payment_method->is_active() && $universal_payment_method->is_payment_method_active( $payment_method->get_name() ) ) {
+						$item['method']['gateway'] = $universal_payment_method->get_name();
+						$list['cc'][]              = $item;
+					}
+				}
+			}
+			if ( $payment_method ) {
+				unset( $list[ $type ] );
+			}
+		}
+
+		return $list;
 	}
 
 }

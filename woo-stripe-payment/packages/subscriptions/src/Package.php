@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\Stripe\WooCommerceSubscriptions;
 
+use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\ChangePaymentGatewayController;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\OrderMetadata;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\PaymentIntent;
 
@@ -21,6 +22,7 @@ class Package {
 	public static function initialize() {
 		new PaymentIntent( new FrontendRequests() );
 		new OrderMetadata();
+		( new ChangePaymentGatewayController() )->initialize();
 	}
 
 	private static function is_enabled() {

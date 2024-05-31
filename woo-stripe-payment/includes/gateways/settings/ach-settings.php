@@ -34,6 +34,13 @@ return array(
 		'description' => __( 'Leave blank if you don\'t want a description to show for the gateway.', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
 	),
+	'stripe_mandate'    => array(
+		'title'       => __( 'Use Stripe Mandate', 'woo-stripe-payment' ),
+		'type'        => 'checkbox',
+		'default'     => 'yes',
+		'desc_tip'    => true,
+		'description' => __( 'If enabled, Stripe\'s default mandate text will be used. If disabled, the plugin will use it\'s mandate text.', 'woo-stripe-payment' )
+	),
 	'order_button_text' => array(
 		'title'       => __( 'Order Button Text', 'woo-stripe-payment' ),
 		'type'        => 'text',

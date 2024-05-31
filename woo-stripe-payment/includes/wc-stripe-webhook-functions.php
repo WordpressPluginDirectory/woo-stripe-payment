@@ -196,6 +196,10 @@ function wc_stripe_process_create_refund( $charge ) {
 		if ( ! $order ) {
 			throw new Exception( sprintf( 'Could not match order with charge %s.', $charge->id ) );
 		}
+		if ( isset( $charge->metadata['cancellation_via'] ) && $charge->metadata['cancellation_via'] === 'woocommerce_admin' ) {
+			// This refund webhook is the result of an authorized payment intent being cancelled. Don't create a refund object.
+			return;
+		}
 		$response = WC_Stripe_Gateway::load( wc_stripe_order_mode( $order ) )->refunds->all( array( 'charge' => $charge->id ) );
 		$refunds  = $response->data;
 		usort( $refunds, function ( $a, $b ) {

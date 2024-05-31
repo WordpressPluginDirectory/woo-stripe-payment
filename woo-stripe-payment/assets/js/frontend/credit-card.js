@@ -17,7 +17,6 @@
         this.handle_create_account_change();
         $(document.body).on('change', '[name="stripe_cc_saved_method_key"]', this.maybe_initialize_installments.bind(this));
         $(document.body).on('wc_stripe_saved_method_' + this.gateway_id, this.maybe_initialize_installments.bind(this));
-        $(document.body).on('change', '[name="billing_email"], [name="billing_phone"], [name="billing_first_name"], [name="billing_last_name"]', this.handle_checkout_field_change.bind(this));
     }
 
     var elementClasses = {
@@ -34,7 +33,7 @@
         cardCvc: '#stripe-cvv'
     }
 
-    CC.prototype.handleActionMethod = 'handleCardAction';
+    CC.prototype.handleActionMethod = 'confirmCardPayment';
     CC.prototype.setupActionMethod = 'confirmCardSetup';
 
     /**
@@ -80,36 +79,19 @@
                 $('#stripe-postal-code').val(val).trigger('keyup');
             }.bind(this));
         } else {
-            if (this.is_payment_element_enabled()) {
-                this.card = this.elements.create('payment', {
-                    fields: {
-                        billingDetails: this.is_current_page('checkout') ? {address: 'never', name: 'auto', email: 'auto', phone: 'auto'} : 'auto'
-                    },
-                    wallets: {applePay: 'never', googlePay: 'never'},
-                    defaultValues: {
-                        billingDetails: {
-                            name: this.fields.get('billing_first_name') + ' ' + this.fields.get('billing_last_name'),
-                            email: this.fields.get('billing_email'),
-                            phone: this.fields.get('billing_phone')
-                        }
-                    }
-                });
-                this.elementStatus.payment = {};
-            } else {
-                this.card = this.elements.create('card', $.extend(true, {}, {
-                    value: {
-                        postalCode: this.fields.get('billing_postcode', '')
-                    },
-                    hidePostalCode: this.fields.required('billing_postcode'),
-                    iconStyle: 'default'
-                }, this.params.cardOptions));
-                $(document.body).on('change', '#billing_postcode', function (e) {
-                    if (this.card) {
-                        this.card.update({value: $('#billing_postcode').val()});
-                    }
-                }.bind(this));
-                this.elementStatus.card = {};
-            }
+            this.card = this.elements.create('card', $.extend(true, {}, {
+                value: {
+                    postalCode: this.fields.get('billing_postcode', '')
+                },
+                hidePostalCode: this.fields.required('billing_postcode'),
+                iconStyle: 'default'
+            }, this.params.cardOptions));
+            $(document.body).on('change', '#billing_postcode', function (e) {
+                if (this.card) {
+                    this.card.update({value: $('#billing_postcode').val()});
+                }
+            }.bind(this));
+            this.elementStatus.card = {};
             this.card.on('change', this.on_card_element_change.bind(this));
         }
         // setup a timeout so CC element is always rendered.
@@ -187,14 +169,12 @@
                 if ($('#wc-stripe-card-element').find('iframe').length == 0) {
                     this.card.unmount();
                     this.card.mount('#wc-stripe-card-element');
-                    if (!this.is_payment_element_enabled()) {
-                        this.card.update({
-                            value: {
-                                postalCode: this.fields.get('billing_postcode', '')
-                            },
-                            hidePostalCode: this.fields.required('billing_postcode')
-                        });
-                    }
+                    this.card.update({
+                        value: {
+                            postalCode: this.fields.get('billing_postcode', '')
+                        },
+                        hidePostalCode: this.fields.required('billing_postcode')
+                    });
                 }
             }
         }
@@ -213,53 +193,24 @@
                 if (this.confirmedSetupIntent) {
                     return this.on_setup_intent_received(this.confirmedSetupIntent);
                 }
-                if (this.is_payment_element_enabled()) {
-                    this.elements.submit().then(function () {
-                        this.block();
-                        this.stripe.confirmSetup({
-                            elements: this.elements,
-                            clientSecret: this.client_secret,
-                            confirmParams: (function () {
-                                var params = {return_url: ''};
-                                if (this.is_current_page('checkout')) {
-                                    params.payment_method_data = {
-                                        billing_details: this.get_billing_details()
-                                    };
-                                }
-                                return params;
-                            }.bind(this)()),
-                            redirect: 'if_required'
-                        }).then(function (result) {
-                            if (result.error) {
-                                this.unblock();
-                                return this.submit_card_error(result.error);
+                this.stripe.confirmCardSetup(this.client_secret, {
+                    payment_method: {
+                        card: this.is_custom_form() ? this.cardNumber : this.card,
+                        billing_details: (function () {
+                            if (this.is_current_page('checkout')) {
+                                return this.get_billing_details();
                             }
-                            this.confirmedSetupIntent = result.setupIntent;
-                            this.on_setup_intent_received(result.setupIntent);
-                        }.bind(this)).catch(function (error) {
-                            this.unblock();
-                        }.bind(this));
-                    }.bind(this));
-                } else {
-                    this.stripe.confirmCardSetup(this.client_secret, {
-                        payment_method: {
-                            card: this.is_custom_form() ? this.cardNumber : this.card,
-                            billing_details: (function () {
-                                if (this.is_current_page('checkout')) {
-                                    return this.get_billing_details();
-                                }
-                                return $.extend({}, this.is_custom_form() ? {address: {postal_code: $('#stripe-postal-code').val()}} : {});
-                            }.bind(this)())
-                        }
-                    }).then(function (result) {
-                        if (result.error) {
-                            this.submit_card_error(result.error);
-                            return;
-                        }
-                        this.confirmedSetupIntent = result.setupIntent;
-                        this.on_setup_intent_received(result.setupIntent);
-                    }.bind(this))
-                }
+                            return $.extend({}, this.is_custom_form() ? {address: {postal_code: $('#stripe-postal-code').val()}} : {});
+                        }.bind(this)())
+                    }
+                }).then(function (result) {
+                    if (result.error) {
+                        this.submit_card_error(result.error);
+                        return;
+                    }
+                    this.confirmedSetupIntent = result.setupIntent;
+                    this.on_setup_intent_received(result.setupIntent);
+                }.bind(this))
             } else {
                 if (!this.payment_token_received && !this.is_saved_method_selected()) {
                     e.preventDefault();
@@ -275,11 +226,7 @@
                                 } else {
                                     this.on_token_received(result.paymentMethod);
                                 }
-                            }.bind(this)).catch(function (error) {
-                                return this.submit_card_error(error);
                             }.bind(this))
-                        }.bind(this)).catch(function (error) {
-                            return this.submit_card_error(error);
                         }.bind(this));
                     }
                 }
@@ -327,22 +274,6 @@
      *
      */
     CC.prototype.updated_checkout = function (e, data) {
-        if (typeof data !== 'undefined' && data.fragments && data.fragments.hasOwnProperty('.wc-stripe-element-options')) {
-            if (this.is_payment_element_enabled()) {
-                try {
-                    var options = JSON.parse(window.atob(decodeURIComponent(data.fragments['.wc-stripe-element-options'])));
-                    // if mode has changed, update elements
-                    if (this.params.elementOptions.mode !== options.mode) {
-                        this.params.elementOptions = Object.assign(this.params.elementOptions, options);
-                        this.params.cardFormType = 'payment';
-                        this.elements = this.create_stripe_elements();
-                        this.setup_card();
-                    }
-                } catch (error) {
-
-                }
-            }
-        }
         this.create_card_element();
         this.handle_create_account_change();
         if (this.has_gateway_data() && this.can_create_setup_intent() && !this.client_secret) {
@@ -589,60 +520,15 @@
         }
     }
 
-    CC.prototype.is_payment_element_enabled = function () {
-        return this.params.cardFormType === 'payment'
-    }
-
     CC.prototype.get_element_options = function () {
-        if (this.is_payment_element_enabled()) {
-            var params = this.params.elementOptions.mode === 'payment' ? this.get_payment_element_params() : {};
-            return $.extend({}, this.params.elementOptions, params);
-        }
         return this.params.elementOptions;
     }
 
-    CC.prototype.get_payment_element_params = function () {
-        if (this.has_gateway_data()) {
-            var data = {
-                amount: this.get_total_price_cents(),
-                currency: this.get_currency().toLowerCase()
-            };
-            if (data.amount <= 0) {
-                data.amount = 100;
-            }
-            return data;
-        }
-        return {amount: 100, currency: this.params.currency.toLowerCase()};
-    }
-
     CC.prototype.get_create_payment_method_params = function () {
-        if (this.is_payment_element_enabled()) {
-            return {
-                elements: this.elements,
-                params: {
-                    billing_details: this.get_billing_details()
-                }
-            }
-        } else {
-            return {
-                type: 'card',
-                card: this.is_custom_form() ? this.cardNumber : this.card,
-                billing_details: this.get_billing_details()
-            }
-        }
-    }
-
-    CC.prototype.handle_checkout_field_change = function () {
-        if (this.is_payment_element_enabled() && this.card) {
-            this.card.update({
-                defaultValues: {
-                    billingDetails: {
-                        name: $('#billing_first_name').val() + ' ' + $('#billing_last_name').val(),
-                        email: $('#billing_email').val(),
-                        phone: $('#billing_phone').val()
-                    }
-                }
-            })
+        return {
+            type: 'card',
+            card: this.is_custom_form() ? this.cardNumber : this.card,
+            billing_details: this.get_billing_details()
         }
     }
 

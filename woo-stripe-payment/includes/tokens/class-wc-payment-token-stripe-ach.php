@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit();
  * @author  Payment Plugins
  *
  */
-class WC_Payment_Token_Stripe_ACH extends WC_Payment_Token_Stripe {
+class WC_Payment_Token_Stripe_ACH extends WC_Payment_Token_Stripe_Local {
 
 	use WC_Payment_Token_Payment_Method_Trait;
 

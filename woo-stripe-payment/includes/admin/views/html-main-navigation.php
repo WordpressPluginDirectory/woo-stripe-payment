@@ -1,7 +1,7 @@
 <?php
 
-$page    = isset( $_GET['page'] ) ? $_GET['page'] : '';
-$section = isset( $_GET['section'] ) ? $_GET['section'] : '';
+$page    = isset( $_GET['page'] ) ? wc_clean( $_GET['page'] ) : '';
+$section = isset( $_GET['section'] ) ? wc_clean( $_GET['section'] ) : '';
 ?>
 <div class="navigation">
     <div class="wc-stripe-main__logo">

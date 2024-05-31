@@ -203,6 +203,30 @@ label.wc-stripe-label-payment-type:after {
     background-image: url(../img/sepa.svg);
 }
 
+.select2-container .select2-selection--single .wc-stripe-select2-container.stripe_sepa:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_sepa:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_sepa:before {
+    background-image: url(../img/sepa.svg);
+}
+
+.select2-container .select2-selection--single .wc-stripe-select2-container.stripe_upm.amazon_pay:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_upm.amazon_pay:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_upm.amazon_pay:before {
+    background-image: url(../img/amazon_pay.svg);
+}
+
+.select2-container .select2-selection--single .wc-stripe-select2-container.stripe_cashapp:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_cashapp:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_cashapp:before {
+    background-image: url(../img/cashapp.svg);
+}
+
+.select2-container .select2-selection--single .wc-stripe-select2-container.stripe_upm.revolut_pay:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_upm.revolut_pay:before,
+.select2-results__options li.wc-stripe-select2-container.stripe_upm.revolut_pay:before {
+    background-image: url(../img/revolut_pay.svg);
+}
+
 .select2-results__options li.wc-stripe-select2-container.wc-stripe-ach:before,
 .select2-results__options li.wc-stripe-select2-container.stripe_becs:before,
 .select2-container .select2-selection--single .wc-stripe-select2-container.stripe_becs:before {
@@ -732,6 +756,21 @@ ul.payment_methods li.payment_method_stripe_swish img {
     max-height: 28px;
 }
 
+ul.payment_methods li.payment_method_stripe_cashapp img {
+    width: 32px;
+    height: 32px;
+}
+
+ul.payment_methods li.payment_method_stripe_revolut img {
+    width: 22px;
+    height: 28px;
+}
+
+ul.payment_methods li.payment_method_stripe_zip img {
+    width: 48px;
+    height: 30px;
+}
+
 #wc-stripe-card-element {
     width: 100%;
 }
@@ -836,11 +875,6 @@ ul.payment_methods li[class*=payment_method_stripe_] .wc-stripe_cc-new-method-co
 .wc-stripe-save-source label.checkbox {
     padding: 0 !important;
     margin: 0px;
-}
-
-div[id*=wc_stripe_local_payment_stripe_].StripeElement {
-    border: 1px solid #eee;
-    border-radius: 4px;
 }
 
 #payment .payment_methods li #wc_stripe_local_payment_stripe_wechat img,
@@ -1310,5 +1344,13 @@ div.product .wc-stripe-bnpl-product-message {
 }
 
 .wc-stripe-bnpl-cart-message-container:nth-of-type(n+2) {
+    margin-top: 10px;
+}
+
+.woocommerce-checkout #payment ul.payment_methods li:not(.woocommerce-notice) div.wc-stripe-gateway-container li::before {
+    content: none;
+}
+
+.wc-stripe_upm-new-method-container .wc-stripe-save-source {
     margin-top: 10px;
 }

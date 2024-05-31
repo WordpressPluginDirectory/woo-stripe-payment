@@ -20,6 +20,8 @@ class WC_Stripe_Frontend_Scripts {
 
 	public $localized_data = array();
 
+	private $scripts_registered = false;
+
 	public $global_scripts = array(
 		'external' => 'https://js.stripe.com/v3/',
 		'gpay'     => 'https://pay.google.com/gp/p/js/pay.js'
@@ -33,16 +35,31 @@ class WC_Stripe_Frontend_Scripts {
 		add_action( 'wp_print_scripts', array( $this, 'localize_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( $this, 'localize_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( $this, 'print_footer_scripts' ), 6 );
+
+		$this->initialize();
 	}
 
-	/**
-	 * Enqueue all frontend scripts needed by the plugin
-	 */
-	public function enqueue_scripts() {
+	public function initialize() {
+		if ( did_action( 'init' ) || doing_action( 'init' ) ) {
+			$this->register_scripts();
+		}
+	}
+
+	protected function register_scripts() {
 		// register global scripts
 		foreach ( $this->global_scripts as $handle => $src ) {
 			$this->register_script( $handle, $src );
 		}
+
+		$this->assets_api->register_script( 'wc-stripe-vendors', 'assets/build/vendors.js' );
+
+		$this->assets_api->register_script( 'wc-stripe-checkout-modules', 'assets/build/checkout-modules.js', array( 'wc-stripe-vendors' ) );
+
+		$this->assets_api->register_script( 'wc-stripe-message-modules', 'assets/build/message-modules.js', array( 'wc-stripe-vendors' ) );
+
+		$this->assets_api->register_script( 'wc-stripe-local-payment', 'assets/build/local-payment.js' );
+
+		$this->assets_api->register_script( 'wc-stripe-ach-connections', 'assets/build/ach-connections.js' );
 
 		$this->register_script( 'form-handler', $this->assets_url( 'js/frontend/form-handler.js' ), array( 'jquery' ) );
 
@@ -53,8 +70,22 @@ class WC_Stripe_Frontend_Scripts {
 				$this->get_handle( 'external' ),
 				'woocommerce',
 				$this->get_handle( 'form-handler' )
-			) );
+			)
+		);
 
+		wp_register_style( $this->prefix . 'styles', $this->assets_url( 'build/stripe.css' ), array(), stripe_wc()->version() );
+
+		$this->scripts_registered = true;
+	}
+
+
+	/**
+	 * Enqueue all frontend scripts needed by the plugin
+	 */
+	public function enqueue_scripts() {
+		if ( ! $this->scripts_registered ) {
+			$this->register_scripts();
+		}
 		// mini cart is not relevant on cart and checkout page.
 		if ( ! is_checkout() && ! is_cart() ) {
 			foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
@@ -62,16 +93,6 @@ class WC_Stripe_Frontend_Scripts {
 					$gateway->enqueue_frontend_scripts( 'mini_cart' );
 				}
 			}
-		}
-
-		if ( function_exists( 'wp_add_inline_script' ) ) {
-			wp_add_inline_script( $this->get_handle( 'wc-stripe' ), '(function(){
-				if(window.navigator.userAgent.match(/MSIE|Trident/)){
-					var script = document.createElement(\'script\');
-					script.setAttribute(\'src\', \'' . $this->assets_url( 'js/frontend/promise-polyfill.min.js' ) . '\');
-					document.head.appendChild(script);
-				}
-			}());' );
 		}
 	}
 
@@ -87,7 +108,11 @@ class WC_Stripe_Frontend_Scripts {
 				'stripeParams' => array(
 					'stripeAccount' => $account_id,
 					'apiVersion'    => '2022-08-01',
-					'betas'         => array()
+					'betas'         => array(
+						'deferred_intent_blik_beta_1',
+						'disable_deferred_intent_client_validation_beta_1',
+						'multibanco_pm_beta_1'
+					)
 				)
 			),
 			'wc_stripe_params_v3'
@@ -114,18 +139,11 @@ class WC_Stripe_Frontend_Scripts {
 	}
 
 	public function enqueue_local_payment_scripts() {
-		if ( ! in_array( $this->get_handle( 'local-payment' ), $this->enqueued_scripts ) ) {
+		if ( ! wp_script_is( 'wc-stripe-local-payment', 'enqueued' ) ) {
 			$data = wc_stripe_get_local_payment_params();
 			// only enqueue local payment script if there are local payment gateways that have been enabled.
 			if ( ! empty( $data['gateways'] ) ) {
-				$this->enqueue_script(
-					'local-payment',
-					$this->assets_url( 'js/frontend/local-payment.js' ),
-					array(
-						$this->get_handle( 'external' ),
-						$this->get_handle( 'wc-stripe' ),
-					)
-				);
+				wp_enqueue_script( 'wc-stripe-local-payment' );
 				$this->localize_script( 'local-payment', $data );
 			}
 		}

@@ -34,6 +34,13 @@ return array(
 		'description' => __( 'Leave blank if you don\'t want a description to show for the gateway.', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
 	),
+	'notice_enabled'       => array(
+		'title'       => __( 'Show Payment Notice', 'woo-stripe-payment' ),
+		'type'        => 'checkbox',
+		'default'     => 'yes',
+		'description' => __( 'When enabled, a notice with additional payment instructions is shown in the payment method section of the checkout shortcode.', 'woo-stripe-payment' ),
+		'desc_tip'    => true
+	),
 	'method_format'    => array(
 		'title'       => __( 'Credit Card Display', 'woo-stripe-payment' ),
 		'type'        => 'select',

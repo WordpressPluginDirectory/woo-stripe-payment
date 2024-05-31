@@ -3,18 +3,11 @@
 
 namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
 
+use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripeLocalPayment;
 
-use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment;
-
-class ACHPayment extends AbstractStripePayment {
+class ACHPayment extends AbstractStripeLocalPayment {
 
 	protected $name = 'stripe_ach';
-
-	public function get_payment_method_script_handles() {
-		$this->assets_api->register_script( 'wc-stripe-blocks-ach', 'build/wc-stripe-ach.js' );
-
-		return array( 'wc-stripe-blocks-ach' );
-	}
 
 	public function get_payment_method_icon() {
 		return array(
@@ -26,8 +19,11 @@ class ACHPayment extends AbstractStripePayment {
 
 	public function get_payment_method_data() {
 		return wp_parse_args( array(
-			'businessName' => $this->payment_method->get_option( 'business_name' ),
-			'mandateText'  => $this->payment_method->get_mandate_text()
+			'businessName'   => $this->payment_method->get_option( 'business_name' ),
+			'mandate'        => wc_string_to_bool( $this->get_setting( 'stripe_mandate', 'yes' ) ),
+			'mandateText'    => $this->payment_method->get_mandate_text(),
+			'accountCountry' => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
+			'showSaveOption'         => \in_array( 'tokenization', $this->get_supported_features() ) && wc_string_to_bool( $this->get_setting( 'save_card_enabled', true ) ),
 		), parent::get_payment_method_data() );
 	}
 

@@ -2,6 +2,8 @@
 
 namespace PaymentPlugins\Stripe\Controllers;
 
+use PaymentPlugins\Stripe\RequestContext;
+
 class PaymentIntent {
 
 	/**
@@ -19,6 +21,13 @@ class PaymentIntent {
 	private $max_retries = 1;
 
 	private $intent_exists;
+
+	/**
+	 * @var RequestContext
+	 */
+	private $request_context;
+
+	private $element_options;
 
 	private static $instance;
 
@@ -44,17 +53,36 @@ class PaymentIntent {
 		//add_filter( 'wc_stripe_blocks_general_data', [ $this, 'add_blocks_general_data' ] );
 	}
 
-	public function get_element_options() {
-		$params = array(
-			'mode'                  => 'payment',
-			'paymentMethodCreation' => 'manual',
-			'payment_method_types'  => $this->get_payment_method_types()
-		);
-		if ( $this->is_setup_intent_needed() ) {
-			$params['mode'] = 'setup';
+	public function set_request_context( $context ) {
+		$this->request_context = $context;
+	}
+
+	public function get_request_context() {
+		if ( ! $this->request_context ) {
+			$this->request_context = new RequestContext();
 		}
 
-		return $params;
+		return $this->request_context;
+	}
+
+	public function get_element_options() {
+		if ( ! $this->element_options ) {
+			$element_options = array(
+				'mode'                  => 'payment',
+				'paymentMethodCreation' => 'manual'
+			);
+			if ( ! $this->request_context ) {
+				$this->request_context = new RequestContext();
+			}
+			if ( $this->is_setup_intent_needed() ) {
+				$element_options['mode'] = 'setup';
+			} elseif ( $this->is_subscription_mode() ) {
+				$element_options['mode'] = 'subscription';
+			}
+			$this->element_options = $element_options;
+		}
+
+		return $this->element_options;
 	}
 
 	protected function is_payment_intent_required_for_frontend() {
@@ -81,7 +109,11 @@ class PaymentIntent {
 	}
 
 	private function is_setup_intent_needed() {
-		return ( is_add_payment_method_page() || apply_filters( 'wc_stripe_create_setup_intent', false ) ) && $this->is_payment_intent_required_for_frontend();
+		return ( $this->request_context->is_add_payment_method() || apply_filters( 'wc_stripe_create_setup_intent', false, $this->get_request_context() ) ) && $this->is_payment_intent_required_for_frontend();
+	}
+
+	private function is_subscription_mode() {
+		return apply_filters( 'wc_stripe_deferred_intent_subscription_mode', false, $this->get_request_context() );
 	}
 
 	public function set_order_pay_constants() {

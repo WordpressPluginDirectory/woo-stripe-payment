@@ -81,7 +81,19 @@ class WC_Stripe_Controller_Payment_Intent extends WC_Stripe_Rest_Controller {
 			 * @var WC_Payment_Gateway_Stripe $payment_method
 			 */
 			$payment_method = WC()->payment_gateways()->payment_gateways()[ $request['payment_method'] ];
-			$params         = array( 'usage' => 'off_session', 'payment_method_types' => [ $payment_method->get_payment_method_type() ] );
+			if ( $payment_method->id === 'stripe_upm' ) {
+				$params   = array(
+					'usage'                        => 'off_session',
+					'automatic_payment_methods'    => array( 'enabled' => true ),
+					'payment_method_configuration' => $payment_method->get_payment_method_configuration()
+				);
+				$customer = wc_stripe_get_customer_id( get_current_user_id() );
+				if ( $customer ) {
+					$params['customer'] = $customer;
+				}
+			} else {
+				$params = array( 'usage' => 'off_session', 'payment_method_types' => [ $payment_method->get_payment_method_type() ] );
+			}
 			// @3.3.12 - check if 3DS is being forced
 			if ( $payment_method->is_active( 'force_3d_secure' ) ) {
 				$params['payment_method_options']['card']['request_three_d_secure'] = 'any';
@@ -90,14 +102,30 @@ class WC_Stripe_Controller_Payment_Intent extends WC_Stripe_Rest_Controller {
 				apply_filters( 'wc_stripe_create_setup_intent_params', $params, $payment_method, $request )
 			);
 			if ( is_wp_error( $intent ) ) {
+				if ( $intent->get_error_code() === 'resource_missing:customer' ) {
+					$response = WC_Stripe_Customer_Manager::instance()->create_customer( new WC_Customer( get_current_user_id() ) );
+					if ( ! is_wp_error( $response ) ) {
+						wc_stripe_save_customer( $response->id, get_current_user_id() );
+
+						return $this->create_setup_intent( $request );
+					}
+				}
 				throw new Exception( $intent->get_error_message() );
 			}
 
-			$response = array( 'intent' => array( 'client_secret' => $intent->client_secret ) );
+			$response = array( 'intent' => $intent );
+
+			$context = new \PaymentPlugins\Stripe\RequestContext( $request->get_param( 'context' ) );
+
+			$payment_method->set_request_context( $context );
 
 			if ( $order_id ) {
 				$order = wc_get_order( absint( $order_id ) );
 				if ( $order && $order->key_is_valid( $request->get_param( 'order_key' ) ) ) {
+					$context->set_props( array(
+						'order_id'  => $order->get_id(),
+						'order_key' => $order->get_order_key()
+					) );
 					$response = array_merge( $response, $payment_method->get_setup_intent_checkout_params( $intent, $order ) );
 				}
 			}
@@ -197,6 +225,7 @@ class WC_Stripe_Controller_Payment_Intent extends WC_Stripe_Rest_Controller {
 		 */
 		$payment_method = WC()->payment_gateways()->payment_gateways()[ $request['payment_method'] ];
 		$params         = $this->get_create_payment_intent_params( $request, $payment_method, $order );
+
 		if ( $payment_intent ) {
 			$payment_intent = $payment_method->gateway->paymentIntents->retrieve( $payment_intent->id );
 			if ( is_wp_error( $payment_intent ) || in_array( $payment_intent->status, array( 'succeeded', 'requires_capture' ) )

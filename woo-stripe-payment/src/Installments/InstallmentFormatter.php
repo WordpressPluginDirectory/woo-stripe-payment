@@ -25,6 +25,7 @@ class InstallmentFormatter {
 					'plan'               => $plan,
 					'amount'             => $amount,
 					'installment_amount' => $installment_amount,
+					'currency'           => $currency,
 					'text'               => $formatter->format_plan( $plan, $amount, $currency )
 				];
 			}

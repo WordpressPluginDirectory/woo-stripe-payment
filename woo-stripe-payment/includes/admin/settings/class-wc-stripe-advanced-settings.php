@@ -105,6 +105,13 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, the plugin will process a payment cancellation or refund within Stripe when the order\'s status is set to cancelled.', 'woo-stripe-payment' )
 			),
+			'extended_authorization' => array(
+				'title'       => __( 'Extended Authorization', 'woo-stripe-payment' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'desc_tip'    => true,
+				'description' => __( 'If enabled, eligible card authorizations can be extended for up to 30 days. Make sure this feature is enabled on your Stripe account before enabling.', 'woo-stripe-payment' )
+			),
 			'link_title'             => array(
 				'type'  => 'title',
 				'title' => __( 'Link Settings', 'woo-stripe-payment' ),
@@ -184,6 +191,13 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				),
 				'description' => __( 'This option allows you to control when a Stripe customer object is created. The plugin can create a Stripe customer ID when 
 				your customer creates an account with your store, or it can wait until the Stripe customer ID is required for things like payment on the checkout page.', 'woo-stripe-payment' )
+			),
+			'guest_customer'         => array(
+				'title'       => __( 'Guest Customer Creation', 'woo-stripe-payment' ),
+				'type'        => 'checkbox',
+				'default'     => 'yes',
+				'desc_tip'    => true,
+				'description' => __( 'If enabled, a Stripe customer will be created for guest users during checkout.', 'woo-stripe-payment' )
 			),
 			'disputes'               => array(
 				'title' => __( 'Dispute Settings', 'woo-stripe-payment' ),

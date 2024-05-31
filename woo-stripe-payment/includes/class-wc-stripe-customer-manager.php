@@ -25,6 +25,7 @@ class WC_Stripe_Customer_Manager {
 	public function __construct() {
 		add_action( 'woocommerce_checkout_update_customer', array( $this, 'checkout_update_customer' ), 10, 2 );
 		add_action( 'wp_loaded', array( $this, 'wp_loaded' ) );
+		add_action( 'wc_stripe_before_process_payment', array( $this, 'handle_before_process_payment' ), 10, 2 );
 	}
 
 	/**
@@ -61,25 +62,6 @@ class WC_Stripe_Customer_Manager {
 					// add info to log. This error isn't added to wc_add_notice because we don't want a user update to
 					// interfere with payment being processed.
 					wc_stripe_log_error( sprintf( __( 'Error saving customer. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
-				}
-			}
-		} else {
-			if ( isset( $data['payment_method'] ) && strpos( $data['payment_method'], 'stripe_' ) !== false ) {
-				if ( WC()->session ) {
-					$customer_id = WC()->session->get( WC_Stripe_Constants::STRIPE_CUSTOMER_ID );
-					if ( $customer_id ) {
-						// customer ID is no longer needed since it's being added to the user.
-						unset( WC()->session->{WC_Stripe_Constants::STRIPE_CUSTOMER_ID} );
-
-						return wc_stripe_save_customer( $customer_id, $customer->get_id() );
-					}
-				}
-				// create the customer since this is a Stripe payment
-				$response = $this->create_customer( $customer );
-				if ( ! is_wp_error( $response ) ) {
-					wc_stripe_save_customer( $response->id, $customer->get_id() );
-				} else {
-					wc_add_notice( sprintf( __( 'Error saving customer. Reason: %s', 'woo-stripe-payment' ), $response->get_error_message() ), 'error' );
 				}
 			}
 		}
@@ -136,23 +118,28 @@ class WC_Stripe_Customer_Manager {
 
 	/**
 	 *
-	 * @param WC_Customer $customer
+	 * @param mixed $customer
 	 */
 	private function user_has_id( $customer ) {
-		$id = wc_stripe_get_customer_id( $customer->get_id() );
+		if ( $customer instanceof \WC_Customer ) {
+			$user_id = $customer->get_id();
+		} else {
+			$user_id = $customer;
+		}
+		$id = wc_stripe_get_customer_id( $user_id );
 
 		// this customer may have an ID from another plugin. Check that too.
 		if ( empty( $id ) ) {
-			$id = get_user_option( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, $customer->get_id() );
+			$id = get_user_option( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, $user_id );
 			if ( ! empty( $id ) && is_string( $id ) ) {
 				// validate that this customer exists in the Stripe gateway
 				$response = WC_Stripe_Gateway::load()->customers->retrieve( $id );
 				if ( ! is_wp_error( $response ) ) {
 					// id exists so save customer ID to this plugin's format.
-					wc_stripe_save_customer( $id, $customer->get_id() );
+					wc_stripe_save_customer( $id, $user_id );
 
 					// load this customer's payment methods
-					$this->sync_payment_methods( $id, $customer->get_id() );
+					$this->sync_payment_methods( $id, $user_id );
 				} else {
 					$id = '';
 				}
@@ -292,6 +279,69 @@ class WC_Stripe_Customer_Manager {
 		}
 
 		return $args;
+	}
+
+	private function get_customer_args_from_order( \WC_Order $order ) {
+		return apply_filters( 'wc_stripe_customer_order_args', array(
+			'email'    => $order->get_billing_email(),
+			'name'     => sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ),
+			'phone'    => $order->get_billing_phone(),
+			'address'  => array(
+				'city'        => $order->get_billing_city(),
+				'country'     => $order->get_billing_country(),
+				'line1'       => $order->get_billing_address_1(),
+				'line2'       => $order->get_billing_address_2(),
+				'postal_code' => $order->get_billing_postcode(),
+				'state'       => $order->get_billing_state()
+			),
+			'metadata' => array(
+				'website' => get_site_url(),
+			)
+		) );
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param string    $gateway_id
+	 *
+	 * @return void
+	 */
+	public function handle_before_process_payment( $order, $gateway_id ) {
+		if ( $order->get_customer_id() > 0 ) {
+			// user exists. check if they have a Stripe customer ID
+			if ( ! $this->user_has_id( $order->get_customer_id() ) ) {
+				if ( WC()->session ) {
+					$customer_id = WC()->session->get( WC_Stripe_Constants::STRIPE_CUSTOMER_ID );
+					if ( $customer_id ) {
+						// customer ID is no longer needed since it's being added to the user.
+						unset( WC()->session->{WC_Stripe_Constants::STRIPE_CUSTOMER_ID} );
+
+						return wc_stripe_save_customer( $customer_id, $order->get_customer_id() );
+					}
+				}
+				$customer = new WC_Customer( $order->get_customer_id() );
+				$response = $this->create_customer( $customer );
+				if ( ! is_wp_error( $response ) ) {
+					wc_stripe_save_customer( $response->id, $customer->get_id() );
+				} else {
+					wc_add_notice( sprintf( __( 'Error saving customer. Reason: %s', 'woo-stripe-payment' ), $response->get_error_message() ), 'error' );
+				}
+			}
+		} elseif ( wc_string_to_bool( stripe_wc()->advanced_settings->get_option( 'guest_customer', 'no' ) ) ) {
+			$customer_id = $order->get_meta( WC_Stripe_Constants::CUSTOMER_ID );
+			if ( ! $customer_id ) {
+				// create a Stripe customer ID for the guest user.
+				$payment_method = WC()->payment_gateways()->payment_gateways()[ $gateway_id ];
+				$response       = $payment_method->gateway->mode( $order )->customers->create( $this->get_customer_args_from_order( $order ) );
+				if ( ! is_wp_error( $response ) ) {
+					$order->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $response->id );
+					$order->save();
+				} else {
+					// fail silently. The customer creation failure should not prevent payment for a guest user.
+					wc_stripe_log_error( sprintf( 'Error creating customer ID for guest. Reason: %s', $response->get_error_message() ) );
+				}
+			}
+		}
 	}
 
 }

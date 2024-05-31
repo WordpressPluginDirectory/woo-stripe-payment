@@ -26,11 +26,11 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.61';
+	public $version = '3.3.71';
 
 	/**
 	 *
-	 * @var WC_Stripe_Settings_API
+	 * @var \WC_Stripe_API_Settings
 	 */
 	public $api_settings;
 
@@ -244,6 +244,12 @@ class WC_Stripe_Manager {
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-paynow.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-promptpay.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-swish.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-amazonpay.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-cashapp.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-revolut.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-zip.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-upm.php';
 
 		// tokens
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/abstract/abstract-wc-payment-token-stripe.php';
@@ -310,7 +316,13 @@ class WC_Stripe_Manager {
 				'WC_Payment_Gateway_Stripe_Konbini',
 				'WC_Payment_Gateway_Stripe_PayNow',
 				'WC_Payment_Gateway_Stripe_PromptPay',
-				'WC_Payment_Gateway_Stripe_Swish'
+				'WC_Payment_Gateway_Stripe_Swish',
+				'WC_Payment_Gateway_Stripe_AmazonPay',
+				'WC_Payment_Gateway_Stripe_CashApp',
+				'WC_Payment_Gateway_Stripe_Revolut',
+				'WC_Payment_Gateway_Stripe_Zip',
+				'WC_Payment_Gateway_Stripe_MobilePay',
+				'WC_Payment_Gateway_Stripe_UPM'
 			)
 		);
 
@@ -336,7 +348,7 @@ class WC_Stripe_Manager {
 		new WC_Stripe_API_Request_Filter( $this->advanced_settings );
 
 		new \PaymentPlugins\Stripe\Link\LinkIntegration( $this->advanced_settings, $this->account_settings, $this->assets(), $this->data_api() );
-		new \PaymentPlugins\Stripe\Controllers\PaymentIntent( WC_Stripe_Gateway::load(), [ 'stripe_cc' ] );
+		new \PaymentPlugins\Stripe\Controllers\PaymentIntent( WC_Stripe_Gateway::load(), [ 'stripe_cc', 'stripe_upm' ] );
 		new \PaymentPlugins\Stripe\Messages\MessageController();
 		new \PaymentPlugins\Stripe\Products\ProductController();
 		new \PaymentPlugins\Stripe\Messages\BNPL\CategoryMessageController( [ 'stripe_affirm', 'stripe_afterpay', 'stripe_klarna' ] );

@@ -48,14 +48,19 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function enqueue_checkout_scripts( $scripts ) {
-		$scripts->enqueue_script(
-			'credit-card',
-			$scripts->assets_url( 'js/frontend/credit-card.js' ),
-			array(
-				$scripts->prefix . 'external',
-				$scripts->prefix . 'wc-stripe',
-			)
-		);
+		if ( $this->is_payment_element_active() ) {
+			$scripts->assets_api->register_script( 'wc-stripe-credit-card', 'assets/build/credit-card-payment-element.js' );
+			wp_enqueue_script( 'wc-stripe-credit-card' );
+		} else {
+			$scripts->enqueue_script(
+				'credit-card',
+				$scripts->assets_url( 'js/frontend/credit-card.js' ),
+				array(
+					$scripts->prefix . 'external',
+					$scripts->prefix . 'wc-stripe',
+				)
+			);
+		}
 		$scripts->localize_script( 'credit-card', $this->get_localized_params() );
 	}
 
@@ -145,12 +150,21 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function get_element_options( $options = array() ) {
-		if ( $this->is_custom_form_active() ) {
-			return parent::get_element_options( $this->get_custom_form()['elementOptions'] );
+		if ( $this->is_custom_form_active() || ! $this->is_payment_element_active() ) {
+			$options = array( 'locale' => wc_stripe_get_site_locale() );
+			if ( $this->is_custom_form_active() ) {
+				$options = array_merge(
+					$this->get_custom_form()['elementOptions'],
+					$options
+				);
+			}
+
+			return apply_filters( 'wc_stripe_get_element_options', $options, $this );
 		} elseif ( $this->is_payment_element_active() ) {
-			$options = \PaymentPlugins\Stripe\Controllers\PaymentIntent::instance()->get_element_options();
+			$options                       = \PaymentPlugins\Stripe\Controllers\PaymentIntent::instance()->get_element_options();
+			$options['paymentMethodTypes'] = array( 'card' );
 			if ( \PaymentPlugins\Stripe\Link\LinkIntegration::instance()->is_active() ) {
-				$options = array_merge( $options, array( 'payment_method_types' => array( 'card', 'link' ) ) );
+				$options['paymentMethodTypes'][] = 'link';
 			}
 			$options['appearance'] = array( 'theme' => $this->get_option( 'theme', 'stripe' ) );
 
@@ -230,10 +244,13 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	 *
 	 * @see WC_Payment_Gateway_Stripe::add_stripe_order_args()
 	 */
-	public function add_stripe_order_args( &$args, $order ) {
+	public function add_stripe_order_args( &$args, $order, $intent = null ) {
 		// if the merchant is forcing 3D secure for all intents then add the required args.
 		if ( $this->is_active( 'force_3d_secure' ) && is_checkout() && ! doing_action( 'woocommerce_scheduled_subscription_payment_' . $this->id ) ) {
 			$args['payment_method_options']['card']['request_three_d_secure'] = 'any';
+		}
+		if ( stripe_wc()->advanced_settings && wc_string_to_bool( stripe_wc()->advanced_settings->get_option( 'extended_authorization', 'no' ) ) ) {
+			$args['payment_method_options']['card']['request_extended_authorization'] = 'if_available';
 		}
 	}
 

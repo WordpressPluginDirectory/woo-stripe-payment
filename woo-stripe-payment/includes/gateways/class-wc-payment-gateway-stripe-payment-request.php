@@ -8,13 +8,15 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe' ) ) {
 /**
  * This gateway is provided so merchants can accept Chrome Payments, Microsoft Pay, etc.
  *
- * @author PaymentPlugins
+ * @author  PaymentPlugins
  * @package Stripe/Gateways
  *
  */
 class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Stripe {
 
 	use WC_Stripe_Payment_Intent_Trait;
+
+	use WC_Stripe_Express_Payment_Trait;
 
 	protected $payment_method_type = 'card';
 
@@ -26,6 +28,7 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 		$this->method_title       = __( 'Payment Request (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Gateway that renders based on the user\'s browser. Chrome payment methods, Microsoft pay, etc.', 'woo-stripe-payment' );
 		$this->has_digital_wallet = true;
+		$this->icon               = stripe_wc()->assets_url( 'img/googlepay_round_outline.svg' );
 		parent::__construct();
 	}
 
@@ -37,9 +40,9 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 		$this->supports[] = 'wc_stripe_mini_cart_checkout';
 	}
 
-	public function get_icon() {
+	/*public function get_icon() {
 		return wc_stripe_get_template_html( 'payment-request-icons.php' );
-	}
+	}*/
 
 	public function enqueue_product_scripts( $scripts ) {
 		$this->enqueue_checkout_scripts( $scripts );
@@ -93,4 +96,5 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 	public function has_enqueued_scripts( $scripts ) {
 		return wp_script_is( $scripts->get_handle( 'payment-request' ) );
 	}
+
 }

@@ -113,7 +113,7 @@ abstract class WC_Stripe_Payment {
 			if ( $charge->captured ) {
 				$order->payment_complete( $charge->id );
 			} else {
-				$order_status = $this->payment_method->get_option( 'order_status' );
+				$order_status = $this->payment_method->get_order_status_option();
 				$order->update_status( apply_filters( 'wc_stripe_authorized_order_status', 'default' === $order_status ? 'on-hold' : $order_status, $order, $this->payment_method ) );
 			}
 			$order->add_order_note( sprintf( __( 'Order %1$s successful in Stripe. Charge: %2$s. Payment Method: %3$s', 'woo-stripe-payment' ),
@@ -365,7 +365,7 @@ abstract class WC_Stripe_Payment {
 	 * @since 3.3.20
 	 */
 	protected function get_payment_method_charge_type() {
-		return $this->payment_method->get_option( 'charge_type' ) === 'capture' ? WC_Stripe_Constants::AUTOMATIC : WC_Stripe_Constants::MANUAL;
+		return $this->payment_method->get_payment_method_charge_type();
 	}
 
 	public function destroy_session_data() {

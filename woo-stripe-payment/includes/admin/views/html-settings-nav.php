@@ -21,7 +21,3 @@ $tab_active = false;
 	<?php endforeach; ?>
 </div>
 <div class="clear"></div>
-<!--<div class="wc-stripe-docs">
-    <a target="_blank" class="button button-secondary"
-       href="<?php /*echo $this->get_stripe_documentation_url(); */ ?>"><?php /*esc_html_e( 'Documentation', 'woo-stripe-payment' ); */ ?></a>
-</div>-->

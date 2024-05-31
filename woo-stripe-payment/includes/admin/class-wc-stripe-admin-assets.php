@@ -23,10 +23,11 @@ class WC_Stripe_Admin_Assets {
 
 		wp_register_script( 'wc-stripe-help-widget', $js_path . 'admin/help-widget.js', array( 'jquery' ), stripe_wc()->version(), true );
 
-		wp_register_script( 'wc-stripe-admin-settings', $js_path . 'admin/admin-settings.js', array(
-			'jquery',
-			'jquery-blockui'
-		), stripe_wc()->version, true );
+		stripe_wc()->assets()->register_script( 'wc-stripe-admin-settings', 'assets/build/admin-settings.js', array(
+			'jquery-blockui',
+			'wc-backbone-modal'
+		) );
+
 		wp_register_script( 'wc-stripe-meta-boxes-order', $js_path . 'admin/meta-boxes-order.js', array(
 			'jquery',
 			'jquery-blockui'
@@ -45,7 +46,8 @@ class WC_Stripe_Admin_Assets {
 			stripe_wc()->version(),
 			true
 		);
-		wp_register_style( 'wc-stripe-admin-style', $css_path . 'admin/admin.css', array(), stripe_wc()->version );
+		stripe_wc()->assets()->register_style( 'wc-stripe-admin-style', 'assets/build/admin.css' );
+		//wp_register_style( 'wc-stripe-admin-style', $css_path . 'admin/admin.css', array(), stripe_wc()->version );
 		wp_register_style( 'wc-stripe-admin-main-style', $css_path . 'admin/main.css', array( 'woocommerce_admin_styles' ), stripe_wc()->version );
 
 		if ( strpos( $screen_id, 'wc-settings' ) !== false ) {
@@ -58,15 +60,20 @@ class WC_Stripe_Admin_Assets {
 					'wc_stripe_setting_params',
 					array(
 						'routes'     => array(
-							'apple_domain'      => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'apple-domain' ) ),
-							'create_webhook'    => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'create-webhook' ) ),
-							'delete_webhook'    => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'delete-webhook' ) ),
-							'connection_test'   => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'connection-test' ) ),
-							'delete_connection' => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'delete-connection' ) )
+							'apple_domain'                  => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'apple-domain' ) ),
+							'create_webhook'                => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'create-webhook' ) ),
+							'delete_webhook'                => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'delete-webhook' ) ),
+							'connection_test'               => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'connection-test' ) ),
+							'delete_connection'             => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'delete-connection' ) ),
+							'fetch_payment_method_config'   => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'fetch-payment-config' ) ),
+							'create_payment_method_config'  => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'create-payment-config' ) ),
+							'refresh_payment_method_config' => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->settings->rest_uri( 'refresh-payment-config' ) )
 						),
 						'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 						'messages'   => array(
-							'delete_connection' => __( 'Are you sure you want to delete your connection data?', 'woo-stripe-payment' )
+							'delete_connection' => __( 'Are you sure you want to delete your connection data?', 'woo-stripe-payment' ),
+							'create'            => __( 'Creating', 'woo-stripe-payment' ),
+							'upm_validation'    => __( 'Please select or create a payment method configuration', 'woo-stripe-payment' )
 						)
 					)
 				);

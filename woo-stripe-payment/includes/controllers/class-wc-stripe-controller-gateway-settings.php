@@ -46,6 +46,27 @@ class WC_Stripe_Controller_Gateway_Settings extends WC_Stripe_Rest_Controller {
 				'permission_callback' => array( $this, 'shop_manager_permission_check' )
 			)
 		);
+		register_rest_route( $this->rest_uri(), 'create-payment-config',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'create_payment_config' ),
+				'permission_callback' => array( $this, 'shop_manager_permission_check' )
+			)
+		);
+		register_rest_route( $this->rest_uri(), 'fetch-payment-config',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'fetch_payment_config' ),
+				'permission_callback' => array( $this, 'shop_manager_permission_check' )
+			)
+		);
+		register_rest_route( $this->rest_uri(), 'refresh-payment-config',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'refresh_payment_config' ),
+				'permission_callback' => array( $this, 'shop_manager_permission_check' )
+			)
+		);
 	}
 
 	/**
@@ -296,6 +317,83 @@ class WC_Stripe_Controller_Gateway_Settings extends WC_Stripe_Rest_Controller {
 		stripe_wc()->account_settings->delete_account_settings();
 
 		return rest_ensure_response( array( 'success', true ) );
+	}
+
+	public function create_payment_config( WP_REST_Request $request ) {
+		global $current_section;
+		$mode = wc_stripe_mode();
+		$name = $request->get_param( 'name' );
+		/**
+		 * @var \WC_Payment_Gateway_Stripe_UPM $payment_method
+		 */
+		$payment_method = WC()->payment_gateways()->payment_gateways()['stripe_upm'];
+		try {
+			$response = $payment_method->gateway->mode( $mode )->paymentMethodConfigurations->create( array(
+				'name' => $name
+			) );
+			if ( is_wp_error( $response ) ) {
+				throw new \Exception( sprintf( __( 'Error creating payment method configuration. Reason: %s', 'woo-stripe-payment' ), $response->get_error_message() ) );
+			}
+			$payment_method->update_payment_method_configuration( $response->id, $mode );
+			$payment_method->update_available_payment_methods(
+				$payment_method->map_payment_config_to_payment_methods( $response ),
+				$mode
+			);
+			$current_section = $payment_method->id;
+			$payment_method->init_form_fields();
+			ob_start();
+			$payment_method->admin_options();
+
+			return array(
+				'html' => ob_get_clean()
+			);
+		} catch ( \Exception $e ) {
+			return new WP_Error( 'stripe_error', $e->getMessage(), array( 'status' => 200 ) );
+		}
+	}
+
+	public function fetch_payment_config( WP_REST_Request $request ) {
+		global $current_section;
+		$mode = wc_stripe_mode();
+		$id   = $request->get_param( 'payment_config' );
+		/**
+		 * @var \WC_Payment_Gateway_Stripe_UPM $payment_method
+		 */
+		$payment_method = WC()->payment_gateways()->payment_gateways()['stripe_upm'];
+
+		try {
+			$config = $payment_method->gateway->mode( $mode )->paymentMethodConfigurations->retrieve( $id );
+			if ( is_wp_error( $config ) ) {
+				wc_stripe_log_error( sprintf( 'Error retrieving payment method config. Reason: %s', $config->get_error_message() ) );
+				throw new \Exception( __( 'Error retrieving payment method config. Check logs for more details.', 'woo-stripe-payment' ) );
+			}
+
+			$payment_method->update_payment_method_configuration( $id, $mode );
+			$payment_method->update_available_payment_methods(
+				$payment_method->map_payment_config_to_payment_methods( $config ),
+				$mode
+			);
+			$current_section = $payment_method->id;
+			$payment_method->init_form_fields();
+			ob_start();
+			$payment_method->admin_options();
+
+			return array(
+				'html' => ob_get_clean()
+			);
+		} catch ( \Exception $e ) {
+			return new WP_Error( 'stripe_error', $e->getMessage(), array( 'status' => 200 ) );
+		}
+	}
+
+	public function refresh_payment_config( WP_REST_Request $request ) {
+		/**
+		 * @var \WC_Payment_Gateway_Stripe_UPM $payment_method
+		 */
+		$payment_method = WC()->payment_gateways()->payment_gateways()['stripe_upm'];
+		$request->set_param( 'payment_config', $payment_method->get_payment_method_configuration() );
+
+		return $this->fetch_payment_config( $request );
 	}
 
 	public function shop_manager_permission_check() {

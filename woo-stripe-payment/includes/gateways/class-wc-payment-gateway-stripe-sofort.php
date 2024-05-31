@@ -33,4 +33,12 @@ class WC_Payment_Gateway_Stripe_Sofort extends WC_Payment_Gateway_Stripe_Local_P
 		parent::__construct();
 	}
 
+	public function get_payment_element_options() {
+		return array(
+			'terms' => array(
+				'sofort' => 'auto'
+			)
+		);
+	}
+
 }

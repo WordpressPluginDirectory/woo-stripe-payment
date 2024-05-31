@@ -40,7 +40,6 @@ class CreditCardPayment extends AbstractStripePayment {
 			'customFieldOptions'     => $this->payment_method->get_card_custom_field_options(),
 			'customFormActive'       => $this->payment_method->is_custom_form_active(),
 			'isPaymentElement'       => $this->payment_method->is_payment_element_active(),
-			'elementOptions'         => $this->payment_method->get_element_options(),
 			'customForm'             => $this->payment_method->get_option( 'custom_form' ),
 			'customFormLabels'       => wp_list_pluck( wc_stripe_get_custom_forms(), 'label' ),
 			'postalCodeEnabled'      => $this->payment_method->postal_enabled(),

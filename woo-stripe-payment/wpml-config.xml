@@ -137,5 +137,9 @@
             <key name="description"/>
             <key name="order_button_text"/>
         </key>
+        <key name="woocommerce_stripe_upm_settings">
+            <key name="title_text"/>
+            <key name="description"/>
+        </key>
     </admin-texts>
 </wpml-config>

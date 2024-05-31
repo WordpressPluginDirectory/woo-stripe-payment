@@ -103,6 +103,10 @@ class WC_Stripe_Constants {
 	 */
 	const STRIPE_MANDATE = '_stripe_mandate';
 
+	const STRIPE_UPE_PAYMENT_METHOD = '_stripe_upm_payment_method';
+
+	const STRIPE_PAYMENT_METHOD_TYPE = '_stripe_payment_method_type';
+
 	/**
 	 * @since 3.3.60
 	 */

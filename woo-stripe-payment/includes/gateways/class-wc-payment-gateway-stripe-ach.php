@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit();
  * @package Stripe/Gateways
  *
  */
-class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
+class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Payment {
 
 	use WC_Stripe_Payment_Intent_Trait;
 
@@ -21,17 +21,17 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 
 	protected $supports_save_payment_method = true;
 
+	public $token_type = 'Stripe_ACH';
+
 	public function __construct() {
 		$this->id                 = 'stripe_ach';
+		$this->currencies         = array( 'USD' );
+		$this->countries          = array( 'US' );
 		$this->tab_title          = __( 'ACH', 'woo-stripe-payment' );
-		$this->template_name      = 'ach-connections.php';
-		$this->token_type         = 'Stripe_ACH';
 		$this->method_title       = __( 'ACH (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'ACH gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		$this->icon               = stripe_wc()->assets_url( 'img/ach.svg' );
 		parent::__construct();
-		$this->settings['charge_type']     = 'capture';
-		$this->order_button_text           = $this->get_option( 'order_button_text' );
 		$this->new_payment_method_label    = __( 'New Bank', 'woo-stripe-payment' );
 		$this->saved_payment_methods_label = __( 'Saved Banks', 'woo-stripe-payment' );
 	}
@@ -41,39 +41,35 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 		add_action( 'woocommerce_checkout_process', array( __CLASS__, 'add_fees_for_checkout' ) );
 	}
 
-	public function get_confirmation_method( $order = null ) {
-		return 'automatic';
-	}
-
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see WC_Payment_Gateway::is_available()
-	 */
-	public function is_available() {
-		$is_available = parent::is_available();
-		global $wp;
-		if ( isset( $wp->query_vars['order-pay'] ) ) {
-			$order = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
-
-			return $is_available && $order && $order->get_currency() === 'USD';
-		} elseif ( $this->is_change_payment_method_request() ) {
-			return $is_available;
-		}
-
-		return $is_available && get_woocommerce_currency() === 'USD';
-	}
-
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see WC_Payment_Gateway_Stripe::init_supports()
-	 */
 	public function init_supports() {
 		parent::init_supports();
-		unset( $this->supports['add_payment_method'] );
+		$this->supports[] = 'subscriptions';
+		$this->supports[] = 'subscription_cancellation';
+		$this->supports[] = 'multiple_subscriptions';
+		$this->supports[] = 'subscription_reactivation';
+		$this->supports[] = 'subscription_suspension';
+		$this->supports[] = 'subscription_date_changes';
+		$this->supports[] = 'subscription_payment_method_change_admin';
+		$this->supports[] = 'subscription_amount_changes';
+		$this->supports[] = 'subscription_payment_method_change_customer';
+		$this->supports[] = 'pre-orders';
+	}
+
+	public function get_local_payment_settings() {
+		$settings = include stripe_wc()->plugin_path() . 'includes/gateways/settings/ach-settings.php';
+
+		return $settings;
+	}
+
+	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+		if ( $currency !== 'USD' ) {
+			return false;
+		}
+		if ( stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ) !== 'US' ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -83,15 +79,7 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 	 * @see WC_Payment_Gateway_Stripe::enqueue_checkout_scripts()
 	 */
 	public function enqueue_checkout_scripts( $scripts ) {
-		$scripts->enqueue_script(
-			'ach-connections',
-			$scripts->assets_url( 'build/ach-connections.js' ),
-			array(
-				$scripts->get_handle( 'external' ),
-				$scripts->get_handle( 'wc-stripe' ),
-				'wp-polyfill'
-			)
-		);
+		wp_enqueue_script( 'wc-stripe-ach-connections' );
 		$scripts->localize_script( 'ach-connections', $this->get_localized_params() );
 	}
 
@@ -189,7 +177,7 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 		return wp_script_is( $scripts->get_handle( 'ach-connections' ) );
 	}
 
-	public function add_stripe_order_args( &$args, $order ) {
+	public function add_stripe_order_args( &$args, $order, $intent = null ) {
 		$args['payment_method_options'] = array(
 			'us_bank_account' => array(
 				'verification_method'   => 'instant',
@@ -222,33 +210,10 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 		}
 	}
 
-	/**
-	 * @param           $intent
-	 * @param \WC_Order $order
-	 *
-	 * @return \array[][]
-	 */
-	public function get_payment_intent_confirmation_args( $intent, $order ) {
-		$ip_address = $order->get_customer_ip_address();
-		$user_agent = $order->get_customer_user_agent();
-		if ( ! $ip_address ) {
-			$ip_address = WC_Geolocation::get_external_ip_address();
-		}
-		if ( ! $user_agent ) {
-			$user_agent = 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' );
-		}
+	public function get_local_payment_description() {
+		$this->local_payment_description = $this->get_mandate_text();
 
-		return array(
-			'mandate_data' => array(
-				'customer_acceptance' => array(
-					'type'   => 'online',
-					'online' => array(
-						'ip_address' => $ip_address,
-						'user_agent' => $user_agent
-					)
-				)
-			)
-		);
+		return parent::get_local_payment_description();
 	}
 
 	public function get_mandate_text() {
@@ -277,6 +242,17 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe {
 			$this->form_fields['desc']['description'] = $this->form_fields['desc']['description'] . $description;
 		}
 		parent::admin_options();
+	}
+
+	public function get_payment_element_options() {
+		return array(
+			'terms'    => array(
+				'usBankAccount' => $this->is_active( 'stripe_mandate' ) ? 'auto' : 'never'
+			),
+			'business' => array(
+				'name' => $this->get_option( 'business_name', '' )
+			)
+		);
 	}
 
 }

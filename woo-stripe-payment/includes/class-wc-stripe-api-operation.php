@@ -7,8 +7,8 @@ defined( 'ABSPATH' ) || exit();
  * Allows method chaining so things like mode can
  * be set intuitively.
  *
- * @since 3.1.6
- * @author PaymentPlugins
+ * @since   3.1.6
+ * @author  PaymentPlugins
  * @package Stripe/Classes
  */
 class WC_Stripe_API_Operation {
@@ -83,23 +83,20 @@ class WC_Stripe_API_Operation {
 			/**
 			 * Filters arguments before they are sent to the service for an API request.
 			 *
-			 * @param array  $args The array of arguments that will be passed to the service method.
+			 * @param array  $args     The array of arguments that will be passed to the service method.
 			 * @param string $property The name of the service being called.
-			 * @param string $method The method of the service. Ex: create, delete, retrieve
+			 * @param string $method   The method of the service. Ex: create, delete, retrieve
 			 *
 			 * @since 3.1.6
 			 */
 			$args = apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method );
 
-			return $this->service->{$method}( ...$args );
-		}
-		catch ( \Stripe\Exception\ApiErrorException $e ) {
+			return $this->service->{$method}( ...$this->sanitize_request_args( $args, $method ) );
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
 			return $this->gateway->get_wp_error( $e, $this->property . '-error' );
-		}
-		catch ( \Stripe\Exception\UnexpectedValueException $e ) {
+		} catch ( \Stripe\Exception\UnexpectedValueException $e ) {
 			return new WP_Error( 'stripe-error', $e->getMessage(), $e );
-		}
-		catch ( \Stripe\Exception\InvalidArgumentException $e ) {
+		} catch ( \Stripe\Exception\InvalidArgumentException $e ) {
 			return new WP_Error( 'stripe-error', $e->getMessage(), $e );
 		}
 	}
@@ -134,6 +131,43 @@ class WC_Stripe_API_Operation {
 		}
 		// merge options
 		$args[ $num_args - 1 ] = wp_parse_args( $args[ $num_args - 1 ], $this->gateway->get_api_options( $this->mode ) );
+
+		return $args;
+	}
+
+	/**
+	 * Prevents any unwanted arguments from being added to a Stripe request.
+	 *
+	 * @since 3.3.61
+	 * @return void
+	 */
+	private function sanitize_request_args( $args, $method ) {
+		$idx = null;
+		switch ( $this->property ) {
+			case 'paymentIntents':
+			case 'setupIntents':
+				switch ( $method ) {
+					case 'create':
+						$idx = 0;
+						break;
+					case 'update':
+						$idx = 1;
+						break;
+				}
+				if ( $idx !== null ) {
+					$params = $args[ $idx ] ?? null;
+					if ( is_array( $params ) ) {
+						if ( isset( $params['payment_method_configuration'] ) ) {
+							unset( $params['payment_method_types'], $params['confirmation_method'] );
+							if ( $method === 'create' ) {
+								$params['automatic_payment_methods'] = [ 'enabled' => true ];
+							}
+						}
+						$args[ $idx ] = $params;
+					}
+				}
+				break;
+		}
 
 		return $args;
 	}

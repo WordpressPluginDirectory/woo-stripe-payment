@@ -30,11 +30,4 @@ class WC_Payment_Gateway_Stripe_PayNow extends WC_Payment_Gateway_Stripe_Local_P
 		parent::__construct();
 	}
 
-	public function get_local_payment_description() {
-		$this->local_payment_description = wc_stripe_get_template_html( 'checkout/paynow-instructions.php', array( 'button_text' => $this->order_button_text ) );
-
-		return parent::get_local_payment_description();
-	}
-
-
 }

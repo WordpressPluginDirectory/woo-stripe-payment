@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @since 3.1.0
+ * @since  3.1.0
  *
  * @author Payment Plugins
  */
@@ -28,10 +28,10 @@ trait WC_Stripe_Settings_Trait {
 		if ( $this->admin_output ) {
 			return;
 		}
+		echo '<div class="wc-stripe-settings-container ' . $this->id . '">';
 		$this->display_errors();
 		$this->output_settings_nav();
 		printf( '<input type="hidden" id="wc_stripe_prefix" name="wc_stripe_prefix" value="%1$s"/>', $this->get_prefix() );
-		echo '<div class="wc-stripe-settings-container ' . $this->id . '">';
 		parent::admin_options();
 		echo '</div>';
 		$this->admin_output = true;
@@ -199,12 +199,13 @@ trait WC_Stripe_Settings_Trait {
 			if ( ! in_array( $this->get_field_type( $field ), $skip_types ) && ! $skip ) {
 				try {
 					$this->settings[ $key ] = $this->get_field_value( $key, $field, $post_data );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 					$this->add_error( $e->getMessage() );
 				}
 			}
 		}
+
+		do_action( 'wc_stripe_update_admin_options', $this );
 
 		return update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ), 'yes' );
 	}

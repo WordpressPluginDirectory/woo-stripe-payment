@@ -14,13 +14,15 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
  */
 class WC_Payment_Gateway_Stripe_OXXO extends WC_Payment_Gateway_Stripe_Local_Payment {
 
+	use WC_Stripe_Local_Payment_Intent_Trait;
+
+	use WC_Stripe_Voucher_Payment_Trait;
+
 	protected $payment_method_type = 'oxxo';
 
 	public $synchronous = false;
 
 	public $is_voucher_payment = true;
-
-	use WC_Stripe_Local_Payment_Intent_Trait;
 
 	public function __construct() {
 		$this->local_payment_type = 'oxxo';
@@ -46,7 +48,7 @@ class WC_Payment_Gateway_Stripe_OXXO extends WC_Payment_Gateway_Stripe_Local_Pay
 					return $carry;
 				}, array() ),
 				'desc_tip'    => true,
-				'description' => __( 'The number of days before the OXXO voucher expires.', 'woo-stripe-payment' )
+				'description' => __( 'The number of days before the voucher expires.', 'woo-stripe-payment' )
 			),
 			'email_link'      => array(
 				'title'       => __( 'Voucher Link In Email', 'woo-stripe-payment' ),
@@ -58,59 +60,12 @@ class WC_Payment_Gateway_Stripe_OXXO extends WC_Payment_Gateway_Stripe_Local_Pay
 		) );
 	}
 
-	public function add_stripe_order_args( &$args, $order ) {
+	public function add_stripe_order_args( &$args, $order, $intent = null ) {
 		$args['payment_method_options'] = array(
 			'oxxo' => array(
 				'expires_after_days' => $this->get_option( 'expiration_days', 3 )
 			)
 		);
-	}
-
-	/**
-	 * @param \WC_Order $order
-	 */
-	public function process_voucher_order_status( $order ) {
-		if ( $this->is_active( 'email_link' ) ) {
-			add_filter( 'woocommerce_email_additional_content_customer_on_hold_order', array( $this, 'add_customer_voucher_email_content' ), 10, 2 );
-		}
-		$order->update_status( 'on-hold' );
-	}
-
-	/**
-	 * @param string    $content
-	 * @param \WC_Order $order
-	 */
-	public function add_customer_voucher_email_content( $content, $order ) {
-		if ( $order && $order->get_payment_method() === $this->id ) {
-			if ( ( $intent_id = $order->get_meta( WC_Stripe_Constants::PAYMENT_INTENT_ID ) ) ) {
-				$payment_intent = $this->gateway->mode( $order )->paymentIntents->retrieve( $intent_id );
-				if ( ! is_wp_error( $payment_intent ) ) {
-					$link = isset( $payment_intent->next_action->oxxo_display_details->hosted_voucher_url ) ? $payment_intent->next_action->oxxo_display_details->hosted_voucher_url : null;
-					if ( $link ) {
-						$content .= '<p>' . sprintf( __( 'Please click %shere%s to view your OXXO voucher.', 'woo-stripe-payment' ), '<a href="' . $link . '" target="_blank">', '</a>' ) . '</p>';
-					}
-				}
-			}
-		}
-
-		return $content;
-	}
-
-	/**
-	 * @param null $order
-	 *
-	 * @return string
-	 */
-	public function get_return_url( $order = null ) {
-		if ( $this->processing_payment && $order ) {
-			return add_query_arg( array(
-				WC_Stripe_Constants::VOUCHER_PAYMENT => $this->id,
-				'order-id'                           => $order->get_id(),
-				'order-key'                          => $order->get_order_key()
-			), wc_get_checkout_url() );
-		}
-
-		return parent::get_return_url( $order );
 	}
 
 }

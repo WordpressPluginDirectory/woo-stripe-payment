@@ -16,7 +16,7 @@ class PaymentsApi {
 	}
 
 	public function add_payment_gateways( $supported_gateways ) {
-		foreach ( $this->get_supported_gateway_ids() as $id ) {
+		foreach ( $this->get_payment_method_ids() as $id ) {
 			$supported_gateways[ $id ] = array(
 				'path'  => dirname( __FILE__ ) . '/PaymentGateways/BasePaymentGateway.php',
 				'class' => '\PaymentPlugins\CartFlows\Stripe\PaymentGateways\BasePaymentGateway'
@@ -24,10 +24,6 @@ class PaymentsApi {
 		}
 
 		return $supported_gateways;
-	}
-
-	private function get_supported_gateway_ids() {
-		return array( 'stripe_cc', 'stripe_googlepay', 'stripe_applepay', 'stripe_payment_request' );
 	}
 
 	/**
@@ -90,7 +86,7 @@ class PaymentsApi {
 
 	public function get_order_bump_fragments( $data ) {
 		$payment_gateways = WC()->payment_gateways()->payment_gateways();
-		foreach ( $this->get_supported_gateway_ids() as $id ) {
+		foreach ( $this->get_payment_method_ids() as $id ) {
 			$gateway = $payment_gateways[ $id ] ?? null;
 			if ( $gateway ) {
 				ob_start();

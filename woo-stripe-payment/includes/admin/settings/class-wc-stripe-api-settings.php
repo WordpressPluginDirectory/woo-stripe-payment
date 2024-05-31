@@ -398,4 +398,10 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 		delete_option( $this->get_option_key() );
 	}
 
+	public function has_secret_key( $mode ) {
+		$key = wc_stripe_get_secret_key( $mode );
+
+		return ! empty( $key );
+	}
+
 }

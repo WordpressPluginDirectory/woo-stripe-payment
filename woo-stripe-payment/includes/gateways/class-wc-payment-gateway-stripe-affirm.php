@@ -27,7 +27,6 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 		$this->method_description = __( 'Affirm gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		$this->icon               = stripe_wc()->assets_url( 'img/affirm.svg' );
 		parent::__construct();
-		$this->template_name = 'affirm.php';
 		add_filter( 'woocommerce_gateway_icon', array( $this, 'get_woocommerce_gateway_icon' ), 10, 2 );
 	}
 
@@ -86,7 +85,11 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 
 	public function enqueue_checkout_scripts( $scripts ) {
 		parent::enqueue_checkout_scripts( $scripts );
-		$scripts->assets_api->register_script( 'wc-stripe-affirm-checkout', 'assets/build/affirm-message.js' );
+		$scripts->assets_api->register_script(
+			'wc-stripe-affirm-checkout',
+			'assets/build/affirm-message.js',
+			array( 'wc-stripe-vendors', 'wc-stripe-local-payment' )
+		);
 		wp_enqueue_script( 'wc-stripe-affirm-checkout' );
 	}
 
@@ -96,7 +99,10 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 	 * @return void
 	 */
 	public function enqueue_cart_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-affirm-cart', 'assets/build/affirm-message.js' );
+		$scripts->assets_api->register_script(
+			'wc-stripe-affirm-cart',
+			'assets/build/affirm-message.js'
+		);
 		wp_enqueue_script( 'wc-stripe-affirm-cart' );
 		$this->enqueue_payment_method_styles();
 		$scripts->localize_script( 'wc-stripe-affirm-cart', $this->get_localized_params( 'cart' ) );
@@ -108,7 +114,10 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 	 * @return void
 	 */
 	public function enqueue_product_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-affirm-product', 'assets/build/affirm-message.js' );
+		$scripts->assets_api->register_script(
+			'wc-stripe-affirm-product',
+			'assets/build/affirm-message.js'
+		);
 		wp_enqueue_script( 'wc-stripe-affirm-product' );
 		$scripts->localize_script( 'wc-stripe-affirm-product', $this->get_localized_params( 'product' ) );
 	}
@@ -158,7 +167,7 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 					'cart'     => __( 'Cart Page', 'woo-stripe-payment' ),
 					'shop'     => __( 'Shop/Category Page', 'woo-stripe-payment' )
 				),
-				'default'     => array( 'cart', 'checkout' ),
+				'default'     => array(),
 				'desc_tip'    => true,
 				'description' => __( 'These are the sections where the Affirm messaging will be enabled.',
 					'woo-stripe-payment' ),

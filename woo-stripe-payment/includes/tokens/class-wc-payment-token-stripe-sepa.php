@@ -11,24 +11,46 @@ defined( 'ABSPATH' ) || exit();
  */
 class WC_Payment_Token_Stripe_Sepa extends WC_Payment_Token_Stripe_Local {
 
-	use WC_Payment_Token_Payment_Method_Trait;
+	use WC_Payment_Token_Payment_Method_Trait {
+		save_payment_method as attach_payment_method;
+	}
 
 	protected $type = 'Stripe_Sepa';
 
 	protected $stripe_data = array(
-		'bank_code'   => '',
-		'last4'       => '',
-		'mandate_url' => '',
-		'mandate'     => ''
+		'bank_code'           => '',
+		'last4'               => '',
+		'mandate_url'         => '',
+		'mandate'             => '',
+		'payment_method_type' => ''
 	);
 
 	public function details_to_props( $details ) {
-		if ( isset( $details['sepa_debit'] ) ) {
-			$this->set_last4( $details['sepa_debit']['last4'] );
-			$this->set_bank_code( $details['sepa_debit']['bank_code'] );
-			$this->set_mandate( isset( $details['sepa_debit']['mandate'] ) ? $details['sepa_debit']['mandate'] : '' );
-			$this->set_mandate_url( isset( $details['sepa_debit']['mandate_url'] ) ? $details['sepa_debit']['mandate_url'] : '' );
+		$type = $details['type'] ?? '';
+		switch ( $type ) {
+			case 'sepa_debit':
+				$this->set_last4( $details['sepa_debit']['last4'] );
+				$this->set_bank_code( $details['sepa_debit']['bank_code'] );
+				$this->set_mandate( isset( $details['sepa_debit']['mandate'] ) ? $details['sepa_debit']['mandate'] : '' );
+				$this->set_mandate_url( isset( $details['sepa_debit']['mandate_url'] ) ? $details['sepa_debit']['mandate_url'] : '' );
+				break;
+			default:
+				$type = $details['type'];
+				$this->set_last4( $details[ $type ]['iban_last4'] ?? '' );
+				$this->set_bank_code( $details[ $type ]['bank_code'] ?? '' );
+				$this->set_mandate( $details[ $type ]['generated_sepa_debit_mandate'] ?? '' );
+				if ( ! empty( $details[ $type ]['generated_sepa_debit'] ) ) {
+					$gateways = WC()->payment_gateways()->payment_gateways();
+					$sepa     = $gateways['stripe_sepa'] ?? null;
+					$this->set_gateway_id( 'stripe_sepa' );
+					$this->set_token( $details[ $type ]['generated_sepa_debit'] );
+					$this->set_format( 'type_ending_last4' );
+					if ( $sepa ) {
+						$this->set_format( $sepa->get_option( 'method_format' ) );
+					}
+				}
 		}
+		$this->set_payment_method_type( $type );
 	}
 
 	public function set_last4( $value ) {
@@ -80,6 +102,25 @@ class WC_Payment_Token_Stripe_Sepa extends WC_Payment_Token_Stripe_Local {
 				'format'  => '{brand} {last4}',
 			),
 		), parent::get_formats() );
+	}
+
+	public function set_payment_method_type( $value ) {
+		$this->set_prop( 'payment_method_type', $value );
+	}
+
+	public function get_payment_method_type() {
+		$value = $this->get_prop( 'payment_method_type' );
+
+		return empty( $value ) ?? 'sepa_debit';
+	}
+
+	public function save_payment_method() {
+		switch ( $this->get_payment_method_type() ) {
+			case 'sepa_debit':
+				return $this->attach_payment_method();
+			default:
+				return null;
+		}
 	}
 
 }

@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers;
 
+use PaymentPlugins\Stripe\RequestContext;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\FrontendRequests;
 
 class PaymentIntent {
@@ -14,7 +15,7 @@ class PaymentIntent {
 	}
 
 	private function initialize() {
-		add_filter( 'wc_stripe_create_setup_intent', [ $this, 'maybe_create_setup_intent' ] );
+		add_filter( 'wc_stripe_create_setup_intent', [ $this, 'maybe_create_setup_intent' ], 10, 2 );
 		add_filter( 'wc_stripe_payment_intent_args', [ $this, 'update_payment_intent_args' ], 10, 2 );
 		add_filter( 'wc_stripe_setup_intent_params', [ $this, 'update_setup_intent_params' ], 10, 2 );
 		add_filter( 'wc_stripe_update_setup_intent_params', [ $this, 'update_setup_intent_params' ], 10, 2 );
@@ -24,22 +25,48 @@ class PaymentIntent {
 		 */
 		add_filter( 'wc_stripe_create_setup_intent_params', [ $this, 'add_setup_intent_params' ], 10, 2 );
 
+		add_filter( 'wc_stripe_deferred_intent_subscription_mode', [ $this, 'is_subscription_mode' ], 10, 2 );
+
 		add_action( 'wc_stripe_output_checkout_fields', [ $this, 'print_script_variables' ] );
+
+		add_filter( 'wc_stripe_create_payment_method_return_url', [ $this, 'add_change_payment_method_query' ], 10, 3 );
+
+		add_filter( 'wc_stripe_process_redirect_change_payment_method', [ $this, 'process_change_payment_method_redirect' ], 10, 3 );
+
+		add_filter( 'wc_stripe_is_link_active', [ $this, 'is_link_active' ] );
 	}
 
 	private function account_requires_mandate() {
 		return stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ) === 'IN';
 	}
 
-	public function maybe_create_setup_intent( $bool ) {
+	public function maybe_create_setup_intent( $bool, RequestContext $context ) {
 		if ( ! $bool ) {
 			if ( $this->request->is_change_payment_method() ) {
 				$bool = true;
-			} elseif ( $this->request->is_checkout_with_free_trial() ) {
+			} elseif ( $this->request->is_checkout_with_free_trial( $context ) ) {
 				$bool = true;
-			} elseif ( $this->request->is_order_pay_with_free_trial() ) {
+			} elseif ( $this->request->is_order_pay_with_free_trial( $context ) ) {
 				$bool = true;
-			} elseif ( $this->request->is_checkout_with_free_coupon() ) {
+			} elseif ( $this->request->is_checkout_with_free_coupon( $context ) ) {
+				$bool = true;
+			}
+		}
+
+		return $bool;
+	}
+
+	/**
+	 * @param $bool
+	 *
+	 * @since 3.3.60
+	 * @return bool|mixed
+	 */
+	public function is_subscription_mode( $bool, RequestContext $context ) {
+		if ( ! $bool ) {
+			if ( $this->request->is_order_pay_with_subscription( $context ) ) {
+				$bool = true;
+			} elseif ( $this->request->is_checkout_with_subscription( $context ) ) {
 				$bool = true;
 			}
 		}
@@ -69,7 +96,7 @@ class PaymentIntent {
 	 * @return array
 	 */
 	private function add_params_to_intent( $args, $order, $type = 'payment_intent' ) {
-		if ( in_array( 'card', $args['payment_method_types'] ) ) {
+		if ( isset( $args['payment_method_types'] ) && in_array( 'card', $args['payment_method_types'] ) ) {
 			// check if this is an India account. If so, make sure mandate data is included.
 			if ( stripe_wc()->account_settings->get_account_country( wc_stripe_order_mode( $order ) ) === 'IN' ) {
 				if ( isset( $args['setup_future_usage'] ) && $args['setup_future_usage'] === 'off_session'
@@ -110,7 +137,7 @@ class PaymentIntent {
 	 * @return array
 	 */
 	public function add_setup_intent_params( $args, $payment_method ) {
-		if ( in_array( 'card', $args['payment_method_types'] ) ) {
+		if ( isset( $args['payment_method_types'] ) && in_array( 'card', $args['payment_method_types'] ) ) {
 			if ( $payment_method->is_mandate_required() ) {
 				//if ( \WC_Subscriptions_Cart::cart_contains_free_trial() ) {
 				if ( ! isset( $args['payment_method_options']['card'] ) ) {
@@ -159,6 +186,89 @@ class PaymentIntent {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * @param                            $url
+	 * @param \WC_Payment_Gateway_Stripe $gateway
+	 * @param                            $page
+	 *
+	 * @return mixed|string
+	 */
+	public function add_change_payment_method_query( $url, $gateway, $page ) {
+		if ( $page === 'change_payment_method' ) {
+			global $wp;
+			if ( isset( $wp->query_vars['order-pay'] ) ) {
+				$url = add_query_arg(
+					[ 'order_id' => absint( $wp->query_vars['order-pay'] ), 'order_key' => wc_get_var( $_REQUEST['key'] ) ],
+					$url
+				);
+			} elseif ( $gateway->get_request_context() && $gateway->get_request_context()->has_prop( 'order_id' ) ) {
+				$context = $gateway->get_request_context();
+				$url     = add_query_arg(
+					[ 'order_id' => absint( $context->get_prop( 'order_id' ) ), 'order_key' => $context->get_prop( 'order_key' ) ],
+					$url
+				);
+			}
+		}
+
+		return $url;
+	}
+
+	/**
+	 * @param array                      $result
+	 * @param \WC_Payment_Gateway_Stripe $gateway
+	 * @param \Stripe\SetupIntent        $setup_intent
+	 *
+	 * @return void
+	 */
+	public function process_change_payment_method_redirect( $result, $gateway, $setup_intent ) {
+		$id        = wc_get_var( $_GET['order_id'], '' );
+		$order_key = wc_get_var( $_GET['order_key'], '' );
+		if ( ! $id ) {
+			return [
+				'result'   => 'error',
+				'redirect' => wc_get_page_permalink( 'myaccount' )
+			];
+		}
+		$subscription = wc_get_order( absint( $id ) );
+
+		if ( ! $subscription || ! $subscription->key_is_valid( $order_key ) ) {
+			return [
+				'result'   => 'error',
+				'redirect' => wc_get_page_permalink( 'myaccount' )
+			];
+		}
+		if ( $setup_intent->status === 'requires_payment_method' ) {
+			return [
+				'result'   => 'error',
+				'redirect' => add_query_arg(
+					[ '_wpnonce' => wp_create_nonce(), 'change_payment_method' => $subscription->get_id() ],
+					$subscription->get_checkout_payment_url()
+				)
+			];
+		} elseif ( $setup_intent->status === 'succeeded' ) {
+			// update the payment method on the subscription
+			\WC_Subscriptions_Change_Payment_Gateway::update_payment_method( $subscription, $gateway->id );
+
+			if ( wc_notice_count( 'error' ) == 0 ) {
+				$gateway->set_setup_intent( $setup_intent );
+				$gateway->set_new_source_token( $setup_intent->payment_method->id );
+				$gateway->process_subscription_payment_method_updated( $subscription );
+			}
+			wp_safe_redirect( $subscription->get_view_order_url() );
+			exit();
+		}
+	}
+
+	public function is_link_active( $bool ) {
+		if ( $bool ) {
+			if ( \WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ) {
+				$bool = false;
+			}
+		}
+
+		return $bool;
 	}
 
 }

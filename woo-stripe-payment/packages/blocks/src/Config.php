@@ -4,7 +4,6 @@
 namespace PaymentPlugins\Blocks\Stripe;
 
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
-use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\Blocks\Registry\Container as Container;
 use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
 use Automattic\WooCommerce\StoreApi\StoreApi;
@@ -40,6 +39,7 @@ class Config {
 		$this->container->get( PaymentsApi::class );
 		$this->container->get( SchemaController::class );
 		$this->container->get( Payments\Gateways\Link\Controller::class );
+		$this->container->get( BlocksController::class )->initialize();
 	}
 
 	public function get_url( $relative_path = '' ) {
@@ -67,6 +67,9 @@ class Config {
 				StoreApi::container()->get( ExtendSchema::class ),
 				$container->get( PaymentsApi::class )
 			);
+		} );
+		$this->container->register( BlocksController::class, function ( $container ) {
+			return new BlocksController( $container );
 		} );
 	}
 

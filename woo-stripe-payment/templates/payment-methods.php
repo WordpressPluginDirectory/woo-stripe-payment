@@ -8,7 +8,8 @@
 <div class="wc-stripe-saved-methods-container wc-<?php echo esc_attr( $gateway->id ) ?>-saved-methods-container">
     <select class="wc-stripe-saved-methods" id="<?php echo esc_attr( $gateway->saved_method_key ) ?>" name="<?php echo esc_attr( $gateway->saved_method_key ) ?>">
 		<?php foreach ( $tokens as $token ): ?>
-            <option class="wc-stripe-saved-method <?php echo esc_attr( $token->get_html_classes() ) ?>" value="<?php echo esc_attr( $token->get_token() ) ?>"><?php echo esc_html( $token->get_payment_method_title( $gateway->get_option( 'method_format' ) ) ) ?></option>
+            <option class="wc-stripe-saved-method <?php echo esc_attr( $token->get_html_classes() ) ?>" value="<?php echo esc_attr( $token->get_token() ) ?>"
+                    data-gateway="<?php echo esc_attr( $token->get_gateway_id() ) ?>"><?php echo esc_html( $token->get_payment_method_title( $gateway->get_option( 'method_format' ) ) ) ?></option>
 		<?php endforeach; ?>
     </select>
 </div>

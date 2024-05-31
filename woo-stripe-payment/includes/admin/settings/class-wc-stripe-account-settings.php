@@ -61,6 +61,8 @@ class WC_Stripe_Account_Settings extends WC_Stripe_Settings_API {
 				);
 			}
 			update_option( $this->get_option_key(), $this->settings, 'yes' );
+
+			do_action( 'wc_stripe_account_settings_saved', $this, $mode, $account );
 		}
 	}
 

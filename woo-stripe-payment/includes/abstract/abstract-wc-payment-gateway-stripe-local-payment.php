@@ -55,7 +55,6 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 
 	public function hooks() {
 		parent::hooks();
-		add_filter( 'wc_stripe_local_gateway_tabs', array( $this, 'local_gateway_tab' ) );
 		remove_filter( 'wc_stripe_settings_nav_tabs', array( $this, 'admin_nav_tab' ) );
 		add_filter( 'wc_stripe_local_gateways_tab', array( $this, 'admin_nav_tab' ) );
 	}
@@ -188,7 +187,6 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 					),
 					wc_get_checkout_url()
 				),
-				'element_params'     => $this->get_element_params(),
 				'routes'             => array(
 					'delete_order_source' => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'order/source' ) ),
 					'update_source'       => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->source->rest_uri( 'update' ) )
@@ -198,6 +196,10 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		);
 	}
 
+	/**
+	 * @return array[]
+	 * @deprecated 3.3.70
+	 */
 	public function get_element_params() {
 		return array(
 			'style' => array(
@@ -282,27 +284,13 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	}
 
 	/**
-	 *
 	 * @param WC_Order $order
 	 *
 	 * @return string
+	 * @deprecated 3.3.60
 	 */
 	public function get_local_payment_return_url( $order ) {
-		global $wp;
-		if ( isset( $wp->query_vars['order-pay'] ) ) {
-			$url = $order->get_checkout_payment_url();
-		} else {
-			$url = wc_get_checkout_url();
-		}
-
-		return add_query_arg(
-			array(
-				'key'                   => $order->get_order_key(),
-				'order_id'              => $order->get_id(),
-				'_stripe_local_payment' => $this->id,
-			),
-			$url
-		);
+		return parent::get_complete_payment_return_url( $order );
 	}
 
 	public function is_local_payment_available() {
@@ -387,7 +375,12 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	 * Return a description of the payment method.
 	 */
 	public function get_local_payment_description() {
-		return apply_filters( 'wc_stripe_local_payment_description', $this->local_payment_description, $this );
+		$text = $this->local_payment_description;
+		if ( $this->is_active( 'stripe_mandate' ) ) {
+			$text = '';
+		}
+
+		return apply_filters( 'wc_stripe_local_payment_description', $text, $this );
 	}
 
 	/**

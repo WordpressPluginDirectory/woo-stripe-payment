@@ -15,8 +15,6 @@ class WC_Stripe_Field_Manager {
 
 	private static $_product_button_position;
 
-	public static $_mini_cart_count = 0;
-
 	public static function init() {
 		add_action( 'woocommerce_checkout_before_customer_details', array( __CLASS__, 'output_banner_checkout_fields' ) );
 		add_action( 'woocommerce_before_add_to_cart_form', array( __CLASS__, 'before_add_to_cart' ) );
@@ -71,14 +69,17 @@ class WC_Stripe_Field_Manager {
 
 	public static function output_product_checkout_fields() {
 		global $product;
-		$gateways        = array();
-		$ordering        = $product->get_meta( WC_Stripe_Constants::PRODUCT_GATEWAY_ORDER );
-		$ordering        = ! $ordering ? array() : $ordering;
-		$is_subscription = wcs_stripe_active() && WC_Subscriptions_Product::is_subscription( $product );
-		$is_preorder     = wc_stripe_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product );
-
+		$gateways         = array();
+		$ordering         = $product->get_meta( WC_Stripe_Constants::PRODUCT_GATEWAY_ORDER );
+		$ordering         = ! $ordering ? array() : $ordering;
+		$is_subscription  = wcs_stripe_active() && WC_Subscriptions_Product::is_subscription( $product );
+		$is_preorder      = wc_stripe_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product );
+		$payment_gateways = array_merge(
+			WC()->payment_gateways()->get_available_payment_gateways(),
+			\PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::get_active_bnpl_gateways()
+		);
 		if ( ! $product->is_type( 'external' ) ) {
-			foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $id => $gateway ) {
+			foreach ( $payment_gateways as $id => $gateway ) {
 				/**
 				 *
 				 * @var WC_Payment_Gateway_Stripe $gateway
@@ -113,8 +114,12 @@ class WC_Stripe_Field_Manager {
 	}
 
 	public static function output_cart_fields() {
-		$gateways = array();
-		foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $id => $gateway ) {
+		$gateways         = array();
+		$payment_gateways = array_merge(
+			WC()->payment_gateways()->get_available_payment_gateways(),
+			\PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::get_active_bnpl_gateways()
+		);
+		foreach ( $payment_gateways as $id => $gateway ) {
 			/**
 			 *
 			 * @var WC_Payment_Gateway_Stripe $gateway

@@ -72,7 +72,8 @@ class InstallmentController {
 			$is_available = true;
 			foreach ( $filters as $filter ) {
 				if ( ! $filter->is_available() ) {
-					return false;
+					$is_available = false;
+					break;
 				}
 			}
 

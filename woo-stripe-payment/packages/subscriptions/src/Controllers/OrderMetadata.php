@@ -27,6 +27,15 @@ class OrderMetadata {
 		if ( wcs_stripe_active() && wcs_order_contains_subscription( $order ) ) {
 			if ( $charge ) {
 				foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
+					$subscription->set_payment_method( $payment_method->id );
+					/**
+					 * The token's gateway ID may not match the payment method's ID, like when iDEAL is used
+					 * for a subscription, but it's actually SEPA that will process all the renewals. In that case,
+					 * use the token's gateway ID.
+					 */
+					if ( $token->get_gateway_id() !== $payment_method->id ) {
+						$subscription->set_payment_method( $token->get_gateway_id() );
+					}
 					$subscription->set_transaction_id( $charge->id );
 					$subscription->set_payment_method_title( $token->get_payment_method_title() );
 					$subscription->update_meta_data( \WC_Stripe_Constants::MODE, wc_stripe_mode() );
@@ -64,6 +73,15 @@ class OrderMetadata {
 				 *
 				 * @var WC_Subscription $subscription
 				 */
+				$subscription->set_payment_method( $payment_method->id );
+				/**
+				 * The token's gateway ID may not match the payment method's ID, like when iDEAL is used
+				 * for a subscription, but it's actually SEPA that will process all the renewals. In that case,
+				 * use the token's gateway ID.
+				 */
+				if ( $token->get_gateway_id() !== $payment_method->id ) {
+					$subscription->set_payment_method( $token->get_gateway_id() );
+				}
 				$subscription->set_payment_method_title( $token->get_payment_method_title() );
 				$subscription->update_meta_data( \WC_Stripe_Constants::MODE, wc_stripe_mode() );
 				$subscription->update_meta_data( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );

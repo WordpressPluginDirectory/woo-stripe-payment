@@ -539,8 +539,12 @@ function wc_stripe_process_shop_subscription_meta( $post_id, $post ) {
 	if ( isset( $gateways[ $gateway_id ] ) ) {
 		$gateway = $gateways[ $gateway_id ];
 		if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
-			$token = $gateway->get_token( $subscription->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ), $subscription->get_customer_id() );
-			if ( $token ) {
+			$token = \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::get_payment_token(
+				$subscription->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ),
+				$subscription->get_customer_id(),
+				$gateway
+			);
+			if ( $token && method_exists( $token, 'get_payment_method_title' ) ) {
 				$subscription->set_payment_method_title( $token->get_payment_method_title() );
 				$subscription->save();
 			}
@@ -563,7 +567,7 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 	if ( is_add_payment_method_page() && ! isset( $wp->query_vars['payment-methods'] ) ) {
 		foreach ( $gateways as $gateway ) {
 			if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
-				if ( 'stripe_cc' !== $gateway->id ) {
+				if ( ! in_array( $gateway->id, array( 'stripe_cc', 'stripe_upm', 'stripe_sepa', 'stripe_ideal', 'stripe_ach' ) ) ) {
 					unset( $gateways[ $gateway->id ] );
 				}
 			}
@@ -583,6 +587,7 @@ function wc_stripe_get_local_payment_params() {
 	global $wp;
 	$data     = array();
 	$gateways = WC()->payment_gateways()->payment_gateways();
+	unset( $gateways['stripe_ach'] );
 	foreach ( $gateways as $gateway ) {
 		if ( $gateway instanceof WC_Payment_Gateway_Stripe_Local_Payment && $gateway->is_available() ) {
 			$data['gateways'][ $gateway->id ] = $gateway->get_localized_params();
@@ -1181,7 +1186,14 @@ function wc_stripe_get_error_messages() {
 			'ach_instant_only'                                    => __( 'Your payment could not be processed at this time because your bank account does not support instant verification.', 'woo-stripe-payment' ),
 			'payment_intent_konbini_rejected_confirmation_number' => __( 'The confirmation number was rejected by Konbini. Please try again.', 'woo-stripe-payment' ),
 			'payment_intent_payment_attempt_expired'              => __( 'The payment attempt for this payment method has expired. Please try again.', 'woo-stripe-payment' ),
-			'payment_intent_authentication_failure'               => __( 'We are unable to authenticate your payment method. Please choose a different payment method and try again.', 'woo-stripe-payment' )
+			'payment_intent_authentication_failure'               => __( 'We are unable to authenticate your payment method. Please choose a different payment method and try again.', 'woo-stripe-payment' ),
+			'payment_cancelled'                                   => __( 'Payment has been cancelled.', 'woo-stripe-payment' ),
+			'billing_label'                                       => __( 'Billing %s', 'woocommerce' ),
+			'shipping_label'                                      => __( 'Shipping %s', 'woocommerce' ),
+			'required_field'                                      => __( '%s is a required field.', 'woocommerce' ),
+			'required_fields'                                     => __( 'Please fill out all required fields.', 'woo-stripe-payment' ),
+			'payment_unavailable'                                 => __( 'This payment method is currently unavailabe. Reason: %s', 'woo-stripe-payment' ),
+			'billing_details.phone.required'                      => __( 'A billing phone number is required for this payment.', 'woo-stripe-payment' )
 		)
 	);
 }

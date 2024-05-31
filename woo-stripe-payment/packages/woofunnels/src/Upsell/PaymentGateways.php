@@ -48,7 +48,8 @@ class PaymentGateways {
 			'stripe_cc'              => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\CreditCardGateway',
 			'stripe_googlepay'       => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\GooglePayGateway',
 			'stripe_applepay'        => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\ApplePayGateway',
-			'stripe_payment_request' => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\PaymentRequestGateway'
+			'stripe_payment_request' => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\PaymentRequestGateway',
+			'stripe_upm'             => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\UniversalPaymentGateway'
 		];
 	}
 

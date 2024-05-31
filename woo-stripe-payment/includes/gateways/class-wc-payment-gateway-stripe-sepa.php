@@ -14,7 +14,9 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
  */
 class WC_Payment_Gateway_Stripe_Sepa extends WC_Payment_Gateway_Stripe_Local_Payment {
 
-	use WC_Stripe_Local_Payment_Intent_Trait;
+	use WC_Stripe_Local_Payment_Intent_Trait {
+		get_payment_intent_confirmation_args as trait_get_payment_intent_confirmation_args;
+	}
 
 	protected $payment_method_type = 'sepa_debit';
 
@@ -74,14 +76,21 @@ class WC_Payment_Gateway_Stripe_Sepa extends WC_Payment_Gateway_Stripe_Local_Pay
 
 	public function get_local_payment_settings() {
 		return parent::get_local_payment_settings() + array(
-				'company_name'  => array(
+				'stripe_mandate' => array(
+					'title'       => __( 'Use Stripe Mandate', 'woo-stripe-payment' ),
+					'type'        => 'checkbox',
+					'default'     => 'yes',
+					'desc_tip'    => true,
+					'description' => __( 'If enabled, Stripe\'s default mandate text will be used. If disabled, the plugin will use it\'s mandate text.', 'woo-stripe-payment' )
+				),
+				'company_name'   => array(
 					'title'       => __( 'Company Name', 'woo-stripe-payment' ),
 					'type'        => 'text',
 					'default'     => get_bloginfo( 'name' ),
 					'desc_tip'    => true,
 					'description' => __( 'The name of your company that will appear in the SEPA mandate.', 'woo-stripe-payment' ),
 				),
-				'method_format' => array(
+				'method_format'  => array(
 					'title'       => __( 'Payment Method Display', 'woo-stripe-payment' ),
 					'type'        => 'select',
 					'class'       => 'wc-enhanced-select',
@@ -115,5 +124,35 @@ class WC_Payment_Gateway_Stripe_Sepa extends WC_Payment_Gateway_Stripe_Local_Pay
 		return $token;
 	}
 
+	public function get_payment_element_options() {
+		return array_merge(
+			parent::get_payment_element_options(),
+			array(
+				'terms'    => array(
+					'sepaDebit' => $this->is_active( 'stripe_mandate' ) ? 'auto' : 'never'
+				),
+				'business' => array(
+					'name' => $this->get_option( 'company_name', '' )
+				)
+			)
+		);
+	}
+
+	public function get_payment_intent_confirmation_args( $intent, $order ) {
+		$args = $this->trait_get_payment_intent_confirmation_args( $intent, $order );
+		$this->add_payment_intent_mandate_args( $args, $order );
+		if ( isset( $intent->payment_method ) ) {
+			if ( is_object( $intent->payment_method ) ) {
+				$id = $intent->payment_method->id;
+			} else {
+				$id = $intent->payment_method;
+			}
+			if ( strpos( $id, 'src_' ) !== false ) {
+				unset( $args['mandate_data'] );
+			}
+		}
+
+		return $args;
+	}
 
 }
