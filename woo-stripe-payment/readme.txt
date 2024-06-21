@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.3.71
+Stable tag: 3.3.72
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,11 +63,15 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
-= 3.3.71 - 05/30/24 =
+= 3.3.72 - 06/20/2024 =
+* Fixed - handleCardAction action error triggered when GPay requires 3DS
+* Fixed - Apple Pay showing pending total for cart and checkout block when only digital goods in cart (this did not affect payment functionality)
+* Updated - Improved integration with German Market plugin by MarketPress
+= 3.3.71 - 05/30/2024 =
 * Added - MobilePay payments can be authorized or captured
 * Added - Extended authorizations for card payments. [Stripe Docs](https://docs.stripe.com/payments/extended-authorization). Make sure your account is eligible before enabling this feature.
 * Added - EUR support for Revolut. EUR support is in beta so make sure it's enabled on your Stripe account.
-= 3.3.70 - 05/21/24 =
+= 3.3.70 - 05/21/2024 =
 * Added - Amazon Pay, Cash App, Revolut, Zip Pay, MobilePay can now be used as stand alone gateways. They can also be used in the Universal Payment Method.
 * Added - Support for recurring payments for iDEAL
 * Added - SEPA, ACH, and other payment methods added to the My Account > Add Payment Method page
@@ -76,33 +80,33 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 * Updated - Consolidated code for smaller Javascript files
 * Updated - Improved ACH integration which now supports micro-deposit verification
 * Updated - If Afterpay/Clearpay is disabled, don't show messaging either. The messaging relied on the Messaging Section settings but Afterpay should also be enabled before messaging shows.
-= 3.3.62 - 05/9/24 =
+= 3.3.62 - 05/9/2024 =
 * Added - Universal Payment Method integration
 * Added - Amazon Pay, Zip Pay, Cashapp, Revolut
 * Updated - Multibanco integration now uses Payment Intent API
-= 3.3.61 - 04/25/24 =
+= 3.3.61 - 04/25/2024 =
 * Added - Klarna support for CZK
 * Added - WC Tested to 8.8
 * Added - GPay button radius option
 * Fixed - Only load the WooCommerce Product Add-On script if payment buttons are enabled on product pages
 * Fixed - [https://wordpress.org/support/topic/fatal-error-after-updated-to-latest-version/](https://wordpress.org/support/topic/fatal-error-after-updated-to-latest-version/)
-= 3.3.60 - 03/18/24 =
+= 3.3.60 - 03/18/2024 =
 * Added - Order button text translations added to the wpml-config.xml file.
 * Added - Refund reason in the refund metadata. https://wordpress.org/support/topic/metadata-in-refunds/
 * Added - Stripe refund ID in order notes when a refund is processed
 * Fixed - Fullname is required error message encountered with Link using checkout shortcode.
 * Fixed - Ensure ACH payments use the order_status option if it's not set to default. https://wordpress.org/support/topic/the-order-status-feature-in-general-settings-doesnt-work/
-= 3.3.59 - 02/23/24 =
+= 3.3.59 - 02/23/2024 =
 * Added - Support for the Swish payment method popular in Sweden
 * Updated - Translations used by the checkout blog integration. Translations used in the checkout shortcode will now work on the cart block and checkout block
-= 3.3.58 - 02/16/24 =
+= 3.3.58 - 02/16/2024 =
 * Added - Filter wc_stripe_capture_charge_failed so merchants can perform custom actions after a failed capture of an authorized payment
 * Fixed - On pay for order page, resolved error if card triggered insufficient funds error and then customer used a saved card instead
-= 3.3.57 - 02/07/24 =
+= 3.3.57 - 02/07/2024 =
 * Updated - Improved compatibility with FunnelKit order bump when cart total is $0
 * Updated - For card payments, replaced "statement_descriptor" property with "statement_descriptor_suffix". [Stripe announcement](https://support.stripe.com/questions/use-of-the-statement-descriptor-parameter-on-paymentintents-for-card-charges)
 * Updated - Improved Link Checkout integration with Checkout Block
-= 3.3.56 - 01/26/24 =
+= 3.3.56 - 01/26/2024 =
 * Fixed - Stripe payment form not submitting if 100% off coupon used on subscription.
 * Fixed - Compatibility with CheckoutWC side-cart and GPay
 * Added - Add Link to payment_method_types array if needed on recurring payment
@@ -111,7 +115,7 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 [https://wordpress.org/support/topic/conflict-with-sequential-order-numbers-and-admin-phone-order-feature/](https://wordpress.org/support/topic/conflict-with-sequential-order-numbers-and-admin-phone-order-feature/)
 * Added - Option to save ACH payment method on checkout page
 * Updated - Removed the "created" key from payment intent metadata since it's redundant. The Payment Intent object already has the creation time as a property.
-= 3.3.55 - 01/01/24 =
+= 3.3.55 - 01/01/2024 =
 * Added - Support for Afterpay, Affirm, and Klarna messaging on the Cart Block
 * Added - Clearpay icon so merchants can choose which icon appears on checkout page if they're not relying on the messaging element
 * Fixed - Afterpay message settings being ignored after version 3.3.53 release

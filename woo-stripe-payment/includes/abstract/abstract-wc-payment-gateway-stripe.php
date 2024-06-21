@@ -1806,8 +1806,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			$chosen_methods = array();
 			$packages       = $this->get_shipping_packages();
 			$incl_tax       = wc_stripe_display_prices_including_tax();
-			foreach ( WC()->session->get( 'chosen_shipping_methods', array() ) as $i => $id ) {
-				$chosen_methods[] = $this->get_shipping_method_id( $id, $i );
+			if ( WC()->session ) {
+				foreach ( WC()->session->get( 'chosen_shipping_methods', array() ) as $i => $id ) {
+					$chosen_methods[] = $this->get_shipping_method_id( $id, $i );
+				}
 			}
 			foreach ( $packages as $i => $package ) {
 				foreach ( $package['rates'] as $rate ) {

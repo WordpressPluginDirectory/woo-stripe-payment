@@ -31,7 +31,7 @@ return array(
 	),
 	'desc'                              => array(
 		'type'        => 'description',
-		'description' => sprintf( __( 'The Universal Payment Method (UPM) allows you to combine all payment methods into a single integration. On your checkout page, the UPM will show all of the enabled payment methdods
+		'description' => sprintf( __( 'The Universal Payment Method (UPM) allows you to combine all payment methods into a single integration. On your checkout page, the UPM will show all of the enabled payment methods
 		 that are eligible.', 'woo-stripe-payment' ), '<a target="_blank" href="https://stripe.com/docs/testing#cards">', '</a>' ),
 	),
 	'general_settings'                  => array(

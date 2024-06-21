@@ -29,26 +29,6 @@ class WC_Payment_Gateway_Stripe_MobilePay extends WC_Payment_Gateway_Stripe_Loca
 		parent::__construct();
 	}
 
-	public function init_supports() {
-		$this->supports = array(
-			'tokenization',
-			'products',
-			'subscriptions',
-			'add_payment_method',
-			'subscription_cancellation',
-			'multiple_subscriptions',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'default_credit_card_form',
-			'refunds',
-			'pre-orders',
-			'subscription_payment_method_change_admin',
-			'subscription_reactivation',
-			'subscription_suspension',
-			'subscription_payment_method_change_customer',
-		);
-	}
-
 	public function get_local_payment_settings() {
 		return wp_parse_args(
 			array(

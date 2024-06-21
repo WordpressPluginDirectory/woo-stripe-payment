@@ -28,7 +28,10 @@ abstract class AbstractBNPLMessageController {
 
 	protected function get_supported_gateways() {
 		if ( ! $this->supported_gateways ) {
-			$payment_gateways         = WC()->payment_gateways()->payment_gateways();
+			$payment_gateways = WC()->payment_gateways()->payment_gateways();
+			/**
+			 * @var \WC_Payment_Gateway_Stripe $universal_payment_method
+			 */
 			$universal_payment_method = $payment_gateways['stripe_upm'] ?? null;
 			$ordering                 = (array) get_option( 'woocommerce_gateway_order' );
 			$sort                     = 999;
@@ -36,7 +39,7 @@ abstract class AbstractBNPLMessageController {
 				$gateway = isset( $payment_gateways[ $id ] ) ? $payment_gateways[ $id ] : null;
 				if ( $gateway && $gateway instanceof \WC_Payment_Gateway_Stripe_Local_Payment ) {
 					if ( wc_string_to_bool( $gateway->enabled )
-					     || ( $universal_payment_method && $universal_payment_method->is_enabled_payment_method( $gateway->id ) )
+					     || ( $universal_payment_method && wc_string_to_bool( $universal_payment_method->enabled ) && $universal_payment_method->is_enabled_payment_method( $gateway->id ) )
 					) {
 						$payment_sections = $gateway->get_option( 'payment_sections', [] );
 						$payment_sections = ! is_array( $payment_sections ) ? [] : $payment_sections;

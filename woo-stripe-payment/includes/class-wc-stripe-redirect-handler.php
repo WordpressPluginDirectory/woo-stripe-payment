@@ -38,23 +38,20 @@ class WC_Stripe_Redirect_Handler {
 	/**
 	 */
 	public static function process_redirect() {
-		if ( isset( $_GET['source'] ) ) {
-			$result        = WC_Stripe_Gateway::load()->sources->retrieve( wc_clean( $_GET['source'] ) );
-			$client_secret = isset( $_GET['client_secret'] ) ? $_GET['client_secret'] : '';
+		if ( isset( $_GET['payment_intent'] ) ) {
+			$result        = WC_Stripe_Gateway::load()->paymentIntents->retrieve(
+				wc_clean( $_GET['payment_intent'] ),
+				array( 'expand' => array( 'payment_method' ) )
+			);
+			$client_secret = isset( $_GET['payment_intent_client_secret'] ) ? $_GET['payment_intent_client_secret'] : '';
+		} elseif ( isset( $_GET['setup_intent'] ) ) {
+			$result        = WC_Stripe_Gateway::load()->setupIntents->retrieve(
+				wc_clean( $_GET['setup_intent'] ),
+				array( 'expand' => array( 'payment_method', 'latest_attempt' ) )
+			);
+			$client_secret = isset( $_GET['setup_intent_client_secret'] ) ? $_GET['setup_intent_client_secret'] : '';
 		} else {
-			if ( isset( $_GET['payment_intent'] ) ) {
-				$result        = WC_Stripe_Gateway::load()->paymentIntents->retrieve(
-					wc_clean( $_GET['payment_intent'] ),
-					array( 'expand' => array( 'payment_method' ) )
-				);
-				$client_secret = isset( $_GET['payment_intent_client_secret'] ) ? $_GET['payment_intent_client_secret'] : '';
-			} elseif ( isset( $_GET['setup_intent'] ) ) {
-				$result        = WC_Stripe_Gateway::load()->setupIntents->retrieve(
-					wc_clean( $_GET['setup_intent'] ),
-					array( 'expand' => array( 'payment_method', 'latest_attempt' ) )
-				);
-				$client_secret = isset( $_GET['setup_intent_client_secret'] ) ? $_GET['setup_intent_client_secret'] : '';
-			}
+			return;
 		}
 		if ( is_wp_error( $result ) ) {
 			wc_add_notice( sprintf( __( 'Error retrieving payment source. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ), 'error' );

@@ -1395,7 +1395,7 @@
     wc_stripe.GooglePay = function () {
     };
 
-    wc_stripe.GooglePay.prototype.handleActionMethod = 'handleCardAction';
+    wc_stripe.GooglePay.prototype.handleActionMethod = 'confirmCardPayment';
     wc_stripe.GooglePay.prototype.setupActionMethod = 'confirmCardSetup';
 
     var googlePayBaseRequest = {
@@ -1676,7 +1676,7 @@
     wc_stripe.ApplePay = function () {
     };
 
-    wc_stripe.ApplePay.prototype.handleActionMethod = 'handleCardAction';
+    wc_stripe.ApplePay.prototype.handleActionMethod = 'confirmCardPayment';
     wc_stripe.ApplePay.prototype.setupActionMethod = 'confirmCardSetup';
 
     wc_stripe.ApplePay.prototype.initialize = function () {
@@ -1729,7 +1729,7 @@
     wc_stripe.PaymentRequest = function () {
     };
 
-    wc_stripe.PaymentRequest.prototype.handleActionMethod = 'handleCardAction';
+    wc_stripe.PaymentRequest.prototype.handleActionMethod = 'confirmCardPayment';
     wc_stripe.PaymentRequest.prototype.setupActionMethod = 'confirmCardSetup';
 
     wc_stripe.PaymentRequest.prototype.initialize = function () {
