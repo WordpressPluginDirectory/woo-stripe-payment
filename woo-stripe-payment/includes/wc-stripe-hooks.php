@@ -15,8 +15,6 @@ add_action( 'wc_stripe_retry_source_chargeable', 'wc_stripe_retry_source_chargea
 /**
  * * Webhook Actions ***
  */
-add_action( 'wc_stripe_webhook_source_chargeable', 'wc_stripe_process_source_chargeable', 10, 2 );
-add_action( 'wc_stripe_webhook_charge_succeeded', 'wc_stripe_process_charge_succeeded', 10, 2 );
 add_action( 'wc_stripe_webhook_charge_failed', 'wc_stripe_process_charge_failed', 10, 2 );
 add_action( 'wc_stripe_webhook_charge_pending', 'wc_stripe_process_charge_pending', 10, 1 );
 add_action( 'wc_stripe_webhook_payment_intent_succeeded', 'wc_stripe_process_payment_intent_succeeded', 10, 2 );

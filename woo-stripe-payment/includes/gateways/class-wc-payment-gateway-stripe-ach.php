@@ -255,6 +255,14 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 		);
 	}
 
+	protected function requires_confirmation_mandate( $intent ) {
+		if ( $intent && $intent->status === 'requires_confirmation' ) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
 
 WC_Payment_Gateway_Stripe_ACH::init();

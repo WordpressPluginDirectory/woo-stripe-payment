@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.3.72
+Stable tag: 3.3.73
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,10 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.73 - 06/27/2024 =
+* Fixed - Mandate error for ACH payments when using checkout block. [https://wordpress.org/support/topic/error-code-pops-up-when-customer-try-to-pay-with-ach/](https://wordpress.org/support/topic/error-code-pops-up-when-customer-try-to-pay-with-ach/)
+* Fixed - If there are duplicate payment methods saved in the WooCommerce payment_tokens table, ensure the row created by this plugin is used.
+* Added - Users can now switch seamlessly from the FunnelKit Stripe plugin to this plugin.
 = 3.3.72 - 06/20/2024 =
 * Fixed - handleCardAction action error triggered when GPay requires 3DS
 * Fixed - Apple Pay showing pending total for cart and checkout block when only digital goods in cart (this did not affect payment functionality)

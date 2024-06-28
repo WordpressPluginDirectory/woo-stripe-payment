@@ -1503,10 +1503,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			$keys = array();
 			switch ( $meta_key ) {
 				case WC_Stripe_Constants::PAYMENT_METHOD_TOKEN:
-					$keys = array( WC_Stripe_Constants::SOURCE_ID );
+					$keys = array( WC_Stripe_Constants::SOURCE_ID, '_fkwcs_source_id' );
 					break;
 				case WC_Stripe_Constants::CUSTOMER_ID:
-					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID );
+					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' );
 					break;
 				case WC_Stripe_Constants::PAYMENT_INTENT_ID:
 					$keys = array( WC_Stripe_Constants::STRIPE_INTENT_ID );

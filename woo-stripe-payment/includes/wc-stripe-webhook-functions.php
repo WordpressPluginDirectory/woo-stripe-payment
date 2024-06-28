@@ -8,8 +8,9 @@ defined( 'ABSPATH' ) || exit();
  * @param \Stripe\Source  $source
  * @param WP_REST_Request $request
  *
- * @since   3.0.0
- * @package Stripe/Functions
+ * @since      3.0.0
+ * @deprecated 3.3.73
+ * @package    Stripe/Functions
  */
 function wc_stripe_process_source_chargeable( $source, $request ) {
 	if ( isset( $source->metadata['order_id'] ) ) {
@@ -62,8 +63,9 @@ function wc_stripe_process_source_chargeable( $source, $request ) {
  * @param \Stripe\Charge  $charge
  * @param WP_REST_Request $request
  *
- * @since   3.0.5
- * @package Stripe/Functions
+ * @since      3.0.5
+ * @deprecated 3.3.73
+ * @package    Stripe/Functions
  */
 function wc_stripe_process_charge_succeeded( $charge, $request ) {
 	// charges that belong to a payment intent can be  skipped
@@ -128,7 +130,7 @@ function wc_stripe_process_payment_intent_succeeded( $intent, $request ) {
 	/**
 	 * @var \WC_Payment_Gateway_Stripe $payment_method
 	 */
-	$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ];
+	$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ] ?? null;
 
 	if ( $payment_method instanceof WC_Payment_Gateway_Stripe_Local_Payment
 	     || ( $payment_method instanceof WC_Payment_Gateway_Stripe && ! $payment_method->synchronous )

@@ -130,8 +130,8 @@ class WC_Stripe_Customer_Manager {
 
 		// this customer may have an ID from another plugin. Check that too.
 		if ( empty( $id ) ) {
-			$id = get_user_option( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, $user_id );
-			if ( ! empty( $id ) && is_string( $id ) ) {
+			$id = $this->get_customer_id_from_user_id( $user_id );
+			if ( $id ) {
 				// validate that this customer exists in the Stripe gateway
 				$response = WC_Stripe_Gateway::load()->customers->retrieve( $id );
 				if ( ! is_wp_error( $response ) ) {
@@ -147,6 +147,18 @@ class WC_Stripe_Customer_Manager {
 		}
 
 		return ! empty( $id );
+	}
+
+	private function get_customer_id_from_user_id( $user_id ) {
+		$keys = [ WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' ];
+		foreach ( $keys as $key ) {
+			$id = get_user_option( $key, $user_id );
+			if ( $id && ! empty( $id ) && is_string( $id ) ) {
+				return $id;
+			}
+		}
+
+		return null;
 	}
 
 	/**

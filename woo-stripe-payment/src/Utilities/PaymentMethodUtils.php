@@ -82,6 +82,9 @@ class PaymentMethodUtils {
 			if ( method_exists( $gateway, 'get_payment_token_type' ) ) {
 				$where[] = $wpdb->prepare( 'type = %s', $gateway->get_payment_token_type() );
 			}
+		} else {
+			// if gateway isn't specified, make sure duplicate tokens from other plugins won't be included in this request.
+			$where[] = $wpdb->prepare( 'gateway_id like %s', '%stripe_%' );
 		}
 
 		$where_clause = ' WHERE ' . implode( ' AND ', $where );

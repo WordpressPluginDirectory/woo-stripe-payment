@@ -106,7 +106,7 @@ abstract class WC_Stripe_Payment {
 		$this->payment_method->save_order_meta( $order, $charge );
 		if ( 'pending' === $charge->status ) {
 			$order->update_status( apply_filters( 'wc_stripe_pending_charge_status', 'on-hold', $order, $this->payment_method ),
-				sprintf( __( 'Charge %1$s is pending. Payment Method: %2$s. Payment will be completed once charge.succeeded webhook received from Stripe.', 'woo-stripe-payment' ),
+				sprintf( __( 'Charge %1$s is pending. Payment Method: %2$s. Payment will be completed once payment_intent.succeeded webhook received from Stripe.', 'woo-stripe-payment' ),
 					$order->get_transaction_id(),
 					$order->get_payment_method_title() ) );
 		} else {

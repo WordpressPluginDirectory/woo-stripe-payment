@@ -111,7 +111,7 @@ trait WC_Stripe_Payment_Intent_Trait {
 			'return_url' => $this->get_complete_payment_return_url( $order )
 		);
 
-		if ( isset( $intent['setup_future_usage'] ) && $intent['setup_future_usage'] === 'off_session' ) {
+		if ( $this->requires_confirmation_mandate( $intent ) || ( isset( $intent['setup_future_usage'] ) && $intent['setup_future_usage'] === 'off_session' ) ) {
 			$this->add_payment_intent_mandate_args( $args, $order );
 		}
 
@@ -120,6 +120,10 @@ trait WC_Stripe_Payment_Intent_Trait {
 
 	public function get_setup_intent_checkout_params( $intent, $order ) {
 		return array();
+	}
+
+	protected function requires_confirmation_mandate( $intent ) {
+		return false;
 	}
 
 	protected function add_payment_intent_mandate_args( &$args, $order ) {

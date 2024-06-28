@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.72';
+	public $version = '3.3.73';
 
 	/**
 	 *

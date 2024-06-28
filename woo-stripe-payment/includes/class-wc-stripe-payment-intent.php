@@ -618,6 +618,13 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 				} elseif ( isset( $data['param'] ) && strpos( $data['param'], 'level3' ) !== false ) {
 					$result = true;
 					$remove_level3_data();
+				} elseif ( isset( $data['message'] ) && preg_match( '/(update\s+the).+payment_method_types.+link/', $data['message'] ) ) {
+					add_filter( 'wc_stripe_payment_intent_args', function ( $args ) {
+						$args['payment_method_types'][] = 'link';
+
+						return $args;
+					} );
+					$result = true;
 				}
 			}
 			if ( $result ) {
