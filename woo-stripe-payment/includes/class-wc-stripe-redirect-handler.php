@@ -100,7 +100,9 @@ class WC_Stripe_Redirect_Handler {
 								$payment_method->process_voucher_order_status( $order );
 							}
 						} else {
-							return;
+							if ( ! $payment_method->synchronous ) {
+								$order->update_status( 'on-hold' );
+							}
 						}
 					}
 				}

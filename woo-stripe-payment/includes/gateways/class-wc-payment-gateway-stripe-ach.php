@@ -178,14 +178,16 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 	}
 
 	public function add_stripe_order_args( &$args, $order, $intent = null ) {
-		$args['payment_method_options'] = array(
-			'us_bank_account' => array(
-				'verification_method'   => 'instant',
-				'financial_connections' => array(
-					'permissions' => array( 'payment_method' ) //@todo - add balances in future release 'permissions' => array( 'payment_method', 'balances' )
+		if ( ! $intent ) {
+			$args['payment_method_options'] = array(
+				'us_bank_account' => array(
+					'verification_method'   => 'automatic',
+					'financial_connections' => array(
+						'permissions' => array( 'payment_method' ) //@todo - add balances in future release 'permissions' => array( 'payment_method', 'balances' )
+					)
 				)
-			)
-		);
+			);
+		}
 		// check if this was a Plaid bank token. If so, add the mandate
 		if ( strpos( $order->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ), 'ba_' ) !== false ) {
 			if ( $this->is_processing_scheduled_payment() ) {

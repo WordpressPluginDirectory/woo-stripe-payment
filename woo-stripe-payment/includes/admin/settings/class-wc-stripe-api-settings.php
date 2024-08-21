@@ -361,7 +361,7 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 			);
 		}
 		$webhook = $client->mode( $mode )->webhookEndpoints->create( array(
-			'api_version'    => '2020-03-02',
+			'api_version'    => '2022-08-01',
 			'url'            => $url,
 			'enabled_events' => $events,
 		) );

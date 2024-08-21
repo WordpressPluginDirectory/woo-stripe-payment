@@ -88,6 +88,7 @@ return array(
     'PaymentPlugins\\Stripe\\Utilities\\FeaturesUtil' => $baseDir . '/src/Utilities/FeaturesUtil.php',
     'PaymentPlugins\\Stripe\\Utilities\\PaymentMethodUtils' => $baseDir . '/src/Utilities/PaymentMethodUtils.php',
     'PaymentPlugins\\Stripe\\Utilities\\ProductUtils' => $baseDir . '/src/Utilities/ProductUtils.php',
+    'PaymentPlugins\\Stripe\\Webhooks\\DeferredWebhookHandler' => $baseDir . '/src/Webhooks/DeferredWebhookHandler.php',
     'PaymentPlugins\\Stripe\\WooCommerceExtraProductOptions\\FrontendScripts' => $baseDir . '/packages/woocommerce-tm-extra-product-options/src/FrontendScripts.php',
     'PaymentPlugins\\Stripe\\WooCommerceExtraProductOptions\\Package' => $baseDir . '/packages/woocommerce-tm-extra-product-options/src/Package.php',
     'PaymentPlugins\\Stripe\\WooCommercePreOrders\\Controllers\\PaymentIntent' => $baseDir . '/packages/preorders/src/Controllers/PaymentIntent.php',

@@ -156,6 +156,7 @@ class ComposerStaticInitc671a417b249808ec64a85f88728cc49
         'PaymentPlugins\\Stripe\\Utilities\\FeaturesUtil' => __DIR__ . '/../..' . '/src/Utilities/FeaturesUtil.php',
         'PaymentPlugins\\Stripe\\Utilities\\PaymentMethodUtils' => __DIR__ . '/../..' . '/src/Utilities/PaymentMethodUtils.php',
         'PaymentPlugins\\Stripe\\Utilities\\ProductUtils' => __DIR__ . '/../..' . '/src/Utilities/ProductUtils.php',
+        'PaymentPlugins\\Stripe\\Webhooks\\DeferredWebhookHandler' => __DIR__ . '/../..' . '/src/Webhooks/DeferredWebhookHandler.php',
         'PaymentPlugins\\Stripe\\WooCommerceExtraProductOptions\\FrontendScripts' => __DIR__ . '/../..' . '/packages/woocommerce-tm-extra-product-options/src/FrontendScripts.php',
         'PaymentPlugins\\Stripe\\WooCommerceExtraProductOptions\\Package' => __DIR__ . '/../..' . '/packages/woocommerce-tm-extra-product-options/src/Package.php',
         'PaymentPlugins\\Stripe\\WooCommercePreOrders\\Controllers\\PaymentIntent' => __DIR__ . '/../..' . '/packages/preorders/src/Controllers/PaymentIntent.php',

@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.73';
+	public $version = '3.3.75';
 
 	/**
 	 *
@@ -354,6 +354,7 @@ class WC_Stripe_Manager {
 		new \PaymentPlugins\Stripe\Messages\BNPL\CategoryMessageController( [ 'stripe_affirm', 'stripe_afterpay', 'stripe_klarna' ] );
 		new \PaymentPlugins\Stripe\Messages\BNPL\ProductMessageController( [ 'stripe_affirm', 'stripe_afterpay', 'stripe_klarna' ] );
 		new \PaymentPlugins\Stripe\Messages\BNPL\CartMessageController( [ 'stripe_affirm', 'stripe_afterpay', 'stripe_klarna' ] );
+		( new \PaymentPlugins\Stripe\Webhooks\DeferredWebhookHandler() )->initialize();
 	}
 
 	/**
