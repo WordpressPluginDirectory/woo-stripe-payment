@@ -116,6 +116,7 @@ class ComposerStaticInitc671a417b249808ec64a85f88728cc49
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SepaPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SepaPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SofortPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SofortPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SwishPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/SwishPayment.php',
+        'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\TwintPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/TwintPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\UniversalPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/UniversalPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\WeChatPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/WeChatPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\ZipPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/ZipPayment.php',

@@ -48,6 +48,7 @@ return array(
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SepaPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SepaPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SofortPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SofortPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\SwishPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/SwishPayment.php',
+    'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\TwintPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/TwintPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\UniversalPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/UniversalPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\WeChatPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/WeChatPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\ZipPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/ZipPayment.php',

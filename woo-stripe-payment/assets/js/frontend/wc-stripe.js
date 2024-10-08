@@ -152,6 +152,7 @@
 
         if ($(document.body).triggerHandler('wc_stripe_error_message_enabled', [true, message, $container]) !== false) {
             $container.prepend(message);
+            $('form.checkout').removeClass('processing');
             $container.removeClass('processing');
             $container.find('.input-text, select, input:checkbox').trigger('blur');
 

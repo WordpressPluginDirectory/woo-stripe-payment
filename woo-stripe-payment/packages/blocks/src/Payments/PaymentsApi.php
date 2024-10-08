@@ -163,6 +163,9 @@ class PaymentsApi {
 		$this->container->register( Gateways\MobilePayPayment::class, function ( $container ) {
 			return new Gateways\MobilePayPayment( $container->get( AssetsApi::class ) );
 		} );
+		$this->container->register( Gateways\TwintPayment::class, function ( Container $container ) {
+			return new Gateways\TwintPayment( $container->get( AssetsApi::class ) );
+		} );
 		$this->container->register( Gateways\UniversalPayment::class, function ( Container $container ) {
 			return new Gateways\UniversalPayment(
 				$container->get( AssetsApi::class ),
@@ -215,7 +218,8 @@ class PaymentsApi {
 			Gateways\CashAppPayment::class,
 			Gateways\RevolutPayment::class,
 			Gateways\ZipPayment::class,
-			Gateways\MobilePayPayment::class
+			Gateways\MobilePayPayment::class,
+			Gateways\TwintPayment::class
 		);
 
 		foreach ( $payment_methods as $clazz ) {

@@ -756,6 +756,19 @@ ul.payment_methods li.payment_method_stripe_swish img {
   max-height: 28px;
 }
 
+ul {
+  &.payment_methods {
+    li {
+      &.payment_method_stripe_twint {
+        img {
+          max-height: 35px;
+          width: 35px;
+        }
+      }
+    }
+  }
+}
+
 ul.payment_methods li.payment_method_stripe_cashapp img {
   width: 32px;
   height: 32px;
