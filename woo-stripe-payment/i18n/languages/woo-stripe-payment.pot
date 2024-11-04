@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.76\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.77\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-07T17:43:39+00:00\n"
+"POT-Creation-Date: 2024-11-03T23:31:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -1899,11 +1899,11 @@ msgstr ""
 msgid "Loading installments..."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:317
+#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:319
 msgid "Only the Stripe payment form and inline form can be used while Link is enabled."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:328
+#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:330
 #: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:47
 msgid "Save Card"
 msgstr ""

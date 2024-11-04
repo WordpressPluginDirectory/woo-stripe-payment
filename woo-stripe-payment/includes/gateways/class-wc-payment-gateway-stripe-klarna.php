@@ -53,7 +53,7 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	public function __construct() {
 		$this->local_payment_type = 'klarna';
 		$this->currencies         = array( 'AUD', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'NOK', 'NZD', 'PLN', 'SEK', 'DKK', 'USD' );
-		$this->countries          = $this->limited_countries = array( 'AT', 'AU', 'BE', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'IE', 'IT', 'NL', 'NO', 'NZ', 'PL', 'PT', 'SE', 'US' );
+		$this->countries          = $this->limited_countries = array( 'AT', 'AU', 'BE', 'CA', 'CH', 'CZ', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'IE', 'IT', 'NL', 'NO', 'NZ', 'PL', 'PT', 'SE', 'US' );
 		$this->id                 = 'stripe_klarna';
 		$this->tab_title          = __( 'Klarna', 'woo-stripe-payment' );
 		$this->token_type         = 'Stripe_Local';

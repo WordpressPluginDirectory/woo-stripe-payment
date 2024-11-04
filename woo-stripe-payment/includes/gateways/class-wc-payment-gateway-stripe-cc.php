@@ -250,7 +250,9 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 			$args['payment_method_options']['card']['request_three_d_secure'] = 'any';
 		}
 		if ( stripe_wc()->advanced_settings && wc_string_to_bool( stripe_wc()->advanced_settings->get_option( 'extended_authorization', 'no' ) ) ) {
-			$args['payment_method_options']['card']['request_extended_authorization'] = 'if_available';
+			if ( isset( $args['capture_method'] ) && $args['capture_method'] === WC_Stripe_Constants::MANUAL ) {
+				$args['payment_method_options']['card']['request_extended_authorization'] = 'if_available';
+			}
 		}
 	}
 
