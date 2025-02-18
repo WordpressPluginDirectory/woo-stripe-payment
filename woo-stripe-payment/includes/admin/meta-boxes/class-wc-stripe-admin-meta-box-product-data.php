@@ -89,7 +89,7 @@ class WC_Stripe_Admin_Meta_Box_Product_Data {
 			}
 		}
 		if ( isset( $_POST['_stripe_button_position'] ) ) {
-			$product->update_meta_data( '_stripe_button_position', wc_clean( $_POST['_stripe_button_position'] ) );
+			$product->update_meta_data( \WC_Stripe_Constants::BUTTON_POSITION, wc_clean( $_POST['_stripe_button_position'] ) );
 		}
 		$product->update_meta_data( \WC_Stripe_Constants::PRODUCT_GATEWAY_ORDER, $order );
 	}

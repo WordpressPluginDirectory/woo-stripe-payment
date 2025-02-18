@@ -49,8 +49,10 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 			$this->settings['charge_type'] = 'capture';
 		}
 
-		$this->settings['order_status'] = 'default';
-		$this->order_button_text        = $this->get_option( 'order_button_text' );
+		if ( ! array_key_exists( 'order_status', $this->settings ) ) {
+			$this->settings['order_status'] = 'default';
+		}
+		$this->order_button_text = $this->get_option( 'order_button_text' );
 	}
 
 	public function hooks() {

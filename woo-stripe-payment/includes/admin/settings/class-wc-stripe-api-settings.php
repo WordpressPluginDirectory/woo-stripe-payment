@@ -404,4 +404,20 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 		return ! empty( $key );
 	}
 
+	protected function validate_secret_key_test_field( $key, $value ) {
+		if ( preg_match( '/^rk_live|^sk_live/', $value ) ) {
+			throw new Exception( sprintf( __( 'Live mode keys are not allowed in the "%s field.', 'woo-stripe-payment' ), __( 'Test Secret Key', 'woo-stripe-payment' ) ) );
+		}
+
+		return $value;
+	}
+
+	protected function validate_publishable_key_test_field( $key, $value ) {
+		if ( preg_match( '/^pk_live/', $value ) ) {
+			throw new Exception( sprintf( __( 'Live mode keys are not allowed in the "%s" field.', 'woo-stripe-payment' ), __( 'Test Publishable Key', 'woo-stripe-payment' ) ) );
+		}
+
+		return $value;
+	}
+
 }

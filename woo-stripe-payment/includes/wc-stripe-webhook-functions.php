@@ -327,12 +327,12 @@ function wc_stripe_charge_dispute_closed( $dispute ) {
 		switch ( $dispute->status ) {
 			case 'won':
 				//set the order's status back to what it was before the dispute
-				if ( isset( $dispute->metadata['prev_order_status'] ) ) {
+				if ( ! empty( $dispute->metadata['prev_order_status'] ) ) {
 					$status = $dispute->metadata['prev_order_status'];
 				} else {
 					$status = $order->needs_processing() ? 'processing' : 'completed';
 				}
-				$order->update_status( $dispute->metadata['prev_order_status'], $message );
+				$order->update_status( $status, $message );
 				break;
 			case 'lost':
 				$order->update_status( apply_filters( 'wc_stripe_dispute_closed_order_status', 'failed', $dispute, $order ), $message );

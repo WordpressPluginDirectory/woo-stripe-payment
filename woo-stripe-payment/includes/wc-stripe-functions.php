@@ -677,7 +677,10 @@ function wc_stripe_payment_complete_order_status( $order_status, $order_id, $ord
 	if ( ( is_checkout() || wc_stripe_is_processing_webhook() ) && $order && $order->get_payment_method() ) {
 		$gateway = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ] ?? null;
 		if ( $gateway instanceof WC_Payment_Gateway_Stripe && 'default' !== $gateway->get_option( 'order_status', 'default' ) ) {
-			$order_status = $gateway->get_option( 'order_status' );
+			$status = $gateway->get_option( 'order_status', 'default' );
+			if ( is_string( $status ) && strlen( $status ) > 0 ) {
+				$order_status = $status;
+			}
 		}
 	}
 

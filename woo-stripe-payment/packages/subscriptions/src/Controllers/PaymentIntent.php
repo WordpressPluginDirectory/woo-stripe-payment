@@ -64,10 +64,16 @@ class PaymentIntent {
 	 */
 	public function is_subscription_mode( $bool, RequestContext $context ) {
 		if ( ! $bool ) {
-			if ( $this->request->is_order_pay_with_subscription( $context ) ) {
-				$bool = true;
-			} elseif ( $this->request->is_checkout_with_subscription( $context ) ) {
-				$bool = true;
+			$is_manual_enabled = function_exists( 'wcs_is_manual_renewal_enabled' )
+			                     && \wcs_is_manual_renewal_enabled();
+
+			// if $is_manual_enabled is enabled then subscription mode isn't needed.
+			if ( ! $is_manual_enabled ) {
+				if ( $this->request->is_order_pay_with_subscription( $context ) ) {
+					$bool = true;
+				} elseif ( $this->request->is_checkout_with_subscription( $context ) ) {
+					$bool = true;
+				}
 			}
 		}
 

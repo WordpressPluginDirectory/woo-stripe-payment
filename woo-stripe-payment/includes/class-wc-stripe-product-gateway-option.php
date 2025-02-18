@@ -66,7 +66,7 @@ class WC_Stripe_Product_Gateway_Option {
 	}
 
 	/**
-	 * Initialzie the settings.
+	 * Initialize the settings.
 	 */
 	public function init_settings() {
 		if ( ! $this->settings && $this->product ) {

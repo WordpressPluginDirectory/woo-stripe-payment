@@ -89,10 +89,15 @@ class PaymentMethodUtils {
 
 		$where_clause = ' WHERE ' . implode( ' AND ', $where );
 
-		$result = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}woocommerce_payment_tokens {$where_clause}" );
+		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_payment_tokens {$where_clause}" );
 
-		if ( $result ) {
-			return \WC_Payment_Tokens::get( $result->token_id, $result );
+		if ( is_array( $results ) ) {
+			foreach ( $results as $result ) {
+				$token = \WC_Payment_Tokens::get( $result->token_id, $result );
+				if ( $token instanceof \WC_Payment_Token_Stripe ) {
+					return $token;
+				}
+			}
 		}
 
 		return null;

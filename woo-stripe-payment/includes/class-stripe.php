@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.77';
+	public $version = '3.3.82';
 
 	/**
 	 *
@@ -285,6 +285,7 @@ class WC_Stripe_Manager {
 		if ( is_admin() ) {
 			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-notices.php';
 			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-user-edit.php';
+			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-product-edit.php';
 		}
 
 		$this->payment_gateways = apply_filters(

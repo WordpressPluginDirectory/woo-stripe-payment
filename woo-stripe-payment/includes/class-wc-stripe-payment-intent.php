@@ -565,6 +565,10 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 						$order->get_customer_id()
 					) );
 				}
+			} else {
+				if ( $order->get_meta( WC_Stripe_Constants::CUSTOMER_ID ) ) {
+					$order->delete_meta_data( WC_Stripe_Constants::CUSTOMER_ID );
+				}
 			}
 		};
 		$delete_payment_token = function () use ( $order ) {

@@ -294,18 +294,6 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		return WC()->payment_gateways()->payment_gateways()[ $gateway_id ];
 	}
 
-	/*public function generate_multiselect_html( $key, $data ) {
-		if ( $key === 'icons' ) {
-			$data['options'] = array_reduce( $this->get_supported_payment_methods(), function ( $carry, $payment_method ) {
-				$carry[ $payment_method->id ] = $payment_method->get_title();
-
-				return $carry;
-			}, array() );
-		}
-
-		return parent::generate_multiselect_html( $key, $data );
-	}*/
-
 	public function generate_payment_methods_html( $key, $data ) {
 		$payment_methods = $this->get_supported_payment_methods();
 		ksort( $payment_methods );

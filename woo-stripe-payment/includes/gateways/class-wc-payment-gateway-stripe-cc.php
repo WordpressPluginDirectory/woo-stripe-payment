@@ -34,7 +34,9 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		$cards = $this->get_option( 'cards', array() );
 		$icons = array();
 		foreach ( $cards as $card ) {
-			$icons[ $card ] = stripe_wc()->assets_url( "img/cards/{$card}.svg" );
+			if ( $card && is_string( $card ) ) {
+				$icons[ $card ] = stripe_wc()->assets_url( "img/cards/{$card}.svg" );
+			}
 		}
 
 		return wc_stripe_get_template_html(

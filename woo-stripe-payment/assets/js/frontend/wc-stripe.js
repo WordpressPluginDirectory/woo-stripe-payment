@@ -1217,8 +1217,10 @@
 
     wc_stripe.ProductGateway.prototype.reset_variation_data = function () {
         var data = this.get_product_data();
-        data.variation = false;
-        this.set_product_data(data);
+        if (data) {
+            data.variation = false;
+            this.set_product_data(data);
+        }
         this.disable_payment_button();
     };
 

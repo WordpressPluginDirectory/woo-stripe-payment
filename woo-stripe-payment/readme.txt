@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 3.3.77
+Stable tag: 3.3.82
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,23 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.82 - 02/17/25 =
+* Fixed - Klarna not showing for certain EEA countries.
+* Added - Improved description on Klarna Settings page showing the plugin rules for when Klarna is available.
+= 3.3.81 - 02/11/25 =
+* Fixed - Incompatibility with WooCommerce Smart Coupons. Issue resolved where items were appearing in cart/removed from cart when payment buttons enabled on product pages.
+* Updated - Klarna rules so merchants can offer Klarna in more currencies and countries
+= 3.3.80 - 12/20/2024 =
+* Fixed - missing file introduced in 3.3.79
+= 3.3.79 - 12/20/2024 =
+* Added - Test mode validation so live keys can't be entered in test mode fields
+* Added - Bulk action on Products page so product level Stripe settings can be removed
+* Added - Alt tags to the credit card icons displayed next to the payment method title
+= 3.3.78 - 11/19/2024 =
+* Added - Buy Now Pay Later payment method support for manual subscription renewal
+* Added - Klarna support for Romania (RON currency)
+* Added - Klarna Order status option on Klarna Settings page
+* Fixed - SEPA error on Add Payment Method page if Stripe inline form enabled
 = 3.3.77 - 11/03/2024 =
 * Fixed - WeChat pay error on checkout block when place order button clicked
 * Added - Klarna support for Czech Republic (CZK currency)

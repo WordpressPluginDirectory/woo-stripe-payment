@@ -90,7 +90,8 @@ class PaymentIntent {
 	}
 
 	private function is_deferred_intent_creation() {
-		return count( $this->get_payment_method_types() ) > 0;
+		//return count( $this->get_payment_method_types() ) > 0;
+		return true;
 	}
 
 	private function get_payment_method_types() {
@@ -109,7 +110,8 @@ class PaymentIntent {
 	}
 
 	private function is_setup_intent_needed() {
-		return ( $this->request_context->is_add_payment_method() || apply_filters( 'wc_stripe_create_setup_intent', false, $this->get_request_context() ) ) && $this->is_payment_intent_required_for_frontend();
+		return $this->request_context->is_add_payment_method()
+		       || apply_filters( 'wc_stripe_create_setup_intent', false, $this->get_request_context() );
 	}
 
 	private function is_subscription_mode() {
