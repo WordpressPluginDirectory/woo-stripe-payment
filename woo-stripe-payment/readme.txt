@@ -1,10 +1,10 @@
 === Payment Plugins for Stripe WooCommerce ===
 Contributors: mr.clayton
-Tags: stripe, ach, klarna, credit card, apple pay, google pay
+Tags: stripe, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 3.3.82
+Stable tag: 3.3.83
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,11 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.83 - 03/15/25 =
+* Fixed - Error on checkout block "The type of the provided source is link. This does not match the expected type card."
+* Fixed - Horizontal scroll on checkout page when Apple Pay selected.
+* Fixed - On checkout block, don't show "use another payment method" if there are no saved payment methods
+* Fixed - Card option for UPM would not deactivate when unchecked. [https://wordpress.org/support/topic/universal-payment-method-card-issue/](https://wordpress.org/support/topic/universal-payment-method-card-issue/)
 = 3.3.82 - 02/17/25 =
 * Fixed - Klarna not showing for certain EEA countries.
 * Added - Improved description on Klarna Settings page showing the plugin rules for when Klarna is available.

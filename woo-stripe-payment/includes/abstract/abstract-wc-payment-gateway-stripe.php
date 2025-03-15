@@ -1819,13 +1819,25 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			}
 
 			/**
-			 * Sort shipping methods so the selected method is first in the array.
+			 * Combined sorting function that:
+			 * 1. Prioritizes shipping methods with IDs in $chosen_methods
+			 * 2. Then sorts all other methods by amount in ascending order
 			 */
-			usort( $methods, function ( $method ) use ( $chosen_methods ) {
-				foreach ( $chosen_methods as $id ) {
-					if ( in_array( $id, $method, true ) ) {
-						return - 1;
-					}
+			usort( $methods, function ( $method1, $method2 ) use ( $chosen_methods ) {
+				// Check if method IDs are in chosen_methods
+				$method1_chosen = ! empty( $chosen_methods ) && in_array( $method1['id'], $chosen_methods, true );
+				$method2_chosen = ! empty( $chosen_methods ) && in_array( $method2['id'], $chosen_methods, true );
+
+				// If only one is chosen, prioritize it
+				if ( $method1_chosen && ! $method2_chosen ) {
+					return - 1;
+				} elseif ( ! $method1_chosen && $method2_chosen ) {
+					return 1;
+				}
+
+				if ( isset( $method1['amount'], $method2['amount'] ) ) {
+					// Otherwise sort by amount
+					return $method1['amount'] <=> $method2['amount'];
 				}
 
 				return 1;

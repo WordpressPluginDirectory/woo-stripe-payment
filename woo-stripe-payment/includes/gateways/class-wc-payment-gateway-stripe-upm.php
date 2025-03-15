@@ -314,7 +314,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 			'custom_attributes' => array()
 		);
 		$data         = wp_parse_args( $data, $defaults );
-		$cards        = $payment_methods['stripe_cc'];
+		$stripe_cc    = $payment_methods['stripe_cc'];
 		unset( $payment_methods['stripe_cc'] );
 		ob_start();
 		?>
@@ -335,19 +335,19 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
                     </div>
                     <div class="stripe-upm-payment-methods-container stripe_cc">
 						<?php
-						$supported = isset( $value[ $cards->id ] ) && true === $value[ $cards->id ]['supported'];
-						$checked   = isset( $value[ $cards->id ] ) && true === $value[ $cards->id ]['enabled'];
+						$supported = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['supported'];
+						$checked   = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['enabled'];
 						?>
                         <div class="stripe-upm-payment-method <?php echo $supported ? 'supported-method' : 'unsupported-method' ?>">
                             <div class="stripe-upm-checkbox-container">
                                 <input <?php disabled( $supported, false ); ?>
                                         class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]"
                                         id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>"
-                                        value="<?php echo $cards->id ?>" <?php checked( $checked, true ) ?>"/>
+                                        value="<?php echo $stripe_cc->id ?>" <?php checked( $checked, true ) ?>"/>
 								<?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
                             </div>
                             <div class="stripe-upm-label-container">
-                                <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $cards->id ) ?>" target="_blank"><?php echo $cards->get_title() ?></a></label>
+                                <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $stripe_cc->id ) ?>" target="_blank"><?php echo $stripe_cc->get_title() ?></a></label>
                             </div>
                         </div>
                     </div>
@@ -662,11 +662,22 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 						];
 					}
 				}
+				$params['apple_pay']  = [
+					'display_preference' => [
+						'preference' => 'off'
+					]
+				];
+				$params['google_pay'] = [
+					'display_preference' => [
+						'preference' => 'off'
+					]
+				];
 				if ( $payment_config_id ) {
 					$response = $this->gateway->paymentMethodConfigurations->update( $payment_config_id, $params );
 					if ( ! is_wp_error( $response ) ) {
 						$this->update_option( "{$mode}_payment_method_configuration", $response->id );
 					} else {
+						WC_Admin_Settings::add_error( sprintf( __( 'Error saving payment method configuration in Stripe. Reason: %s', 'woo-stripe-payment' ), $response->get_error_message() ) );
 						throw new \Exception( sprintf( __( 'Error saving payment method configuration in Stripe. Reason: %s', 'woo-stripe-payment' ), $response->get_error_message() ) );
 					}
 				}

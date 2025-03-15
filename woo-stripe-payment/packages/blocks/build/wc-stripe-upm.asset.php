@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'wc-blocks-registry', 'wc-price-format', 'wc-settings', 'wp-api-fetch', 'wp-element', 'wp-is-shallow-equal', 'wp-polyfill'), 'version' => '0a9f3c25ccdc395ce742');
+<?php return array('dependencies' => array('react', 'wc-blocks-checkout', 'wc-blocks-registry', 'wc-price-format', 'wc-settings', 'wp-api-fetch', 'wp-element', 'wp-is-shallow-equal', 'wp-polyfill'), 'version' => 'f4c2443dc65404128a4d');

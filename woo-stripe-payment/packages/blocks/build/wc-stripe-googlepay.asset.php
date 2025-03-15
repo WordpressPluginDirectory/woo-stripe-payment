@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'wc-blocks-registry', 'wc-price-format', 'wc-settings', 'wc-stripe-gpay-external', 'wp-api-fetch', 'wp-element', 'wp-is-shallow-equal', 'wp-polyfill'), 'version' => '960de613ef03118d3e1b');
+<?php return array('dependencies' => array('react', 'wc-blocks-registry', 'wc-price-format', 'wc-settings', 'wc-stripe-gpay-external', 'wp-api-fetch', 'wp-element', 'wp-is-shallow-equal', 'wp-polyfill'), 'version' => '51e273fdc147ec0ae36e');

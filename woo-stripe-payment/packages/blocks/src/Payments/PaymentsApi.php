@@ -341,19 +341,16 @@ class PaymentsApi {
 	 */
 	public function transform_payment_method_type( $list ) {
 		$universal_payment_method = $this->payment_method_registry->get_registered( 'stripe_upm' );
-		if ( ! isset( $list['cc'] ) ) {
-			$list['cc'] = [];
-		}
 		foreach ( $list as $type => $items ) {
 			$payment_method = null;
 			foreach ( $items as $item ) {
 				$payment_method = $this->payment_methods[ $item['method']['gateway'] ] ?? null;
 				if ( $payment_method ) {
 					if ( $payment_method->is_active() ) {
-						$list['cc'][] = $item;
+						$this->add_to_cc_list( $list, $item );
 					} elseif ( $universal_payment_method->is_active() && $universal_payment_method->is_payment_method_active( $payment_method->get_name() ) ) {
 						$item['method']['gateway'] = $universal_payment_method->get_name();
-						$list['cc'][]              = $item;
+						$this->add_to_cc_list( $list, $item );
 					}
 				}
 			}
@@ -363,6 +360,18 @@ class PaymentsApi {
 		}
 
 		return $list;
+	}
+
+	/**
+	 * Helper function to add an item to the cc list, initializing if needed
+	 *
+	 * @since 3.3.83
+	 */
+	private function add_to_cc_list( &$list, $item ) {
+		if ( ! isset( $list['cc'] ) ) {
+			$list['cc'] = [];
+		}
+		$list['cc'][] = $item;
 	}
 
 }

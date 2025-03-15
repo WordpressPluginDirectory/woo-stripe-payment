@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.82\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.83\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-17T18:24:12+00:00\n"
+"POT-Creation-Date: 2025-03-15T00:56:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -183,7 +183,7 @@ msgid "Charge voided in Stripe."
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:886
-#: includes/gateways/class-wc-payment-gateway-stripe-upm.php:692
+#: includes/gateways/class-wc-payment-gateway-stripe-upm.php:703
 msgid "n/a"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgstr ""
 msgid "Fees"
 msgstr ""
 
-#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1944
+#: includes/abstract/abstract-wc-payment-gateway-stripe.php:1956
 msgid "Error saving payment method for subscription. Reason: %s"
 msgstr ""
 
@@ -310,7 +310,7 @@ msgstr ""
 
 #: includes/abstract/abstract-wc-stripe-rest-controller.php:58
 #: includes/controllers/class-wc-stripe-controller-gateway-settings.php:404
-#: includes/controllers/class-wc-stripe-controller-order-actions.php:343
+#: includes/controllers/class-wc-stripe-controller-order-actions.php:354
 msgid "You do not have permissions to access this resource."
 msgstr ""
 
@@ -1207,16 +1207,16 @@ msgstr ""
 msgid "Invalid amount entered."
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-order-actions.php:192
-#: includes/controllers/class-wc-stripe-controller-order-actions.php:195
+#: includes/controllers/class-wc-stripe-controller-order-actions.php:198
+#: includes/controllers/class-wc-stripe-controller-order-actions.php:201
 msgid "Order total must be greater than zero."
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-order-actions.php:205
+#: includes/controllers/class-wc-stripe-controller-order-actions.php:215
 msgid "This order has already been processed. Transaction ID: %1$s. Payment method: %2$s"
 msgstr ""
 
-#: includes/controllers/class-wc-stripe-controller-order-actions.php:216
+#: includes/controllers/class-wc-stripe-controller-order-actions.php:231
 msgid "Order customer Id and payment method customer Id do not match."
 msgstr ""
 
@@ -2392,7 +2392,8 @@ msgstr ""
 msgid "live"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-upm.php:670
+#: includes/gateways/class-wc-payment-gateway-stripe-upm.php:680
+#: includes/gateways/class-wc-payment-gateway-stripe-upm.php:681
 msgid "Error saving payment method configuration in Stripe. Reason: %s"
 msgstr ""
 
