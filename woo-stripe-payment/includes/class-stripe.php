@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.83';
+	public $version = '3.3.86';
 
 	/**
 	 *
@@ -157,15 +157,15 @@ class WC_Stripe_Manager {
 		\PaymentPlugins\Stripe\WooCommerceExtraProductOptions\Package::init();
 		\PaymentPlugins\Stripe\WooCommerceProductAddons\Package::init();
 
-		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			add_action( 'before_woocommerce_init', function () {
+		add_action( 'before_woocommerce_init', function () {
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 				try {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->plugin_path() . 'stripe-payments.php', true );
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->plugin_path() . 'stripe-payments.php', true );
 				} catch ( \Exception $e ) {
 				}
-			} );
-		}
+			}
+		} );
 	}
 
 	/**

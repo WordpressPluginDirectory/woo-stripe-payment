@@ -41,7 +41,7 @@ class WC_Stripe_Update {
 	 */
 	public static function update() {
 		// if option is not set, make the default version 3.0.6.
-		$current_version = get_option( WC_Stripe_Constants::VERSION_KEY, '3.0.6' );
+		$current_version = get_option( WC_Stripe_Constants::VERSION_KEY, stripe_wc()->version() );
 
 		// if database version is less than plugin version, an update might be required.
 		if ( version_compare( $current_version, stripe_wc()->version(), '<' ) ) {

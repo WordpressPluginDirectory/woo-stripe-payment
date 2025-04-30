@@ -186,12 +186,7 @@ class WC_Stripe_Controller_Order_Actions extends WC_Stripe_Rest_Controller {
 		$order        = wc_get_order( $order_id );
 		$use_token    = $payment_type === 'token';
 		try {
-			/**
-			 *
-			 * @var WC_Payment_Gateway_Stripe $gateway
-			 */
-			$gateway = wc_get_payment_gateway_by_order( $order );
-
+			$client = WC_Stripe_Gateway::load( wc_stripe_order_mode( $order ) );
 			// perform some validations
 			if ( $order->get_total() == 0 ) {
 				if ( ! wcs_stripe_active() ) {
@@ -209,7 +204,7 @@ class WC_Stripe_Controller_Order_Actions extends WC_Stripe_Rest_Controller {
 
 			if ( $order->get_transaction_id() ) {
 				// confirm if the payment intent was authorized.
-				$charge = $gateway->gateway->mode( $order )->charges->retrieve( $order->get_transaction_id() );
+				$charge = $client->mode( $order )->charges->retrieve( $order->get_transaction_id() );
 
 				if ( $charge->captured ) {
 					throw new Exception( sprintf( __( 'This order has already been processed. Transaction ID: %1$s. Payment method: %2$s', 'woo-stripe-payment' ),
@@ -232,6 +227,11 @@ class WC_Stripe_Controller_Order_Actions extends WC_Stripe_Rest_Controller {
 				}
 				$payment_method = $token->get_gateway_id();
 			}
+
+			/**
+			 * @var \WC_Stripe_Payment_Gateway $gateway
+			 */
+			$gateway = WC()->payment_gateways()->payment_gateways()[ $payment_method ];
 
 			// temporarily set the charge type of the gateway to whatever the admin has selected.
 			$gateway->settings['charge_type'] = $request->get_param( 'wc_stripe_charge_type' );

@@ -385,9 +385,9 @@
                     return !this.is_valid_address(this.get_address_object('billing'), 'billing', ['email', 'phone']);
                 }
                 return true;
-            }.bind(this)()),
-            requestPayerEmail: this.fields.requestFieldInWallet('billing_email'),
-            requestPayerPhone: this.fields.requestFieldInWallet('billing_phone'),
+            }.bind(this)()) || !!this.params.requestPayerName,
+            requestPayerEmail: this.fields.requestFieldInWallet('billing_email') || !!this.params.requestPayerEmail,
+            requestPayerPhone: this.fields.requestFieldInWallet('billing_phone') || !!this.params.requestPayerPhone,
             requestShipping: (function () {
                 if (this.needs_shipping()) {
                     var prefix = this.get_shipping_prefix();

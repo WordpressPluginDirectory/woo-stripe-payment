@@ -649,10 +649,11 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			return $charge;
 		} else {
 			if ( ! $charge->captured ) {
+				$this->processing_payment = true;
+
 				$result = $this->payment_object->capture_charge( $amount, $order, $charge );
 
 				if ( ! is_wp_error( $result ) ) {
-					remove_action( 'woocommerce_order_status_completed', 'wc_stripe_order_status_completed' );
 					WC_Stripe_Utils::add_balance_transaction_to_order( $result, $order, true );
 					if ( isset( $result->refunds->data[0] ) ) {
 						$balance_transaction = $this->gateway->balanceTransactions->retrieve( $result->refunds->data[0]->balance_transaction );
@@ -674,6 +675,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 					 */
 					$result = apply_filters( 'wc_stripe_capture_charge_failed', $result, $order, $amount, $this );
 				}
+				$this->processing_payment = false;
 
 				return $result;
 			}
