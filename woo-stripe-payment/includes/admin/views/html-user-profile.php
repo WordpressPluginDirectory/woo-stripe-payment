@@ -6,8 +6,8 @@
 ?>
 <div class="wc-stripe-user-info">
     <h2><?php esc_html_e( 'Stripe Customer ID\'s', 'woo-stripe-payment' ); ?></h2>
-    <p><?php esc_html_e( 'If you change a customer ID, the customer\'s payment methods will be imported from your Stripe account.' ); ?></p>
-    <p><?php esc_html_e( 'If you remove a customer ID, the customer\'s payment methods will be removed from the WC payment methods table.' ); ?></p>
+    <p><?php esc_html_e( 'If you change a customer ID, the customer\'s payment methods will be imported from your Stripe account.', 'woo-stripe-payment' ); ?></p>
+    <p><?php esc_html_e( 'If you remove a customer ID, the customer\'s payment methods will be removed from the WC payment methods table.', 'woo-stripe-payment' ); ?></p>
     <table class="form-table">
         <tbody>
         <tr>

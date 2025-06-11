@@ -23,6 +23,11 @@ class LinkPayment extends AbstractStripePayment {
 	 */
 	private $assets;
 
+	/**
+	 * @var \PaymentPlugins\Blocks\Stripe\Payments\Gateways\CreditCardPayment
+	 */
+	private $credit_card;
+
 	public function __construct( LinkIntegration $link, Api $assets ) {
 		$this->link       = $link;
 		$this->assets_api = $assets;
@@ -33,7 +38,7 @@ class LinkPayment extends AbstractStripePayment {
 	}
 
 	public function is_active() {
-		return $this->link->is_active();
+		return $this->link->is_active() && $this->credit_card->is_active();
 	}
 
 	public function add_stripe_params( $data ) {
@@ -68,6 +73,10 @@ class LinkPayment extends AbstractStripePayment {
 
 	public function set_payment_intent_controller( PaymentIntent $controller ) {
 		$this->payment_intent_ctrl = $controller;
+	}
+
+	public function set_credit_card_gateway( $value ) {
+		$this->credit_card = $value;
 	}
 
 }

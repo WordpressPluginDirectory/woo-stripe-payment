@@ -109,6 +109,7 @@ class ComposerStaticInitc671a417b249808ec64a85f88728cc49
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\MultibancoPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/MultibancoPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\OXXOPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/OXXOPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\P24Payment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/P24Payment.php',
+        'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PayByBankPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/PayByBankPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PayNowPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/PayNowPayment.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PaymentRequest' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/PaymentRequest.php',
         'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PromptPayPayment' => __DIR__ . '/../..' . '/packages/blocks/src/Payments/Gateways/PromptPayPayment.php',

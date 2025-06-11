@@ -52,6 +52,12 @@ if ( $order->has_status( 'auto-draft' ) ) {
                             <input type="hidden" name="payment_nonce"/>
                             <div id="wc-stripe-card-container" class="wc-stripe-card-container show_if_nonce hide_if_token">
                                 <div id="card-element"></div>
+                                <div class="wc-stripe-save-payment-container">
+                                    <input type="checkbox" name="stripe_cc_save_source_key"/>
+                                    <span>
+		                                    <?php esc_html_e( 'Save payment information for future purchases.', 'woo-stripe-payment' ) ?>
+	                                    </span>
+                                </div>
                             </div>
                             <div>
                     </form>

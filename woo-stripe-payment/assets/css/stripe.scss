@@ -473,34 +473,12 @@ li.payment_method_stripe_promptpay label:first-of-type img {
   width: 84px;
 }
 
-li.payment_method_stripe_affirm label[for="payment_method_stripe_affirm"] {
-  display: flex;
-  align-items: center;
-}
-
-#wc-stripe-affirm-message-container,
-#wc-stripe-afterpay-message-container {
-  flex: 1 1 auto;
-  margin-left: 30px;
-  min-width: 200px;
-}
-
-#wc-stripe-klarna-message-container {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-#wc-stripe-affirm-message-container .StripeElement {
+#wc-stripe-affirm-message-container.StripeElement {
   width: 100%;
 }
 
 #wc-stripe-affirm-message-container .__PrivateStripeElement {
   width: 100%;
-}
-
-#wc-stripe-afterpay-message-container {
-  text-align: end;
 }
 
 .gpay-button-container .gpay-button:hover,
@@ -1290,8 +1268,8 @@ div.payment_method_stripe_cc.custom-form__bootstrap > .woocommerce-NoticeGroup {
   padding: 9px 24px;
 }
 
-.stripe-link-icon-container {
-  background-repeat: no-repeat;
+input.stripe-link-icon-container {
+  background-repeat: no-repeat !important;
   background-position: right;
   background-origin: content-box;
 }

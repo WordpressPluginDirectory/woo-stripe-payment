@@ -440,9 +440,17 @@ trait WC_Stripe_Voucher_Payment_Trait {
 trait WC_Stripe_Express_Payment_Trait {
 
 	public function get_element_options( $options = array() ) {
-		$options = array( 'locale' => wc_stripe_get_site_locale() );
+		$options = array( 'locale' => $this->get_element_options_locale() );
 
 		return apply_filters( 'wc_stripe_get_element_options', $options, $this );
+	}
+
+	/**
+	 * @since 3.3.87
+	 * @return mixed|null
+	 */
+	protected function get_element_options_locale() {
+		return wc_stripe_get_site_locale();
 	}
 
 }

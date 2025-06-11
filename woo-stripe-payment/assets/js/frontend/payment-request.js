@@ -208,7 +208,7 @@
                 if (this.banner_enabled()) {
                     $(this.banner_container).empty().show().append('<div id="wc-stripe-payment-request-banner"></div>');
                     $(this.banner_container).show().addClass('active').closest('.wc-stripe-banner-checkout').addClass('active');
-                    var elements = this.stripe.elements();
+                    var elements = this.create_stripe_elements();
                     var button = elements.create("paymentRequestButton", {
                         paymentRequest: this.paymentRequest,
                         style: {

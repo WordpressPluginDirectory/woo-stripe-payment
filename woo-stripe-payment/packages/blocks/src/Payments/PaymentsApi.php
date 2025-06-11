@@ -126,6 +126,7 @@ class PaymentsApi {
 		} );
 		$this->container->register( Gateways\LinkPayment::class, function ( $container ) {
 			$instance = new Gateways\LinkPayment( LinkIntegration::instance(), $container->get( AssetsApi::class ) );
+			$instance->set_credit_card_gateway( $container->get( Gateways\CreditCardPayment::class ) );
 			$instance->set_payment_intent_controller( PaymentIntent::instance() );
 
 			return $instance;
@@ -165,6 +166,9 @@ class PaymentsApi {
 		} );
 		$this->container->register( Gateways\TwintPayment::class, function ( Container $container ) {
 			return new Gateways\TwintPayment( $container->get( AssetsApi::class ) );
+		} );
+		$this->container->register( Gateways\PayByBankPayment::class, function ( Container $container ) {
+			return new Gateways\PayByBankPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\UniversalPayment::class, function ( Container $container ) {
 			return new Gateways\UniversalPayment(
@@ -219,6 +223,7 @@ class PaymentsApi {
 			Gateways\RevolutPayment::class,
 			Gateways\ZipPayment::class,
 			Gateways\MobilePayPayment::class,
+			Gateways\PayByBankPayment::class,
 			Gateways\TwintPayment::class
 		);
 

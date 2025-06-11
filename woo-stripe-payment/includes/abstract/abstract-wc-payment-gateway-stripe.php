@@ -1815,7 +1815,11 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			}
 			foreach ( $packages as $i => $package ) {
 				foreach ( $package['rates'] as $rate ) {
-					$price     = $incl_tax ? $rate->cost + $rate->get_shipping_tax() : $rate->cost;
+					/**
+					 * @var \WC_Shipping_Rate $rate
+					 */
+					$cost      = (float) $rate->get_cost();
+					$price     = $incl_tax ? $cost + (float) $rate->get_shipping_tax() : $cost;
 					$methods[] = $this->get_formatted_shipping_method( $price, $rate, $i, $package, $incl_tax );
 				}
 			}

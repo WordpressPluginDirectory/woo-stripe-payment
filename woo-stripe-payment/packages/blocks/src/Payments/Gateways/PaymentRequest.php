@@ -22,6 +22,10 @@ class PaymentRequest extends AbstractStripePayment {
 
 	public function get_payment_method_data() {
 		return wp_parse_args( array(
+			'editorIcons'          => array(
+				'long'  => $this->assets_api->get_asset_url( 'assets/img/gpay_button_buy_black.svg' ),
+				'short' => $this->assets_api->get_asset_url( 'assets/img/gpay_button_black.svg' )
+			),
 			'paymentRequestButton' => array(
 				'type'   => $this->payment_method->get_option( 'button_type' ),
 				'theme'  => $this->payment_method->get_option( 'button_theme' ),
@@ -29,4 +33,5 @@ class PaymentRequest extends AbstractStripePayment {
 			)
 		), parent::get_payment_method_data() );
 	}
+
 }

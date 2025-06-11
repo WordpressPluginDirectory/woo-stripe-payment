@@ -20,6 +20,51 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 
 	protected $payment_method_type = 'card';
 
+	private $supported_locales = [
+		'ar',
+		'bg',
+		'cs',
+		'da',
+		'de',
+		'el',
+		'en',
+		'en-GB',
+		'es',
+		'es-419',
+		'et',
+		'fi',
+		'fil',
+		'fr',
+		'fr-CA',
+		'he',
+		'hr',
+		'hu',
+		'id',
+		'it',
+		'ja',
+		'ko',
+		'lt',
+		'lv',
+		'ms',
+		'mt',
+		'nb',
+		'nl',
+		'pl',
+		'pt-BR',
+		'pt',
+		'ro',
+		'ru',
+		'sk',
+		'sl',
+		'sv',
+		'th',
+		'tr',
+		'vi',
+		'zh',
+		'zh-HK',
+		'zh-TW'
+	];
+
 	public function __construct() {
 		$this->id                 = 'stripe_payment_request';
 		$this->tab_title          = __( 'PaymentRequest Gateway', 'woo-stripe-payment' );
@@ -39,10 +84,6 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 		$this->supports[] = 'wc_stripe_banner_checkout';
 		$this->supports[] = 'wc_stripe_mini_cart_checkout';
 	}
-
-	/*public function get_icon() {
-		return wc_stripe_get_template_html( 'payment-request-icons.php' );
-	}*/
 
 	public function enqueue_product_scripts( $scripts ) {
 		$this->enqueue_checkout_scripts( $scripts );
@@ -81,7 +122,7 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 					'invalid_amount' => __( 'Please update you product quantity before paying.', 'woo-stripe-payment' ),
 					'add_to_cart'    => __( 'Adding to cart...', 'woo-stripe-payment' ),
 					'choose_product' => __( 'Please select a product option before updating quantity.', 'woo-stripe-payment' ),
-				),
+				)
 			)
 		);
 	}
@@ -95,6 +136,26 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 
 	public function has_enqueued_scripts( $scripts ) {
 		return wp_script_is( $scripts->get_handle( 'payment-request' ) );
+	}
+
+	protected function get_element_options_locale() {
+		$locale = wc_stripe_get_site_locale();
+
+		if ( $locale === 'auto' ) {
+			return $locale;
+		}
+
+		if ( in_array( $locale, $this->supported_locales ) ) {
+			return $locale;
+		}
+
+		$formatted_locale = substr( $locale, 0, 2 );
+
+		if ( in_array( $formatted_locale, $this->supported_locales ) ) {
+			$locale = $formatted_locale;
+		}
+
+		return $locale;
 	}
 
 }

@@ -41,6 +41,7 @@ return array(
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\MultibancoPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/MultibancoPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\OXXOPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/OXXOPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\P24Payment' => $baseDir . '/packages/blocks/src/Payments/Gateways/P24Payment.php',
+    'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PayByBankPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/PayByBankPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PayNowPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/PayNowPayment.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PaymentRequest' => $baseDir . '/packages/blocks/src/Payments/Gateways/PaymentRequest.php',
     'PaymentPlugins\\Blocks\\Stripe\\Payments\\Gateways\\PromptPayPayment' => $baseDir . '/packages/blocks/src/Payments/Gateways/PromptPayPayment.php',

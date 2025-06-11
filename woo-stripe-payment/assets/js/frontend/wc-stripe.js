@@ -55,7 +55,7 @@
     };
 
     wc_stripe.BaseGateway.prototype.get_element_options = function () {
-        return {};
+        return this.params.elementOptions;
     };
 
     wc_stripe.BaseGateway.prototype.initialize = function () {
@@ -877,10 +877,6 @@
 
         this.hasOrderReviewParams();
     };
-
-    wc_stripe.CheckoutGateway.prototype.get_element_options = function () {
-        return this.params.elementOptions;
-    }
 
     wc_stripe.CheckoutGateway.prototype.container_styles = function () {
         if (!this.params.description) {
