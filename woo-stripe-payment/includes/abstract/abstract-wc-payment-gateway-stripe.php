@@ -1098,7 +1098,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param [] $data
 	 */
 	public function get_update_shipping_address_response( $data ) {
-		return apply_filters( 'wc_stripe_update_shipping_address_response', $data );
+		return $data;
 	}
 
 	/**
@@ -1621,7 +1621,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 				'id'          => $product->get_id(),
 				'price'       => $price,
 				'price_cents' => wc_stripe_add_number_precision( $price, get_woocommerce_currency() ),
-				'variation'   => false
+				'variation'   => false,
+				'is_in_stock' => $product->is_in_stock()
 			);
 		}
 		/**
@@ -1993,6 +1994,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			if ( $token ) {
 				$subscription->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $token->get_customer_id() );
 				$subscription->set_payment_method_title( $token->get_payment_method_title( $this->get_option( 'method_format' ) ) );
+				$gateway_id = $token->get_gateway_id();
+				if ( $gateway_id && $gateway_id !== $this->id ) {
+					$subscription->set_payment_method( $gateway_id );
+				}
 			}
 			$subscription->save();
 		}

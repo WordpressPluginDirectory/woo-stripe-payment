@@ -2,8 +2,11 @@
 
 namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
 
+use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
 use PaymentPlugins\Blocks\Stripe\Assets\Api;
 use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment;
+use PaymentPlugins\Blocks\Stripe\Payments\Gateways\Link\LinkPaymentGateway;
+use PaymentPlugins\Blocks\Stripe\StoreApi\EndpointData;
 use PaymentPlugins\Stripe\Controllers\PaymentIntent;
 use PaymentPlugins\Stripe\Link\LinkIntegration;
 
@@ -23,22 +26,13 @@ class LinkPayment extends AbstractStripePayment {
 	 */
 	private $assets;
 
-	/**
-	 * @var \PaymentPlugins\Blocks\Stripe\Payments\Gateways\CreditCardPayment
-	 */
-	private $credit_card;
-
 	public function __construct( LinkIntegration $link, Api $assets ) {
 		$this->link       = $link;
 		$this->assets_api = $assets;
 	}
 
-	public function initialize() {
-		add_filter( 'wc_stripe_blocks_general_data', [ $this, 'add_stripe_params' ] );
-	}
-
 	public function is_active() {
-		return $this->link->is_active() && $this->credit_card->is_active();
+		return \wc_string_to_bool( $this->get_setting( 'enabled', 'no' ) );
 	}
 
 	public function add_stripe_params( $data ) {
@@ -51,32 +45,59 @@ class LinkPayment extends AbstractStripePayment {
 
 	public function get_payment_method_data() {
 		return [
-			'name'            => $this->name,
-			'launchLink'      => $this->link->is_autoload_enabled(),
-			'popupEnabled'    => $this->link->is_popup_enabled(),
-			'linkIconEnabled' => $this->link->is_icon_enabled(),
-			'linkIcon'        => $this->link->is_icon_enabled()
+			'name'                   => $this->name,
+			'features'               => $this->get_supported_features(),
+			'button'                 => [
+				'height' => (int) $this->get_setting( 'button_height', 40 )
+			],
+			/*'launchLink'             => $this->link->is_autoload_enabled(),
+			'popupEnabled'           => $this->link->is_popup_enabled(),
+			'linkIconEnabled'        => $this->link->is_icon_enabled(),
+			'linkIcon'               => $this->link->is_icon_enabled()
 				? \wc_stripe_get_template_html( "link/link-icon-{$this->link->get_settings()->get_option('link_icon')}.php" )
-				: null
+				: null,*/
+			'expressCheckoutEnabled' => $this->is_express_checkout_enabled(),
+			'cartCheckoutEnabled'    => $this->is_cart_checkout_enabled()
 		];
 	}
 
 	public function get_payment_method_script_handles() {
 		$this->assets_api->register_script( 'wc-stripe-blocks-link', 'build/wc-stripe-link-checkout.js' );
+		//$this->assets_api->register_script( 'wc-stripe-blocks-link-checkout-modal', 'build/wc-stripe-link-checkout-modal.js' );
 
-		return [ 'wc-stripe-blocks-link' ];
+		$handles = [ 'wc-stripe-blocks-link' ];
+
+		/*if ( $this->link->is_popup_enabled() ) {
+			$handles = array_merge( $handles, [ 'wc-stripe-blocks-link-checkout-modal' ] );
+		}*/
+
+		return $handles;
 	}
 
 	protected function is_express_checkout_enabled() {
-		return true;
+		return \in_array( 'checkout_banner', $this->get_setting( 'payment_sections', [] ), true );
+	}
+
+	protected function is_cart_checkout_enabled() {
+		return \in_array( 'cart', $this->get_setting( 'payment_sections', [] ), true );
 	}
 
 	public function set_payment_intent_controller( PaymentIntent $controller ) {
 		$this->payment_intent_ctrl = $controller;
 	}
 
-	public function set_credit_card_gateway( $value ) {
-		$this->credit_card = $value;
+	public function get_endpoint_data() {
+		$data = new EndpointData();
+		$data->set_namespace( $this->get_name() );
+		$data->set_endpoint( CartSchema::IDENTIFIER );
+		$data->set_schema_type( ARRAY_A );
+		$data->set_data_callback( function () {
+			return [
+				'lineItems' => $this->payment_method->get_display_items_for_cart( WC()->cart ),
+			];
+		} );
+
+		return $data;
 	}
 
 }

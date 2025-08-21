@@ -41,13 +41,20 @@
 
     GPay.prototype.maybe_calculate_cart = function () {
         this.disable_payment_button();
-        if (!this.is_variable_product() || this.variable_product_selected()) {
-            this.cart_calculation().then(function (data) {
-                this.enable_payment_button();
-            }.bind(this)).catch(function () {
-                this.enable_payment_button();
-            }.bind(this));
+        if (this.is_variable_product()) {
+            if (!this.variable_product_selected()) {
+                return;
+            }
+            var data = this.get_product_data();
+            if (data && data.variation && !data.variation.is_in_stock) {
+                return;
+            }
         }
+        this.cart_calculation().then(function (data) {
+            this.enable_payment_button();
+        }.bind(this)).catch(function () {
+            this.enable_payment_button();
+        }.bind(this));
     }
 
     GPay.prototype.found_variation = function () {

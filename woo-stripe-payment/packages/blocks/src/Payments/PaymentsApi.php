@@ -126,7 +126,6 @@ class PaymentsApi {
 		} );
 		$this->container->register( Gateways\LinkPayment::class, function ( $container ) {
 			$instance = new Gateways\LinkPayment( LinkIntegration::instance(), $container->get( AssetsApi::class ) );
-			$instance->set_credit_card_gateway( $container->get( Gateways\CreditCardPayment::class ) );
 			$instance->set_payment_intent_controller( PaymentIntent::instance() );
 
 			return $instance;

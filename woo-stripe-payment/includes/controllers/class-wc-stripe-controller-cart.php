@@ -181,7 +181,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 
 			$response = rest_ensure_response(
 				apply_filters(
-					'wc_stripe_update_shipping_method_response',
+					'wc_stripe_update_shipping_address_response',
 					array(
 						'data' => $gateway->get_update_shipping_address_response(
 							array(

@@ -12,7 +12,7 @@ class FrontendRequests {
 
 	public function is_checkout_with_free_trial( RequestContext $context ) {
 		if ( WC()->cart ) {
-			return $context->is_checkout() && \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->total == 0;
+			return ( $context->is_checkout() || $context->is_cart() ) && \WC_Subscriptions_Cart::cart_contains_free_trial() && WC()->cart->total == 0;
 		}
 
 		return false;
@@ -28,7 +28,7 @@ class FrontendRequests {
 	}
 
 	public function is_checkout_with_subscription( RequestContext $context ) {
-		return $context->is_checkout() && \WC_Subscriptions_Cart::cart_contains_subscription();
+		return ( $context->is_checkout() || $context->is_cart() ) && ( \WC_Subscriptions_Cart::cart_contains_subscription() || \wcs_cart_contains_renewal() );
 	}
 
 	public function is_order_pay_with_subscription( RequestContext $context ) {

@@ -703,6 +703,20 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 				$line_item->tax_amount          = wc_stripe_add_number_precision( $item->get_total_tax(), $currency );
 				$line_item->discount_amount     = wc_stripe_add_number_precision( (float) $item_total - (float) $item->get_total(), $currency );
 
+				/**
+				 * Some plugins incorrectly create a discount using the fee API. If the unit_cost is negative, then this is actually a discount.
+				 * This code ensures the unit_cost is never negative. If it is negative, it's replaced with the discount_amount property.
+				 * The tax_amount must also be considered in the discount_amount total since tax_amount must be non-negative as well.
+				 */
+				if ( $line_item->unit_cost < 0 ) {
+					$line_item->discount_amount = $line_item->discount_amount + abs( $line_item->unit_cost );
+					$line_item->unit_cost       = 0;
+					if ( $line_item->tax_amount < 0 ) {
+						$line_item->discount_amount += abs( $line_item->tax_amount );
+						$line_item->tax_amount      = 0;
+					}
+				}
+
 				$totals->subtotal += $line_item->unit_cost * $line_item->quantity;
 				$totals->tax      += $line_item->tax_amount;
 				$totals->discount += $line_item->discount_amount;

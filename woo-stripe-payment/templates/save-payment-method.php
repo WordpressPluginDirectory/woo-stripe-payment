@@ -10,5 +10,5 @@
         <input type="checkbox" id="<?php echo esc_attr( $gateway->save_source_key ) ?>" name="<?php echo esc_attr( $gateway->save_source_key ) ?>" value="yes"/>
         <span class="save-source-checkbox"></span>
     </label>
-    <label class="save-source-label"><?php echo esc_html( $gateway->get_save_payment_method_label() ) ?></label>
+    <label class="save-source-label" for="<?php echo esc_attr( $gateway->save_source_key ) ?>"><?php echo esc_html( $gateway->get_save_payment_method_label() ) ?></label>
 </div>

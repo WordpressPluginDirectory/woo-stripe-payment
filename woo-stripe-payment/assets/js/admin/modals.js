@@ -29,7 +29,7 @@
             this.payment_type();
         },
         init_card_element: function () {
-            this.stripe = Stripe(wc_stripe_order_pay_params.api_key);
+            this.stripe = Stripe(wc_stripe_order_metabox_params.api_key);
             var elements = this.stripe.elements();
             this.card = elements.create('card', {
                 style: {

@@ -112,17 +112,50 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, eligible card authorizations can be extended for up to 30 days. Make sure this feature is enabled on your Stripe account before enabling.', 'woo-stripe-payment' )
 			),
-			'link_title'             => array(
+			/*'link_title'             => array(
 				'type'  => 'title',
 				'title' => __( 'Link Settings', 'woo-stripe-payment' ),
-			),
-			'link_enabled'           => array(
+			),*/
+			/*
+			 * Commented in version 3.3.89 because this option was moved to credit card settings.
+			 * 'link_enabled'           => array(
 				'title'       => __( 'Faster Checkout With Link', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'value'       => 'yes',
-				'description' => __( 'With Link enabled, Stripe will use your customer\'s email address to determine if they have used Stripe in the past. If yes, their payment info, billing and shipping information can be used to 
-				auto-populate the checkout page resulting in higher conversion rates and less customer friction. If enabled, the Stripe payment form will be used because it\'s the only card form compatible with Link.', 'woo-stripe-payment' )
+				'description' => __( 'When enabled, customers can use Stripe Link for faster checkout on your website. Use the Link Locations setting to choose which pages display the Link option.', 'woo-stripe-payment' )
+			),*/
+			/*'link_locations'         => array(
+				'title'             => __( 'Link Checkout Locations', 'woo-stripe-payment' ),
+				'type'              => 'multiselect',
+				'class'             => 'wc-enhanced-select',
+				'options'           => array(
+					//'product'         => __( 'Product Page', 'woo-stripe-payment' ),
+					'cart'            => __( 'Cart Page', 'woo-stripe-payment' ),
+					//'mini_cart'       => __( 'Mini Cart', 'woo-stripe-payment' ),
+					'checkout_banner' => __( 'Express Checkout', 'woo-stripe-payment' ),
+				),
+				'sanitize_callback' => function ( $value ) {
+					if ( empty( $value ) ) {
+						$value = array();
+					}
+
+					return $value;
+				},
+				'default'           => array( 'cart', 'checkout_banner' ),
+				'description'       => __( 'Select where Link Express Checkout buttons will appear. Express Checkout allows customers to pay instantly using their saved payment and shipping information from Link, similar to Apple Pay or Google Pay.', 'woo-stripe-payment' )
+			),*/
+			/*'link_popup'             => array(
+				'title'             => __( 'Display Link popup if customer is eligible for Link.', 'woo-stripe-payment' ),
+				'type'              => 'checkbox',
+				'default'           => 'no',
+				'value'             => 'yes',
+				'description'       => __( 'After the customer enters their billing email, if the customer can use Link, a popup will appear.', 'woo-stripe-payment' ),
+				'custom_attributes' => array(
+					'data-show-if' => array(
+						'link_enabled' => true
+					)
+				)
 			),
 			'link_email'             => array(
 				'title'             => __( 'Move email field to top of page', 'woo-stripe-payment' ),
@@ -132,7 +165,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description'       => __( 'If enabled, the email field will be placed at the top of the checkout page. Link uses the email address so it\'s best to prioritize it.', 'woo-stripe-payment' ),
 				'custom_attributes' => array(
 					'data-show-if' => array(
-						'link_enabled' => true
+						'link_popup' => true
 					)
 				)
 			),
@@ -148,19 +181,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description'       => __( 'Render the Link icon in the email field. This indicates to customers that Link is enabled.', 'woo-stripe-payment' ),
 				'custom_attributes' => array(
 					'data-show-if' => array(
-						'link_enabled' => true
-					)
-				)
-			),
-			'link_popup'             => array(
-				'title'             => __( 'Display Link popup if customer is eligible for Link.', 'woo-stripe-payment' ),
-				'type'              => 'checkbox',
-				'default'           => 'no',
-				'value'             => 'yes',
-				'description'       => __( 'After the customer enters their billing email, if the customer can use Link, a popup will appear.', 'woo-stripe-payment' ),
-				'custom_attributes' => array(
-					'data-show-if' => array(
-						'link_enabled' => true
+						'link_popup' => true
 					)
 				)
 			),
@@ -176,7 +197,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 						'link_popup'   => true
 					)
 				)
-			),
+			),*/
 			'gdpr'                   => array(
 				'title' => __( 'GDPR Settings', 'woo-stripe-payment' ),
 				'type'  => 'title'
@@ -259,20 +280,6 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 					'woo-stripe-payment' ),
 			)
 		);
-	}
-
-	public function process_admin_options() {
-		parent::process_admin_options();
-		if ( $this->is_active( 'link_enabled' ) ) {
-			/**
-			 * @var \WC_Payment_Gateway_Stripe $payment_method
-			 */
-			$payment_method = WC()->payment_gateways()->payment_gateways()['stripe_cc'];
-			if ( ! in_array( $payment_method->get_option( 'form_type' ), array( 'payment', 'inline' ) ) ) {
-				$payment_method->update_option( 'form_type', 'payment' );
-				wc_stripe_log_info( 'Stripe payment form enabled for Link integration compatibility' );
-			}
-		}
 	}
 
 	public function is_fee_enabled() {

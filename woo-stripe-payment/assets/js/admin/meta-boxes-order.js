@@ -144,14 +144,14 @@
             template: 'wc-stripe-modal-pay-order',
             params: {
                 customer_id: $('#customer_user').val(),
-                payment_methods: wc_stripe_order_pay_params.payment_methods,
+                payment_methods: wc_stripe_order_metabox_params.payment_methods,
                 order_id: $('#post_ID').val()
             }
         })
     }
 
     MetaBox.prototype.fetch_payment_methods = function (e) {
-        wc_stripe_order_pay_params.payment_methods = [];
+        wc_stripe_order_metabox_params.payment_methods = [];
         var customer_id = $('#customer_user').val();
         if (customer_id) {
             $.ajax({
@@ -163,7 +163,7 @@
                     customer_id: customer_id
                 }
             }).done(function (response) {
-                wc_stripe_order_pay_params.payment_methods = response.payment_methods;
+                wc_stripe_order_metabox_params.payment_methods = response.payment_methods;
             }.bind(this)).fail(function () {
 
             }.bind(this))

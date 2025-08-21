@@ -13,7 +13,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	 */
 	private $child_payment_gateway;
 
-	private $excluded_payment_methods = [ 'stripe_applepay', 'stripe_googlepay', 'stripe_payment_request', 'paypal', 'apple_pay', 'google_pay', 'customer_balance' ];
+	private $excluded_payment_methods = [ 'stripe_applepay', 'stripe_googlepay', 'stripe_payment_request', 'stripe_link_checkout', 'paypal', 'apple_pay', 'google_pay', 'customer_balance' ];
 
 	public $installments;
 

@@ -39,7 +39,7 @@ class WC_Stripe_Admin_Order_Metaboxes {
 					}
 				}
 			}
-			self::enqueue_scripts();
+			self::enqueue_scripts( $order );
 		}
 	}
 
@@ -68,30 +68,9 @@ class WC_Stripe_Admin_Order_Metaboxes {
 		     || apply_filters( 'wc_stripe_show_pay_order_section', false, $order )
 		) {
 			include 'views/html-order-pay.php';
-			$payment_methods = array();
-			foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
-				if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
-					$payment_methods = array_merge( $payment_methods, WC_Payment_Tokens::get_customer_tokens( $order->get_user_id(), $gateway->id ) );
-				}
-			}
+
 			wp_enqueue_script( 'wc-stripe-elements', 'https://js.stripe.com/v3/', array(), stripe_wc()->version, true );
-			wp_localize_script(
-				'wc-stripe-elements',
-				'wc_stripe_order_pay_params',
-				array(
-					'api_key'         => wc_stripe_get_publishable_key(),
-					'payment_methods' => array_map(
-						function ( $payment_method ) {
-							return $payment_method->to_json();
-						},
-						$payment_methods
-					),
-					'order_status'    => $order->get_status(),
-					'messages'        => array(
-						'order_status' => __( 'You must create the order before payment can be processed.', 'woo-stripe-payment' )
-					)
-				)
-			);
+
 			wp_enqueue_script( 'wc-stripe-admin-modals', stripe_wc()->assets_url( 'js/admin/modals.js' ), array(
 				'wc-backbone-modal',
 				'jquery-blockui'
@@ -121,27 +100,45 @@ class WC_Stripe_Admin_Order_Metaboxes {
 		}
 	}
 
-	public static function enqueue_scripts() {
+	public static function enqueue_scripts( $order ) {
 		wp_enqueue_script( 'wc-stripe-order-metabox', stripe_wc()->assets_url( 'js/admin/meta-boxes-order.js' ), array(
 			'jquery',
 			'jquery-blockui'
 		), stripe_wc()->version(), true );
 
+		$payment_methods = array();
+		if ( $order && $order->get_customer_id() ) {
+			foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
+				if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
+					$payment_methods = array_merge( $payment_methods, WC_Payment_Tokens::get_customer_tokens( $order->get_customer_id(), $gateway->id ) );
+				}
+			}
+		}
+
 		wp_localize_script(
 			'wc-stripe-order-metabox',
 			'wc_stripe_order_metabox_params',
 			array(
-				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
-				'routes'   => array(
+				'_wpnonce'        => wp_create_nonce( 'wp_rest' ),
+				'routes'          => array(
 					'charge_view'     => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->order_actions->rest_uri( 'charge-view' ) ),
 					'capture'         => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->order_actions->rest_uri( 'capture' ) ),
 					'void'            => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->order_actions->rest_uri( 'void' ) ),
 					'pay'             => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->order_actions->rest_uri( 'pay' ) ),
 					'payment_methods' => WC_Stripe_Rest_API::get_admin_endpoint( stripe_wc()->rest_api->order_actions->rest_uri( 'customer-payment-methods' ) ),
 				),
-				'messages' => array(
+				'messages'        => array(
+					'order_status'   => __( 'You must create the order before payment can be processed.', 'woo-stripe-payment' ),
 					'capture_amount' => __( 'If the capture amount is less than the order total, make sure you edit your order line items to reflect the new capture amount.', 'woo-stripe-payment' )
-				)
+				),
+				'api_key'         => wc_stripe_get_publishable_key(),
+				'payment_methods' => array_map(
+					function ( $payment_method ) {
+						return $payment_method->to_json();
+					},
+					$payment_methods
+				),
+				'order_status'    => $order ? $order->get_status() : 'pending',
 			)
 		);
 	}

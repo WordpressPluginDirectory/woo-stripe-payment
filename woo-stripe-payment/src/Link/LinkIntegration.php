@@ -38,7 +38,9 @@ class LinkIntegration {
 	private $supported_countries = 'AE, AT, AU, BE, BG, CA, CH, CY, CZ, DE, DK, EE, ES, FI, FR, GB, 
 	GI, GR, HK, HR, HU, IE, IT, JP, LI, LT, LU, LV, MT, MX, MY, NL, NO, NZ, PL, PT, RO, SE, SG, SI, SK, US';
 
-	private $supported_payment_methods = [ 'stripe_cc' ];
+	private $supported_payment_methods = [ 'stripe_cc', 'stripe_link_checkout' ];
+
+	private $card_settings = [];
 
 	private static $instance;
 
@@ -49,9 +51,7 @@ class LinkIntegration {
 		$this->assets           = $assets;
 		$this->data_api         = $data_api;
 		$this->enabled          = $settings->is_active( 'link_enabled' );
-		if ( $this->is_active() ) {
-			$this->initialize();
-		}
+		$this->initialize();
 	}
 
 	public static function get_instance() {
@@ -63,26 +63,22 @@ class LinkIntegration {
 	}
 
 	protected function initialize() {
-		$this->register_assets();
-		add_action( 'wp_print_scripts', [ $this, 'enqueue_scripts' ], 5 );
-		add_filter( 'wc_stripe_localize_script_wc-stripe', [ $this, 'add_script_params' ], 10, 2 );
+		//add_action( 'wp_print_scripts', [ $this, 'enqueue_scripts' ], 5 );
+		//add_filter( 'wc_stripe_localize_script_wc-stripe', [ $this, 'add_script_params' ], 10, 2 );
+		//add_filter( 'woocommerce_checkout_fields', [ $this, 'add_billing_email_priority' ] );
+
 		add_filter( 'wc_stripe_payment_intent_args', [ $this, 'add_payment_method_type' ], 10, 2 );
 		add_filter( 'wc_stripe_create_setup_intent_params', [ $this, 'add_setup_intent_params' ], 10, 2 );
 		add_filter( 'wc_stripe_setup_intent_params', [ $this, 'add_setup_intent_params_v2' ], 10, 3 );
-		add_filter( 'woocommerce_checkout_fields', [ $this, 'add_billing_email_priority' ] );
 		add_filter( 'wc_stripe_payment_intent_confirmation_args', [ $this, 'add_confirmation_args' ], 10, 3 );
+
+		add_filter( 'wc_stripe_express_payment_methods', [ $this, 'get_express_payment_methods' ] );
+
+		add_filter( 'woocommerce_update_order_review_fragments', [ $this, 'update_order_review_fragments' ] );
 	}
 
 	public function is_active() {
-		return apply_filters( 'wc_stripe_is_link_active', $this->enabled && $this->is_valid_account_country() && ! is_add_payment_method_page() );
-	}
-
-	private function register_assets() {
-		$this->assets->register_script(
-			'wc-stripe-link-checkout',
-			'assets/build/link-checkout.js',
-			[ 'wc-stripe-credit-card', 'wc-stripe-checkout-modules' ]
-		);
+		return apply_filters( 'wc_stripe_is_link_active', $this->is_valid_account_country() && ! is_add_payment_method_page() );
 	}
 
 	public function get_supported_countries() {
@@ -123,7 +119,7 @@ class LinkIntegration {
 					'amount'   => wc_stripe_add_number_precision( WC()->cart->total )
 				] )
 			] );
-			wp_enqueue_script( 'wc-stripe-link-checkout' );
+			wp_enqueue_script( 'wc-stripe-link-checkout-modal' );
 		}
 	}
 
@@ -201,8 +197,10 @@ class LinkIntegration {
 
 	public function add_setup_intent_params( $args, $payment_method ) {
 		if ( \in_array( $payment_method->id, $this->supported_payment_methods ) ) {
-			if ( $this->is_active() ) {
-				$args['payment_method_types'][] = 'link';
+			if ( wc_string_to_bool( $payment_method->get_option( 'link_enabled' ) ) ) {
+				if ( $this->is_active() && ! \in_array( 'link', $args['payment_method_types'] ?? [] ) ) {
+					$args['payment_method_types'][] = 'link';
+				}
 			}
 		}
 
@@ -211,9 +209,13 @@ class LinkIntegration {
 
 	public function add_setup_intent_params_v2( $args, $order, $payment_method ) {
 		if ( \in_array( $payment_method->id, $this->supported_payment_methods ) ) {
-			if ( $this->is_active() ) {
-				$args['payment_method_types'][] = 'link';
-				$this->add_mandate_data( $args, $order );
+			if ( wc_string_to_bool( $payment_method->get_option( 'link_enabled' ) ) || $payment_method instanceof \WC_Payment_Gateway_Stripe_Link ) {
+				if ( $this->is_active() ) {
+					if ( ! \in_array( 'link', $args['payment_method_types'] ?? [] ) ) {
+						$args['payment_method_types'][] = 'link';
+					}
+					$this->add_mandate_data( $args, $order );
+				}
 			}
 		}
 
@@ -238,6 +240,25 @@ class LinkIntegration {
 				]
 			]
 		];
+	}
+
+	public function get_express_payment_methods( $gateways ) {
+		$link = WC()->payment_gateways()->payment_gateways()['stripe_link_checkout'] ?? null;
+		if ( $link && $link->banner_checkout_enabled() ) {
+			wp_localize_script( 'wc-stripe-link-express-checkout', 'wc_stripe_link_checkout_params', $link->get_localized_params() );
+			wp_enqueue_script( 'wc-stripe-link-express-checkout' );
+		}
+
+		return $gateways;
+	}
+
+	public function update_order_review_fragments( $fragments ) {
+		if ( in_array( 'checkout_banner', $this->settings->get_option( 'payment_sections', [] ) ) ) {
+			$link                   = WC()->payment_gateways()->payment_gateways()['stripe_link_checkout'];
+			$fragments[ $link->id ] = $link->get_localized_params();
+		}
+
+		return $fragments;
 	}
 
 }

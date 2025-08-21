@@ -27,13 +27,16 @@ class PaymentsApi {
 	}
 
 	/**
-	 * @param $bool
-	 * @param $order
-	 * @param $payment_method
+	 * @param                            $bool
+	 * @param \WC_Order|null             $order
+	 * @param \WC_Payment_Gateway_Stripe $payment_method
 	 *
 	 * @return bool
 	 */
-	public function maybe_force_save_payment_method( bool $bool, \WC_Order $order, \WC_Payment_Gateway_Stripe $payment_method ) {
+	public function maybe_force_save_payment_method( bool $bool, $order, $payment_method = null ) {
+		if ( ! $payment_method ) {
+			return $bool;
+		}
 		// validate that next step is an offer
 		$checkout_id = wcf()->utils->get_checkout_id_from_post_data();
 		$flow_id     = wcf()->utils->get_flow_id_from_post_data();

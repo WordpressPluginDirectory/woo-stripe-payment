@@ -16,12 +16,10 @@ class LinkIntegration {
 	 * @return void
 	 */
 	public function add_payment_intent_params( $params, $order, $client ) {
-		if ( $order->get_payment_method() === 'stripe_cc' ) {
-			if ( \PaymentPlugins\Stripe\Link\LinkIntegration::instance()->is_active() ) {
-				$payment_intent = $client->mode( $order )->paymentIntents->retrieve( $order->get_meta( \WC_Stripe_Constants::PAYMENT_INTENT_ID ) );
-				if ( ! is_wp_error( $payment_intent ) ) {
-					$params['payment_method_types'] = array_values( array_unique( array_merge( $params['payment_method_types'], $payment_intent->payment_method_types ) ) );
-				}
+		if ( \PaymentPlugins\Stripe\Link\LinkIntegration::instance()->can_process_link_payment( $order ) ) {
+			$payment_intent = $client->mode( $order )->paymentIntents->retrieve( $order->get_meta( \WC_Stripe_Constants::PAYMENT_INTENT_ID ) );
+			if ( ! is_wp_error( $payment_intent ) ) {
+				$params['payment_method_types'] = array_values( array_unique( array_merge( $params['payment_method_types'], $payment_intent->payment_method_types ) ) );
 			}
 		}
 

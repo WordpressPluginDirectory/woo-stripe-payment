@@ -107,6 +107,18 @@ return array(
 		'desc_tip'    => true,
 		'description' => __( 'The selected icons will show customers which credit card brands you accept.', 'woo-stripe-payment' ),
 	),
+	'link_title'        => array(
+		'type'  => 'title',
+		'title' => __( 'Link Options', 'woo-stripe-payment' )
+	),
+	'link_enabled'      => array(
+		'title'       => __( 'Faster Checkout With Link', 'woo-stripe-payment' ),
+		'type'        => 'checkbox',
+		'default'     => 'yes',
+		'value'       => 'yes',
+		'description' => __( 'Enable Stripe Link to offer customers a faster checkout experience. With Link, returning customers can pay with one click using their saved payment information, while new customers can create a 
+		Link account to speed up future purchases. Link appears integrated within the credit card payment form.', 'woo-stripe-payment' )
+	),
 	'form_title'        => array(
 		'type'  => 'title',
 		'title' => __( 'Credit Card Form', 'woo-stripe-payment' ),
@@ -115,8 +127,8 @@ return array(
 		'title'       => __( 'Card Form', 'woo-stripe-payment' ),
 		'type'        => 'select',
 		'options'     => array(
-			'inline'  => __( 'Stripe inline form', 'woo-stripe-payment' ),
 			'payment' => __( 'Stripe payment form', 'woo-stripe-payment' ),
+			'inline'  => __( 'Stripe inline form', 'woo-stripe-payment' ),
 			'custom'  => __( 'Custom form', 'woo-stripe-payment' ),
 		),
 		'default'     => 'payment',

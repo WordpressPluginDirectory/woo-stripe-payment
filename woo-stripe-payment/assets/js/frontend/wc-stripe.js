@@ -813,10 +813,14 @@
                 beforeSend: this.ajax_before_send.bind(this)
             }).done(function (response) {
                 if (response.code) {
-                    ev.updateWith(response.data.newData);
+                    if (ev.updateWith) {
+                        ev.updateWith(response.data.newData);
+                    }
                     reject(response.data);
                 } else {
-                    ev.updateWith(response.data.newData);
+                    if (ev.updateWith) {
+                        ev.updateWith(response.data.newData);
+                    }
                     this.fields.set('shipping_method', response.data.shipping_method);
                     resolve(response.data);
                 }
@@ -840,11 +844,15 @@
                 beforeSend: this.ajax_before_send.bind(this)
             }).done(function (response) {
                 if (response.code) {
-                    ev.updateWith(response.data.newData);
+                    if (ev.updateWith) {
+                        ev.updateWith(response.data.newData);
+                    }
                     reject(response.data);
                 } else {
                     this.set_selected_shipping_methods(response.data.shipping_methods);
-                    ev.updateWith(response.data.newData);
+                    if (ev.updateWith) {
+                        ev.updateWith(response.data.newData);
+                    }
                     resolve(response.data);
                 }
             }.bind(this)).fail(function (xhr, textStatus, errorThrown) {
@@ -940,6 +948,7 @@
             // populate the checkout fields with the address
             this.populate_address_fields(data.address, this.get_shipping_prefix());
             this.fields.toFormFields({update_shipping_method: false});
+            return data;
         }.bind(this));
     }
 

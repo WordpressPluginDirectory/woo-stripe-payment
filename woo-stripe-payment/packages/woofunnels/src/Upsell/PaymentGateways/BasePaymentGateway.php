@@ -29,12 +29,7 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 	}
 
 	public static function get_instance() {
-		static $instance;
-		if ( ! $instance ) {
-			$instance = new static( \WC_Stripe_Gateway::load(), new \WC_Stripe_Payment_Intent( null, null ), WFOCU_Core()->log );
-		}
-
-		return $instance;
+		return new static( \WC_Stripe_Gateway::load(), new \WC_Stripe_Payment_Intent( null, null ), WFOCU_Core()->log );
 	}
 
 	public function initialize() {

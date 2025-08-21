@@ -555,8 +555,6 @@ function wc_stripe_process_shop_subscription_meta( $post_id, $post ) {
 /**
  * Filter the WC payment gateways based on criteria specific to Stripe functionality.
  *
- * <strong>Example:</strong> on add payment method page, only show the CC gateway for Stripe.
- *
  * @param WC_Payment_Gateway[] $gateways
  *
  * @since   3.0.0
@@ -572,6 +570,15 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 				}
 			}
 		}
+	}
+	/**
+	 * Link Checkout should not be available in the payment methods section of the checkout shortcode.
+	 */
+	if ( doing_action( 'woocommerce_checkout_order_review' )
+	     || ( wp_doing_ajax() && did_action( 'woocommerce_checkout_update_order_review' ) )
+	     || is_checkout_pay_page()
+	) {
+		unset( $gateways['stripe_link_checkout'] );
 	}
 
 	return $gateways;

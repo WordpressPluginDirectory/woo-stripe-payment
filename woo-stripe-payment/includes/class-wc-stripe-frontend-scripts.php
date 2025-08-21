@@ -63,6 +63,14 @@ class WC_Stripe_Frontend_Scripts {
 
 		$this->register_script( 'form-handler', $this->assets_url( 'js/frontend/form-handler.js' ), array( 'jquery' ) );
 
+		$this->assets_api->register_script( 'wc-stripe-link-checkout-modal', 'assets/build/link-checkout-modal.js' );
+
+		$this->assets_api->register_script( 'wc-stripe-link-express-checkout', 'assets/build/link-express-checkout.js' );
+
+		$this->assets_api->register_script( 'wc-stripe-link-express-cart', 'assets/build/link-express-cart.js' );
+
+		$this->assets_api->register_script( 'wc-stripe-link-express-product', 'assets/build/link-express-product.js' );
+
 		// register scripts that aren't part of gateways
 		$this->register_script( 'wc-stripe', $this->assets_url( 'js/frontend/wc-stripe.js' ),
 			array(

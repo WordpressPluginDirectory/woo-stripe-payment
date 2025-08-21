@@ -259,7 +259,7 @@ label.wc-stripe-label-payment-type:after {
 .wc-stripe_cc-container .wc-stripe-save-source input[type="checkbox"][name="stripe_cc_save_source_key"],
 .payment_methods .wc-stripe-save-source input[type="checkbox"][name$="_save_source_key"] {
   opacity: 0;
-  position: absolute;
+  position: absolute !important;
   width: 20px;
   height: 20px;
 }
@@ -1280,6 +1280,27 @@ input.stripe-link-icon-container {
   top: 50%;
   transform: translateY(-50%);
   display: flex;
+}
+
+li.banner_payment_method_stripe_link_checkout,
+li.payment_method_stripe_link_checkout {
+  iframe {
+    max-width: calc(100% + 8px);
+  }
+}
+
+li {
+  &.payment_method_stripe_link_checkout {
+
+    &.StripeElement {
+      width: 100%;
+      min-height: 1px;
+
+      iframe {
+        max-width: calc(100% + 8px);
+      }
+    }
+  }
 }
 
 div.product .wc-stripe-bnpl-product-message {

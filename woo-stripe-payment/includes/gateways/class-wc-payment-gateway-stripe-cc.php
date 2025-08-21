@@ -165,7 +165,7 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		} elseif ( $this->is_payment_element_active() ) {
 			$options                       = \PaymentPlugins\Stripe\Controllers\PaymentIntent::instance()->get_element_options();
 			$options['paymentMethodTypes'] = array( 'card' );
-			if ( \PaymentPlugins\Stripe\Link\LinkIntegration::instance()->is_active() ) {
+			if ( \wc_string_to_bool( $this->get_option( 'link_enabled', 'yes' ) ) ) {
 				$options['paymentMethodTypes'][] = 'link';
 			}
 			$options['appearance'] = array( 'theme' => $this->get_option( 'theme', 'stripe' ) );
@@ -316,7 +316,7 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function validate_form_type_field( $key, $value ) {
-		if ( ! in_array( $value, array( 'payment', 'inline' ) ) && stripe_wc()->advanced_settings->is_active( 'link_enabled' ) ) {
+		if ( ! in_array( $value, array( 'payment', 'inline' ) ) && $this->is_active( 'link_enabled' ) ) {
 			$value = $this->get_option( 'form_type' );
 			WC_Admin_Settings::add_error( __( 'Only the Stripe payment form and inline form can be used while Link is enabled.', 'woo-stripe-payment' ) );
 		}

@@ -26,7 +26,7 @@ class WC_Stripe_Manager {
 	 *
 	 * @var string
 	 */
-	public $version = '3.3.88';
+	public $version = '3.3.92';
 
 	/**
 	 *
@@ -252,6 +252,7 @@ class WC_Stripe_Manager {
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-twint.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-paybybank.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-upm.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/gateways/class-wc-payment-gateway-stripe-link.php';
 
 		// tokens
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/abstract/abstract-wc-payment-token-stripe.php';
@@ -327,7 +328,8 @@ class WC_Stripe_Manager {
 				'WC_Payment_Gateway_Stripe_MobilePay',
 				'WC_Payment_Gateway_Stripe_Twint',
 				'WC_Payment_Gateway_Stripe_PayByBank',
-				'WC_Payment_Gateway_Stripe_UPM'
+				'WC_Payment_Gateway_Stripe_UPM',
+				'WC_Payment_Gateway_Stripe_Link'
 			)
 		);
 
