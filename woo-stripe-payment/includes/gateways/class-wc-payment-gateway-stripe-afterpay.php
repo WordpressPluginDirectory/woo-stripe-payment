@@ -458,8 +458,8 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 			'AUD' => array( 'AU', 1, 2000 ),
 			'CAD' => array( 'CA', 1, 2000 ),
 			'NZD' => array( 'NZ', 1, 2000 ),
-			'GBP' => array( 'GB', 1, 1000 ),
-			'USD' => array( 'US', 1, 2000 )
+			'GBP' => array( 'GB', 1, 1200 ),
+			'USD' => array( 'US', 1, 4000 )
 		), $this );
 	}
 

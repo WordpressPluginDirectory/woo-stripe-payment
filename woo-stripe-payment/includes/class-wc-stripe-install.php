@@ -42,7 +42,7 @@ class WC_Stripe_Install {
 	public static function plugin_action_links( $links ) {
 		$action_links = array(
 			'settings' => sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=wc-settings&tab=checkout&section=stripe_api' ), esc_html__( 'Settings', 'woo-stripe-payment' ) ),
-			'docs'     => sprintf( '<a target="_blank" href="https://docs.paymentplugins.com/wc-stripe/config">%s</a>', __( 'Documentation', 'woo-stripe-payment' ) ),
+			'docs'     => sprintf( '<a target="_blank" href="https://paymentplugins.com/documentation/stripe/">%s</a>', __( 'Documentation', 'woo-stripe-payment' ) ),
 		);
 
 		return array_merge( $action_links, $links );

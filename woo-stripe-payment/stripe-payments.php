@@ -3,13 +3,13 @@
  * Plugin Name: Payment Plugins for Stripe WooCommerce
  * Plugin URI: https://docs.paymentplugins.com/wc-stripe/config/
  * Description: Accept Credit Cards, Google Pay, Apple Pay, ACH, Klarna and more using Stripe.
- * Version: 3.3.92
+ * Version: 3.3.93
  * Author: Payment Plugins, support@paymentplugins.com
  * Text Domain: woo-stripe-payment
  * Domain Path: /i18n/languages/
  * Tested up to: 6.8
  * WC requires at least: 3.0.0
- * WC tested up to: 10.1
+ * WC tested up to: 10.2
  * Requires Plugins: woocommerce
  */
 defined( 'ABSPATH' ) || exit ();

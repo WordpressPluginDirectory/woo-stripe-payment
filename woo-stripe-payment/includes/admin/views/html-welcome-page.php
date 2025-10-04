@@ -25,7 +25,7 @@ $user      = wp_get_current_user();
                     </a>
                 </div>
                 <div class="wc-stripe-main__card">
-                    <a target="_blank" href="https://docs.paymentplugins.com/wc-stripe/config">
+                    <a target="_blank" href="https://paymentplugins.com/documentation/stripe/">
                         <div class="wc-stripe-main-card__content">
                             <h3><?php esc_html_e( 'Documentation', 'woo-stripe-payment' ) ?></h3>
                             <div class="icon-container documentation">

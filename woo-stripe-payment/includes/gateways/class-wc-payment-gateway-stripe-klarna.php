@@ -138,6 +138,16 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 		$this->supports[] = 'wc_stripe_cart_checkout';
 		$this->supports[] = 'wc_stripe_product_checkout';
 		$this->supports[] = 'wc_stripe_mini_cart_checkout';
+		$this->supports[] = 'subscriptions';
+		$this->supports[] = 'subscription_cancellation';
+		$this->supports[] = 'multiple_subscriptions';
+		$this->supports[] = 'subscription_reactivation';
+		$this->supports[] = 'subscription_suspension';
+		$this->supports[] = 'subscription_date_changes';
+		$this->supports[] = 'subscription_payment_method_change_admin';
+		$this->supports[] = 'subscription_amount_changes';
+		$this->supports[] = 'subscription_payment_method_change_customer';
+		$this->supports[] = 'pre-orders';
 	}
 
 	public function get_required_parameters() {

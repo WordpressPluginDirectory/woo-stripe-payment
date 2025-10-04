@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $text  string
- * @var $title string
+ * @var string $text
+ * @var string $title
  * @version 3.3.34
  */
 

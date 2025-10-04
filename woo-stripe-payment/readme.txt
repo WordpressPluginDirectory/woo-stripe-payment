@@ -4,7 +4,7 @@ Tags: stripe, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 3.3.92
+Stable tag: 3.3.93
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -46,7 +46,7 @@ To see Apple Pay, visit the site using an iOS device. Google Pay will display fo
 Yes, the plugin supports all functionality related to WooCommerce Subscriptions.
 
 = Where is your documentation? =
-https://docs.paymentplugins.com/wc-stripe/config/#/
+https://paymentplugins.com/documentation/stripe/
 
 = Why isn't the Payment Request button showing on my local machine? =
 If your site is not loading over https, then Stripe won't render the Payment Request button. Make sure you are using https.
@@ -63,6 +63,15 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.93 - 10/03/25 =
+* Fixed - When Stripe inline form was enabled, Link was always active
+* Fixed - Apple Pay rounded button option on checkout block
+* Added - Klarna support for recurring payments and pre-orders
+* Added - WC Tested to 10.2
+* Updated - New documentation website. [Documentation](https://paymentplugins.com/documentation/stripe/)
+* Updated  - Stripe PHP library to version 13.18.0
+* Updated - Afterpay parameters updated for USD and GBP. Max cart total for USD is $4,000 and 1,200 for GBP.
+* Updated - Limit ACH payment option to US customers based on billing country. [https://wordpress.org/support/topic/no-option-to-limit-countries-for-ach-bank-transfer/](https://wordpress.org/support/topic/no-option-to-limit-countries-for-ach-bank-transfer/)
 = 3.3.92 - 08/21/25 =
 * Fixed - Incompatibility notice that was showing on block editor under certain conditions. The Stripe plugin has supported the cart and checkout block for several years.
 * Fixed - Issue where Link Checkout was not showing on product page if other express options were not enabled.

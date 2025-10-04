@@ -326,7 +326,7 @@ function wc_stripe_order_status_completed( $order_id, $order ) {
 
 /**
  *
- * @param   [] $address
+ * @param array $address
  *
  * @since   3.0.0
  * @throws Exception
@@ -370,7 +370,7 @@ function wc_stripe_update_customer_location( $address ) {
 
 /**
  *
- * @param   [] $methods
+ * @param array $methods
  *
  * @since   3.0.0
  * @package Stripe/Functions

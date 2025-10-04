@@ -14,7 +14,7 @@ $section = isset( $_GET['section'] ) ? wc_clean( $_GET['section'] ) : '';
         <a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=stripe_api' ) ?>">
 			<?php esc_html_e( 'Settings', 'woo-stripe-payment' ) ?>
         </a>
-        <a target="_blank" href="https://docs.paymentplugins.com/wc-stripe/config">
+        <a target="_blank" href="https://paymentplugins.com/documentation/stripe/">
 			<?php esc_html_e( 'Documentation', 'woo-stripe-payment' ) ?>
         </a>
         <a class="<?php if ( $section === 'support' ) { ?>active<?php } ?>" href="<?php echo admin_url( 'admin.php?page=wc-stripe-main&section=support' ) ?>">

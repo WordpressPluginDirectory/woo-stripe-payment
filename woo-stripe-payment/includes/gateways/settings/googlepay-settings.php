@@ -5,7 +5,7 @@ return array(
 		'type'        => 'description',
 		'description' => '<p><a target="_blank" href="https://pay.google.com/business/console">' . __( 'GPay Business Console', 'woo-stripe-payment' ) .
 		                 '</a></p>' .
-		                 '<p><a target="_blank" href="https://docs.paymentplugins.com/wc-stripe/config/#/stripe_googlepay?id=testing">Testing GPay</a></p>' .
+		                 '<p><a target="_blank" href="https://paymentplugins.com/documentation/stripe/googlepay/testing/">Testing GPay</a></p>' .
 		                 __( 'When test mode is enabled, Google Pay will work without a merchant ID, allowing you to capture the necessary screenshots the Google API team needs to approve your integration request.',
 			                 'woo-stripe-payment' ),
 	),
