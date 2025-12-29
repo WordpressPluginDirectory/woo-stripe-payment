@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
  * Class WC_Payment_Gateway_Stripe_Afterpay
  *
  * @since   3.3.1
- * @package Stripe/Gateways
+ * @package PaymentPlugins\Gateways
  */
 class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local_Payment {
 

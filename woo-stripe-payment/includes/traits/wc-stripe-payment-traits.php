@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   3.1.0
  * @author  Payment Plugins
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  */
 trait WC_Stripe_Payment_Intent_Trait {
 
@@ -361,7 +361,7 @@ trait WC_Stripe_Payment_Intent_Trait {
  *
  * @since   3.1.0
  * @author  Payment Plugins
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  */
 trait WC_Stripe_Payment_Charge_Trait {
 
@@ -375,7 +375,7 @@ trait WC_Stripe_Payment_Charge_Trait {
  *
  * @since   3.1.0
  * @author  Payment Plugins
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  */
 trait WC_Stripe_Local_Payment_Charge_Trait {
 
@@ -389,7 +389,7 @@ trait WC_Stripe_Local_Payment_Charge_Trait {
  *
  * @since   3.1.0
  * @author  Payment Plugins
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  *
  */
 trait WC_Stripe_Local_Payment_Intent_Trait {

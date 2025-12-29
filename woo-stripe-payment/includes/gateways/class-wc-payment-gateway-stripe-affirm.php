@@ -6,6 +6,9 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
 	return;
 }
 
+/**
+ * @package PaymentPlugins\Gateways
+ */
 class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_Payment {
 
 	use WC_Stripe_Local_Payment_Intent_Trait;

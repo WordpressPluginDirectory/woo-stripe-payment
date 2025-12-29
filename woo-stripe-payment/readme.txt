@@ -2,9 +2,9 @@
 Contributors: mr.clayton
 Tags: stripe, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 3.3.93
+Stable tag: 3.3.97
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,32 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.97 - 12/29/25 =
+* Added - Checkout page upsell support for new CheckoutWC feature coming out in January
+* Added - Apple Pay button height option. The minimum height is 40px and the maximum height is 55px.
+* Added - The cart block and checkout block Apple Pay integration now uses the new Stripe Express Checkout element. This allows Apple Pay to be available on browsers other than Safari. Support for the checkout shortcode, cart shortcode, and product pages will be added in upcoming releases.
+* Added - Button radius option for the Payment Request Gateway
+* Added - Button radius option for Link Checkout
+* Added - Button radius option for Apple Pay. This option replaces the now deprecated "Button Design" option
+* Added - Automatic registration of payment method domains during plugin update for improved Apple Pay compatibility
+* Updated - Default payment method configurations now automatically enable Apple Pay and Google Pay display preferences
+* Updated - For cart block and checkout block, updated logic for determining if the phone field is required
+* Updated - Improved compatibility with cart and checkout blocks
+= 3.3.96 - 11/30/25 =
+* Added - tested up to WordPress 6.9
+* Updated - Load wc-stripe-functions.php earlier than "init" action. Some 3rd party plugins were causing a conflict which is resolved by earlier loading of Stripe plugin functions.
+* Updated - Modified payment button logic on product variation pages to use the DOM value instead of Javascript variable values. [https://wordpress.org/support/topic/more-than-one-variation-on-a-product-causes-googlepay-error/](https://wordpress.org/support/topic/more-than-one-variation-on-a-product-causes-googlepay-error/)
+= 3.3.95 - 10/29/25 =
+* Added - WC Tested to 10.3
+* Added - Support for Billie payment method
+* Added - Puerto Rico to Klarna supported countries
+* Updated - Changed script handles for WooCommerce to include the "wc-" prefix for WooCommerce 10.3.0.
+* Updated - When express payment is made on product and cart page, ensure attribution data is included in the request.
+* Updated - Removed Giropay and Sofort from payment method options since they have been deprecated by Stripe.
+= 3.3.94 - 10/15/25 =
+* Updated - Merchants using Bluehost reported that payment methods were not showing in settings or checkout page. This was caused by an update to the Bluehost plugin where it triggered the "woocommerce_payment_gateways" too early in the WordPress load sequence.
+ We have added additional code to ensure Stripe payment methods are loaded even if the filter "woocommerce_payment_gateways" is called before the WordPress "init" action.
+* Added - Filter "wc_stripe_order_cancelled_enabled". [https://wordpress.org/support/topic/limit-refund-on-cancel-option/](https://wordpress.org/support/topic/limit-refund-on-cancel-option/)
 = 3.3.93 - 10/03/25 =
 * Fixed - When Stripe inline form was enabled, Link was always active
 * Fixed - Apple Pay rounded button option on checkout block

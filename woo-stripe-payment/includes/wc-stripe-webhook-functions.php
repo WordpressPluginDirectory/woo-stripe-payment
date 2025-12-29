@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package PaymentPlugins\Functions
+ */
 
 defined( 'ABSPATH' ) || exit();
 
@@ -10,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since      3.0.0
  * @deprecated 3.3.73
- * @package    Stripe/Functions
+ * @package    PaymentPlugins\Functions
  */
 function wc_stripe_process_source_chargeable( $source, $request ) {
 	if ( isset( $source->metadata['order_id'] ) ) {
@@ -65,7 +68,7 @@ function wc_stripe_process_source_chargeable( $source, $request ) {
  *
  * @since      3.0.5
  * @deprecated 3.3.73
- * @package    Stripe/Functions
+ * @package    PaymentPlugins\Functions
  */
 function wc_stripe_process_charge_succeeded( $charge, $request ) {
 	// charges that belong to a payment intent can be  skipped
@@ -117,7 +120,7 @@ function wc_stripe_process_charge_succeeded( $charge, $request ) {
  * @param \Stripe\Event         $event
  *
  * @since   3.1.0
- * @package Stripe/Functions
+ * @package PaymentPlugins\Functions
  */
 function wc_stripe_process_payment_intent_succeeded( $intent, $request, $event ) {
 	$order = WC_Stripe_Utils::get_order_from_payment_intent( $intent );
@@ -168,7 +171,7 @@ function wc_stripe_process_payment_intent_succeeded( $intent, $request, $event )
  * @param WP_REST_Request $request
  *
  * @since   3.1.1
- * @package Stripe/Functions
+ * @package PaymentPlugins\Functions
  */
 function wc_stripe_process_charge_failed( $charge, $request ) {
 	$order = wc_get_order( wc_stripe_filter_order_id( $charge->metadata['order_id'], $charge ) );

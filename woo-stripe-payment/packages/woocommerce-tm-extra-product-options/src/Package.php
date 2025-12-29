@@ -4,6 +4,9 @@ namespace PaymentPlugins\Stripe\WooCommerceExtraProductOptions;
 
 use PaymentPlugins\Stripe\Assets\AssetsApi;
 
+/**
+ * @package PaymentPlugins\WooCommerceExtraProductOptions\Stripe
+ */
 class Package {
 
 	public static function init() {

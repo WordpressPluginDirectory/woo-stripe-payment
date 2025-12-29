@@ -2,6 +2,9 @@
 
 namespace PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers;
 
+/**
+ * @package PaymentPlugins\WooCommerceSubscriptions\Stripe
+ */
 class OrderMetadata {
 
 	public function __construct() {

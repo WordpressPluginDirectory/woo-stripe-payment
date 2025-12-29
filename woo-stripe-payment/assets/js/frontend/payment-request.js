@@ -101,6 +101,7 @@
         }
 
         PaymentRequest.prototype.button_click = function (e) {
+            this.store_attribution_values();
             if (this.$button.is('.disabled')) {
                 e.preventDefault();
             } else if (this.get_quantity() == 0) {
@@ -173,6 +174,7 @@
         }
 
         PaymentRequest.prototype.button_click = function (e) {
+            this.store_attribution_values();
             this.paymentRequest.update(this.get_payment_request_update({
                 total: {
                     pending: false
@@ -231,6 +233,9 @@
                         }
                     });
                     button.on('click', this.banner_checkout.bind(this));
+                    button.on('ready', function () {
+                        $('#wc-stripe-payment-request-banner iframe').css({borderRadius: this.params.button_radius});
+                    }.bind(this))
                     button.mount("#wc-stripe-payment-request-banner");
                 }
             }.bind(this))

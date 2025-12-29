@@ -27,6 +27,7 @@
             if (this.banner_enabled()) {
                 var $button = $(this.params.button);
                 $button.addClass('banner-checkout');
+                $button.css({borderRadius: this.params.button_radius, height: this.params.button_height});
                 $button.on('click', this.start.bind(this));
                 $(this.banner_container).empty().append($button);
                 $(this.banner_container).show().addClass('active').closest('.wc-stripe-banner-checkout').addClass('active');

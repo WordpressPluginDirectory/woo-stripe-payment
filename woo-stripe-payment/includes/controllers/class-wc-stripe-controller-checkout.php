@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Stripe_Rest_Controller' ) ) {
  *
  * @since   3.0.0
  * @author  PaymentPlugins
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  */
 class WC_Stripe_Controller_Checkout extends WC_Stripe_Rest_Controller {
 

@@ -8,7 +8,7 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe' ) ) {
 
 /**
  *
- * @package Stripe/Gateways
+ * @package PaymentPlugins\Gateways
  * @author  PaymentPlugins
  *
  */
@@ -83,11 +83,11 @@ class WC_Payment_Gateway_Stripe_ApplePay extends WC_Payment_Gateway_Stripe {
 		return array_merge_recursive(
 			parent::get_localized_params(),
 			array(
-				'messages' => array(
+				'messages'      => array(
 					'invalid_amount' => __( 'Please update you product quantity before using Apple Pay.', 'woo-stripe-payment' ),
 					'choose_product' => __( 'Please select a product option before updating quantity.', 'woo-stripe-payment' ),
 				),
-				'button'   => wc_stripe_get_template_html(
+				'button'        => wc_stripe_get_template_html(
 					'applepay-button.php',
 					array(
 						'style'       => $this->get_option( 'button_style' ),
@@ -96,6 +96,8 @@ class WC_Payment_Gateway_Stripe_ApplePay extends WC_Payment_Gateway_Stripe {
 						'design'      => $this->get_option( 'button_design', 'standard' )
 					)
 				),
+				'button_height' => $this->get_option( 'button_height', 40 ) . 'px',
+				'button_radius' => $this->get_option( 'button_radius', 4 ) . 'px',
 			)
 		);
 	}

@@ -773,8 +773,28 @@
     };
 
     wc_stripe.BaseGateway.prototype.serialize_fields = function () {
-        return $.extend({}, this.fields.toJson(), $(document.body).triggerHandler('wc_stripe_process_checkout_data', [this, this.fields]));
+        var data = $.extend({}, this.fields.toJson(), $(document.body).triggerHandler('wc_stripe_process_checkout_data', [this, this.fields]));
+        return data;
     };
+
+    wc_stripe.BaseGateway.prototype.store_attribution_values = function () {
+        if (this.is_order_attribution_enabled() && !this.is_current_page('checkout')) {
+            var prefix = wc_order_attribution.params.prefix;
+
+            // Store the order attribution values so they will be used in the request.
+            var _this = this;
+            $('input[type="hidden"][name^="' + prefix + '"]').each(function () {
+                var $input = $(this);
+                var name = $input.attr('name');
+                _this.fields.set(name, $input.val());
+            });
+        }
+    }
+
+    wc_stripe.BaseGateway.prototype.is_order_attribution_enabled = function () {
+        var attribution = document.getElementsByTagName('wc-order-attribution-inputs');
+        return attribution.length && typeof wc_order_attribution !== 'undefined';
+    }
 
     wc_stripe.BaseGateway.prototype.map_shipping_methods = function (shippingData) {
         var methods = {};
@@ -1366,7 +1386,7 @@
             $('.variations [name^="attribute_"]').each(function (index, el) {
                 var $el = $(el);
                 var name = $el.data('attribute_name') || $el.attr('name');
-                if (!(name in attributes)) {
+                if (!(name in attributes) || attributes[name] === '') {
                     attributes[name] = $el.val();
                 }
             });
@@ -1628,9 +1648,7 @@
 
         this.$button = $(this.paymentsClient.createButton(this.get_button_options()));
         this.$button.addClass('gpay-button-container');
-        /*if (!this.is_rectangle_button()) {
-            this.$button.find('button').css('border-radius', '100px');
-        }*/
+        this.$button.find('button').css({height: this.params.button_height});
     };
 
     wc_stripe.GooglePay.prototype.is_rectangle_button = function () {
@@ -1653,6 +1671,7 @@
 
     wc_stripe.GooglePay.prototype.start = function () {
         // always recreate the paymentClient to ensure latest data is used.
+        this.store_attribution_values();
         this.createPaymentsClient();
         this.paymentsClient.loadPaymentData(this.build_payment_request()).then(function (paymentData) {
             var data = JSON.parse(paymentData.paymentMethodData.tokenizationData.token);
@@ -1706,6 +1725,7 @@
         }
 
         this.$button = $(this.params.button);
+        this.$button.css({borderRadius: this.params.button_radius, height: this.params.button_height});
         this.$button.on('click', this.start.bind(this));
         this.append_button();
     };
@@ -1725,6 +1745,7 @@
 
     wc_stripe.ApplePay.prototype.start = function (e) {
         e.preventDefault();
+        this.store_attribution_values();
         this.paymentRequest.update(this.get_payment_request_update({
             total: {
                 pending: false
@@ -1764,6 +1785,9 @@
                 }
             }
         });
+        this.paymentRequestButton.on('ready', function () {
+            $('#wc-stripe-payment-request-container iframe').css({borderRadius: this.params.button_radius});
+        }.bind(this))
     };
 
     wc_stripe.PaymentRequest.prototype.canMakePayment = function () {

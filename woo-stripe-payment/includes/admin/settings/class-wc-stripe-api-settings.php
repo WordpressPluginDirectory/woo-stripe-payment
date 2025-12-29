@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   3.0.0
  * @author  Payment Plugins
- * @package Stripe/Classes
+ * @package PaymentPlugins\Settings
  *
  */
 class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
@@ -157,7 +157,7 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 				'type'        => 'paragraph',
 				'title'       => __( 'Webhook url', 'woo-stripe-payment' ),
 				'class'       => 'wc-stripe-webhook',
-				'text'        => stripe_wc()->rest_api->webhook->rest_url( 'webhook' ),
+				'text'        => '',
 				'desc_tip'    => true,
 				'description' => __( '<strong>Important:</strong> the webhook url is called by Stripe when events occur in your account, like a source becomes chargeable. Use the Create Webhook button or add the webhook manually in your Stripe account.',
 					'woo-stripe-payment' ),
@@ -302,6 +302,8 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 				}
 			}
 		}
+		// Set webhook URL here (after init has run) to avoid calling get_rest_url() too early
+		$this->form_fields['webhook_url']['text'] = get_rest_url( null, '/wc-stripe/v1/webhook' );
 		parent::admin_options();
 	}
 

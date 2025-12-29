@@ -2,6 +2,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * @package PaymentPlugins\Admin
+ */
 class WC_Stripe_Admin_Product_Edit {
 
 	//bulk_actions-edit-product

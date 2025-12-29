@@ -4,6 +4,9 @@ namespace PaymentPlugins\Stripe\WooCommercePreOrders;
 
 use PaymentPlugins\Stripe\RequestContext;
 
+/**
+ * @package PaymentPlugins\WooCommercePreOrders\Stripe
+ */
 class FrontendRequests {
 
 	public function is_checkout_with_preorder_requires_tokenization( RequestContext $context ) {

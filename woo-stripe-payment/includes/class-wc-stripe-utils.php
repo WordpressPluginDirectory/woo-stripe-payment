@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @since 3.3.13
+ * @since   3.3.13
+ * @package PaymentPlugins\Utils
  */
 class WC_Stripe_Utils {
 

@@ -9,7 +9,7 @@ require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/abstract/abstract-wc-stripe
  * @since   3.1.0
  *
  * @author  Payment Plugins
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  */
 class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 

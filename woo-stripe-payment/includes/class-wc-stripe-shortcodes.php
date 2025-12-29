@@ -3,7 +3,9 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class WC_Stripe_Shortcodes
- * @since 3.2.15
+ *
+ * @since   3.2.15
+ * @package PaymentPlugins\Shortcodes
  */
 class WC_Stripe_Shortcodes {
 
@@ -30,7 +32,7 @@ class WC_Stripe_Shortcodes {
 		if ( is_product() ) {
 			$method           = 'output_product_buttons';
 			$wrapper['class'] = $wrapper['class'] . ' wc-stripe-shortcode-product-buttons';
-		} else if ( ! is_null( WC()->cart ) && ( is_cart() || ( isset( $atts['page'] ) && 'cart' === $atts['page'] ) ) ) {
+		} elseif ( ! is_null( WC()->cart ) && ( is_cart() || ( isset( $atts['page'] ) && 'cart' === $atts['page'] ) ) ) {
 			$method           = 'output_cart_buttons';
 			$wrapper['class'] = $wrapper['class'] . ' wc-stripe-shortcode-cart-buttons';
 		}
@@ -41,6 +43,7 @@ class WC_Stripe_Shortcodes {
 
 		return WC_Shortcodes::shortcode_wrapper( array( 'WC_Stripe_Shortcode_Payment_Buttons', $method ), $atts, $wrapper );
 	}
+
 }
 
 WC_Stripe_Shortcodes::init();

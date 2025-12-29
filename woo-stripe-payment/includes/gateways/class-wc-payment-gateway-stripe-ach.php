@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   3.0.5
  * @author  Payment Plugins
- * @package Stripe/Gateways
+ * @package PaymentPlugins\Gateways
  *
  */
 class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Payment {

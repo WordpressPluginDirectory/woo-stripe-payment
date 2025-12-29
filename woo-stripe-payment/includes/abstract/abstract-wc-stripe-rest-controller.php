@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  *
  * @author PaymentPlugins
- * @package Stripe/Abstract
+ * @package PaymentPlugins\Abstract
  *
  */
 abstract class WC_Stripe_Rest_Controller {

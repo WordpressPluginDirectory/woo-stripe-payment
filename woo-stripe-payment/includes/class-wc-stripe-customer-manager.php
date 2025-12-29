@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  * Class that manages customer creation and custom updates.
  *
  * @since   3.0.0
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  * @author  PaymentPlugins
  *
  */

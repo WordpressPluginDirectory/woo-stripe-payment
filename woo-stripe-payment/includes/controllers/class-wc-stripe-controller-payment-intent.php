@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  * Controller which handles Payment Intent related actions such as creation.
  *
  * @author  PaymentPlugins
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  *
  */
 class WC_Stripe_Controller_Payment_Intent extends WC_Stripe_Rest_Controller {

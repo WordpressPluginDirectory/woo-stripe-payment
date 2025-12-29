@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @package Stripe/Admin
+ * @package PaymentPlugins\Admin
  * @author  User
  *
  */

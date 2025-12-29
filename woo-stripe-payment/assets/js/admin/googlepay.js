@@ -29,8 +29,10 @@
             },
             buttonColor: $('.button-color').val(),
             buttonType: $('.button-style').val(),
-            buttonRadius: $('.button-radius').val()
+            buttonRadius: $('.button-radius').val(),
+            buttonSizeMode: 'fill'
         }));
+        this.$button.find('button').css({height: $('.button-height').val() + 'px'});
         $('#gpay-button').append(this.$button);
     }
 

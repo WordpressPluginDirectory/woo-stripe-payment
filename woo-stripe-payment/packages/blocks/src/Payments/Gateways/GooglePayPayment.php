@@ -34,6 +34,7 @@ class GooglePayPayment extends AbstractStripePayment {
 				'buttonLocale'   => $this->payment_method->get_payment_button_locale()
 			),
 			'buttonShape'       => $this->payment_method->get_option( 'button_shape', 'rect' ),
+			'buttonHeight'      => $this->get_setting( 'button_height', 40 ) . 'px',
 			'environment'       => $this->get_google_pay_environment(),
 			'processingCountry' => WC()->countries ? WC()->countries->get_base_country() : wc_get_base_location()['country']
 		), parent::get_payment_method_data() );

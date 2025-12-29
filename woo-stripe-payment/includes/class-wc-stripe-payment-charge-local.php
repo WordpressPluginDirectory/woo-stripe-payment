@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @author PaymentPlugins
  * @since 3.1.1
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  *
  */
 class WC_Stripe_Payment_Charge_Local extends WC_Stripe_Payment_Charge {

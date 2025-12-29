@@ -33,6 +33,7 @@ export default function (Base) {
         }
 
         onClickElement(event) {
+            this.store_attribution_values();
             // pass initial data.
             const data = {};
 
@@ -217,6 +218,11 @@ export default function (Base) {
         get_element_options() {
             const options = {
                 currency: this.params.currency.toLowerCase(),
+                appearance: {
+                    variables: {
+                        borderRadius: this.params.button.radius
+                    }
+                },
                 ...this.params.elementOptions
             };
             delete options.paymentMethodTypes;

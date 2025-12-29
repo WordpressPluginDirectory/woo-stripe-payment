@@ -47,7 +47,10 @@ class PaymentsApi {
 		add_action( 'woocommerce_blocks_payment_method_type_registration', array( $this, 'register_payment_methods' ) );
 		add_action( 'woocommerce_blocks_checkout_enqueue_data', array( $this, 'enqueue_checkout_data' ) );
 		add_action( 'woocommerce_blocks_cart_enqueue_data', array( $this, 'enqueue_cart_data' ) );
-		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_with_context' ), 10, 2 );
+		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array(
+			$this,
+			'payment_with_context'
+		), 10, 2 );
 		add_action( 'wc_stripe_blocks_enqueue_styles', array( $this, 'enqueue_payment_styles' ) );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_editor_styles' ] );
 		add_filter( 'woocommerce_saved_payment_methods_list', [ $this, 'transform_payment_method_type' ], 99 );
@@ -79,9 +82,6 @@ class PaymentsApi {
 		$this->container->register( Gateways\BancontactPayment::class, function ( Container $container ) {
 			return new Gateways\BancontactPayment( $container->get( AssetsApi::class ) );
 		} );
-		$this->container->register( Gateways\GiropayPayment::class, function ( Container $container ) {
-			return new Gateways\GiropayPayment( $container->get( AssetsApi::class ) );
-		} );
 		$this->container->register( Gateways\EPSPayment::class, function ( Container $container ) {
 			return new Gateways\EPSPayment( $container->get( AssetsApi::class ) );
 		} );
@@ -90,9 +90,6 @@ class PaymentsApi {
 		} );
 		$this->container->register( Gateways\SepaPayment::class, function ( Container $container ) {
 			return new Gateways\SepaPayment( $container->get( AssetsApi::class ) );
-		} );
-		$this->container->register( Gateways\SofortPayment::class, function ( Container $container ) {
-			return new Gateways\SofortPayment( $container->get( AssetsApi::class ) );
 		} );
 		$this->container->register( Gateways\WeChatPayment::class, function ( Container $container ) {
 			return new Gateways\WeChatPayment( $container->get( AssetsApi::class ) );
@@ -169,6 +166,9 @@ class PaymentsApi {
 		$this->container->register( Gateways\PayByBankPayment::class, function ( Container $container ) {
 			return new Gateways\PayByBankPayment( $container->get( AssetsApi::class ) );
 		} );
+		$this->container->register( Gateways\BilliePayment::class, function ( Container $container ) {
+			return new Gateways\BilliePayment( $container->get( AssetsApi::class ) );
+		} );
 		$this->container->register( Gateways\UniversalPayment::class, function ( Container $container ) {
 			return new Gateways\UniversalPayment(
 				$container->get( AssetsApi::class ),
@@ -194,11 +194,9 @@ class PaymentsApi {
 			Gateways\IdealPayment::class,
 			Gateways\P24Payment::class,
 			Gateways\BancontactPayment::class,
-			Gateways\GiropayPayment::class,
 			Gateways\EPSPayment::class,
 			Gateways\MultibancoPayment::class,
 			Gateways\SepaPayment::class,
-			Gateways\SofortPayment::class,
 			Gateways\WeChatPayment::class,
 			Gateways\FPXPayment::class,
 			Gateways\BECSPayment::class,
@@ -223,7 +221,8 @@ class PaymentsApi {
 			Gateways\ZipPayment::class,
 			Gateways\MobilePayPayment::class,
 			Gateways\PayByBankPayment::class,
-			Gateways\TwintPayment::class
+			Gateways\TwintPayment::class,
+			Gateways\BilliePayment::class
 		);
 
 		foreach ( $payment_methods as $clazz ) {

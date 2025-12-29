@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @author PaymentPlugins
  * @since 3.1.5
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  *
  */
 trait WC_Payment_Token_Source_Trait {
@@ -23,7 +23,7 @@ trait WC_Payment_Token_Source_Trait {
  *
  * @author PaymentPlugins
  * @since 3.1.5
- * @package Stripe/Trait
+ * @package PaymentPlugins\Traits
  *
  */
 trait WC_Payment_Token_Payment_Method_Trait {

@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  * Class WC_Payment_Gateway_Stripe_Becs
  *
  * @since   3.1.7
- * @package Stripe/Gateways
+ * @package PaymentPlugins\Gateways
  * @author  PaymentPlugins
  */
 class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Payment {

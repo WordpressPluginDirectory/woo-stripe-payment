@@ -3,7 +3,8 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * @since 3.3.13
+ * @since   3.3.13
+ * @package PaymentPlugins\Settings
  */
 class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 

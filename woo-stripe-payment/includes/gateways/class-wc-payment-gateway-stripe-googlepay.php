@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe' ) ) {
  *
  * @since   3.0.0
  * @author  PaymentPlugins
- * @package Stripe/Gateways
+ * @package PaymentPlugins\Gateways
  */
 class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 
@@ -110,6 +110,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 				'button_locale'      => $this->get_payment_button_locale(),
 				'button_shape'       => $this->get_option( 'button_shape', 'rect' ),
 				'button_radius'      => $this->get_option( 'button_radius', 4 ),
+				'button_height'      => $this->get_option( 'button_height', 40 ) . 'px',
 				'total_price_label'  => __( 'Total', 'woo-stripe-payment' ),
 				'routes'             => array( 'payment_data' => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->googlepay->rest_uri( 'shipping-data' ) ) ),
 				'messages'           => array( 'invalid_amount' => __( 'Please update you product quantity before using Google Pay.', 'woo-stripe-payment' ) )
@@ -184,9 +185,9 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param float            $price
+	 * @param float $price
 	 * @param WC_Shipping_Rate $rate
-	 * @param bool             $incl_tax
+	 * @param bool $incl_tax
 	 *
 	 * @return string|void
 	 */
@@ -241,8 +242,8 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @since 3.3.14
 	 * @return mixed|void
+	 * @since 3.3.14
 	 */
 	public function get_payment_button_locale() {
 		$locale        = wc_stripe_get_site_locale();
@@ -258,8 +259,8 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @since 3.3.14
 	 * @return mixed|void
+	 * @since 3.3.14
 	 */
 	public function get_supported_button_locales() {
 		return apply_filters( 'wc_stripe_googlepay_supported_button_locales',

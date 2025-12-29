@@ -21,17 +21,35 @@ class PaymentRequest extends AbstractStripePayment {
 	}
 
 	public function get_payment_method_data() {
-		return wp_parse_args( array(
-			'editorIcons'          => array(
+		$data = [
+			'editorIcons'  => array(
 				'long'  => $this->assets_api->get_asset_url( 'assets/img/gpay_button_buy_black.svg' ),
 				'short' => $this->assets_api->get_asset_url( 'assets/img/gpay_button_black.svg' )
 			),
-			'paymentRequestButton' => array(
-				'type'   => $this->payment_method->get_option( 'button_type' ),
-				'theme'  => $this->payment_method->get_option( 'button_theme' ),
-				'height' => $this->payment_method->get_button_height(),
-			)
-		), parent::get_payment_method_data() );
+			'buttonHeight' => $this->get_setting( 'button_height', 40 ),
+			'buttonRadius' => $this->get_setting( 'button_radius', 4 ) . 'px'
+		];
+
+		switch ( $this->get_setting( 'button_type', 'buy' ) ) {
+			case 'default':
+				$data['buttonType'] = 'plain';
+				break;
+			default:
+				$data['buttonType'] = 'buy';
+		}
+
+		switch ( $this->get_setting( 'button_theme' ) ) {
+			case 'light':
+			case 'light-outline':
+				$data['buttonTheme'] = 'white';
+				break;
+			case 'dark':
+			default:
+				$data['buttonTheme'] = 'black';
+				break;
+		}
+
+		return wp_parse_args( $data, parent::get_payment_method_data() );
 	}
 
 }

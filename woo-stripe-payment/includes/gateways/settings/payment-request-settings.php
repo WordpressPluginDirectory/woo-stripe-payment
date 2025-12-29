@@ -34,7 +34,7 @@ return array(
 		'description' => __( 'Leave blank if you don\'t want a description to show for the gateway.', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
 	),
-	'notice_enabled'       => array(
+	'notice_enabled'   => array(
 		'title'       => __( 'Show Payment Notice', 'woo-stripe-payment' ),
 		'type'        => 'checkbox',
 		'default'     => 'yes',
@@ -119,5 +119,19 @@ return array(
 		'default'     => '40',
 		'desc_tip'    => true,
 		'description' => __( 'The height of the button. Max height is 64', 'woo-stripe-payment' ),
+	),
+	'button_radius'    => array(
+		'title'             => __( 'Button Radius', 'woo-stripe-payment' ),
+		'type'              => 'number',
+		'class'             => 'button-radius',
+		'default'           => '4',
+		'description'       => __( 'The border radius of the button.', 'woo-stripe-payment' ),
+		'sanitize_callback' => function ( $value ) {
+			if ( ! preg_match( '/^[\d]+$/', $value ) ) {
+				$value = 0;
+			}
+
+			return absint( $value );
+		}
 	),
 );

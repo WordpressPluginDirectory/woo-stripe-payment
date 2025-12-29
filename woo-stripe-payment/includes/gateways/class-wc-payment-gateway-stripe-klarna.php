@@ -9,6 +9,8 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
 /**
  * Class WC_Payment_Gateway_Stripe_Klarna
  *
+ * @package PaymentPlugins\Gateways
+ *
  */
 class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_Payment {
 
@@ -50,40 +52,6 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 		'pl-PL'
 	);
 
-	/**
-	 * European Economic Area countries
-	 *
-	 * @var string[]
-	 */
-	private $eea_countries = array(
-		'AT', // Austria
-		'BE', // Belgium
-		'HR', // Croatia
-		'CY', // Cyprus
-		'CZ', // Czech Republic
-		'DK', // Denmark
-		'EE', // Estonia
-		'FI', // Finland
-		'FR', // France
-		'DE', // Germany
-		'GR', // Greece
-		'IE', // Ireland
-		'IT', // Italy
-		'LV', // Latvia
-		'LT', // Lithuania
-		'LU', // Luxembourg
-		'MT', // Malta
-		'NL', // Netherlands
-		'NO', // Norway
-		'PL', // Poland
-		'PT', // Portugal
-		'RO', // Romania
-		'SK', // Slovakia
-		'SI', // Slovenia
-		'ES', // Spain
-		'SE'  // Sweden
-	);
-
 	private $account_countries = array(
 		'AU', // Australia
 		'AT', // Austria
@@ -121,8 +89,47 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 
 	public function __construct() {
 		$this->local_payment_type = 'klarna';
-		$this->currencies         = array( 'AUD', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'NOK', 'NZD', 'PLN', 'RON', 'SEK', 'USD' );
-		$this->countries          = $this->limited_countries = array( 'AT', 'AU', 'BE', 'CA', 'CH', 'CZ', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'GR', 'IE', 'IT', 'NL', 'NO', 'NZ', 'PL', 'PT', 'RO', 'SE', 'US' );
+		$this->currencies         = array(
+			'AUD',
+			'CAD',
+			'CHF',
+			'CZK',
+			'DKK',
+			'EUR',
+			'GBP',
+			'NOK',
+			'NZD',
+			'PLN',
+			'RON',
+			'SEK',
+			'USD'
+		);
+		$this->countries          = $this->limited_countries = array(
+			'AT',
+			'AU',
+			'BE',
+			'CA',
+			'CH',
+			'CZ',
+			'DE',
+			'DK',
+			'ES',
+			'FI',
+			'FR',
+			'GB',
+			'GR',
+			'IE',
+			'IT',
+			'NL',
+			'NO',
+			'NZ',
+			'PL',
+			'PR',
+			'PT',
+			'RO',
+			'SE',
+			'US'
+		);
 		$this->id                 = 'stripe_klarna';
 		$this->tab_title          = __( 'Klarna', 'woo-stripe-payment' );
 		$this->token_type         = 'Stripe_Local';
@@ -164,14 +171,14 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 			'PLN' => array( 'PL' ),
 			'RON' => array( 'RO' ),
 			'SEK' => array( 'SE' ),
-			'USD' => array( 'US' ),
+			'USD' => array( 'US', 'PR' ),
 		), $this );
 	}
 
 	/**
 	 * @param string $currency
 	 * @param string $billing_country
-	 * @param float  $total
+	 * @param float $total
 	 *
 	 * @return bool
 	 */
@@ -196,9 +203,9 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 					}
 				}
 			} else {
-				$result = $account_country === $billing_country
-				          && ( isset( $params[ $currency ] )
-				               && in_array( $billing_country, $params[ $currency ] ) !== false );
+				$result = isset( $params[ $currency ] )
+				          && in_array( $account_country, $params[ $currency ], true )
+				          && in_array( $billing_country, $params[ $currency ], true );
 			}
 		}
 
@@ -350,7 +357,10 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 
 	public function enqueue_checkout_scripts( $scripts ) {
 		parent::enqueue_checkout_scripts( $scripts );
-		$scripts->assets_api->register_script( 'wc-stripe-klarna-checkout', 'assets/build/klarna-message.js', array( 'wc-stripe-vendors', 'wc-stripe-local-payment' ) );
+		$scripts->assets_api->register_script( 'wc-stripe-klarna-checkout', 'assets/build/klarna-message.js', array(
+			'wc-stripe-vendors',
+			'wc-stripe-local-payment'
+		) );
 		wp_enqueue_script( 'wc-stripe-klarna-checkout' );
 	}
 
@@ -368,7 +378,7 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	}
 
 	/**
-	 * @param \PaymentPlugins\Stripe\Assets\AssetsApi    $assets_api
+	 * @param \PaymentPlugins\Stripe\Assets\AssetsApi $assets_api
 	 * @param \PaymentPlugins\Stripe\Assets\AssetDataApi $asset_data
 	 *
 	 * @return void
@@ -406,26 +416,27 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	/**
 	 * Returns true if the provided country is part of the European Economic Area (EEA)
 	 *
-	 * @since 3.3.81
 	 * @return bool
+	 * @since 3.3.81
 	 */
 	private function is_eea( $country ) {
-		return \in_array( $country, $this->eea_countries, true );
+		return \in_array( $country, \PaymentPlugins\Stripe\Utilities\CountryUtils::get_eea_countries(), true );
 	}
 
 	/**
-	 * @since 3.3.81
 	 * @return string[]
+	 * @since 3.3.81
 	 */
 	public function get_eea_countries() {
-		return $this->eea_countries;
+		return \PaymentPlugins\Stripe\Utilities\CountryUtils::get_eea_countries();
 	}
 
 	public function get_payment_description() {
 		ob_start();
 		?>
         <span><?php esc_html_e( 'The rules for Klarna are as follows:', 'woo-stripe-payment' ) ?></span>
-        <a href="https://docs.stripe.com/payments/klarna" target="_blank"><?php esc_html_e( 'Learn more', 'woo-stripe-payment' ) ?></a>
+        <a href="https://docs.stripe.com/payments/klarna"
+           target="_blank"><?php esc_html_e( 'Learn more', 'woo-stripe-payment' ) ?></a>
 
         <div class="klarna-rules">
             <h4><?php esc_html_e( 'For EEA, UK, and Switzerland accounts:', 'woo-stripe-payment' ) ?></h4>

@@ -2,6 +2,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * @package PaymentPlugins\Gateways
+ */
 class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 
 	use WC_Stripe_Payment_Intent_Trait;
@@ -13,7 +16,16 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	 */
 	private $child_payment_gateway;
 
-	private $excluded_payment_methods = [ 'stripe_applepay', 'stripe_googlepay', 'stripe_payment_request', 'stripe_link_checkout', 'paypal', 'apple_pay', 'google_pay', 'customer_balance' ];
+	private $excluded_payment_methods = [
+		'stripe_applepay',
+		'stripe_googlepay',
+		'stripe_payment_request',
+		'stripe_link_checkout',
+		'paypal',
+		'apple_pay',
+		'google_pay',
+		'customer_balance'
+	];
 
 	public $installments;
 
@@ -341,13 +353,16 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
                         <div class="stripe-upm-payment-method <?php echo $supported ? 'supported-method' : 'unsupported-method' ?>">
                             <div class="stripe-upm-checkbox-container">
                                 <input <?php disabled( $supported, false ); ?>
-                                        class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]"
-                                        id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>"
+                                        class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox"
+                                        name="<?php echo esc_attr( $field_key ); ?>[]"
+                                        id="<?php echo esc_attr( $field_key ); ?>"
+                                        style="<?php echo esc_attr( $data['css'] ); ?>"
                                         value="<?php echo $stripe_cc->id ?>" <?php checked( $checked, true ) ?>"/>
 								<?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
                             </div>
                             <div class="stripe-upm-label-container">
-                                <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $stripe_cc->id ) ?>" target="_blank"><?php echo $stripe_cc->get_title() ?></a></label>
+                                <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $stripe_cc->id ) ?>"
+                                          target="_blank"><?php echo $stripe_cc->get_title() ?></a></label>
                             </div>
                         </div>
                     </div>
@@ -361,13 +376,17 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
                             <div class="stripe-upm-payment-method <?php echo esc_attr( $payment_method->id ) ?> <?php echo $supported ? 'supported-method' : 'unsupported-method' ?>">
                                 <div class="stripe-upm-checkbox-container">
                                     <input <?php disabled( $supported, false ); ?>
-                                            class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]"
-                                            id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>"
-                                            value="<?php echo $payment_method->id ?>" <?php checked( $checked, true ) ?>"/>
+                                            class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox"
+                                            name="<?php echo esc_attr( $field_key ); ?>[]"
+                                            id="<?php echo esc_attr( $field_key ); ?>"
+                                            style="<?php echo esc_attr( $data['css'] ); ?>"
+                                            value="<?php echo $payment_method->id ?>" <?php checked( $checked, true ) ?>
+                                    "/>
 									<?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
                                 </div>
                                 <div class="stripe-upm-label-container">
-                                    <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $payment_method->id ) ?>" target="_blank"><?php echo $payment_method->get_title() ?></a></label>
+                                    <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $payment_method->id ) ?>"
+                                              target="_blank"><?php echo $payment_method->get_title() ?></a></label>
                                 </div>
                             </div>
 						<?php endforeach; ?>
@@ -381,8 +400,10 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
                             <div class="stripe-upm-payment-method <?php echo esc_attr( $key ) ?> <?php echo $supported ? 'supported-method' : 'unsupported-method' ?>">
                                 <div class="stripe-upm-checkbox-container">
                                     <input <?php disabled( $supported, false ); ?>
-                                            class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]"
-                                            id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>"
+                                            class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox"
+                                            name="<?php echo esc_attr( $field_key ); ?>[]"
+                                            id="<?php echo esc_attr( $field_key ); ?>"
+                                            style="<?php echo esc_attr( $data['css'] ); ?>"
                                             value="<?php echo esc_attr( $key ) ?>" <?php checked( $checked, true ) ?>"/>
 									<?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
                                 </div>
@@ -567,8 +588,11 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
             </th>
             <td class="forminp">
                 <fieldset>
-                    <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-                    <select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'],
+                    <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span>
+                    </legend>
+                    <select class="select <?php echo esc_attr( $data['class'] ); ?>"
+                            name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
+                            style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'],
 						true ); ?> <?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>>
 						<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
 							<?php if ( is_array( $option_value ) ) : ?>
@@ -662,7 +686,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 						];
 					}
 				}
-				$params['apple_pay']  = [
+				/*$params['apple_pay']  = [
 					'display_preference' => [
 						'preference' => 'off'
 					]
@@ -671,7 +695,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 					'display_preference' => [
 						'preference' => 'off'
 					]
-				];
+				];*/
 				if ( $payment_config_id ) {
 					$response = $this->gateway->paymentMethodConfigurations->update( $payment_config_id, $params );
 					if ( ! is_wp_error( $response ) ) {

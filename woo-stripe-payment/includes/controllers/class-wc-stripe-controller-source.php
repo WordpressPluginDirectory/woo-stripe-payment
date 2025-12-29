@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
  * Controller class that perfors cart operations for client side requests.
  *
  * @author PaymentPlugins
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  *
  */
 class WC_Stripe_Controller_Source extends WC_Stripe_Rest_Controller {

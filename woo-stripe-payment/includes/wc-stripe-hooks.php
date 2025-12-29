@@ -28,7 +28,6 @@ add_action( 'wc_stripe_webhook_review_closed', 'wc_stripe_review_closed', 10, 1 
  * Filters
  */
 add_filter( 'wc_stripe_api_options', 'wc_stripe_api_options' );
-add_filter( 'woocommerce_payment_gateways', 'wc_stripe_payment_gateways' );
 add_filter( 'woocommerce_available_payment_gateways', 'wc_stripe_available_payment_gateways' );
 add_action( 'woocommerce_process_shop_subscription_meta', 'wc_stripe_process_shop_subscription_meta', 10, 2 );
 add_filter( 'woocommerce_payment_complete_order_status', 'wc_stripe_payment_complete_order_status', 10, 3 );

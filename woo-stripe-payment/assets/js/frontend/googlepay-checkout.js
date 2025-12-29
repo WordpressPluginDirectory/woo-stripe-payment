@@ -32,6 +32,7 @@
                 var $button = $(this.paymentsClient.createButton($.extend({}, this.get_button_options(), {
                     onClick: this.banner_checkout.bind(this)
                 })));
+                $button.find('button').css({height: this.params.button_height});
                 $(this.banner_container).show().addClass('active').closest('.wc-stripe-banner-checkout').addClass('active');
                 $(this.banner_container).empty().append($button);
                 /*if (!this.is_rectangle_button()) {
@@ -46,6 +47,7 @@
      */
     GPay.prototype.create_button = function () {
         wc_stripe.GooglePay.prototype.create_button.apply(this, arguments);
+        this.$button.find('button').attr('id', 'gpay-button-online-api-id-checkout');
         $('#place_order').after(this.$button);
         this.trigger_payment_method_selected();
     }

@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Payment_Token_Stripe' ) ) {
  * @sin     3.0.0
  *
  * @author  PaymentPlugins
- * @package Stripe/Tokens
+ * @package PaymentPlugins\PaymentTokens
  *
  */
 class WC_Payment_Token_Stripe_CC extends WC_Payment_Token_Stripe {

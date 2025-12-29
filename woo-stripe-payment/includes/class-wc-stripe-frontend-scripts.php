@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Handles script enqueuement and output of params needed by the plugin.
  *
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  * @author  PaymentPlugins
  */
 class WC_Stripe_Frontend_Scripts {

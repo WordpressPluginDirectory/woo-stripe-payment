@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  *
  */
 class WC_Stripe_Install {

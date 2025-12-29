@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @package PaymentPlugins\Gateways
+ */
 class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 
 	use WC_Stripe_Payment_Intent_Trait;
@@ -99,7 +102,21 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 
 					return max( 40, min( 55, $value ) );
 				}
-			)
+			),
+			'button_radius'    => array(
+				'title'             => __( 'Button Radius', 'woo-stripe-payment' ),
+				'type'              => 'number',
+				'class'             => 'button-radius',
+				'default'           => '4',
+				'description'       => __( 'The border radius of the button.', 'woo-stripe-payment' ),
+				'sanitize_callback' => function ( $value ) {
+					if ( ! preg_match( '/^[\d]+$/', $value ) ) {
+						$value = 0;
+					}
+
+					return absint( $value );
+				}
+			),
 		);
 	}
 
@@ -131,13 +148,13 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param float  $price
+	 * @param float $price
 	 * @param string $label
 	 * @param string $type
-	 * @param mixed  ...$args
+	 * @param mixed ...$args
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	protected function get_display_item_for_cart( $price, $label, $type, ...$args ) {
 		return [
@@ -147,11 +164,11 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param float    $price
-	 * @param string   $label
+	 * @param float $price
+	 * @param string $label
 	 * @param WC_Order $order
-	 * @param string   $type
-	 * @param mixed    ...$args
+	 * @param string $type
+	 * @param mixed ...$args
 	 */
 	protected function get_display_item_for_order( $price, $label, $order, $type, ...$args ) {
 		return array(
@@ -163,9 +180,9 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	/**
 	 * @param WC_Product $product
 	 *
+	 * @return array
 	 * @since 3.2.1
 	 *
-	 * @return array
 	 */
 	protected function get_display_item_for_product( $product ) {
 		return array(
@@ -238,7 +255,8 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 		}
 
 		$data['button'] = array(
-			'height' => (int) $this->get_option( 'button_height', 40 )
+			'height' => (int) $this->get_option( 'button_height', 40 ),
+			'radius' => $this->get_option( 'button_radius', 4 ) . 'px',
 		);
 
 		return $data;

@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  *
  * @author  PaymentPlugins
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  *
  */
 class WC_Stripe_Update {
@@ -30,7 +30,8 @@ class WC_Stripe_Update {
 			'3.3.47' => 'update-3.3.47.php',
 			'3.3.53' => 'update-3.3.53.php',
 			'3.3.70' => 'update-3.3.70.php',
-			'3.3.89' => 'update-3.3.89.php'
+			'3.3.89' => 'update-3.3.89.php',
+			'3.3.97' => 'update-3.3.97.php',
 		);
 
 	public static function init() {

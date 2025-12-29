@@ -4,8 +4,9 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @since  3.1.0
- * @author Payment Plugins
+ * @since   3.1.0
+ * @author  Payment Plugins
+ * @package PaymentPlugins\Constants
  *
  */
 class WC_Stripe_Constants {

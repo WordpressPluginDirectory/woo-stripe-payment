@@ -36,7 +36,7 @@ class LinkExpressCheckout extends LinkMixin(Gateway) {
     createExpressElement() {
         if (this.elements) {
             this.expressCheckoutElement = this.elements.create('expressCheckout', {
-                buttonHeight: 44,
+                buttonHeight: parseInt(this.params.button.height),
                 paymentMethods: {
                     applePay: this.type === 'applePay' ? 'always' : 'never',
                     googlePay: this.type === 'googlePay' ? 'always' : 'never',

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   3.1.6
  * @author  PaymentPlugins
- * @package Stripe/Classes
+ * @package PaymentPlugins\Classes
  */
 class WC_Stripe_API_Operation {
 

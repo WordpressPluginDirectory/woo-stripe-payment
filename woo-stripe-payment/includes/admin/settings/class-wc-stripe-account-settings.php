@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   3.1.7
  * @author  Payment Plugins
- * @package Stripe/Classes
+ * @package PaymentPlugins\Settings
  */
 class WC_Stripe_Account_Settings extends WC_Stripe_Settings_API {
 

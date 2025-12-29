@@ -4,8 +4,9 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @since  3.1.0
- * @author Payment Plugins
+ * @since   3.1.0
+ * @author  Payment Plugins
+ * @package PaymentPlugins\Classes
  *
  */
 class WC_Stripe_Gateway_Conversion {

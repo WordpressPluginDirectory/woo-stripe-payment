@@ -3,7 +3,8 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * @since 3.3.13
+ * @since   3.3.13
+ * @package PaymentPlugins\Classes
  */
 class WC_Stripe_API_Request_Filter {
 
@@ -44,7 +45,7 @@ class WC_Stripe_API_Request_Filter {
 			$args = $this->expand_balance_transaction( $args );
 		}
 
- 		return $args;
+		return $args;
 	}
 
 	public function expand_balance_transaction_for_charge( $args ) {

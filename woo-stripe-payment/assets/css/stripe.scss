@@ -510,12 +510,8 @@ li.payment_method_stripe_promptpay label:first-of-type img {
     width: 100%;
     max-width: 100%;
     min-width: 200px;
-    height: 40px;
-    max-height: 40px;
-  }
-
-  .apple-pay-button-rounded {
-    border-radius: 50px !important;
+    min-height: 40px;
+    max-height: 55px;
   }
 
   .apple-pay-button-black {

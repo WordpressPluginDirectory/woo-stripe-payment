@@ -9,7 +9,7 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe' ) ) {
 /**
  * Local payment method classes should extend this abstract class
  *
- * @package Stripe/Abstract
+ * @package PaymentPlugins\Abstract
  * @author  Payment Plugins
  *
  */

@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit();
  * Controller class that perfors cart operations for client side requests.
  *
  * @author  PaymentPlugins
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  *
  */
 class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
@@ -39,7 +39,10 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'payment_method' => array( 'required' => true ),
-					'address'        => array( 'required' => true, 'validate_callback' => array( $this, 'validate_shipping_address' ) )
+					'address'        => array(
+						'required'          => true,
+						'validate_callback' => array( $this, 'validate_shipping_address' )
+					)
 				),
 			)
 		);
@@ -85,7 +88,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 
 	/**
 	 *
-	 * @param int             $qty
+	 * @param int $qty
 	 * @param WP_REST_Request $request
 	 */
 	public function validate_quantity( $qty, $request ) {
@@ -123,6 +126,8 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 			}
 			WC()->cart->calculate_totals();
 
+			$cart = ( new \PaymentPlugins\Stripe\Transformers\DataTransformer() )->transform_cart( WC()->cart );
+
 			return rest_ensure_response(
 				apply_filters(
 					'wc_stripe_update_shipping_method_response',
@@ -139,6 +144,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 									'displayItems'    => $gateway->get_display_items(),
 									'shippingOptions' => $gateway->get_formatted_shipping_methods(),
 								),
+								'cart'             => $cart,
 								'shipping_methods' => WC()->session->get( 'chosen_shipping_methods', array() ),
 							)
 						),
@@ -179,6 +185,8 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 				throw new Exception( 'No valid shipping methods.' );
 			}
 
+			$cart = ( new \PaymentPlugins\Stripe\Transformers\DataTransformer() )->transform_cart( WC()->cart );
+
 			$response = rest_ensure_response(
 				apply_filters(
 					'wc_stripe_update_shipping_address_response',
@@ -188,13 +196,14 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 								'newData'         => array(
 									'status'          => 'success',
 									'total'           => array(
-										'amount'  => wc_stripe_add_number_precision( WC()->cart->total ),
+										'amount'  => wc_stripe_add_number_precision( WC()->cart->get_total( 'float' ) ),
 										'label'   => __( 'Total', 'woo-stripe-payment' ),
 										'pending' => false,
 									),
 									'displayItems'    => $gateway->get_display_items(),
 									'shippingOptions' => $gateway->get_formatted_shipping_methods(),
 								),
+								'cart'            => $cart,
 								'address'         => $address,
 								'shipping_method' => WC()->session->get( 'chosen_shipping_methods', array() )
 							)

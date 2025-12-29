@@ -356,6 +356,10 @@
   max-width: 200px;
 }
 
+#gpay-button {
+  max-width: 240px;
+}
+
 tr[data-gateway_id="stripe_afterpay"] td.capture-type,
 tr[data-gateway_id="stripe_affirm"] td.capture-type,
 tr[data-gateway_id="stripe_klarna"] td.capture-type {

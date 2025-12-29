@@ -9,7 +9,7 @@ if ( ! class_exists( 'WC_Stripe_Rest_Controller' ) ) {
 /**
  *
  * @author  PaymentPlugins
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  */
 class WC_Stripe_Controller_GooglePay extends WC_Stripe_Rest_Controller {
 

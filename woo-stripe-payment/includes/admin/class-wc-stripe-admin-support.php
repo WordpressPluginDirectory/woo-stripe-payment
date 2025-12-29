@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @package PaymentPlugins\Admin
+ */
 class WC_Stripe_Admin_Support {
 
 	public static function init() {

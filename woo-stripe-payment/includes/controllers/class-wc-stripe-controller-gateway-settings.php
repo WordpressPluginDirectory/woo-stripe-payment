@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  *
- * @package Stripe/Controllers
+ * @package PaymentPlugins\Controllers
  * @author  PaymentPlugins
  *
  */
@@ -102,50 +102,73 @@ class WC_Stripe_Controller_Gateway_Settings extends WC_Stripe_Rest_Controller {
 		 * @since 3.3.9
 		 */
 		$server_name = apply_filters( 'wc_stripe_apple_pay_domain', $server_name );
-		if ( strstr( $server_name, 'www.' ) ) {
-			$server_name_2 = str_replace( 'www.', '', $server_name );
-		} else {
-			$server_name_2 = 'www.' . $server_name;
-		}
-		$domains = array( $server_name, $server_name_2 );
+		$domains     = array( $server_name );
+
 		try {
-			$api_key = wc_stripe_get_secret_key( 'live' );
-			if ( empty( $api_key ) ) {
-				throw new Exception( __( 'You cannot register your domain until you have completed the Connect process on the API Settings page. A registered domain is not required when test mode is enabled.',
-					'woo-stripe-payment' ) );
-			}
-			// fetch the Apple domains
-			$registered_domains = $gateway->applePayDomains->mode( 'live' )->all( array( 'limit' => 50 ) );
-			if ( ! is_wp_error( $registered_domains ) && $registered_domains ) {
-				// loop through domains and delete if they match domain of site.
-				foreach ( $registered_domains->data as $domain ) {
-					if ( in_array( $domain->domain_name, $domains ) ) {
-						$gateway->applePayDomains->mode( 'live' )->delete( $domain->id );
-					}
+			$modes    = array( 'test', 'live' );
+			$messages = array();
+
+			foreach ( $modes as $mode ) {
+				$api_key = wc_stripe_get_secret_key( $mode );
+				if ( empty( $api_key ) ) {
+					$messages[] = sprintf( __( 'Domain could not be registered in %s mode. %s mode is not connected.', 'woocommerce' ), $server_name, ucfirst( $mode ) );
+					continue; // Skip this mode if no secret key
 				}
-			}
-			$failures = 0;
-			foreach ( $domains as $domain ) {
-				$result = $gateway->applePayDomains->mode( 'live' )->create( array( 'domain_name' => $domain ) );
-				if ( is_wp_error( $result ) ) {
-					$failures ++;
-					if ( $failures > 1 ) {
-						throw new Exception( $result->get_error_message() );
+
+				// Fetch existing payment method domains
+				$registered_domains = $gateway->mode( $mode )->paymentMethodDomains->all( array( 'limit' => 50 ) );
+
+				if ( is_wp_error( $registered_domains ) ) {
+					$messages[] = sprintf( __( 'Error fetching domains for %s mode: %s', 'woo-stripe-payment' ), $mode, $registered_domains->get_error_message() );
+					continue;
+				}
+
+				// These are the filtered domains
+				$filtered_domains = array_filter( $registered_domains->data, function ( $domain ) use ( $domains ) {
+					return in_array( $domain->domain_name, $domains, true );
+				} );
+
+				// loop through the domains and if there is no filtered domain entry, create it.
+				foreach ( $domains as $domain_name ) {
+					$result = null;
+					foreach ( $filtered_domains as $filtered_domain ) {
+						if ( $filtered_domain->domain_name === $domain_name ) {
+							$result = $filtered_domain;
+							break;
+						}
+					}
+					if ( ! $result ) {
+						$response = $gateway->mode( $mode )->paymentMethodDomains->create( array(
+							'domain_name' => $domain_name,
+							'enabled'     => true
+						) );
+						if ( is_wp_error( $response ) ) {
+							$messages[] = sprintf( __( 'Error creating domain %s for %s mode: %s', 'woo-stripe-payment' ), $domain_name, $mode, $response->get_error_message() );
+						} else {
+							$messages[] = sprintf(
+								__( 'Domain %s registered successfully. You can confirm in your Stripe Dashboard at %s.', 'woo-stripe-payment' ),
+								$domain_name,
+								'https://dashboard.stripe.com/settings/payment_method_domains'
+							);
+						}
+					} else {
+						// get the first entry and update it.
+						$response = $gateway->mode( $mode )->paymentMethodDomains->update( $result->id, array( 'enabled' => true ) );
+						if ( is_wp_error( $response ) ) {
+							$messages[] = sprintf( __( 'Error updating domain %s for %s mode: %s', 'woo-stripe-payment' ), $domain_name, $mode, $response->get_error_message() );
+						} else {
+							$messages[] = sprintf( __( 'Domain %s enabled successfully for %s mode.', 'woo-stripe-payment' ), $domain_name, $mode );
+						}
 					}
 				}
 			}
 		} catch ( Exception $e ) {
-			return new WP_Error( 'domain-error', $e->getMessage(), array( 'status' => 200 ) );
+			$messages[] = $e->getMessage();
 		}
 
 		return rest_ensure_response(
 			array(
-				'message' => sprintf(
-					__(
-						'Domain registered successfully. You can confirm in your Stripe Dashboard at https://dashboard.stripe.com/account/apple_pay.',
-						'woo-stripe-payment'
-					)
-				),
+				'messages' => $messages,
 			)
 		);
 	}
