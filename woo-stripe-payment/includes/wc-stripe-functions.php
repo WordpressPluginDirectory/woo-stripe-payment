@@ -25,8 +25,8 @@ function wc_stripe_get_template( $template_name, $args = array() ) {
  * @param string $template_name
  * @param array  $args
  *
- * @since   3.0.0
  * @return string
+ * @since   3.0.0
  */
 function wc_stripe_get_template_html( $template_name, $args = array() ) {
 	return wc_get_template_html( $template_name, $args, stripe_wc()->template_path(), stripe_wc()->default_template_path() );
@@ -117,8 +117,8 @@ function wc_stripe_get_publishable_key( $mode = '' ) {
 /**
  * Return the merchant's Stripe account.
  *
- * @since   3.1.4
  * @return string
+ * @since   3.1.4
  */
 function wc_stripe_get_account_id() {
 	return apply_filters( 'wc_stripe_get_account_id', stripe_wc()->api_settings->get_account_id() );
@@ -257,8 +257,8 @@ function wc_stripe_payment_gateways( $gateways ) {
 }
 
 /**
- * @since 3.3.51
  * @return \WC_Payment_Gateway_Stripe[]
+ * @since 3.3.51
  */
 function wc_stripe_get_payment_gateways() {
 	return array_filter( WC()->payment_gateways()->payment_gateways(), function ( $gateway ) {
@@ -323,8 +323,8 @@ function wc_stripe_order_status_completed( $order_id, $order ) {
  *
  * @param array $address
  *
- * @since   3.0.0
  * @throws Exception
+ * @since   3.0.0
  */
 function wc_stripe_update_customer_location( $address ) {
 	// address validation for countries other than US is problematic when using responses from payment sources like
@@ -383,8 +383,8 @@ function wc_stripe_update_shipping_methods( $methods ) {
  *
  * @param array $packages
  *
- * @since   3.0.0
  * @return boolean
+ * @since   3.0.0
  */
 function wc_stripe_shipping_address_serviceable( $packages = array() ) {
 	if ( $packages ) {
@@ -417,8 +417,8 @@ function wc_stripe_get_display_items( $page = 'cart', $order = null ) {
  * @param WC_Order $order
  * @param array    $packages
  *
- * @since   3.0.0
  * @return mixed
+ * @since   3.0.0
  * @deprecated
  */
 function wc_stripe_get_shipping_options( $order = null, $packages = array() ) {
@@ -551,7 +551,13 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 	if ( is_add_payment_method_page() && ! isset( $wp->query_vars['payment-methods'] ) ) {
 		foreach ( $gateways as $gateway ) {
 			if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
-				if ( ! in_array( $gateway->id, array( 'stripe_cc', 'stripe_upm', 'stripe_sepa', 'stripe_ideal', 'stripe_ach' ) ) ) {
+				if ( ! in_array( $gateway->id, array(
+					'stripe_cc',
+					'stripe_upm',
+					'stripe_sepa',
+					'stripe_ideal',
+					'stripe_ach'
+				) ) ) {
 					unset( $gateways[ $gateway->id ] );
 				}
 			}
@@ -572,8 +578,8 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 
 /**
  *
- * @since   3.0.0
  * @return array
+ * @since   3.0.0
  */
 function wc_stripe_get_local_payment_params() {
 	global $wp;
@@ -597,8 +603,8 @@ function wc_stripe_get_local_payment_params() {
  *
  * @param array $gateways
  *
- * @since   3.0.0
  * @return WC_Payment_Gateway[]
+ * @since   3.0.0
  */
 function wc_stripe_get_available_local_gateways( $gateways ) {
 	foreach ( $gateways as $gateway ) {
@@ -625,8 +631,8 @@ function wc_stripe_set_idempotency_key( $key ) {
 
 /**
  *
- * @since   3.0.0
  * @return mixed
+ * @since   3.0.0
  */
 function wc_stripe_get_idempotency_key() {
 	global $wc_stripe_idempotency_key;
@@ -638,8 +644,8 @@ function wc_stripe_get_idempotency_key() {
  *
  * @param array $options
  *
- * @since   3.0.0
  * @return array
+ * @since   3.0.0
  */
 function wc_stripe_api_options( $options ) {
 	$key = wc_stripe_get_idempotency_key();
@@ -682,8 +688,8 @@ function wc_stripe_payment_complete_order_status( $order_status, $order_id, $ord
  * @param string $currency
  * @param string $round
  *
- * @since   3.0.0
  * @return number
+ * @since   3.0.0
  */
 function wc_stripe_add_number_precision( $value, $currency = '', $round = true ) {
 	if ( ! is_numeric( $value ) ) {
@@ -731,8 +737,8 @@ function wc_stripe_remove_number_precision( $value, $currency = '', $round = tru
 /**
  * Return an array of credit card forms.
  *
- * @since   3.0.0
  * @return mixed
+ * @since   3.0.0
  */
 function wc_stripe_get_custom_forms() {
 	return apply_filters(
@@ -940,8 +946,8 @@ function wc_stripe_get_order_from_source_id( $source_id ) {
  *
  * @param string $transaction_id
  *
- * @since   3.0.5
  * @return WC_Order|WC_Refund|boolean|WC_Order_Refund
+ * @since   3.0.5
  */
 function wc_stripe_get_order_from_transaction( $transaction_id ) {
 	if ( \PaymentPlugins\Stripe\Utilities\FeaturesUtil::is_custom_order_tables_enabled() ) {
@@ -1044,8 +1050,8 @@ function wc_stripe_restore_cart_after_product_checkout() {
  * @param int                $user_id
  * @param string             $gateway_id
  *
- * @since   3.1.0
  * @return WC_Payment_Token[]
+ * @since   3.1.0
  */
 function wc_stripe_get_customer_payment_tokens( $tokens, $user_id, $gateway_id ) {
 	foreach ( $tokens as $idx => $token ) {
@@ -1064,8 +1070,8 @@ function wc_stripe_get_customer_payment_tokens( $tokens, $user_id, $gateway_id )
  *
  * @param array $labels
  *
- * @since   3.1.0
  * @return string
+ * @since   3.1.0
  */
 function wc_stripe_credit_card_labels( $labels ) {
 	if ( ! isset( $labels['amex'] ) ) {
@@ -1179,8 +1185,8 @@ function wc_stripe_get_error_messages() {
  * Return an array of Stripe currencies where the value of each
  * currency is the curency multiplier.
  *
- * @since   3.1.2
  * @return mixed
+ * @since   3.1.2
  */
 function wc_stripe_get_currencies() {
 	return apply_filters(
@@ -1251,8 +1257,8 @@ function wc_stripe_remove_order_locks() {
 /**
  * Returns an array of checkout fields needed to complete an order.
  *
- * @since 3.1.8
  * @return array
+ * @since 3.1.8
  */
 function wc_stripe_get_checkout_fields() {
 	global $wp;
@@ -1297,9 +1303,9 @@ function wc_stripe_get_checkout_fields() {
  * @param string $state
  * @param string $country
  *
- * @since 3.2.1
  * @return string
  *
+ * @since 3.2.1
  */
 function wc_stripe_filter_address_state( $state, $country ) {
 	$states = WC()->countries ? WC()->countries->get_states( $country ) : array();
@@ -1339,13 +1345,16 @@ function wc_stripe_get_current_page() {
 	if ( is_add_payment_method_page() ) {
 		return 'add_payment_method';
 	}
+	if ( is_shop() ) {
+		return 'shop';
+	}
 
 	return '';
 }
 
 /**
- * @since 3.3.14
  * @return mixed|void
+ * @since 3.3.14
  */
 function wc_stripe_get_site_locale() {
 	if ( stripe_wc()->advanced_settings && stripe_wc()->advanced_settings->get_option( 'locale', 'auto' ) !== 'auto' ) {
@@ -1362,8 +1371,8 @@ function wc_stripe_get_site_locale() {
 }
 
 /**
- * @since 3.3.60
  * @return bool
+ * @since 3.3.60
  */
 function wc_stripe_is_processing_webhook() {
 	return defined( WC_Stripe_Constants::WOOCOMMERCE_STRIPE_PROCESSING_WEBHOOK );
@@ -1372,8 +1381,8 @@ function wc_stripe_is_processing_webhook() {
 /**
  * @param $handle
  *
- * @since 3.3.95
  * @return mixed|string
+ * @since 3.3.95
  */
 function wc_stripe_get_script_handle( $handle ) {
 	if ( ! defined( 'WC_VERSION' ) || version_compare( WC_VERSION, '10.3.0', '<' ) ) {

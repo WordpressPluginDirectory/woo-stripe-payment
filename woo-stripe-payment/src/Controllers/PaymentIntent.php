@@ -49,6 +49,7 @@ class PaymentIntent {
 	private function initialize() {
 		add_action( 'woocommerce_before_pay_action', [ $this, 'set_order_pay_constants' ] );
 		add_action( 'woocommerce_checkout_update_order_review', [ $this, 'update_order_review' ] );
+		add_filter( 'woocommerce_update_order_review_fragments', [ $this, 'update_order_review_fragments' ] );
 		//add_filter( 'wc_stripe_localize_script_wc-stripe', [ $this, 'add_script_params' ], 10, 2 );
 		//add_filter( 'wc_stripe_blocks_general_data', [ $this, 'add_blocks_general_data' ] );
 	}
@@ -126,6 +127,19 @@ class PaymentIntent {
 		if ( $this->is_deferred_intent_creation() ) {
 			add_filter( 'woocommerce_update_order_review_fragments', [ $this, 'add_element_options_to_fragments' ] );
 		}
+	}
+
+	public function update_order_review_fragments( $fragments ) {
+		$ids      = [ 'stripe_applepay', 'stripe_link_checkout' ];
+		$gateways = WC()->payment_gateways()->payment_gateways();
+		foreach ( $ids as $id ) {
+			$gateway = $gateways[ $id ] ?? null;
+			if ( $gateway && in_array( 'checkout_banner', $gateway->get_option( 'payment_sections', [] ) ) ) {
+				$fragments[ $id ] = $gateway->get_localized_params();
+			}
+		}
+
+		return $fragments;
 	}
 
 	public function add_element_options_to_fragments( $fragments ) {

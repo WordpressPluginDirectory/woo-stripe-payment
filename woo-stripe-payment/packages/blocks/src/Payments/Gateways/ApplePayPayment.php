@@ -3,10 +3,7 @@
 
 namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
 
-
-use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
 use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment;
-use PaymentPlugins\Blocks\Stripe\StoreApi\EndpointData;
 
 class ApplePayPayment extends AbstractStripePayment {
 
@@ -24,7 +21,8 @@ class ApplePayPayment extends AbstractStripePayment {
 			'buttonTheme'  => $this->get_button_theme(),
 			'buttonHeight' => $this->get_setting( 'button_height', 40 ),
 			'buttonRadius' => $this->get_setting( 'button_radius', 4 ) . 'px',
-			'editorIcon'   => $this->assets_api->get_asset_url( 'assets/img/apple_pay_button_black.svg' )
+			'editorIcon'   => $this->assets_api->get_asset_url( 'assets/img/apple_pay_button_black.svg' ),
+			'displayRule'  => \wc_string_to_bool( $this->get_setting( 'all_browsers', 'yes' ) ) ? 'always' : 'auto',
 		), parent::get_payment_method_data() );
 	}
 

@@ -43,6 +43,13 @@ return array(
 		'description' => __( 'When enabled, a notice with additional payment instructions is shown in the payment method section of the checkout shortcode.', 'woo-stripe-payment' ),
 		'desc_tip'    => true
 	),
+	'all_browsers'         => array(
+		'title'       => __( 'Enable On All Browsers', 'woo-stripe-payment' ),
+		'type'        => 'checkbox',
+		'default'     => 'yes',
+		'desc_tip'    => true,
+		'description' => __( 'If enabled, Apple Pay will be available on all supported browsers, not just Safari.', 'woo-stripe-payment' )
+	),
 	'method_format'        => array(
 		'title'       => __( 'Credit Card Display', 'woo-stripe-payment' ),
 		'type'        => 'select',

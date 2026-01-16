@@ -270,7 +270,10 @@ class DataTransformer {
 			foreach ( $package['rates'] as $rate ) {
 				$cost        = (float) $rate->get_cost();
 				$price       = $incl_tax ? $cost + (float) $rate->get_shipping_tax() : $cost;
-				$description = $rate->get_description();
+				$description = '';
+				if ( method_exists( $rate, 'get_description' ) ) {
+					$description = $rate->get_description();
+				}
 				if ( ! $description && method_exists( $rate, 'get_delivery_time' ) ) {
 					$description = $rate->get_delivery_time();
 				}

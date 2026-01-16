@@ -6,21 +6,7 @@ export default function (Base) {
 
         createExpressElement() {
             if (this.elements) {
-                this.expressCheckoutElement = this.elements.create('expressCheckout', {
-                    buttonHeight: parseInt(this.params.button.height),
-                    paymentMethods: {
-                        applePay: this.type === 'applePay' ? 'always' : 'never',
-                        googlePay: this.type === 'googlePay' ? 'always' : 'never',
-                        amazonPay: this.type === 'amazonPay' ? 'auto' : 'never',
-                        paypal: 'never',
-                        klarna: this.type === 'klarna' ? 'auto' : 'never',
-                        link: this.type === 'link' ? 'auto' : 'never',
-                    },
-                    emailRequired: true,
-                    phoneNumberRequired: true,
-                    billingAddressRequired: true,
-                    shippingAddressRequired: this.needs_shipping()
-                });
+                this.expressCheckoutElement = this.elements.create('expressCheckout', this.getExpressElementOptions());
 
                 this.expressCheckoutElement.on('ready', this.onReady.bind(this));
                 this.expressCheckoutElement.on('loaderror', this.onLoadError.bind(this));
@@ -43,7 +29,7 @@ export default function (Base) {
                 data.lineItems = this.params.items;
             }
 
-            if (this.needs_shipping()) {
+            if (this.expressElementOptions?.shippingAddressRequired) {
                 if (this.params.shipping_options.length) {
                     data.shippingRates = this.params.shipping_options;
                 }
@@ -122,11 +108,11 @@ export default function (Base) {
                 if (response.error) {
                     return this.submit_error(response.error);
                 }
+
                 this.on_token_received(response.paymentMethod);
             } catch (error) {
                 return this.submit_error(error);
             }
-
         }
 
         async onShippingAddressChange(event) {
@@ -145,6 +131,9 @@ export default function (Base) {
                     shippingOptions
                 } = response.newData;
 
+                this.params.total_cents = total.amount;
+                this.params.items = displayItems;
+                this.params.shipping_options = shippingOptions;
                 this.elements.update({
                     amount: total.amount
                 });
@@ -176,6 +165,9 @@ export default function (Base) {
                     shippingOptions
                 } = response.newData;
 
+                this.params.total_cents = total.amount;
+                this.params.items = displayItems;
+                this.params.shipping_options = shippingOptions;
                 this.elements.update({
                     amount: total.amount
                 });
@@ -194,17 +186,28 @@ export default function (Base) {
             this.modalOpen = false;
         }
 
+        isModalOpen() {
+            return !!this.modalOpen;
+        }
+
         mountPaymentElement() {
             try {
-                if (this.expressCheckoutElement && $(this.elementSelector).length) {
+                if (this.expressCheckoutElement) {
                     if ($(this.elementSelector).find('iframe').length === 0) {
                         this.expressCheckoutElement.unmount();
+                        if (!$(this.elementSelector).length) {
+                            this.createElementSelectorHTML();
+                        }
                         this.expressCheckoutElement.mount(this.elementSelector);
                     }
                 }
             } catch (error) {
                 console.log(`Error mounting expressCheckoutElement. `, error);
             }
+        }
+
+        createElementSelectorHTML() {
+
         }
 
         updatePaymentElement() {
@@ -227,7 +230,7 @@ export default function (Base) {
                 currency: this.params.currency.toLowerCase(),
                 appearance: {
                     variables: {
-                        borderRadius: this.params.button.radius
+                        borderRadius: this.params.button_options.radius
                     }
                 },
                 ...this.params.elementOptions
@@ -277,10 +280,10 @@ export default function (Base) {
         }
 
         set_nonce(value) {
-            if (!$('[name="stripe_link_checkout_token_key"]').length) {
-                $(this.elementSelector).append('<input type="hidden" name="stripe_link_checkout_token_key"/>');
+            if (!$('[name="stripe_applepay_token_key"]').length) {
+                $(this.elementSelector).append('<input type="hidden" name="stripe_applepay_token_key"/>');
             }
-            $('[name="stripe_link_checkout_token_key"]').val(value);
+            $('[name="stripe_applepay_token_key"]').val(value);
             this.fields.set(this.gateway_id + '_token_key', value);
         }
 
@@ -376,6 +379,31 @@ export default function (Base) {
             }).catch(error => {
                 return this.submit_error(error);
             });
+        }
+
+        getExpressElementOptions() {
+            this.expressElementOptions = {
+                buttonHeight: parseInt(this.params.button_options.height),
+                buttonType: {
+                    applePay: this.params.button_options.type
+                },
+                buttonTheme: {
+                    applePay: this.params.button_options.theme
+                },
+                paymentMethods: {
+                    applePay: this.type === 'applePay' ? this.params.display_rule : 'never',
+                    googlePay: this.type === 'googlePay' ? 'always' : 'never',
+                    amazonPay: this.type === 'amazonPay' ? 'auto' : 'never',
+                    paypal: 'never',
+                    klarna: this.type === 'klarna' ? 'auto' : 'never',
+                    link: this.type === 'link' ? 'auto' : 'never',
+                },
+                emailRequired: true,
+                phoneNumberRequired: true,
+                billingAddressRequired: true,
+                shippingAddressRequired: this.needs_shipping()
+            }
+            return this.expressElementOptions;
         }
     }
 }

@@ -153,9 +153,9 @@
     if (typeof wc_stripe_googlepay_mini_cart_params !== 'undefined') {
         gateways.push([GPay, wc_stripe_googlepay_mini_cart_params]);
     }
-    if (typeof wc_stripe_applepay_mini_cart_params !== 'undefined') {
+    /*if (typeof wc_stripe_applepay_mini_cart_params !== 'undefined') {
         gateways.push([ApplePay, wc_stripe_applepay_mini_cart_params]);
-    }
+    }*/
     if (typeof wc_stripe_payment_request_mini_cart_params !== 'undefined') {
         gateways.push([PaymentRequest, wc_stripe_payment_request_mini_cart_params]);
     }

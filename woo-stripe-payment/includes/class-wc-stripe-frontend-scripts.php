@@ -65,11 +65,18 @@ class WC_Stripe_Frontend_Scripts {
 
 		$this->assets_api->register_script( 'wc-stripe-link-checkout-modal', 'assets/build/link-checkout-modal.js' );
 
+		// Link Checkout
 		$this->assets_api->register_script( 'wc-stripe-link-express-checkout', 'assets/build/link-express-checkout.js' );
-
 		$this->assets_api->register_script( 'wc-stripe-link-express-cart', 'assets/build/link-express-cart.js' );
-
 		$this->assets_api->register_script( 'wc-stripe-link-express-product', 'assets/build/link-express-product.js' );
+
+		// Apple Pay
+		$this->assets_api->register_script( 'wc-stripe-applepay-checkout', 'assets/build/applepay-checkout.js' );
+		$this->assets_api->register_script( 'wc-stripe-applepay-express-checkout', 'assets/build/applepay-express-checkout.js' );
+		$this->assets_api->register_script( 'wc-stripe-applepay-cart', 'assets/build/applepay-cart.js' );
+		$this->assets_api->register_script( 'wc-stripe-applepay-minicart', 'assets/build/applepay-minicart.js' );
+		$this->assets_api->register_script( 'wc-stripe-applepay-product', 'assets/build/applepay-product.js' );
+
 
 		// register scripts that aren't part of gateways
 		$this->register_script( 'wc-stripe', $this->assets_url( 'js/frontend/wc-stripe.js' ),

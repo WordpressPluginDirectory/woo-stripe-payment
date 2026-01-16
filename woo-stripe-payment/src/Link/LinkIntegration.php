@@ -73,8 +73,6 @@ class LinkIntegration {
 		add_filter( 'wc_stripe_payment_intent_confirmation_args', [ $this, 'add_confirmation_args' ], 10, 3 );
 
 		add_filter( 'wc_stripe_express_payment_methods', [ $this, 'get_express_payment_methods' ] );
-
-		add_filter( 'woocommerce_update_order_review_fragments', [ $this, 'update_order_review_fragments' ] );
 	}
 
 	public function is_active() {
@@ -253,8 +251,8 @@ class LinkIntegration {
 	}
 
 	public function update_order_review_fragments( $fragments ) {
-		if ( in_array( 'checkout_banner', $this->settings->get_option( 'payment_sections', [] ) ) ) {
-			$link                   = WC()->payment_gateways()->payment_gateways()['stripe_link_checkout'];
+		$link = WC()->payment_gateways()->payment_gateways()['stripe_link_checkout'] ?? null;
+		if ( $link && in_array( 'checkout_banner', $link->get_option( 'payment_sections', [] ) ) ) {
 			$fragments[ $link->id ] = $link->get_localized_params();
 		}
 

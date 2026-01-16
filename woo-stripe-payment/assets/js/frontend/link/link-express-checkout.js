@@ -87,9 +87,24 @@ class LinkExpressCheckout extends LinkMixin(Gateway) {
 
     on_token_received(paymentMethod) {
         $('[name="payment_method"]').val(this.gateway_id);
+        this.maybe_set_ship_to_different();
+        this.fields.toFormFields({update_shipping_method: false});
         this.payment_token_received = true;
         this.set_nonce(paymentMethod.id);
         this.get_form().submit();
+    }
+
+    /**
+     * Overrides the default method. Some themes or custom code moves the express checkout section outside
+     * the checkout form. It's important that the payment method ID is inside the form when it's submitted.
+     * @param value
+     */
+    set_nonce(value) {
+        if (!$('form.checkout [name="stripe_link_checkout_token_key"]').length) {
+            $('form.checkout').append('<input type="hidden" name="stripe_link_checkout_token_key"/>');
+        }
+        $('form.checkout [name="stripe_link_checkout_token_key"]').val(value);
+        this.fields.set(this.gateway_id + '_token_key', value);
     }
 
 }

@@ -124,7 +124,7 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	public function product_fields() {
-		wp_enqueue_script( 'wc-stripe-link-express-product' );
+		$this->enqueue_frontend_scripts( 'product' );
 		$data = $this->get_localized_params();
 
 		wp_localize_script( 'wc-stripe-link-express-product', 'wc_stripe_link_product_params', $this->get_localized_params() );
@@ -137,21 +137,29 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	public function cart_fields() {
-		wp_enqueue_script( 'wc-stripe-link-express-cart' );
 		if ( wp_doing_ajax() ) {
 			$data = $this->get_localized_params();
 			$json = wc_esc_json( wp_json_encode( $data ) );
 			printf( '<input type="hidden" class="%1$s" data-gateway="%2$s"/>', "woocommerce_{$this->id}_gateway_data {$data['page']}-page", $json );
 		} else {
+			$this->enqueue_frontend_scripts( 'cart' );
 			wp_localize_script( 'wc-stripe-link-express-cart', 'wc_stripe_link_cart_params', $this->get_localized_params() );
 		}
 	}
 
+	public function enqueue_cart_scripts( $scripts ) {
+		wp_enqueue_script( 'wc-stripe-link-express-cart' );
+	}
+
+	public function enqueue_product_scripts( $scripts ) {
+		wp_enqueue_script( 'wc-stripe-link-express-product' );
+	}
+
 	/**
-	 * @param float $price
+	 * @param float  $price
 	 * @param string $label
 	 * @param string $type
-	 * @param mixed ...$args
+	 * @param mixed  ...$args
 	 *
 	 * @return array
 	 * @since 3.2.1
@@ -164,11 +172,11 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param float $price
-	 * @param string $label
+	 * @param float    $price
+	 * @param string   $label
 	 * @param WC_Order $order
-	 * @param string $type
-	 * @param mixed ...$args
+	 * @param string   $type
+	 * @param mixed    ...$args
 	 */
 	protected function get_display_item_for_order( $price, $label, $order, $type, ...$args ) {
 		return array(
@@ -210,7 +218,7 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 
 	public function get_localized_params() {
 		$data = parent::get_localized_params();
-		if ( in_array( $data['page'], array( 'cart', 'checkout' ) ) ) {
+		if ( in_array( $data['page'], array( 'cart', 'checkout', 'shop' ) ) ) {
 			$data['currency']         = get_woocommerce_currency();
 			$data['total_cents']      = (float) wc_stripe_add_number_precision( WC()->cart->get_total( 'float' ) );
 			$data['items']            = $this->get_display_items( $data['page'] );
@@ -221,37 +229,39 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 			$order                    = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
 			$data['currency']         = get_woocommerce_currency();
 			$data['total_cents']      = (float) wc_stripe_add_number_precision( $order->get_total() );
-			$data['items']            = $this->get_display_items( $data['checkout'], $order );
+			$data['items']            = $this->get_display_items( $data['page'], $order );
 			$data['needs_shipping']   = false;
 			$data['shipping_options'] = array();
 		} elseif ( $data['page'] === 'product' ) {
 			global $product;
-			$price = wc_get_price_to_display( $product );
-			if ( $product->get_type() === 'variable' ) {
-				$data['needs_shipping'] = false;
-				$variations             = \PaymentPlugins\Stripe\Utilities\ProductUtils::get_product_variations( $product );
-				if ( ! empty( $variations ) ) {
-					foreach ( $variations as $variation ) {
-						if ( $variation && $variation->needs_shipping() ) {
-							$data['needs_shipping'] = true;
-							break;
+			if ( $product instanceof WC_Product ) {
+				$price = wc_get_price_to_display( $product );
+				if ( $product->get_type() === 'variable' ) {
+					$data['needs_shipping'] = false;
+					$variations             = \PaymentPlugins\Stripe\Utilities\ProductUtils::get_product_variations( $product );
+					if ( ! empty( $variations ) ) {
+						foreach ( $variations as $variation ) {
+							if ( $variation && $variation->needs_shipping() ) {
+								$data['needs_shipping'] = true;
+								break;
+							}
 						}
 					}
+				} else {
+					$data['needs_shipping'] = $product->needs_shipping();
 				}
-			} else {
-				$data['needs_shipping'] = $product->needs_shipping();
+				$data['currency']         = get_woocommerce_currency();
+				$data['total_cents']      = (float) wc_stripe_add_number_precision( $price, get_woocommerce_currency() );
+				$data['items']            = array( $this->get_display_item_for_product( $product ) );
+				$data['shipping_options'] = array();
+				$data['product']          = array(
+					'id'          => $product->get_id(),
+					'price'       => (float) $price,
+					'price_cents' => (float) wc_stripe_add_number_precision( $price, get_woocommerce_currency() ),
+					'variation'   => false,
+					'is_in_stock' => $product->is_in_stock()
+				);
 			}
-			$data['currency']         = get_woocommerce_currency();
-			$data['total_cents']      = (float) wc_stripe_add_number_precision( $price, get_woocommerce_currency() );
-			$data['items']            = array( $this->get_display_item_for_product( $product ) );
-			$data['shipping_options'] = array();
-			$data['product']          = array(
-				'id'          => $product->get_id(),
-				'price'       => (float) $price,
-				'price_cents' => (float) wc_stripe_add_number_precision( $price, get_woocommerce_currency() ),
-				'variation'   => false,
-				'is_in_stock' => $product->is_in_stock()
-			);
 		}
 
 		$data['button'] = array(

@@ -29,6 +29,8 @@ class CartIntegration {
                     .wc-stripe-payment-request-mini-cart {
                         margin-top: 10px;
                         display: block;
+                        padding-left: 16px;
+                        padding-right: 16px;
                     }
                 </style>
 				<?php

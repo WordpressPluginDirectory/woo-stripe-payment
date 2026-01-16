@@ -1,17 +1,17 @@
 import {BaseGateway, ProductGateway} from '@paymentplugins/wc-stripe';
 import $ from 'jquery';
-import LinkMixin from './link-mixin';
+import ApplePayMixin from './applepay-mixin';
 
 function Gateway(params) {
-    this.type = 'link';
-    this.container = 'li.payment_method_stripe_link_checkout';
-    this.elementSelector = 'li.payment_method_stripe_link_checkout #wc-stripe-link-element';
+    this.type = 'applePay';
+    this.container = 'li.payment_method_stripe_applepay';
+    this.elementSelector = 'li.payment_method_stripe_applepay .wc-stripe-applepay-container';
     BaseGateway.call(this, params);
 }
 
 Gateway.prototype = Object.assign(Gateway.prototype, BaseGateway.prototype, ProductGateway.prototype);
 
-class LinkExpressProduct extends LinkMixin(Gateway) {
+class ApplePayProduct extends ApplePayMixin(Gateway) {
 
     initialize() {
         this.modalOpen = false;
@@ -23,8 +23,8 @@ class LinkExpressProduct extends LinkMixin(Gateway) {
     }
 
     onReady({availablePaymentMethods}) {
-        const {link = false} = availablePaymentMethods || {};
-        if (link) {
+        const {applePay = false} = availablePaymentMethods || {};
+        if (applePay) {
             this.addEvents();
             $(this.container).show().addClass('active');
             $(this.container).parent().parent().addClass('active');
@@ -130,7 +130,7 @@ class LinkExpressProduct extends LinkMixin(Gateway) {
     }
 }
 
-if (typeof wc_stripe_link_product_params !== 'undefined') {
-    const gateway = new LinkExpressProduct(wc_stripe_link_product_params);
+if (typeof wc_stripe_applepay_product_params !== 'undefined') {
+    const gateway = new ApplePayProduct(wc_stripe_applepay_product_params);
     wc_stripe.product_gateways.push(gateway);
 }

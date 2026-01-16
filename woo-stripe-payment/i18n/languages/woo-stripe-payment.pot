@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Payment Plugins, support@paymentplugins.com
+# Copyright (C) 2026 Payment Plugins, support@paymentplugins.com
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.97\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.98\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-29T02:31:01+00:00\n"
+"POT-Creation-Date: 2026-01-15T22:54:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -147,7 +147,7 @@ msgid "Saved Cards"
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:460
-#: includes/wc-stripe-functions.php:1171
+#: includes/wc-stripe-functions.php:1177
 msgid "Please fill out all required fields."
 msgstr ""
 
@@ -437,7 +437,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:276
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:77
 #: includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php:41
-#: includes/gateways/settings/applepay-settings.php:62
+#: includes/gateways/settings/applepay-settings.php:69
 #: includes/gateways/settings/cc-settings.php:50
 #: includes/gateways/settings/googlepay-settings.php:81
 #: includes/gateways/settings/payment-request-settings.php:60
@@ -550,7 +550,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:272
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:73
 #: includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php:37
-#: includes/gateways/settings/applepay-settings.php:58
+#: includes/gateways/settings/applepay-settings.php:65
 #: includes/gateways/settings/cc-settings.php:46
 #: includes/gateways/settings/googlepay-settings.php:77
 #: includes/gateways/settings/payment-request-settings.php:56
@@ -564,7 +564,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:277
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:78
 #: includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php:42
-#: includes/gateways/settings/applepay-settings.php:63
+#: includes/gateways/settings/applepay-settings.php:70
 #: includes/gateways/settings/cc-settings.php:51
 #: includes/gateways/settings/googlepay-settings.php:82
 #: includes/gateways/settings/payment-request-settings.php:61
@@ -1102,7 +1102,7 @@ msgstr ""
 msgid "Error saving customer. Reason: %s"
 msgstr ""
 
-#: includes/class-wc-stripe-frontend-scripts.php:130
+#: includes/class-wc-stripe-frontend-scripts.php:137
 msgid "No matches found"
 msgstr ""
 
@@ -1351,7 +1351,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:280
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:81
 #: includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php:45
-#: includes/gateways/settings/applepay-settings.php:66
+#: includes/gateways/settings/applepay-settings.php:73
 #: includes/gateways/settings/cc-settings.php:54
 #: includes/gateways/settings/payment-request-settings.php:64
 msgid "This option determines whether the customer's funds are captured immediately or authorized and can be captured at a later date."
@@ -1362,7 +1362,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:285
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:85
 #: includes/gateways/settings/ach-settings.php:67
-#: includes/gateways/settings/applepay-settings.php:83
+#: includes/gateways/settings/applepay-settings.php:90
 #: includes/gateways/settings/cc-settings.php:58
 #: includes/gateways/settings/googlepay-settings.php:102
 #: includes/gateways/settings/payment-request-settings.php:81
@@ -1374,7 +1374,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:288
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:88
 #: includes/gateways/settings/ach-settings.php:70
-#: includes/gateways/settings/applepay-settings.php:86
+#: includes/gateways/settings/applepay-settings.php:93
 #: includes/gateways/settings/cc-settings.php:61
 #: includes/gateways/settings/cc-settings.php:143
 #: includes/gateways/settings/googlepay-settings.php:105
@@ -1388,7 +1388,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:290
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:89
 #: includes/gateways/settings/ach-settings.php:72
-#: includes/gateways/settings/applepay-settings.php:88
+#: includes/gateways/settings/applepay-settings.php:95
 #: includes/gateways/settings/cc-settings.php:63
 #: includes/gateways/settings/googlepay-settings.php:107
 #: includes/gateways/settings/payment-request-settings.php:86
@@ -1411,7 +1411,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:104
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:310
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:56
-#: includes/gateways/settings/applepay-settings.php:73
+#: includes/gateways/settings/applepay-settings.php:80
 #: includes/gateways/settings/googlepay-settings.php:92
 #: includes/gateways/settings/payment-request-settings.php:71
 msgid "Product Page"
@@ -1421,7 +1421,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:105
 #: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:311
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:57
-#: includes/gateways/settings/applepay-settings.php:74
+#: includes/gateways/settings/applepay-settings.php:81
 #: includes/gateways/settings/googlepay-settings.php:93
 #: includes/gateways/settings/payment-request-settings.php:72
 msgid "Cart Page"
@@ -1650,7 +1650,7 @@ msgid "This is the icon style that appears next to the gateway on the checkout p
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:106
-#: includes/gateways/settings/applepay-settings.php:75
+#: includes/gateways/settings/applepay-settings.php:82
 #: includes/gateways/settings/googlepay-settings.php:94
 #: includes/gateways/settings/payment-request-settings.php:73
 msgid "Mini Cart"
@@ -1833,11 +1833,11 @@ msgstr ""
 msgid "Apple Pay gateway that integrates with your Stripe account."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-applepay.php:87
+#: includes/gateways/class-wc-payment-gateway-stripe-applepay.php:71
 msgid "Please update you product quantity before using Apple Pay."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-applepay.php:88
+#: includes/gateways/class-wc-payment-gateway-stripe-applepay.php:72
 #: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:125
 msgid "Please select a product option before updating quantity."
 msgstr ""
@@ -2221,7 +2221,7 @@ msgid "Link Checkout Locations"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:59
-#: includes/gateways/settings/applepay-settings.php:76
+#: includes/gateways/settings/applepay-settings.php:83
 #: includes/gateways/settings/googlepay-settings.php:95
 #: includes/gateways/settings/payment-request-settings.php:74
 #: templates/checkout/checkout-banner.php:10
@@ -2233,20 +2233,20 @@ msgid "Select where Link Express Checkout buttons will appear. Express Checkout 
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:93
-#: includes/gateways/settings/applepay-settings.php:119
+#: includes/gateways/settings/applepay-settings.php:126
 #: includes/gateways/settings/googlepay-settings.php:176
 msgid "Button Height"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:107
-#: includes/gateways/settings/applepay-settings.php:133
+#: includes/gateways/settings/applepay-settings.php:140
 #: includes/gateways/settings/googlepay-settings.php:161
 #: includes/gateways/settings/payment-request-settings.php:124
 msgid "Button Radius"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:111
-#: includes/gateways/settings/applepay-settings.php:137
+#: includes/gateways/settings/applepay-settings.php:144
 #: includes/gateways/settings/googlepay-settings.php:165
 #: includes/gateways/settings/payment-request-settings.php:128
 msgid "The border radius of the button."
@@ -2631,71 +2631,79 @@ msgid "When enabled, a notice with additional payment instructions is shown in t
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:47
+msgid "Enable On All Browsers"
+msgstr ""
+
+#: includes/gateways/settings/applepay-settings.php:51
+msgid "If enabled, Apple Pay will be available on all supported browsers, not just Safari."
+msgstr ""
+
+#: includes/gateways/settings/applepay-settings.php:54
 #: includes/gateways/settings/cc-settings.php:35
 #: includes/gateways/settings/googlepay-settings.php:66
 #: includes/gateways/settings/payment-request-settings.php:45
 msgid "Credit Card Display"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:70
+#: includes/gateways/settings/applepay-settings.php:77
 #: includes/gateways/settings/googlepay-settings.php:89
 #: includes/gateways/settings/payment-request-settings.php:68
 msgid "Payment Sections"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:93
+#: includes/gateways/settings/applepay-settings.php:100
 #: includes/gateways/settings/payment-request-settings.php:90
 msgid "Button Settings"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:97
+#: includes/gateways/settings/applepay-settings.php:104
 #: includes/gateways/settings/googlepay-settings.php:146
 msgid "Button Style"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:101
+#: includes/gateways/settings/applepay-settings.php:108
 msgid "Black Button"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:102
+#: includes/gateways/settings/applepay-settings.php:109
 msgid "White With Black Line"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:103
+#: includes/gateways/settings/applepay-settings.php:110
 msgid "White Button"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:105
+#: includes/gateways/settings/applepay-settings.php:112
 msgid "This is the style for all Apple Pay buttons presented on your store."
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:147
+#: includes/gateways/settings/applepay-settings.php:154
 msgid "Checkout button type"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:150
-#: includes/gateways/settings/applepay-settings.php:160
-#: includes/gateways/settings/applepay-settings.php:170
+#: includes/gateways/settings/applepay-settings.php:157
+#: includes/gateways/settings/applepay-settings.php:167
+#: includes/gateways/settings/applepay-settings.php:177
 msgid "Standard Button"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:151
-#: includes/gateways/settings/applepay-settings.php:161
-#: includes/gateways/settings/applepay-settings.php:171
+#: includes/gateways/settings/applepay-settings.php:158
+#: includes/gateways/settings/applepay-settings.php:168
+#: includes/gateways/settings/applepay-settings.php:178
 msgid "Buy with Apple Pay"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:152
-#: includes/gateways/settings/applepay-settings.php:162
-#: includes/gateways/settings/applepay-settings.php:172
+#: includes/gateways/settings/applepay-settings.php:159
+#: includes/gateways/settings/applepay-settings.php:169
+#: includes/gateways/settings/applepay-settings.php:179
 msgid "Checkout with Apple Pay"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:157
+#: includes/gateways/settings/applepay-settings.php:164
 msgid "Cart button type"
 msgstr ""
 
-#: includes/gateways/settings/applepay-settings.php:167
+#: includes/gateways/settings/applepay-settings.php:174
 msgid "Product button type"
 msgstr ""
 
@@ -3187,280 +3195,280 @@ msgstr ""
 msgid "Kind Regards,"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:743
+#: includes/wc-stripe-functions.php:749
 msgid "Bootstrap form"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:769
+#: includes/wc-stripe-functions.php:775
 msgid "Simple form"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:792
+#: includes/wc-stripe-functions.php:798
 msgid "Minimalist form"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:818
+#: includes/wc-stripe-functions.php:824
 msgid "Inline Form"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:840
+#: includes/wc-stripe-functions.php:846
 msgid "Rounded Form"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1087
+#: includes/wc-stripe-functions.php:1093
 msgid "There was an error processing your credit card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1088
+#: includes/wc-stripe-functions.php:1094
 msgid "Your card number is incomplete."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1089
+#: includes/wc-stripe-functions.php:1095
 msgid "Your card's expiration date is incomplete."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1090
+#: includes/wc-stripe-functions.php:1096
 msgid "Your card's security code is incomplete."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1091
+#: includes/wc-stripe-functions.php:1097
 msgid "Your card's zip code is incomplete."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1092
+#: includes/wc-stripe-functions.php:1098
 msgid "The card number is incorrect. Check the card's number or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1093
+#: includes/wc-stripe-functions.php:1099
 msgid "The card's security code is incorrect. Check the card's security code or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1094
+#: includes/wc-stripe-functions.php:1100
 msgid "The card's ZIP code is incorrect. Check the card's ZIP code or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1095
-#: includes/wc-stripe-functions.php:1100
+#: includes/wc-stripe-functions.php:1101
+#: includes/wc-stripe-functions.php:1106
 msgid "The card number is invalid. Check the card details or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1096
+#: includes/wc-stripe-functions.php:1102
 msgid "This value provided to the field contains characters that are unsupported by the field."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1097
+#: includes/wc-stripe-functions.php:1103
 msgid "The card's security code is invalid. Check the card's security code or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1098
+#: includes/wc-stripe-functions.php:1104
 msgid "The card's expiration month is incorrect. Check the expiration date or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1099
+#: includes/wc-stripe-functions.php:1105
 msgid "The card's expiration year is incorrect. Check the expiration date or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1101
+#: includes/wc-stripe-functions.php:1107
 msgid "The card's address is incorrect. Check the card's address or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1102
+#: includes/wc-stripe-functions.php:1108
 msgid "The card has expired. Check the expiration date or use a different card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1103
+#: includes/wc-stripe-functions.php:1109
 msgid "The card has been declined."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1104
+#: includes/wc-stripe-functions.php:1110
 msgid "Your card's expiration year is in the past."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1105
+#: includes/wc-stripe-functions.php:1111
 msgid "The bank account number provided is invalid (e.g., missing digits). Bank account information varies from country to country. We recommend creating validations in your entry forms based on the bank account formats we provide."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1107
+#: includes/wc-stripe-functions.php:1113
 msgid "The specified amount is greater than the maximum amount allowed. Use a lower amount and try again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1108
+#: includes/wc-stripe-functions.php:1114
 msgid "The specified amount is less than the minimum amount allowed. Use a higher amount and try again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1109
+#: includes/wc-stripe-functions.php:1115
 msgid "The payment requires authentication to proceed. If your customer is off session, notify your customer to return to your application and complete the payment. If you provided the error_on_requires_action parameter, then your customer should try another card that does not require authentication."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1111
+#: includes/wc-stripe-functions.php:1117
 msgid "The transfer or payout could not be completed because the associated account does not have a sufficient balance available. Create a new transfer or payout using an amount less than or equal to the account's available balance."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1113
+#: includes/wc-stripe-functions.php:1119
 msgid "The bank account provided can not be used to charge, either because it is not verified yet or it is not supported."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1114
+#: includes/wc-stripe-functions.php:1120
 msgid "The bank account provided already exists on the specified Customer object. If the bank account should also be attached to a different customer, include the correct customer ID when making the request again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1116
+#: includes/wc-stripe-functions.php:1122
 msgid "The bank account provided cannot be used for payouts. A different bank account must be used."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1117
+#: includes/wc-stripe-functions.php:1123
 msgid "Your Connect platform is attempting to share an unverified bank account with a connected account."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1118
+#: includes/wc-stripe-functions.php:1124
 msgid "The bank account cannot be verified, either because the microdeposit amounts provided do not match the actual amounts, or because verification has failed too many times."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1120
+#: includes/wc-stripe-functions.php:1126
 msgid "This card has been declined too many times. You can try to charge this card again after 24 hours. We suggest reaching out to your customer to make sure they have entered all of their information correctly and that there are no issues with their card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1122
+#: includes/wc-stripe-functions.php:1128
 msgid "The charge you're attempting to capture has already been captured. Update the request with an uncaptured charge ID."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1123
+#: includes/wc-stripe-functions.php:1129
 msgid "The charge you're attempting to refund has already been refunded. Update the request to use the ID of a charge that has not been refunded."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1125
+#: includes/wc-stripe-functions.php:1131
 msgid "The charge you're attempting to refund has been charged back. Check the disputes documentation to learn how to respond to the dispute."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1127
+#: includes/wc-stripe-functions.php:1133
 msgid "This charge would cause you to exceed your rolling-window processing limit for this source type. Please retry the charge later, or contact us to request a higher processing limit."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1129
+#: includes/wc-stripe-functions.php:1135
 msgid "The charge cannot be captured as the authorization has expired. Auth and capture charges must be captured within seven days."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1131
+#: includes/wc-stripe-functions.php:1137
 msgid "One or more provided parameters was not allowed for the given operation on the Charge. Check our API reference or the returned error message to see which values were not correct for that Charge."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1133
+#: includes/wc-stripe-functions.php:1139
 msgid "The email address is invalid (e.g., not properly formatted). Check that the email address is properly formatted and only includes allowed characters."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1135
+#: includes/wc-stripe-functions.php:1141
 msgid "The idempotency key provided is currently being used in another request. This occurs if your integration is making duplicate requests simultaneously."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1137
+#: includes/wc-stripe-functions.php:1143
 msgid "The specified amount is invalid. The charge amount must be a positive integer in the smallest currency unit, and not exceed the minimum or maximum amount."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1139
+#: includes/wc-stripe-functions.php:1145
 msgid "The source cannot be used because it is not in the correct state (e.g., a charge request is trying to use a source with a pending, failed, or consumed source). Check the status of the source you are attempting to use."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1141
+#: includes/wc-stripe-functions.php:1147
 msgid "Both a customer and source ID have been provided, but the source has not been saved to the customer. To create a charge for a customer with a specified source, you must first save the card details."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1143
+#: includes/wc-stripe-functions.php:1149
 msgid "The ZIP code provided was incorrect."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1144
+#: includes/wc-stripe-functions.php:1150
 msgid "An error occurred while processing the card. Try again later or with a different payment method."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1145
+#: includes/wc-stripe-functions.php:1151
 msgid "The card does not support this type of purchase."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1146
-#: includes/wc-stripe-functions.php:1149
-#: includes/wc-stripe-functions.php:1151
+#: includes/wc-stripe-functions.php:1152
+#: includes/wc-stripe-functions.php:1155
+#: includes/wc-stripe-functions.php:1157
 msgid "The card has been declined for an unknown reason."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1147
+#: includes/wc-stripe-functions.php:1153
 msgid "The customer has exceeded the balance or credit limit available on their card."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1148
+#: includes/wc-stripe-functions.php:1154
 msgid "The card does not support the specified currency."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1150
+#: includes/wc-stripe-functions.php:1156
 msgid "The payment has been declined as Stripe suspects it is fraudulent."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1152
+#: includes/wc-stripe-functions.php:1158
 msgid "The PIN entered is incorrect. "
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1153
+#: includes/wc-stripe-functions.php:1159
 msgid "The card has insufficient funds to complete the purchase."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1154
+#: includes/wc-stripe-functions.php:1160
 msgid "Please select a payment method before proceeding."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1155
+#: includes/wc-stripe-functions.php:1161
 msgid "Please enter your IBAN before proceeding."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1156
+#: includes/wc-stripe-functions.php:1162
 msgid "Please select a bank before proceeding"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1157
+#: includes/wc-stripe-functions.php:1163
 msgid "The IBAN you entered is incomplete."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1158
+#: includes/wc-stripe-functions.php:1164
 msgid "Please enter a valid CPF / CNPJ"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1159
+#: includes/wc-stripe-functions.php:1165
 msgid "Your card was declined. Your request was in test mode, but you used a real credit card. Only test cards can be used in test mode."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1161
+#: includes/wc-stripe-functions.php:1167
 msgid "You do not have permission to use the PaymentElement card form. Please send a request to https://support.stripe.com/ and ask for the \"server_side_confirmation_beta\" to be added to your account."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1162
+#: includes/wc-stripe-functions.php:1168
 msgid "Please provide a billing phone number."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1163
+#: includes/wc-stripe-functions.php:1169
 msgid "Your payment could not be processed at this time because your bank account does not support instant verification."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1164
+#: includes/wc-stripe-functions.php:1170
 msgid "The confirmation number was rejected by Konbini. Please try again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1165
+#: includes/wc-stripe-functions.php:1171
 msgid "The payment attempt for this payment method has expired. Please try again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1166
+#: includes/wc-stripe-functions.php:1172
 msgid "We are unable to authenticate your payment method. Please choose a different payment method and try again."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1167
+#: includes/wc-stripe-functions.php:1173
 #: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:72
 msgid "Payment has been cancelled."
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1172
+#: includes/wc-stripe-functions.php:1178
 #, php-format
 msgid "This payment method is currently unavailabe. Reason: %s"
 msgstr ""
 
-#: includes/wc-stripe-functions.php:1173
+#: includes/wc-stripe-functions.php:1179
 msgid "A billing phone number is required for this payment."
 msgstr ""
 
