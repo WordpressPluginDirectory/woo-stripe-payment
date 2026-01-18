@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.98\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.99\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-15T22:54:48+00:00\n"
+"POT-Creation-Date: 2026-01-17T21:13:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -41,7 +41,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:14
 #: includes/gateways/settings/cc-settings.php:5
 #: includes/gateways/settings/googlepay-settings.php:26
-#: includes/gateways/settings/payment-request-settings.php:12
+#: includes/gateways/settings/payment-request-settings.php:11
 #: includes/gateways/settings/upm-settings.php:5
 msgid "Enabled"
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:23
 #: includes/gateways/settings/cc-settings.php:18
 #: includes/gateways/settings/googlepay-settings.php:35
-#: includes/gateways/settings/payment-request-settings.php:21
+#: includes/gateways/settings/payment-request-settings.php:20
 #: includes/gateways/settings/upm-settings.php:39
 msgid "General Settings"
 msgstr ""
@@ -67,7 +67,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:27
 #: includes/gateways/settings/cc-settings.php:22
 #: includes/gateways/settings/googlepay-settings.php:46
-#: includes/gateways/settings/payment-request-settings.php:25
+#: includes/gateways/settings/payment-request-settings.php:24
 #: includes/gateways/settings/upm-settings.php:43
 msgid "Title"
 msgstr ""
@@ -77,7 +77,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:33
 #: includes/gateways/settings/cc-settings.php:28
 #: includes/gateways/settings/googlepay-settings.php:52
-#: includes/gateways/settings/payment-request-settings.php:31
+#: includes/gateways/settings/payment-request-settings.php:30
 #: includes/gateways/settings/upm-settings.php:49
 msgid "Description"
 msgstr ""
@@ -87,7 +87,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:36
 #: includes/gateways/settings/cc-settings.php:31
 #: includes/gateways/settings/googlepay-settings.php:55
-#: includes/gateways/settings/payment-request-settings.php:34
+#: includes/gateways/settings/payment-request-settings.php:33
 #: includes/gateways/settings/upm-settings.php:52
 msgid "Leave blank if you don't want a description to show for the gateway."
 msgstr ""
@@ -385,17 +385,17 @@ msgid "Local Gateways"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:95
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:274
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:195
 msgid "Stripe Email Options"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:99
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:278
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:199
 msgid "Email Receipt"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:102
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:280
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:201
 msgid "If enabled, an email receipt will be sent to the customer by Stripe when the order is processed."
 msgstr ""
 
@@ -440,7 +440,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:69
 #: includes/gateways/settings/cc-settings.php:50
 #: includes/gateways/settings/googlepay-settings.php:81
-#: includes/gateways/settings/payment-request-settings.php:60
+#: includes/gateways/settings/payment-request-settings.php:59
 msgid "Capture"
 msgstr ""
 
@@ -489,7 +489,7 @@ msgstr ""
 
 #: includes/admin/meta-boxes/views/html-charge-data-subview.php:51
 #: includes/admin/views/html-ach-fee.php:12
-#: includes/gateways/settings/payment-request-settings.php:94
+#: includes/gateways/settings/payment-request-settings.php:93
 msgid "Type"
 msgstr ""
 
@@ -553,7 +553,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:65
 #: includes/gateways/settings/cc-settings.php:46
 #: includes/gateways/settings/googlepay-settings.php:77
-#: includes/gateways/settings/payment-request-settings.php:56
+#: includes/gateways/settings/payment-request-settings.php:55
 msgid "Charge Type"
 msgstr ""
 
@@ -567,7 +567,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:70
 #: includes/gateways/settings/cc-settings.php:51
 #: includes/gateways/settings/googlepay-settings.php:82
-#: includes/gateways/settings/payment-request-settings.php:61
+#: includes/gateways/settings/payment-request-settings.php:60
 msgid "Authorize"
 msgstr ""
 
@@ -577,6 +577,7 @@ msgstr ""
 
 #: includes/admin/meta-boxes/views/html-order-pay.php:67
 #: includes/gateways/settings/googlepay-settings.php:154
+#: includes/gateways/settings/payment-request-settings.php:99
 msgid "Pay"
 msgstr ""
 
@@ -698,85 +699,89 @@ msgstr ""
 msgid "If enabled, eligible card authorizations can be extended for up to 30 days. Make sure this feature is enabled on your Stripe account before enabling."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:203
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:117
+msgid "Terms Enabled"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:124
 msgid "GDPR Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:207
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:128
 msgid "Customer Creation"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:211
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:132
 msgid "When account is created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:212
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:133
 msgid "When a customer ID is required"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:214
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:135
 msgid ""
 "This option allows you to control when a Stripe customer object is created. The plugin can create a Stripe customer ID when \n"
 "\t\t\t\tyour customer creates an account with your store, or it can wait until the Stripe customer ID is required for things like payment on the checkout page."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:218
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:139
 msgid "Guest Customer Creation"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:222
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:143
 msgid "If enabled, a Stripe customer will be created for guest users during checkout."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:225
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:146
 msgid "Dispute Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:229
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:150
 msgid "Dispute Created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:232
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:153
 msgid "If enabled, the plugin will listen for the <strong>charge.dispute.created</strong> webhook event and set the order's status to on-hold by default."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:236
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:157
 msgid "Dispute Created Order Status"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:240
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:161
 msgid "The status assigned to an order when a dispute is created."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:248
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:169
 msgid "Dispute Closed"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:251
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:172
 msgid "If enabled, the plugin will listen for the <strong>charge.dispute.closed</strong> webhook event and set the order's status back to the status before the dispute was opened."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:255
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:176
 msgid "Review Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:259
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:180
 msgid "Review Created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:262
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:183
 msgid "If enabled, the plugin will listen for the <strong>review.created</strong> webhook event and set the order's status to on-hold by default."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:266
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:187
 msgid "Review Closed"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:269
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:190
 msgid "If enabled, the plugin will listen for the <strong>review.closed</strong> webhook event and set the order's status back to the status before the review was opened."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:319
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:240
 #, php-format
 msgid "Supported Stripe account countries: %1$s. Supported currencies: %2$s"
 msgstr ""
@@ -1102,7 +1107,7 @@ msgstr ""
 msgid "Error saving customer. Reason: %s"
 msgstr ""
 
-#: includes/class-wc-stripe-frontend-scripts.php:137
+#: includes/class-wc-stripe-frontend-scripts.php:144
 msgid "No matches found"
 msgstr ""
 
@@ -1353,7 +1358,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-mobilepay.php:45
 #: includes/gateways/settings/applepay-settings.php:73
 #: includes/gateways/settings/cc-settings.php:54
-#: includes/gateways/settings/payment-request-settings.php:64
+#: includes/gateways/settings/payment-request-settings.php:63
 msgid "This option determines whether the customer's funds are captured immediately or authorized and can be captured at a later date."
 msgstr ""
 
@@ -1365,7 +1370,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:90
 #: includes/gateways/settings/cc-settings.php:58
 #: includes/gateways/settings/googlepay-settings.php:102
-#: includes/gateways/settings/payment-request-settings.php:81
+#: includes/gateways/settings/payment-request-settings.php:80
 msgid "Order Status"
 msgstr ""
 
@@ -1378,7 +1383,7 @@ msgstr ""
 #: includes/gateways/settings/cc-settings.php:61
 #: includes/gateways/settings/cc-settings.php:143
 #: includes/gateways/settings/googlepay-settings.php:105
-#: includes/gateways/settings/payment-request-settings.php:84
+#: includes/gateways/settings/payment-request-settings.php:83
 #: includes/gateways/settings/upm-settings.php:89
 msgid "Default"
 msgstr ""
@@ -1391,7 +1396,7 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:95
 #: includes/gateways/settings/cc-settings.php:63
 #: includes/gateways/settings/googlepay-settings.php:107
-#: includes/gateways/settings/payment-request-settings.php:86
+#: includes/gateways/settings/payment-request-settings.php:85
 msgid "This is the status of the order once payment is complete. If <b>Default</b> is selected, then WooCommerce will set the order status automatically based on internal logic which states if a product is virtual and downloadable then status is set to complete. Products that require shipping are set to Processing. Default is the recommended setting as it allows standard WooCommerce code to process the order status."
 msgstr ""
 
@@ -1413,7 +1418,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:56
 #: includes/gateways/settings/applepay-settings.php:80
 #: includes/gateways/settings/googlepay-settings.php:92
-#: includes/gateways/settings/payment-request-settings.php:71
+#: includes/gateways/settings/payment-request-settings.php:70
 msgid "Product Page"
 msgstr ""
 
@@ -1423,7 +1428,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:57
 #: includes/gateways/settings/applepay-settings.php:81
 #: includes/gateways/settings/googlepay-settings.php:93
-#: includes/gateways/settings/payment-request-settings.php:72
+#: includes/gateways/settings/payment-request-settings.php:71
 msgid "Cart Page"
 msgstr ""
 
@@ -1652,7 +1657,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-afterpay.php:106
 #: includes/gateways/settings/applepay-settings.php:82
 #: includes/gateways/settings/googlepay-settings.php:94
-#: includes/gateways/settings/payment-request-settings.php:73
+#: includes/gateways/settings/payment-request-settings.php:72
 msgid "Mini Cart"
 msgstr ""
 
@@ -1838,7 +1843,7 @@ msgid "Please update you product quantity before using Apple Pay."
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-applepay.php:72
-#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:125
+#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:131
 msgid "Please select a product option before updating quantity."
 msgstr ""
 
@@ -2049,6 +2054,7 @@ msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-googlepay.php:25
 #: includes/gateways/settings/googlepay-settings.php:47
+#: includes/gateways/settings/payment-request-settings.php:25
 #: includes/tokens/class-wc-payment-token-stripe-googlepay.php:29
 msgid "Google Pay"
 msgstr ""
@@ -2058,6 +2064,7 @@ msgid "Google Pay (Stripe) by Payment Plugins"
 msgstr ""
 
 #: includes/gateways/class-wc-payment-gateway-stripe-googlepay.php:29
+#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:74
 msgid "Google Pay gateway that integrates with your Stripe account."
 msgstr ""
 
@@ -2223,7 +2230,7 @@ msgstr ""
 #: includes/gateways/class-wc-payment-gateway-stripe-link.php:59
 #: includes/gateways/settings/applepay-settings.php:83
 #: includes/gateways/settings/googlepay-settings.php:95
-#: includes/gateways/settings/payment-request-settings.php:74
+#: includes/gateways/settings/payment-request-settings.php:73
 #: templates/checkout/checkout-banner.php:10
 msgid "Express Checkout"
 msgstr ""
@@ -2320,15 +2327,11 @@ msgstr ""
 msgid "Payment Request (Stripe) by Payment Plugins"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:74
-msgid "Gateway that renders based on the user's browser. Chrome payment methods, Microsoft pay, etc."
-msgstr ""
-
-#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:123
+#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:129
 msgid "Please update you product quantity before paying."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:124
+#: includes/gateways/class-wc-payment-gateway-stripe-payment-request.php:130
 msgid "Adding to cart..."
 msgstr ""
 
@@ -2614,19 +2617,19 @@ msgid "In order for Apple Pay to display, you must test with an iOS device and h
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:19
-#: includes/gateways/settings/payment-request-settings.php:17
+#: includes/gateways/settings/payment-request-settings.php:16
 msgid "If enabled, your site can accept Apple Pay payments through Stripe."
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:40
 #: includes/gateways/settings/googlepay-settings.php:59
-#: includes/gateways/settings/payment-request-settings.php:38
+#: includes/gateways/settings/payment-request-settings.php:37
 msgid "Show Payment Notice"
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:43
 #: includes/gateways/settings/googlepay-settings.php:62
-#: includes/gateways/settings/payment-request-settings.php:41
+#: includes/gateways/settings/payment-request-settings.php:40
 msgid "When enabled, a notice with additional payment instructions is shown in the payment method section of the checkout shortcode."
 msgstr ""
 
@@ -2641,18 +2644,18 @@ msgstr ""
 #: includes/gateways/settings/applepay-settings.php:54
 #: includes/gateways/settings/cc-settings.php:35
 #: includes/gateways/settings/googlepay-settings.php:66
-#: includes/gateways/settings/payment-request-settings.php:45
+#: includes/gateways/settings/payment-request-settings.php:44
 msgid "Credit Card Display"
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:77
 #: includes/gateways/settings/googlepay-settings.php:89
-#: includes/gateways/settings/payment-request-settings.php:68
+#: includes/gateways/settings/payment-request-settings.php:67
 msgid "Payment Sections"
 msgstr ""
 
 #: includes/gateways/settings/applepay-settings.php:100
-#: includes/gateways/settings/payment-request-settings.php:90
+#: includes/gateways/settings/payment-request-settings.php:89
 msgid "Button Settings"
 msgstr ""
 
@@ -2821,7 +2824,7 @@ msgid "The card form design that displays on payment pages."
 msgstr ""
 
 #: includes/gateways/settings/cc-settings.php:139
-#: includes/gateways/settings/payment-request-settings.php:106
+#: includes/gateways/settings/payment-request-settings.php:107
 #: includes/gateways/settings/upm-settings.php:85
 msgid "Theme"
 msgstr ""
@@ -2898,7 +2901,7 @@ msgstr ""
 
 #: includes/gateways/settings/googlepay-settings.php:17
 #, php-format
-msgid "If you don't want to request a Google Merchant ID, you can use the %1$sPayment Request Gateway%2$s which has a Google Pay integration through Stripe via the Chrome browser."
+msgid "If you don't want to request a Google Merchant ID, you can use the %1$sPayment Request Gateway%2$s which has a Google Pay integration through Stripe."
 msgstr ""
 
 #: includes/gateways/settings/googlepay-settings.php:31
@@ -2954,6 +2957,7 @@ msgid "The button color of the GPay button."
 msgstr ""
 
 #: includes/gateways/settings/googlepay-settings.php:150
+#: includes/gateways/settings/payment-request-settings.php:97
 msgid "Buy"
 msgstr ""
 
@@ -2962,10 +2966,12 @@ msgid "Plain"
 msgstr ""
 
 #: includes/gateways/settings/googlepay-settings.php:152
+#: includes/gateways/settings/payment-request-settings.php:96
 msgid "Checkout"
 msgstr ""
 
 #: includes/gateways/settings/googlepay-settings.php:153
+#: includes/gateways/settings/payment-request-settings.php:98
 msgid "Order"
 msgstr ""
 
@@ -2986,37 +2992,23 @@ msgid "If you can't see the Google Pay button, try switching to a Chrome browser
 msgstr ""
 
 #: includes/gateways/settings/payment-request-settings.php:5
-msgid ""
-"The PaymentRequest gateway uses your customer's browser to render payment options like Google Pay and Microsoft Pay. You can either use the Google Pay gateway for example, or this gateway.\n"
-"\t\t\t\t\t\tThe difference is this gateway uses Stripe's PaymentRequest Button rather than render a Google Pay specific button."
+msgid "This is a Google Pay integration that does not require a merchant ID."
 msgstr ""
 
-#: includes/gateways/settings/payment-request-settings.php:26
-msgid "Browser Payments"
-msgstr ""
-
-#: includes/gateways/settings/payment-request-settings.php:96
+#: includes/gateways/settings/payment-request-settings.php:95
 msgid "default"
 msgstr ""
 
-#: includes/gateways/settings/payment-request-settings.php:98
-msgid "buy"
-msgstr ""
-
-#: includes/gateways/settings/payment-request-settings.php:102
+#: includes/gateways/settings/payment-request-settings.php:103
 msgid "This defines the type of button that will display."
 msgstr ""
 
-#: includes/gateways/settings/payment-request-settings.php:108
+#: includes/gateways/settings/payment-request-settings.php:109
 msgid "dark"
 msgstr ""
 
-#: includes/gateways/settings/payment-request-settings.php:109
-msgid "light"
-msgstr ""
-
 #: includes/gateways/settings/payment-request-settings.php:110
-msgid "light-outline"
+msgid "light"
 msgstr ""
 
 #: includes/gateways/settings/payment-request-settings.php:114

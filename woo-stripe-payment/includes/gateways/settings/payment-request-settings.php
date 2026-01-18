@@ -3,8 +3,7 @@ return array(
 	'desc'             => array(
 		'type'        => 'description',
 		'description' => __(
-			'The PaymentRequest gateway uses your customer\'s browser to render payment options like Google Pay and Microsoft Pay. You can either use the Google Pay gateway for example, or this gateway.
-						The difference is this gateway uses Stripe\'s PaymentRequest Button rather than render a Google Pay specific button.',
+			'This is a Google Pay integration that does not require a merchant ID.',
 			'woo-stripe-payment'
 		),
 	),
@@ -23,7 +22,7 @@ return array(
 	'title_text'       => array(
 		'type'        => 'text',
 		'title'       => __( 'Title', 'woo-stripe-payment' ),
-		'default'     => __( 'Browser Payments', 'woo-stripe-payment' ),
+		'default'     => __( 'Google Pay', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
 		'description' => __( 'Title of the credit card gateway' ),
 	),
@@ -93,9 +92,11 @@ return array(
 		'type'        => 'select',
 		'title'       => __( 'Type', 'woo-stripe-payment' ),
 		'options'     => array(
-			'default' => __( 'default', 'woo-stripe-payment' ),
-			// 'donate' => __ ( 'donate', 'woo-stripe-payment' ),
-			'buy'     => __( 'buy', 'woo-stripe-payment' ),
+			'default'  => __( 'default', 'woo-stripe-payment' ),
+			'checkout' => __( 'Checkout', 'woo-stripe-payment' ),
+			'buy'      => __( 'Buy', 'woo-stripe-payment' ),
+			'order'    => __( 'Order', 'woo-stripe-payment' ),
+			'pay'      => __( 'Pay', 'woo-stripe-payment' ),
 		),
 		'default'     => 'buy',
 		'desc_tip'    => true,
@@ -105,9 +106,8 @@ return array(
 		'type'        => 'select',
 		'title'       => __( 'Theme', 'woo-stripe-payment' ),
 		'options'     => array(
-			'dark'          => __( 'dark', 'woo-stripe-payment' ),
-			'light'         => __( 'light', 'woo-stripe-payment' ),
-			'light-outline' => __( 'light-outline', 'woo-stripe-payment' ),
+			'dark'  => __( 'dark', 'woo-stripe-payment' ),
+			'light' => __( 'light', 'woo-stripe-payment' )
 		),
 		'default'     => 'dark',
 		'desc_tip'    => true,

@@ -1,4 +1,3 @@
-import {registerPaymentMethod} from '@paymentplugins/wc-stripe/checkout';
 import {BaseGateway, CheckoutGateway as StripeCheckoutGateway} from '@paymentplugins/wc-stripe';
 import $ from 'jquery';
 import {isEmail, isPhoneNumber} from "@wordpress/url";
@@ -32,6 +31,16 @@ class ApplePayExpressCheckout extends ApplePayMixin(Gateway) {
     setupEvents() {
         $(document.body).on('updated_checkout', this.onUpdatedCheckout.bind(this));
         window.addEventListener('hashchange', this.onHashChange.bind(this));
+    }
+
+    mountPaymentElement() {
+        if ($('li.payment_method_' + this.gateway_id).length) {
+            super.mountPaymentElement();
+        } else {
+            if (this.expressCheckoutElement) {
+                this.expressCheckoutElement.unmount();
+            }
+        }
     }
 
     onReady({availablePaymentMethods}) {

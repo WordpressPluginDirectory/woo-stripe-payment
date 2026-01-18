@@ -26,7 +26,7 @@ class CartIntegration {
                 <style>
                     .wc-stripe-gpay-mini-cart,
                     .wc-stripe-applepay-mini-cart,
-                    .wc-stripe-payment-request-mini-cart {
+                    .wc-stripe-payment-request-mini-cart.StripeElement {
                         margin-top: 10px;
                         display: block;
                         padding-left: 16px;

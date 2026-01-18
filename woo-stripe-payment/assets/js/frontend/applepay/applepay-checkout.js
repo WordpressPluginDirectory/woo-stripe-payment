@@ -40,7 +40,7 @@ class ApplePayCheckout extends ApplePayMixin(Gateway) {
     }
 
     createElementSelectorHTML() {
-        this.$button = $('<div class="wc-stripe-applepay-button"></div>');
+        this.$button = $('<div class="wc-stripe-applepay-button" style="clear:both"></div>');
         $('#place_order').after(this.$button);
     }
 

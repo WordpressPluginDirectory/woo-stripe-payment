@@ -77,6 +77,13 @@ class WC_Stripe_Frontend_Scripts {
 		$this->assets_api->register_script( 'wc-stripe-applepay-minicart', 'assets/build/applepay-minicart.js' );
 		$this->assets_api->register_script( 'wc-stripe-applepay-product', 'assets/build/applepay-product.js' );
 
+		// Payment Request
+		$this->assets_api->register_script( 'wc-stripe-payment-request-checkout', 'assets/build/payment-request-checkout.js' );
+		$this->assets_api->register_script( 'wc-stripe-payment-request-express-checkout', 'assets/build/payment-request-express-checkout.js' );
+		$this->assets_api->register_script( 'wc-stripe-payment-request-cart', 'assets/build/payment-request-cart.js' );
+		$this->assets_api->register_script( 'wc-stripe-payment-request-minicart', 'assets/build/payment-request-minicart.js' );
+		$this->assets_api->register_script( 'wc-stripe-payment-request-product', 'assets/build/payment-request-product.js' );
+
 
 		// register scripts that aren't part of gateways
 		$this->register_script( 'wc-stripe', $this->assets_url( 'js/frontend/wc-stripe.js' ),

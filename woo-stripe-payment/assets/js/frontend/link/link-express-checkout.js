@@ -1,4 +1,3 @@
-import {registerPaymentMethod} from '@paymentplugins/wc-stripe/checkout';
 import {BaseGateway, CheckoutGateway as StripeCheckoutGateway} from '@paymentplugins/wc-stripe';
 import $ from 'jquery';
 import {isEmail, isPhoneNumber} from "@wordpress/url";
@@ -58,6 +57,20 @@ class LinkExpressCheckout extends LinkMixin(Gateway) {
             this.expressCheckoutElement.on('cancel', this.onCancel.bind(this));
             this.expressCheckoutElement.on('shippingaddresschange', this.onShippingAddressChange.bind(this));
             this.expressCheckoutElement.on('shippingratechange', this.onShippingRateChange.bind(this));
+        }
+    }
+
+    mountPaymentElement() {
+        if (parseInt(this.params.total_cents) === 0) {
+            if (this.isSetupMode()) {
+                super.mountPaymentElement();
+            } else {
+                if (this.expressCheckoutElement) {
+                    this.expressCheckoutElement.unmount();
+                }
+            }
+        } else {
+            super.mountPaymentElement();
         }
     }
 

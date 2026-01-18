@@ -198,7 +198,9 @@ export default function (Base) {
                         if (!$(this.elementSelector).length) {
                             this.createElementSelectorHTML();
                         }
-                        this.expressCheckoutElement.mount(this.elementSelector);
+                        if ($(this.elementSelector).length) {
+                            this.expressCheckoutElement.mount(this.elementSelector);
+                        }
                     }
                 }
             } catch (error) {

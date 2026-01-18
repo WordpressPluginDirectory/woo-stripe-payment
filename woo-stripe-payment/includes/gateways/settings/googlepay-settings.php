@@ -14,7 +14,7 @@ return array(
 		'description' => sprintf(
 			'<p>%s</p>',
 			sprintf(
-				__( 'If you don\'t want to request a Google Merchant ID, you can use the %1$sPayment Request Gateway%2$s which has a Google Pay integration through Stripe via the Chrome browser.',
+				__( 'If you don\'t want to request a Google Merchant ID, you can use the %1$sPayment Request Gateway%2$s which has a Google Pay integration through Stripe.',
 					'woo-stripe-payment' ),
 				'<a target="_blank" href="' .
 				admin_url( 'admin.php?page=wc-settings&tab=checkout&section=stripe_payment_request' ) . '">',

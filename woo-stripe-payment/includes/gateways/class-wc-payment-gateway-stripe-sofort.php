@@ -36,7 +36,7 @@ class WC_Payment_Gateway_Stripe_Sofort extends WC_Payment_Gateway_Stripe_Local_P
 	public function get_payment_element_options() {
 		return array(
 			'terms' => array(
-				'sofort' => 'auto'
+				'sofort' => stripe_wc()->advanced_settings->get_terms_display_rule()
 			)
 		);
 	}

@@ -35,7 +35,7 @@ class PaymentRequest extends AbstractStripePayment {
 				$data['buttonType'] = 'plain';
 				break;
 			default:
-				$data['buttonType'] = 'buy';
+				$data['buttonType'] = $this->get_setting( 'button_type', 'buy' );
 		}
 
 		switch ( $this->get_setting( 'button_theme' ) ) {

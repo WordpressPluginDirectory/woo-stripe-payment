@@ -4,7 +4,7 @@ Tags: stripe, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 3.3.98
+Stable tag: 3.3.99
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,12 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.99 - 01/17/26 =
+* Added - Terms Enabled option on Advanced Settings page. This option allows merchants to enable/disable mandate and legal agreement text rendered by Stripe in the payment element. [https://paymentplugins.com/documentation/stripe/advanced-settings/#terms-enabled](Terms Enabled)
+* Updated - Some themes add the "float" property to the place order button on the checkout page. To prevent the Apple Pay button from conflicting with the float property, additional CSS was added to the button.
+* Updated - The Payment Request Gateway now uses the Express Checkout Element. It will render Google Pay on more browsers like Safari, Firefox, and Edge. Be sure and clear any cache plugins
+so the new scripts load.
+* Updated - Increased Afterpay limits for Australia and New Zealand to 4000 AUD and 4000 NZD
 = 3.3.98 - 01/15/26 =
 * Added - Apple Pay is now available on all supported browsers when using product page, cart shortcode, and checkout shortcode.
 * Added - Option where you can specify if you want Apple Pay available only on Safari or all supported browsers.

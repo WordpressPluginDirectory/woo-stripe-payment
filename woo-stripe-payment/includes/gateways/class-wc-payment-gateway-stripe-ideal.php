@@ -56,7 +56,7 @@ class WC_Payment_Gateway_Stripe_Ideal extends WC_Payment_Gateway_Stripe_Local_Pa
 			parent::get_payment_element_options(),
 			array(
 				'terms' => array(
-					'ideal' => 'auto'
+					'ideal' => stripe_wc()->advanced_settings->get_terms_display_rule()
 				)
 			)
 		);

@@ -130,7 +130,7 @@ class PaymentIntent {
 	}
 
 	public function update_order_review_fragments( $fragments ) {
-		$ids      = [ 'stripe_applepay', 'stripe_link_checkout' ];
+		$ids      = [ 'stripe_applepay', 'stripe_payment_request', 'stripe_link_checkout' ];
 		$gateways = WC()->payment_gateways()->payment_gateways();
 		foreach ( $ids as $id ) {
 			$gateway = $gateways[ $id ] ?? null;
