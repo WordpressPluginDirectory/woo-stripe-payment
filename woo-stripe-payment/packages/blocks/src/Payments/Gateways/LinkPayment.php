@@ -45,7 +45,8 @@ class LinkPayment extends AbstractStripePayment {
 
 	public function get_payment_method_data() {
 		return [
-			'name'                   => $this->name,
+			'name'                   => $this->get_name(),
+			'gatewayId'              => $this->get_name(),
 			'features'               => $this->get_supported_features(),
 			'button'                 => [
 				'radius' => $this->get_setting( 'button_radius', 4 ) . 'px',

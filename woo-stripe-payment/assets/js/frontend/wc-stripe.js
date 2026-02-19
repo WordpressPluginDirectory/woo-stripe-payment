@@ -1402,7 +1402,7 @@
     wc_stripe.CartGateway = function () {
         this.message_container = 'div.woocommerce';
 
-        $(document.body).on('updated_wc_div', this.updated_html.bind(this));
+        //$(document.body).on('updated_wc_div', this.updated_html.bind(this));
         $(document.body).on('updated_cart_totals', this.updated_html.bind(this));
         $(document.body).on('wc_cart_emptied', this.cart_emptied.bind(this));
     };

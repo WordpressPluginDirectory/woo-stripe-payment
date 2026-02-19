@@ -182,13 +182,25 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	public function hooks() {
 		add_filter( 'wc_stripe_settings_nav_tabs', array( $this, 'admin_nav_tab' ) );
 		add_action( 'woocommerce_stripe_settings_checkout_' . $this->id, array( $this, 'enqueue_admin_scripts' ) );
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+			$this,
+			'process_admin_options'
+		) );
 		add_filter( 'woocommerce_payment_methods_list_item', array( $this, 'payment_methods_list_item' ), 10, 2 );
 		add_action( 'wc_stripe_payment_token_deleted_' . $this->id, array( $this, 'delete_payment_method' ), 10, 2 );
 		add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'subscription_payment_meta' ), 10, 2 );
-		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, array( $this, 'scheduled_subscription_payment' ), 10, 2 );
-		add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->id, array( $this, 'update_failing_payment_method' ), 10, 2 );
-		add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->id, array( $this, 'process_pre_order_payment' ) );
+		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, array(
+			$this,
+			'scheduled_subscription_payment'
+		), 10, 2 );
+		add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->id, array(
+			$this,
+			'update_failing_payment_method'
+		), 10, 2 );
+		add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->id, array(
+			$this,
+			'process_pre_order_payment'
+		) );
 
 		/**
 		 * @since 3.1.8
@@ -217,7 +229,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	public function init_form_fields() {
-		$this->form_fields = include stripe_wc()->plugin_path() . 'includes/gateways/settings/' . str_replace( array( 'stripe_', '_' ), array(
+		$this->form_fields = include stripe_wc()->plugin_path() . 'includes/gateways/settings/' . str_replace( array(
+				'stripe_',
+				'_'
+			), array(
 				'',
 				'-'
 			), $this->id ) . '-settings.php';
@@ -333,8 +348,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 3.3.37
 	 * @return void
+	 * @since 3.3.37
 	 */
 	public function enqueue_payment_method_styles() {
 		wp_enqueue_style( stripe_wc()->scripts()->prefix . 'styles' );
@@ -921,8 +936,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 3.3.42
 	 * @return string
+	 * @since 3.3.42
 	 */
 	public function get_save_payment_method_label() {
 		return __( 'Save payment method', 'woo-stripe-payment' );
@@ -1056,8 +1071,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * Return true if mini-cart checkout is enabled for this gateway
 	 *
-	 * @since 3.1.8
 	 * @return bool
+	 * @since 3.1.8
 	 */
 	public function mini_cart_enabled() {
 		return in_array( 'mini_cart', $this->get_option( 'payment_sections', array() ) );
@@ -1505,10 +1520,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			$keys = array();
 			switch ( $meta_key ) {
 				case WC_Stripe_Constants::PAYMENT_METHOD_TOKEN:
-					$keys = array( WC_Stripe_Constants::SOURCE_ID, '_fkwcs_source_id' );
+					$keys = array( WC_Stripe_Constants::SOURCE_ID, '_fkwcs_source_id', '_cpsw_source_id' );
 					break;
 				case WC_Stripe_Constants::CUSTOMER_ID:
-					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' );
+					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id', '_cpsw_customer_id' );
 					break;
 				case WC_Stripe_Constants::PAYMENT_INTENT_ID:
 					$keys = array( WC_Stripe_Constants::STRIPE_INTENT_ID );
@@ -1648,8 +1663,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 3.2.0
 	 * @return array
+	 * @since 3.2.0
 	 */
 	public function get_shipping_packages() {
 		$packages = WC()->shipping()->get_packages();
@@ -1679,8 +1694,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param WC_Cart $cart
 	 * @param array   $items
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	public function get_display_items_for_cart( $cart, $items = array() ) {
 		$incl_tax = wc_stripe_display_prices_including_tax();
@@ -1718,8 +1733,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param WC_Order $order
 	 * @param array    $items
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	protected function get_display_items_for_order( $order, $items = array() ) {
 		foreach ( $order->get_items() as $item ) {
@@ -1753,8 +1768,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param string $type
 	 * @param mixed  ...$args
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	protected function get_display_item_for_cart( $price, $label, $type, ...$args ) {
 		return array(
@@ -1782,9 +1797,9 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * @param WC_Product $product
 	 *
+	 * @return array
 	 * @since 3.2.1
 	 *
-	 * @return array
 	 */
 	protected function get_display_item_for_product( $product ) {
 		return array(
@@ -1798,8 +1813,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param array $methods
 	 * @param       $sort
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	public function get_formatted_shipping_methods( $methods = array() ) {
 		if ( wcs_stripe_active() && WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ) {
@@ -1866,8 +1881,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param array            $package
 	 * @param bool             $incl_tax
 	 *
-	 * @since 3.2.1
 	 * @return array
+	 * @since 3.2.1
 	 */
 	public function get_formatted_shipping_method( $price, $rate, $i, $package, $incl_tax ) {
 		$method = array(
@@ -1913,8 +1928,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * Returns true if a scheduled subscription payment is being processed.
 	 *
-	 * @since 3.2.3
 	 * @return bool
+	 * @since 3.2.3
 	 */
 	protected function is_processing_scheduled_payment() {
 		return doing_action( 'woocommerce_scheduled_subscription_payment_' . $this->id );
@@ -1923,8 +1938,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * @param WC_Stripe_Frontend_Scripts $scripts
 	 *
-	 * @since 3.2.5
 	 * @return bool
+	 * @since 3.2.5
 	 */
 	public function has_enqueued_scripts( $scripts ) {
 		return false;
@@ -1943,8 +1958,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * @param WC_Subscription $subscription
 	 *
-	 * @since 3.2.13
 	 * @return array
+	 * @since 3.2.13
 	 * @deprecated
 	 */
 	protected function process_change_payment_method_request( $subscription ) {
@@ -2006,8 +2021,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 * @param array $options
 	 *
-	 * @since 3.3.10
 	 * @return mixed|void
+	 * @since 3.3.10
 	 */
 	public function get_element_options( $options = array() ) {
 		$options = array_merge(
@@ -2031,8 +2046,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 3.3.42
 	 * @return bool|mixed|void|null
+	 * @since 3.3.42
 	 */
 	public function show_save_payment_method_html() {
 		if ( $this->supports_save_payment_method ) {
@@ -2070,8 +2085,8 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @since 3.3.51
 	 * @return string
+	 * @since 3.3.51
 	 */
 	public function get_payment_token_type() {
 		return $this->token_type;

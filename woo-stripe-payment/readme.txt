@@ -1,10 +1,10 @@
 === Payment Plugins for Stripe WooCommerce ===
-Contributors: mr.clayton
+Contributors: paymentplugins, mrclayton
 Tags: stripe, klarna, credit card, apple pay, google pay
 Requires at least: 3.0.1
 Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 3.3.99
+Stable tag: 3.3.102
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,8 +63,19 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 3.3.102 - 02/18/26 =
+* Fixed - Syntax errors in the Admin option setting descriptions
+* Fixed - JS error for Apple Pay and GPay via Payment Request Gateway when side cart button clicked on product page
+= 3.3.101 - 02/02/26 =
+* Fixed - Apple Pay was showing on some unsupported devices combined with plugins like Funnelkit
+* Fixed - Checkout block express section appeared disabled due to a bug in WooCommerce. We have added a resolution in this plugin so merchants don't have to wait.
+[https://wordpress.org/support/topic/js-error-for-logged-in-customers-with-a-saved-payment-method/](https://wordpress.org/support/topic/js-error-for-logged-in-customers-with-a-saved-payment-method/)
+= 3.3.100 - 01/28/26 =
+* Added - Option for Payment Request Gateway where you can specify Google Pay availability on all browsers or just Chrome.
+* Fixed - When Germanized for WooCommerce installed, Apple Pay and Google Pay were not re-displaying on the checkout shortcode after the order_update_review request was triggered. This made it
+appear as if they were not available.
 = 3.3.99 - 01/17/26 =
-* Added - Terms Enabled option on Advanced Settings page. This option allows merchants to enable/disable mandate and legal agreement text rendered by Stripe in the payment element. [https://paymentplugins.com/documentation/stripe/advanced-settings/#terms-enabled](Terms Enabled)
+* Added - Terms Enabled option on Advanced Settings page. This option allows merchants to enable/disable mandate and legal agreement text rendered by Stripe in the payment element. [Terms Enabled](https://paymentplugins.com/documentation/stripe/advanced-settings/#terms-enabled)
 * Updated - Some themes add the "float" property to the place order button on the checkout page. To prevent the Apple Pay button from conflicting with the float property, additional CSS was added to the button.
 * Updated - The Payment Request Gateway now uses the Express Checkout Element. It will render Google Pay on more browsers like Safari, Firefox, and Edge. Be sure and clear any cache plugins
 so the new scripts load.

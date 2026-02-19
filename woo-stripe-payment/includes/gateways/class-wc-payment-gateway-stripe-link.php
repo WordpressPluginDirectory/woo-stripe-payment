@@ -137,14 +137,23 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 	}
 
 	public function cart_fields() {
-		if ( wp_doing_ajax() ) {
-			$data = $this->get_localized_params();
-			$json = wc_esc_json( wp_json_encode( $data ) );
-			printf( '<input type="hidden" class="%1$s" data-gateway="%2$s"/>', "woocommerce_{$this->id}_gateway_data {$data['page']}-page", $json );
-		} else {
-			$this->enqueue_frontend_scripts( 'cart' );
-			wp_localize_script( 'wc-stripe-link-express-cart', 'wc_stripe_link_cart_params', $this->get_localized_params() );
-		}
+		$data       = $this->get_localized_params();
+		$valid_keys = [
+			'currency',
+			'total_cents',
+			'items',
+			'needs_shipping',
+			'shipping_options',
+			'elementOptions'
+		];
+		$params     = array_intersect_key( $data, array_flip( $valid_keys ) );
+		$json       = wc_esc_json( wp_json_encode( $params ) );
+		printf( '<input type="hidden" class="%1$s" data-gateway="%2$s"/>', "woocommerce_{$this->id}_gateway_data {$data['page']}-page", $json );
+		$this->enqueue_frontend_scripts( 'cart' );
+		wp_localize_script( 'wc-stripe-link-express-cart', 'wc_stripe_link_cart_params', $data );
+		?>
+        <div id="wc-stripe-link-checkout-container"></div>
+		<?php
 	}
 
 	public function enqueue_cart_scripts( $scripts ) {

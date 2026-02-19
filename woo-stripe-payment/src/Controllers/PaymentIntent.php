@@ -130,12 +130,15 @@ class PaymentIntent {
 	}
 
 	public function update_order_review_fragments( $fragments ) {
-		$ids      = [ 'stripe_applepay', 'stripe_payment_request', 'stripe_link_checkout' ];
-		$gateways = WC()->payment_gateways()->payment_gateways();
+		$ids        = [ 'stripe_applepay', 'stripe_payment_request', 'stripe_link_checkout' ];
+		$gateways   = WC()->payment_gateways()->payment_gateways();
+		$valid_keys = [ 'currency', 'total_cents', 'items', 'needs_shipping', 'shipping_options', 'elementOptions' ];
 		foreach ( $ids as $id ) {
 			$gateway = $gateways[ $id ] ?? null;
-			if ( $gateway && in_array( 'checkout_banner', $gateway->get_option( 'payment_sections', [] ) ) ) {
-				$fragments[ $id ] = $gateway->get_localized_params();
+			if ( $gateway && $gateway->is_available() ) {
+				// unset unnecessary params to decrease response size.
+				$params           = array_intersect_key( $gateway->get_localized_params(), array_flip( $valid_keys ) );
+				$fragments[ $id ] = $params;
 			}
 		}
 

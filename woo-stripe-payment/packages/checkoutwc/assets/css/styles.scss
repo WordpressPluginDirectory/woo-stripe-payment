@@ -41,3 +41,10 @@
     }
   }
 }
+
+#cfw-place-order {
+  .wc-stripe-applepay-button,
+  #wc-stripe-payment-request-container {
+    overflow: hidden;
+  }
+}

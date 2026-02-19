@@ -105,7 +105,16 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 
 	public function enqueue_mini_cart_scripts( $scripts ) {
 		wp_enqueue_script( 'wc-stripe-payment-request-minicart' );
-		$scripts->localize_script( 'payment-request-minicart', $this->get_localized_params(), 'wc_stripe_payment_request_mini_cart_params' );
+		$data         = $this->get_localized_params();
+		$data['page'] = 'cart';
+		if ( WC()->cart ) {
+			$data['currency']         = get_woocommerce_currency();
+			$data['total_cents']      = (float) wc_stripe_add_number_precision( WC()->cart->get_total( 'float' ) );
+			$data['items']            = $this->get_display_items_for_cart( WC()->cart );
+			$data['needs_shipping']   = WC()->cart->needs_shipping();
+			$data['shipping_options'] = $this->get_formatted_shipping_methods();
+		}
+		$scripts->localize_script( 'payment-request-minicart', $data, 'wc_stripe_payment_request_mini_cart_params' );
 	}
 
 	public function get_localized_params() {
@@ -129,7 +138,8 @@ class WC_Payment_Gateway_Stripe_Payment_Request extends WC_Payment_Gateway_Strip
 					'invalid_amount' => __( 'Please update you product quantity before paying.', 'woo-stripe-payment' ),
 					'add_to_cart'    => __( 'Adding to cart...', 'woo-stripe-payment' ),
 					'choose_product' => __( 'Please select a product option before updating quantity.', 'woo-stripe-payment' ),
-				)
+				),
+				'display_rule'   => wc_string_to_bool( $this->get_option( 'all_browsers', 'yes' ) ) ? 'always' : 'auto'
 			)
 		);
 		if ( in_array( $data['page'], array( 'cart', 'checkout', 'shop' ) ) ) {

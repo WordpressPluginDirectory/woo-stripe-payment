@@ -32,8 +32,8 @@ class WC_Stripe_Customer_Manager {
 	 * Returns true if the plugin should create a Stripe customer if the user has an account
 	 * with the store
 	 *
-	 * @since 3.3.38
 	 * @return bool
+	 * @since 3.3.38
 	 */
 	public function should_create_when_account_exists() {
 		return stripe_wc()->advanced_settings->get_option( 'customer_creation' ) === 'account_creation';
@@ -42,8 +42,8 @@ class WC_Stripe_Customer_Manager {
 	/**
 	 * Returns true if the plugin should create a Stripe customer when the payment is being processed.
 	 *
-	 * @since 3.3.38
 	 * @return bool
+	 * @since 3.3.38
 	 */
 	public function should_create_when_payment() {
 		return stripe_wc()->advanced_settings->get_option( 'customer_creation' ) === 'payment';
@@ -150,7 +150,7 @@ class WC_Stripe_Customer_Manager {
 	}
 
 	private function get_customer_id_from_user_id( $user_id ) {
-		$keys = [ WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' ];
+		$keys = [ WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id', '_cpsw_customer_id' ];
 		foreach ( $keys as $key ) {
 			$id = get_user_option( $key, $user_id );
 			if ( $id && ! empty( $id ) && is_string( $id ) ) {
@@ -265,8 +265,8 @@ class WC_Stripe_Customer_Manager {
 	 * @param WC_Customer $customer
 	 * @param string      $context
 	 *
-	 * @since 3.2.12
 	 * @return array
+	 * @since 3.2.12
 	 */
 	private function get_customer_args( $customer, $context = 'create' ) {
 		$args = array(
