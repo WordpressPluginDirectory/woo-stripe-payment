@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.102\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 3.3.108\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-18T17:54:57+00:00\n"
+"POT-Creation-Date: 2026-05-15T14:30:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -152,8 +152,8 @@ msgid "Please fill out all required fields."
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:494
-#: includes/controllers/class-wc-stripe-controller-cart.php:141
-#: includes/controllers/class-wc-stripe-controller-cart.php:200
+#: includes/controllers/class-wc-stripe-controller-cart.php:142
+#: includes/controllers/class-wc-stripe-controller-cart.php:202
 #: includes/controllers/class-wc-stripe-controller-googlepay.php:134
 #: includes/gateways/class-wc-payment-gateway-stripe-googlepay.php:114
 #: packages/blocks/src/Payments/AbstractStripePayment.php:79
@@ -385,17 +385,17 @@ msgid "Local Gateways"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:95
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:195
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:219
 msgid "Stripe Email Options"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:99
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:199
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:223
 msgid "Email Receipt"
 msgstr ""
 
 #: includes/admin/class-wc-stripe-admin-settings.php:102
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:201
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:225
 msgid "If enabled, an email receipt will be sent to the customer by Stripe when the order is processed."
 msgstr ""
 
@@ -648,140 +648,161 @@ msgid "Statement Descriptor"
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-advanced-settings.php:59
-msgid "Maximum of 22 characters. This value represents the full statement descriptor that your customer will see. If left blank, Stripe will use your account descriptor."
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:79
+msgid "Supports dynamic variables like {order_id}."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:70
-msgid "Display Stripe Fee"
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:60
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:80
+#: includes/admin/views/html-main-navigation.php:18
+#: includes/admin/views/html-welcome-page.php:30
+#: includes/class-wc-stripe-install.php:45
+msgid "Documentation"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:59
+msgid "Maximum of 22 characters. This value represents the full statement descriptor that your customer will see. If left blank, Stripe will use your account descriptor. "
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-advanced-settings.php:75
-msgid "If enabled, the Stripe fee will be displayed on the Order Details page. The fee and net payout are displayed in your Stripe account currency."
+msgid "Statement Descriptor Suffix"
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-advanced-settings.php:79
-msgid "Fee Display Currency"
+msgid "The statement descriptor suffix is used for card payments. It is concatenated with your static account descriptor or the shortened descriptor."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:82
-msgid "If enabled, the Stripe fee and payout will be displayed in the currency of the order. Stripe by default provides the fee and payout in the Stripe account's currency."
-msgstr ""
-
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:91
-msgid "Capture Status"
-msgstr ""
-
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:95
-msgid "Completed"
-msgstr ""
-
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:96
-msgid "Processing"
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:94
+msgid "Display Stripe Fee"
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-advanced-settings.php:99
+msgid "If enabled, the Stripe fee will be displayed on the Order Details page. The fee and net payout are displayed in your Stripe account currency."
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:103
+msgid "Fee Display Currency"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:106
+msgid "If enabled, the Stripe fee and payout will be displayed in the currency of the order. Stripe by default provides the fee and payout in the Stripe account's currency."
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:115
+msgid "Capture Status"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:119
+msgid "Completed"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:120
+msgid "Processing"
+msgstr ""
+
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:123
 msgid "For orders that are authorized, when the order is set to this status, it will trigger a capture."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:102
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:126
 msgid "Refund On Cancel"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:107
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:131
 msgid "If enabled, the plugin will process a payment cancellation or refund within Stripe when the order's status is set to cancelled."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:110
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:134
 msgid "Extended Authorization"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:114
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:138
 msgid "If enabled, eligible card authorizations can be extended for up to 30 days. Make sure this feature is enabled on your Stripe account before enabling."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:117
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:141
 msgid "Terms Enabled"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:124
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:148
 msgid "GDPR Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:128
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:152
 msgid "Customer Creation"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:132
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:156
 msgid "When account is created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:133
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:157
 msgid "When a customer ID is required"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:135
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:159
 msgid ""
 "This option allows you to control when a Stripe customer object is created. The plugin can create a Stripe customer ID when \n"
 "\t\t\t\tyour customer creates an account with your store, or it can wait until the Stripe customer ID is required for things like payment on the checkout page."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:139
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:163
 msgid "Guest Customer Creation"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:143
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:167
 msgid "If enabled, a Stripe customer will be created for guest users during checkout."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:146
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:170
 msgid "Dispute Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:150
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:174
 msgid "Dispute Created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:153
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:177
 msgid "If enabled, the plugin will listen for the <strong>charge.dispute.created</strong> webhook event and set the order's status to on-hold by default."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:157
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:181
 msgid "Dispute Created Order Status"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:161
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:185
 msgid "The status assigned to an order when a dispute is created."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:169
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:193
 msgid "Dispute Closed"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:172
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:196
 msgid "If enabled, the plugin will listen for the <strong>charge.dispute.closed</strong> webhook event and set the order's status back to the status before the dispute was opened."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:176
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:200
 msgid "Review Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:180
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:204
 msgid "Review Created"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:183
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:207
 msgid "If enabled, the plugin will listen for the <strong>review.created</strong> webhook event and set the order's status to on-hold by default."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:187
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:211
 msgid "Review Closed"
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:190
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:214
 msgid "If enabled, the plugin will listen for the <strong>review.closed</strong> webhook event and set the order's status back to the status before the review was opened."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-advanced-settings.php:240
+#: includes/admin/settings/class-wc-stripe-advanced-settings.php:264
 #, php-format
 msgid "Supported Stripe account countries: %1$s. Supported currencies: %2$s"
 msgstr ""
@@ -945,12 +966,6 @@ msgstr ""
 #: includes/admin/views/html-welcome-page.php:16
 #: includes/class-wc-stripe-install.php:44
 msgid "Settings"
-msgstr ""
-
-#: includes/admin/views/html-main-navigation.php:18
-#: includes/admin/views/html-welcome-page.php:30
-#: includes/class-wc-stripe-install.php:45
-msgid "Documentation"
 msgstr ""
 
 #: includes/admin/views/html-main-navigation.php:21
@@ -1133,7 +1148,7 @@ msgstr ""
 msgid "%1$s is an invalid controller name."
 msgstr ""
 
-#: includes/class-wc-stripe-update.php:64
+#: includes/class-wc-stripe-update.php:65
 #, php-format
 msgid "Thank you for updating Stripe for WooCommerce to version %1$s."
 msgstr ""
@@ -3157,11 +3172,11 @@ msgstr ""
 msgid "Gateway Name"
 msgstr ""
 
-#: includes/traits/wc-stripe-controller-traits.php:41
+#: includes/traits/wc-stripe-controller-traits.php:39
 msgid "Invalid shipping method format. Expected: index:id"
 msgstr ""
 
-#: includes/traits/wc-stripe-payment-traits.php:429
+#: includes/traits/wc-stripe-payment-traits.php:434
 #, php-format
 msgid "Please click %shere%s to view your %s voucher."
 msgstr ""
@@ -3452,7 +3467,7 @@ msgid "We are unable to authenticate your payment method. Please choose a differ
 msgstr ""
 
 #: includes/wc-stripe-functions.php:1173
-#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:73
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:74
 msgid "Payment has been cancelled."
 msgstr ""
 
@@ -3498,12 +3513,12 @@ msgstr ""
 msgid "A review has been closed for charge %1$s. Reason: %2$s."
 msgstr ""
 
-#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:68
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:69
 #, php-format
 msgid "After clicking \"%1$s\", you will be redirected to %2$s to complete your purchase securely"
 msgstr ""
 
-#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:72
+#: packages/blocks/src/Payments/AbstractStripeLocalPayment.php:73
 msgid "Please enter your payment info before proceeding."
 msgstr ""
 

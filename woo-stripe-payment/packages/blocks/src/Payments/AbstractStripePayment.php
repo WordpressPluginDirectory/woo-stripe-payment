@@ -69,7 +69,7 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 		return array(
 			'name'                   => $this->get_name(),
 			'gatewayId'              => $this->get_name(),
-			'title'                  => $this->get_setting( 'title_text' ),
+			'title'                  => $this->payment_method->get_option( 'title_text' ),
 			'showSaveOption'         => \in_array( 'tokenization', $this->get_supported_features() ) && wc_string_to_bool( $this->get_setting( 'save_card_enabled', true ) ),
 			'showSavedCards'         => \in_array( 'tokenization', $this->get_supported_features() ),
 			'features'               => $this->get_supported_features(),
@@ -83,7 +83,8 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 			'description'            => $this->get_setting( 'description' ),
 			'i18n'                   => $this->get_script_translations(),
 			'elementOptions'         => $this->payment_method->get_element_options(),
-			'paymentElementOptions'  => $this->payment_method->get_payment_element_options()
+			'paymentElementOptions'  => $this->payment_method->get_payment_element_options(),
+			'currency'               => get_woocommerce_currency()
 		);
 	}
 

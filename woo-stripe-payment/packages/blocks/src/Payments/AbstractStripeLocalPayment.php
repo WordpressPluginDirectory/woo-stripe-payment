@@ -44,7 +44,8 @@ abstract class AbstractStripeLocalPayment extends AbstractStripePayment {
 			'paymentType'           => $this->payment_method->local_payment_type,
 			'locale'                => str_replace( '_', '-', substr( get_locale(), 0, 5 ) ),
 			'i18n'                  => $this->get_script_translations(),
-			'mandate'               => wc_string_to_bool( $this->get_setting( 'stripe_mandate', 'yes' ) )
+			'mandate'               => wc_string_to_bool( $this->get_setting( 'stripe_mandate', 'yes' ) ),
+			'currency'              => get_woocommerce_currency()
 		);
 	}
 

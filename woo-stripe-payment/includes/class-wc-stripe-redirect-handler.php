@@ -24,8 +24,8 @@ class WC_Stripe_Redirect_Handler {
 	}
 
 	/**
-	 * @since 3.3.62
 	 * @return void
+	 * @since 3.3.62
 	 */
 	public static function process_payment_redirect() {
 		if ( isset( $_GET['_stripe_payment_method'] ) ) {
@@ -128,7 +128,7 @@ class WC_Stripe_Redirect_Handler {
 					}
 				}
 			} elseif ( in_array( $result->status, array( 'succeeded', 'requires_capture' ) ) ) {
-				if ( ! $payment_method->has_order_lock( $order ) ) {
+				if ( ! $payment_method->has_order_lock( $order ) && ! $order->get_date_paid() ) {
 					$payment_method->set_order_lock( $order );
 					$payment_method->set_new_source_token( $result->payment_method->id );
 					$result = $payment_method->process_payment( $order_id );

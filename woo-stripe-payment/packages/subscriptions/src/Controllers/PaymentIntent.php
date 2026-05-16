@@ -34,7 +34,10 @@ class PaymentIntent {
 
 		add_filter( 'wc_stripe_create_payment_method_return_url', [ $this, 'add_change_payment_method_query' ], 10, 3 );
 
-		add_filter( 'wc_stripe_process_redirect_change_payment_method', [ $this, 'process_change_payment_method_redirect' ], 10, 3 );
+		add_filter( 'wc_stripe_process_redirect_change_payment_method', [
+			$this,
+			'process_change_payment_method_redirect'
+		], 10, 3 );
 
 		add_filter( 'wc_stripe_is_link_active', [ $this, 'is_link_active' ] );
 	}
@@ -62,8 +65,8 @@ class PaymentIntent {
 	/**
 	 * @param $bool
 	 *
-	 * @since 3.3.60
 	 * @return bool|mixed
+	 * @since 3.3.60
 	 */
 	public function is_subscription_mode( $bool, RequestContext $context ) {
 		if ( ! $bool ) {
@@ -209,13 +212,19 @@ class PaymentIntent {
 			global $wp;
 			if ( isset( $wp->query_vars['order-pay'] ) ) {
 				$url = add_query_arg(
-					[ 'order_id' => absint( $wp->query_vars['order-pay'] ), 'order_key' => wc_get_var( $_REQUEST['key'] ) ],
+					[
+						'order_id'  => absint( $wp->query_vars['order-pay'] ),
+						'order_key' => wc_get_var( $_REQUEST['key'] )
+					],
 					$url
 				);
 			} elseif ( $gateway->get_request_context() && $gateway->get_request_context()->has_prop( 'order_id' ) ) {
 				$context = $gateway->get_request_context();
 				$url     = add_query_arg(
-					[ 'order_id' => absint( $context->get_prop( 'order_id' ) ), 'order_key' => $context->get_prop( 'order_key' ) ],
+					[
+						'order_id'  => absint( $context->get_prop( 'order_id' ) ),
+						'order_key' => $context->get_prop( 'order_key' )
+					],
 					$url
 				);
 			}
@@ -229,7 +238,7 @@ class PaymentIntent {
 	 * @param \WC_Payment_Gateway_Stripe $gateway
 	 * @param \Stripe\SetupIntent        $setup_intent
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function process_change_payment_method_redirect( $result, $gateway, $setup_intent ) {
 		$id        = wc_get_var( $_GET['order_id'], '' );

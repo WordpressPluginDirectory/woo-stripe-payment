@@ -132,11 +132,31 @@ class WC_Stripe_Utils {
 	/**
 	 * @param $value
 	 *
-	 * @since 3.3.14
 	 * @return string
+	 * @since 3.3.14
 	 */
 	public static function sanitize_statement_descriptor( $value ) {
 		return trim( str_replace( array( '<', '>', '\\', '\'', '"', '*' ), '', $value ) );
+	}
+
+	/**
+	 * @param string   $value
+	 * @param WC_Order $order
+	 *
+	 * @return string
+	 */
+	public static function format_statement_descriptor( $value, $order ) {
+		$data  = [
+			'{order_id}'     => $order->get_id(),
+			'{order_number}' => $order->get_order_number(),
+			'{email}'        => $order->get_billing_email(),
+			'{currency}'     => $order->get_currency(),
+			'{customer_id}'  => $order->get_customer_id(),
+			'{name}'         => sprintf( '%s %s', $order->get_billing_first_name(), $order->get_billing_last_name() ),
+		];
+		$value = str_replace( array_keys( $data ), $data, $value );
+
+		return substr( $value, 0, 22 );
 	}
 
 	/**

@@ -118,6 +118,7 @@ return array(
     'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\ApplePay' => $baseDir . '/packages/woofunnels/src/Checkout/Compatibility/ApplePay.php',
     'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\ExpressButtonController' => $baseDir . '/packages/woofunnels/src/Checkout/Compatibility/ExpressButtonController.php',
     'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\GooglePay' => $baseDir . '/packages/woofunnels/src/Checkout/Compatibility/GooglePay.php',
+    'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\LinkCheckout' => $baseDir . '/packages/woofunnels/src/Checkout/Compatibility/LinkCheckout.php',
     'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\PaymentRequest' => $baseDir . '/packages/woofunnels/src/Checkout/Compatibility/PaymentRequest.php',
     'PaymentPlugins\\WooFunnels\\Stripe\\Main' => $baseDir . '/packages/woofunnels/src/Main.php',
     'PaymentPlugins\\WooFunnels\\Stripe\\Upsell\\LinkIntegration' => $baseDir . '/packages/woofunnels/src/Upsell/LinkIntegration.php',

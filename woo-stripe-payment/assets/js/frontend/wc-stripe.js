@@ -884,7 +884,7 @@
 
     wc_stripe.CheckoutGateway = function () {
         this.message_container = 'li.payment_method_' + this.gateway_id;
-        this.banner_container = 'li.banner_payment_method_' + this.gateway_id;
+        this.banner_container = '.banner_payment_method_' + this.gateway_id;
         $(document.body).on('update_checkout', this.update_checkout.bind(this));
         $(document.body).on('updated_checkout', this.updated_checkout.bind(this));
         $(document.body).on('updated_checkout', this.container_styles.bind(this));
@@ -1384,7 +1384,7 @@
 
     wc_stripe.ProductGateway.prototype.get_product_variations = function () {
         var variation = this.get_product_data().variation;
-        var attributes = variation ? variation.attributes : {};
+        var attributes = variation ? Object.assign({}, variation.attributes) : {};
         if (this.is_variable_product()) {
             $('.variations [name^="attribute_"]').each(function (index, el) {
                 var $el = $(el);

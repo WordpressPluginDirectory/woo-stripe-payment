@@ -59,7 +59,8 @@ class LinkPayment extends AbstractStripePayment {
 				? \wc_stripe_get_template_html( "link/link-icon-{$this->link->get_settings()->get_option('link_icon')}.php" )
 				: null,*/
 			'expressCheckoutEnabled' => $this->is_express_checkout_enabled(),
-			'cartCheckoutEnabled'    => $this->is_cart_checkout_enabled()
+			'cartCheckoutEnabled'    => $this->is_cart_checkout_enabled(),
+			'currency'               => get_woocommerce_currency()
 		];
 	}
 

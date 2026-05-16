@@ -23,15 +23,15 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 
 	public function init_form_fields() {
 		$this->form_fields = array(
-			'title'                  => array(
+			'title'                       => array(
 				'type'  => 'title',
 				'title' => __( 'Advanced Settings', 'woo-stripe-payment' ),
 			),
-			'settings_description'   => array(
+			'settings_description'        => array(
 				'type'        => 'description',
 				'description' => __( 'This section provides advanced settings that allow you to configure functionality that fits your business process.', 'woo-stripe-payment' )
 			),
-			'locale'                 => array(
+			'locale'                      => array(
 				'title'       => __( 'Locale Type', 'woo-stripe-payment' ),
 				'type'        => 'select',
 				'default'     => 'site',
@@ -43,7 +43,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description' => __( 'If set to "auto" Stripe will determine the locale to use based on the customer\'s browser/location settings. Site locale uses the Wordpress locale setting.',
 					'woo-stripe-payment' )
 			),
-			'installments'           => array(
+			'installments'                => array(
 				'title'       => __( 'Installments', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -51,22 +51,46 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'desc_tip'    => false,
 				'description' => sprintf( __( 'If enabled, installments will be available for the credit card gateway. %1$s', 'woo-stripe-payment' ), $this->get_supported_countries_description() )
 			),
-			'statement_descriptor'   => array(
+			'statement_descriptor'        => array(
 				'title'             => __( 'Statement Descriptor', 'woo-stripe-payment' ),
 				'type'              => 'text',
 				'default'           => '',
-				'desc_tip'          => true,
-				'description'       => __( 'Maximum of 22 characters. This value represents the full statement descriptor that your customer will see. If left blank, Stripe will use your account descriptor.',
+				'desc_tip'          => false,
+				'description'       => __( 'Maximum of 22 characters. This value represents the full statement descriptor that your customer will see. If left blank, Stripe will use your account descriptor.' . ' ' . __( 'Supports dynamic variables like {order_id}.', 'woo-stripe-payment' ) .
+				                           ' ' . '<a href="https://paymentplugins.com/documentation/stripe/advanced-settings/#statement-descriptor" target="_blank">' . __( 'Documentation', 'woo-stripe-payment' ) . '</a>',
 					'woo-stripe-payment' ),
 				'sanitize_callback' => function ( $value ) {
-					if ( ! empty( $value ) && strlen( $value ) > 21 ) {
-						$value = substr( $value, 0, 22 );
+					// only validate length for non-dynamic strings
+					if ( ! empty( $value ) ) {
+						// If there are dynamic variables, skip length validation
+						if ( ! preg_match( '/\{[^}]*}/', $value ) ) {
+							$value = substr( $value, 0, 22 );
+						}
 					}
 
 					return WC_Stripe_Utils::sanitize_statement_descriptor( $value );
 				}
 			),
-			'stripe_fee'             => array(
+			'statement_descriptor_suffix' => array(
+				'title'             => __( 'Statement Descriptor Suffix', 'woo-stripe-payment' ),
+				'type'              => 'text',
+				'default'           => '',
+				'desc_tip'          => false,
+				'description'       => __( 'The statement descriptor suffix is used for card payments. It is concatenated with your static account descriptor or the shortened descriptor.', 'woo-stripe-payment' ) . ' ' . __( 'Supports dynamic variables like {order_id}.', 'woo-stripe-payment' ) .
+				                       ' ' . '<a href="https://paymentplugins.com/documentation/stripe/advanced-settings/#statement-descriptor-suffix" target="_blank">' . __( 'Documentation', 'woo-stripe-payment' ) . '</a>',
+				'sanitize_callback' => function ( $value ) {
+					// only validate length for non-dynamic strings
+					if ( ! empty( $value ) ) {
+						// If there are dynamic variables, skip length validation
+						if ( ! preg_match( '/\{[^}]*}/', $value ) ) {
+							$value = substr( $value, 0, 22 );
+						}
+					}
+
+					return WC_Stripe_Utils::sanitize_statement_descriptor( $value );
+				}
+			),
+			'stripe_fee'                  => array(
 				'title'       => __( 'Display Stripe Fee', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
@@ -75,7 +99,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description' => __( 'If enabled, the Stripe fee will be displayed on the Order Details page. The fee and net payout are displayed in your Stripe account currency.',
 					'woo-stripe-payment' )
 			),
-			'stripe_fee_currency'    => array(
+			'stripe_fee_currency'         => array(
 				'title'             => __( 'Fee Display Currency', 'woo-stripe-payment' ),
 				'type'              => 'checkbox',
 				'default'           => 'no',
@@ -87,7 +111,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 					)
 				)
 			),
-			'capture_status'         => array(
+			'capture_status'              => array(
 				'title'       => __( 'Capture Status', 'woo-stripe-payment' ),
 				'type'        => 'select',
 				'default'     => 'completed',
@@ -98,7 +122,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'desc_tip'    => true,
 				'description' => __( 'For orders that are authorized, when the order is set to this status, it will trigger a capture.', 'woo-stripe-payment' ),
 			),
-			'refund_cancel'          => array(
+			'refund_cancel'               => array(
 				'title'       => __( 'Refund On Cancel', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
@@ -106,25 +130,25 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, the plugin will process a payment cancellation or refund within Stripe when the order\'s status is set to cancelled.', 'woo-stripe-payment' )
 			),
-			'extended_authorization' => array(
+			'extended_authorization'      => array(
 				'title'       => __( 'Extended Authorization', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, eligible card authorizations can be extended for up to 30 days. Make sure this feature is enabled on your Stripe account before enabling.', 'woo-stripe-payment' )
 			),
-			'terms_enabled'          => array(
+			'terms_enabled'               => array(
 				'title'       => __( 'Terms Enabled', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'description' => __( 'When enabled, mandates and/or legal agreements will be displayed in the Stripe payment element. Example: If a customer selects the save credit card checkbox
 				a legal notice will be displayed.' )
 			),
-			'gdpr'                   => array(
+			'gdpr'                        => array(
 				'title' => __( 'GDPR Settings', 'woo-stripe-payment' ),
 				'type'  => 'title'
 			),
-			'customer_creation'      => array(
+			'customer_creation'           => array(
 				'title'       => __( 'Customer Creation', 'woo-stripe-payment' ),
 				'type'        => 'select',
 				'default'     => 'account_creation',
@@ -135,25 +159,25 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'description' => __( 'This option allows you to control when a Stripe customer object is created. The plugin can create a Stripe customer ID when 
 				your customer creates an account with your store, or it can wait until the Stripe customer ID is required for things like payment on the checkout page.', 'woo-stripe-payment' )
 			),
-			'guest_customer'         => array(
+			'guest_customer'              => array(
 				'title'       => __( 'Guest Customer Creation', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'desc_tip'    => true,
 				'description' => __( 'If enabled, a Stripe customer will be created for guest users during checkout.', 'woo-stripe-payment' )
 			),
-			'disputes'               => array(
+			'disputes'                    => array(
 				'title' => __( 'Dispute Settings', 'woo-stripe-payment' ),
 				'type'  => 'title'
 			),
-			'dispute_created'        => array(
+			'dispute_created'             => array(
 				'title'       => __( 'Dispute Created', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'description' => __( 'If enabled, the plugin will listen for the <strong>charge.dispute.created</strong> webhook event and set the order\'s status to on-hold by default.',
 					'woo-stripe-payment' )
 			),
-			'dispute_created_status' => array(
+			'dispute_created_status'      => array(
 				'title'             => __( 'Dispute Created Order Status', 'woo-stripe-payment' ),
 				'type'              => 'select',
 				'default'           => 'wc-on-hold',
@@ -165,36 +189,36 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 					)
 				)
 			),
-			'dispute_closed'         => array(
+			'dispute_closed'              => array(
 				'title'       => __( 'Dispute Closed', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'description' => __( 'If enabled, the plugin will listen for the <strong>charge.dispute.closed</strong> webhook event and set the order\'s status back to the status before the dispute was opened.',
 					'woo-stripe-payment' )
 			),
-			'reviews'                => array(
+			'reviews'                     => array(
 				'title' => __( 'Review Settings', 'woo-stripe-payment' ),
 				'type'  => 'title'
 			),
-			'review_created'         => array(
+			'review_created'              => array(
 				'title'       => __( 'Review Created', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __( 'If enabled, the plugin will listen for the <strong>review.created</strong> webhook event and set the order\'s status to on-hold by default.',
 					'woo-stripe-payment' )
 			),
-			'review_closed'          => array(
+			'review_closed'               => array(
 				'title'       => __( 'Review Closed', 'woo-stripe-payment' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __( 'If enabled, the plugin will listen for the <strong>review.closed</strong> webhook event and set the order\'s status back to the status before the review was opened.',
 					'woo-stripe-payment' )
 			),
-			'email_title'            => array(
+			'email_title'                 => array(
 				'type'  => 'title',
 				'title' => __( 'Stripe Email Options', 'woo-stripe-payment' )
 			),
-			'email_enabled'          => array(
+			'email_enabled'               => array(
 				'type'        => 'checkbox',
 				'title'       => __( 'Email Receipt', 'woo-stripe-payment' ),
 				'default'     => 'no',

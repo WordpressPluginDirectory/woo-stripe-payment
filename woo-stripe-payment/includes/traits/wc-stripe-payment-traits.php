@@ -302,6 +302,8 @@ trait WC_Stripe_Payment_Intent_Trait {
 			if ( $payment_method ) {
 				$params['payment_method'] = $payment_method;
 				$params['confirm']        = true;
+				$params['return_url']     = $this->get_complete_payment_return_url( $order );
+				$this->add_payment_intent_mandate_args( $params, $order );
 			}
 			$this->add_stripe_order_args( $params, $order );
 			$intent = $this->payment_object->get_gateway()->setupIntents->create( apply_filters( 'wc_stripe_setup_intent_params', $params, $order, $this ) );
@@ -337,8 +339,8 @@ trait WC_Stripe_Payment_Intent_Trait {
 	}
 
 	/**
-	 * @since 3.3.32
 	 * @return false
+	 * @since 3.3.32
 	 */
 	public function is_deferred_intent_creation() {
 		return false;
@@ -409,7 +411,10 @@ trait WC_Stripe_Voucher_Payment_Trait {
 	 */
 	public function process_voucher_order_status( $order ) {
 		if ( $this->is_active( 'email_link' ) ) {
-			add_filter( 'woocommerce_email_additional_content_customer_on_hold_order', array( $this, 'add_customer_voucher_email_content' ), 10, 2 );
+			add_filter( 'woocommerce_email_additional_content_customer_on_hold_order', array(
+				$this,
+				'add_customer_voucher_email_content'
+			), 10, 2 );
 		}
 		$order->update_status( 'on-hold' );
 	}
@@ -446,8 +451,8 @@ trait WC_Stripe_Express_Payment_Trait {
 	}
 
 	/**
-	 * @since 3.3.87
 	 * @return mixed|null
+	 * @since 3.3.87
 	 */
 	protected function get_element_options_locale() {
 		return wc_stripe_get_site_locale();

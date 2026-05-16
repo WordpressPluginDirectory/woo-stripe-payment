@@ -164,6 +164,11 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 		wp_enqueue_script( 'wc-stripe-link-express-product' );
 	}
 
+	public function enqueue_express_checkout_scripts() {
+		wp_localize_script( 'wc-stripe-link-express-checkout', 'wc_stripe_link_checkout_params', $this->get_localized_params() );
+		wp_enqueue_script( 'wc-stripe-link-express-checkout' );
+	}
+
 	/**
 	 * @param float  $price
 	 * @param string $label

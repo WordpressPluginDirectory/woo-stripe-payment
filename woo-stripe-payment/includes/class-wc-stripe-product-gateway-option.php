@@ -83,7 +83,7 @@ class WC_Stripe_Product_Gateway_Option {
 	 */
 	public function get_default_values() {
 		return array(
-			'enabled'     => $this->payment_method->product_checkout_enabled(),
+			'enabled'     => $this->payment_method->enabled === 'yes' && $this->payment_method->product_checkout_enabled(),
 			'charge_type' => $this->payment_method->get_option( 'charge_type' ),
 		);
 	}
@@ -110,8 +110,8 @@ class WC_Stripe_Product_Gateway_Option {
 	}
 
 	/**
-	 * @since 3.3.21
 	 * @return bool
+	 * @since 3.3.21
 	 */
 	public function has_product() {
 		return ! ! $this->product;

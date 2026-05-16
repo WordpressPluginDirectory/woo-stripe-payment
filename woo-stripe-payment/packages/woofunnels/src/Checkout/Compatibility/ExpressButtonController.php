@@ -25,7 +25,22 @@ class ExpressButtonController {
 	protected function initialize() {
 		add_action( 'wfacp_after_checkout_page_found', [ $this, 'handle_checkout_page_found' ] );
 		add_filter( 'wfacp_smart_buttons', [ $this, 'add_buttons' ], 20 );
-		add_action( 'wfacp_smart_button_container_' . $this->id, [ $this, 'render_express_buttons' ] );
+		//add_action( 'wfacp_smart_button_container_' . $this->id, [ $this, 'render_express_buttons' ] );
+		add_filter( 'wfacp_template_localize_data', function ( $data ) {
+			if ( $this->has_express_buttons() ) {
+				$data['smart_button_wrappers']['dynamic_buttons'] = array_merge(
+					$data['smart_button_wrappers']['dynamic_buttons'],
+					array_reduce( $this->get_payment_gateways(), function ( $carry, $gateway ) {
+						$key           = sprintf( '#wfacp_smart_button_%1$s div.banner_payment_method_%1$s', $gateway->get_id() );
+						$carry[ $key ] = sprintf( '#wfacp_smart_button_%1$s', $gateway->get_id() );
+
+						return $carry;
+					}, [] )
+				);
+			}
+
+			return $data;
+		} );
 	}
 
 	public function handle_checkout_page_found() {
@@ -33,6 +48,18 @@ class ExpressButtonController {
 		if ( $this->has_express_buttons() ) {
 			$this->assets->enqueue_style( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout-styles.css' );
 			$this->assets->enqueue_script( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout.js' );
+
+			foreach ( $this->get_payment_gateways() as $gateway ) {
+				if ( $gateway->get_id() === 'stripe_link_checkout' ) {
+					$link = WC()->payment_gateways()->payment_gateways()['stripe_link_checkout'] ?? null;
+					if ( $link ) {
+						$link->enqueue_express_checkout_scripts();
+					}
+				}
+				add_action( 'wfacp_smart_button_container_' . $gateway->get_id(), function () use ( $gateway ) {
+					$this->render_express_buttons( $gateway );
+				} );
+			}
 		}
 	}
 
@@ -56,7 +83,8 @@ class ExpressButtonController {
 		return [
 			'stripe_googlepay'       => GooglePay::class,
 			'stripe_applepay'        => ApplePay::class,
-			'stripe_payment_request' => PaymentRequest::class
+			'stripe_payment_request' => PaymentRequest::class,
+			'stripe_link_checkout'   => LinkCheckout::class
 		];
 	}
 
@@ -73,24 +101,25 @@ class ExpressButtonController {
 
 	public function add_buttons( $buttons ) {
 		if ( $this->has_express_buttons() ) {
-			$buttons[ $this->id ] = [
-				'iframe' => true
-			];
-			remove_action( 'woocommerce_checkout_before_customer_details', [ \WC_Stripe_Field_Manager::class, 'output_banner_checkout_fields' ] );
+			remove_action( 'woocommerce_checkout_before_customer_details', [
+				\WC_Stripe_Field_Manager::class,
+				'output_banner_checkout_fields'
+			] );
+			foreach ( $this->get_payment_gateways() as $gateway ) {
+				$buttons[ $gateway->get_id() ] = [
+					'iframe' => true
+				];
+			}
 		}
 
 		return $buttons;
 	}
 
-	public function render_express_buttons() {
+	public function render_express_buttons( $gateway ) {
 		?>
-        <ul class="wc_stripe_checkout_banner_gateways wc-stripe-wfacp-express-buttons" style="list-style: none">
-			<?php foreach ( $this->payment_gateways as $gateway ): ?>
-                <li class="wc-stripe-checkout-banner-gateway banner_payment_method_<?php echo $gateway->get_payment_gateway()->id ?>">
+        <div class="wc-stripe-checkout-banner-gateway banner_payment_method_<?php echo esc_attr( $gateway->get_id() ) ?>">
 
-                </li>
-			<?php endforeach; ?>
-        </ul>
+        </div>
 		<?php
 	}
 

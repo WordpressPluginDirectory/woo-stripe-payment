@@ -94,7 +94,11 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 				'redirect'         => $this->payment_method->get_return_url( $order ),
 			);
 		}
-		if ( in_array( $intent->status, array( 'requires_action', 'requires_payment_method', 'requires_confirmation' ), true ) ) {
+		if ( in_array( $intent->status, array(
+			'requires_action',
+			'requires_payment_method',
+			'requires_confirmation'
+		), true ) ) {
 			/**
 			 * Allow 3rd party code to alter the order status of an asynchronous payment method.
 			 * The plugin uses the charge.pending event to set the order's status to on-hold.
@@ -318,13 +322,23 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 
 		$args['payment_method_types'][] = $this->payment_method->get_payment_method_type();
 
-		if ( ( $statement_descriptor = stripe_wc()->advanced_settings->get_option( 'statement_descriptor' ) ) ) {
-			if ( \in_array( 'card', $args['payment_method_types'] ) ) {
-				$args['statement_descriptor_suffix'] = WC_Stripe_Utils::sanitize_statement_descriptor( $statement_descriptor );
-			} else {
-				$args['statement_descriptor'] = WC_Stripe_Utils::sanitize_statement_descriptor( $statement_descriptor );
+
+		if ( \in_array( 'card', $args['payment_method_types'] ) ) {
+			$descriptor_suffix = stripe_wc()->advanced_settings->get_option( 'statement_descriptor_suffix', '' );
+			if ( $descriptor_suffix ) {
+				$args['statement_descriptor_suffix'] = WC_Stripe_Utils::sanitize_statement_descriptor(
+					WC_Stripe_Utils::format_statement_descriptor( $descriptor_suffix, $order )
+				);
+			}
+		} else {
+			$statement_descriptor = stripe_wc()->advanced_settings->get_option( 'statement_descriptor' );
+			if ( $statement_descriptor ) {
+				$args['statement_descriptor'] = WC_Stripe_Utils::sanitize_statement_descriptor(
+					WC_Stripe_Utils::format_statement_descriptor( $statement_descriptor, $order )
+				);
 			}
 		}
+
 		if ( $new ) {
 			$args['confirmation_method'] = $this->payment_method->get_confirmation_method( $order );
 			$args['confirm']             = false;
@@ -546,11 +560,11 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 			$order->delete_meta_data( WC_Stripe_Constants::PAYMENT_INTENT );
 		};
 		/**
+		 * @return void
 		 * @since 3.3.40
 		 * Merchants sometimes change the Stripe account that the plugin is connected to. This results in
 		 * API errors because the customer ID doesn't exist in the new Stripe account. Create a customer ID
 		 * to avoid this error.
-		 * @return void
 		 */
 		$create_customer      = function () use ( $order ) {
 			if ( $order->get_customer_id() ) {
@@ -679,7 +693,12 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 				}
 			}
 			$currency = $order->get_currency();
-			$totals   = (object) array( 'subtotal' => 0, 'tax' => 0, 'discount' => 0, 'shipping_amount' => $args['level3']['shipping_amount'] );
+			$totals   = (object) array(
+				'subtotal'        => 0,
+				'tax'             => 0,
+				'discount'        => 0,
+				'shipping_amount' => $args['level3']['shipping_amount']
+			);
 
 			foreach ( $order->get_items( [ 'line_item', 'fee' ] ) as $item ) {
 				$line_item  = new stdClass();

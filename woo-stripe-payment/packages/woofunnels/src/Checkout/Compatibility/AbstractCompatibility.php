@@ -21,6 +21,10 @@ abstract class AbstractCompatibility {
 	protected function initialize() {
 	}
 
+	public function get_id() {
+		return $this->id;
+	}
+
 	public function handle_checkout_page_found() {
 		$this->settings = \WFACP_Common::get_page_settings( \WFACP_Common::get_id() );
 	}

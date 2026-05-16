@@ -186,6 +186,7 @@ class ComposerStaticInit9dd02bb3d5f31ebcef2d6ae4abe1125e
         'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\ApplePay' => __DIR__ . '/../..' . '/packages/woofunnels/src/Checkout/Compatibility/ApplePay.php',
         'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\ExpressButtonController' => __DIR__ . '/../..' . '/packages/woofunnels/src/Checkout/Compatibility/ExpressButtonController.php',
         'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\GooglePay' => __DIR__ . '/../..' . '/packages/woofunnels/src/Checkout/Compatibility/GooglePay.php',
+        'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\LinkCheckout' => __DIR__ . '/../..' . '/packages/woofunnels/src/Checkout/Compatibility/LinkCheckout.php',
         'PaymentPlugins\\WooFunnels\\Stripe\\Checkout\\Compatibility\\PaymentRequest' => __DIR__ . '/../..' . '/packages/woofunnels/src/Checkout/Compatibility/PaymentRequest.php',
         'PaymentPlugins\\WooFunnels\\Stripe\\Main' => __DIR__ . '/../..' . '/packages/woofunnels/src/Main.php',
         'PaymentPlugins\\WooFunnels\\Stripe\\Upsell\\LinkIntegration' => __DIR__ . '/../..' . '/packages/woofunnels/src/Upsell/LinkIntegration.php',

@@ -88,7 +88,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 
 	/**
 	 *
-	 * @param int $qty
+	 * @param int             $qty
 	 * @param WP_REST_Request $request
 	 */
 	public function validate_quantity( $qty, $request ) {
@@ -124,6 +124,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 				$this->empty_cart( WC()->cart );
 				WC()->cart->add_to_cart( ...array_values( $this->get_add_to_cart_args( $request ) ) );
 			}
+			$this->add_postcode_format_filter( WC()->customer->get_shipping_country() );
 			WC()->cart->calculate_totals();
 
 			$cart = ( new \PaymentPlugins\Stripe\Transformers\DataTransformer() )->transform_cart( WC()->cart );
@@ -174,6 +175,7 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 			wc_stripe_update_customer_location( $address );
 
 			$this->add_ready_to_calc_shipping();
+			$this->add_postcode_format_filter( $address['country'] ?? null );
 
 			if ( 'product' == $request->get_param( 'page_id' ) ) {
 				$this->empty_cart( WC()->cart );
@@ -399,6 +401,24 @@ class WC_Stripe_Controller_Cart extends WC_Stripe_Rest_Controller {
 		foreach ( $packages as $idx => $package ) {
 			$key = 'shipping_for_package_' . $idx;
 			unset( WC()->session->{$key} );
+		}
+	}
+
+	private function add_postcode_format_filter( $country ) {
+		if ( in_array( $country, array( 'CA', 'GB' ) ) ) {
+			add_filter( 'woocommerce_format_postcode', function ( $formatted_postcode, $country ) {
+				switch ( $country ) {
+					case 'CA':
+					case 'GB':
+						$postcode = str_replace( ' ', '', $formatted_postcode );
+						if ( strlen( $postcode ) <= 4 ) {
+							$formatted_postcode = $postcode;
+						}
+						break;
+				}
+
+				return $formatted_postcode;
+			}, 10, 2 );
 		}
 	}
 
