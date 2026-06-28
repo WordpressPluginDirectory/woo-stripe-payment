@@ -49,4 +49,14 @@ class WC_Payment_Token_Stripe_Local extends WC_Payment_Token_Stripe {
 		return sprintf( '%1$s', $this->get_gateway_id() );
 	}
 
+	public function get_payment_token_item_format( $item ) {
+		$item['method']['brand'] = ucfirst( $this->get_brand() );
+		if ( method_exists( $this, 'get_last4' ) ) {
+			$item['method']['last4'] = $this->get_last4();
+		}
+		$item['expires']          = __( 'n/a', 'woo-stripe-payment' );
+		$item['wc_stripe_method'] = true;
+
+		return $item;
+	}
 }

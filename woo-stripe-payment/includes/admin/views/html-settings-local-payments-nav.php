@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 global $current_section;
 $tabs = apply_filters( 'wc_stripe_local_gateways_tab', array() );
 ksort($tabs);
@@ -6,7 +8,7 @@ ksort($tabs);
 <div class="wc-stripe-advanced-settings-nav local-gateways">
 	<?php foreach ( $tabs as $id => $tab ) : ?>
 		<a
-		class="nav-link 
+		class="nav-link
 		<?php
 		if ( $current_section === $id ) {
 			echo 'nav-link-active';}

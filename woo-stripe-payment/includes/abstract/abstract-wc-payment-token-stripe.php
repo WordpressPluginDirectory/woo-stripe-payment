@@ -152,7 +152,11 @@ abstract class WC_Payment_Token_Stripe extends WC_Payment_Token {
 	public abstract function get_formats();
 
 	public function get_brand( $context = 'view' ) {
-		return wc_get_credit_card_type_label( $this->get_prop( 'brand', $context ) );
+		if ( $context == 'view' ) {
+			return wc_get_credit_card_type_label( $this->get_prop( 'brand', $context ) );
+		}
+
+		return $this->get_prop( 'brand', $context );
 	}
 
 	public function set_brand( $value ) {
@@ -184,8 +188,8 @@ abstract class WC_Payment_Token_Stripe extends WC_Payment_Token {
 	}
 
 	/**
-	 * @since 3.2.12
 	 * @return string
+	 * @since 3.2.12
 	 */
 	public function get_basic_payment_method_title() {
 		return '';
@@ -194,5 +198,12 @@ abstract class WC_Payment_Token_Stripe extends WC_Payment_Token {
 	public function get_display_name( $deprecated = '' ) {
 		return $this->get_payment_method_title();
 	}
+
+	/**
+	 * @param array $item
+	 *
+	 * @return mixed
+	 */
+	public abstract function get_payment_token_item_format( $item );
 
 }

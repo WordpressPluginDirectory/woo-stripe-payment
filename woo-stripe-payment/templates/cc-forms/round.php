@@ -3,6 +3,7 @@
  * @version 3.0.0
  * @var WC_Payment_Gateway_Stripe_CC $gateway
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-round-form">
     <div class="fieldset">

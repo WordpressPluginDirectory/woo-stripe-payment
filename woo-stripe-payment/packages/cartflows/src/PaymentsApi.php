@@ -1,25 +1,31 @@
 <?php
 
 
-namespace PaymentPlugins\CartFlows\Stripe;
+namespace PaymentPlugins\Stripe\CartFlows;
 
+
+use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
 
 class PaymentsApi {
 
-	public function __construct() {
+	private $assets;
+
+	public function __construct( AssetsApi $assets ) {
+		$this->assets = $assets;
+	}
+
+	public function initialize() {
 		add_filter( 'cartflows_offer_supported_payment_gateways', array( $this, 'add_payment_gateways' ) );
 		add_filter( 'wc_stripe_force_save_payment_method', array( $this, 'maybe_force_save_payment_method' ), 10, 3 );
 		add_filter( 'cartflows_offer_js_localize', array( $this, 'enqueue_scripts' ) );
-		add_action( 'wcf_after_order_bump_process', function () {
-			add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'get_order_bump_fragments' ) );
-		} );
 	}
 
 	public function add_payment_gateways( $supported_gateways ) {
 		foreach ( $this->get_payment_method_ids() as $id ) {
 			$supported_gateways[ $id ] = array(
 				'path'  => dirname( __FILE__ ) . '/PaymentGateways/BasePaymentGateway.php',
-				'class' => '\PaymentPlugins\CartFlows\Stripe\PaymentGateways\BasePaymentGateway'
+				'class' => '\PaymentPlugins\Stripe\CartFlows\PaymentGateways\BasePaymentGateway'
 			);
 		}
 
@@ -29,23 +35,26 @@ class PaymentsApi {
 	/**
 	 * @param                            $bool
 	 * @param \WC_Order|null             $order
-	 * @param \WC_Payment_Gateway_Stripe $payment_method
+	 * @param AbstractGateway            $payment_method
 	 *
 	 * @return bool
 	 */
 	public function maybe_force_save_payment_method( bool $bool, $order, $payment_method = null ) {
-		if ( ! $payment_method ) {
+		if ( ! $payment_method || $bool ) {
 			return $bool;
+		}
+		if ( $payment_method->should_use_saved_payment_method() ) {
+			return false;
 		}
 		// validate that next step is an offer
 		$checkout_id = wcf()->utils->get_checkout_id_from_post_data();
 		$flow_id     = wcf()->utils->get_flow_id_from_post_data();
-		if ( Main::cartflows_pro_enabled() && $checkout_id && $flow_id ) {
+		if ( function_exists( 'wcf_pro_get_step' ) && $checkout_id && $flow_id ) {
 			$wcf_step_obj      = wcf_pro_get_step( $checkout_id );
 			$next_step_id      = $wcf_step_obj->get_next_step_id();
 			$wcf_next_step_obj = wcf_pro_get_step( $next_step_id );
 			// todo eventually remove check for WC_Stripe_Payment_Intent so sources can be supported.
-			if ( $next_step_id && $wcf_next_step_obj->is_offer_page() && ! $payment_method->use_saved_source() && $payment_method->payment_object instanceof \WC_Stripe_Payment_Intent ) {
+			if ( $next_step_id && $wcf_next_step_obj->is_offer_page() && $payment_method->payment_controller instanceof \WC_Stripe_Payment_Intent ) {
 				$bool = true;
 			}
 		}
@@ -59,17 +68,11 @@ class PaymentsApi {
 	public function enqueue_scripts( $localize ) {
 		if ( in_array( $localize['payment_method'], $this->get_payment_method_ids() ) ) {
 			$localize['stripeData'] = array(
-				'key'       => wc_stripe_get_publishable_key(),
-				'accountId' => wc_stripe_get_account_id(),
-				'version'   => stripe_wc()->version(),
-				'mode'      => wc_stripe_mode(),
-				'msg'       => __( 'Processing Order...', 'cartflows-pro' ),
-				'timeout'   => 3000
+				'msg'     => __( 'Processing Order...', 'cartflows-pro' ),
+				'timeout' => 3000
 			);
 			// enqueue cartflows script
-			$assets_url = plugin_dir_url( __DIR__ ) . 'build/';
-			$assets     = require_once dirname( __DIR__ ) . '/build/wc-stripe-cartflows.asset.php';
-			wp_enqueue_script( 'wc-stripe-cartflows', $assets_url . 'wc-stripe-cartflows.js', $assets['dependencies'], stripe_wc()->version(), true );
+			wp_enqueue_script( 'wc-stripe-cartflows-checkout' );
 		}
 
 		return $localize;
@@ -83,22 +86,8 @@ class PaymentsApi {
 			'stripe_cc',
 			'stripe_applepay',
 			'stripe_googlepay',
-			'stripe_payment_request'
+			'stripe_link_checkout'
 		) );
-	}
-
-	public function get_order_bump_fragments( $data ) {
-		$payment_gateways = WC()->payment_gateways()->payment_gateways();
-		foreach ( $this->get_payment_method_ids() as $id ) {
-			$gateway = $payment_gateways[ $id ] ?? null;
-			if ( $gateway ) {
-				ob_start();
-				$gateway->output_display_items( 'checkout' );
-				$data[ '.woocommerce_' . $id . '_gateway_data' ] = ob_get_clean();
-			}
-		}
-
-		return $data;
 	}
 
 }

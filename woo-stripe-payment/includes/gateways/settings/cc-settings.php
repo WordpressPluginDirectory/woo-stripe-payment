@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 return array(
 	'enabled'           => array(
@@ -22,7 +23,7 @@ return array(
 		'title'       => __( 'Title', 'woo-stripe-payment' ),
 		'default'     => __( 'Credit/Debit Cards', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
-		'description' => __( 'Title of the credit card gateway' ),
+		'description' => __( 'Title of the credit card gateway', 'woo-stripe-payment' ),
 	),
 	'description'       => array(
 		'title'       => __( 'Description', 'woo-stripe-payment' ),
@@ -39,7 +40,7 @@ return array(
 		'value'       => '',
 		'default'     => 'type_ending_in',
 		'desc_tip'    => true,
-		'description' => __( 'This option allows you to customize how the credit card will display for your customers on orders, subscriptions, etc.' ),
+		'description' => __( 'This option allows you to customize how the credit card will display for your customers on orders, subscriptions, etc.', 'woo-stripe-payment' )
 	),
 	'charge_type'       => array(
 		'type'        => 'select',
@@ -89,7 +90,7 @@ return array(
 		'desc_tip'    => true,
 		'description' => __( 'If enabled, credit card errors will be generic when presented to the customer. Merchants may prefer to not provide details on why a card was not accepted for security purposes.', 'woo-stripe-payment' ),
 	),
-	'cards'             => array(
+	'card_icons'        => array(
 		'type'        => 'multiselect',
 		'title'       => __( 'Credit Card Icons', 'woo-stripe-payment' ),
 		'class'       => 'wc-enhanced-select stripe-accepted-cards',

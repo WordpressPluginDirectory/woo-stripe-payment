@@ -1,9 +1,10 @@
 <?php
 
 
-namespace PaymentPlugins\CheckoutWC\Stripe\OrderBumps;
+namespace PaymentPlugins\Stripe\CheckoutWC\OrderBumps;
 
 use Objectiv\Plugins\Checkout\Factories\BumpFactory;
+use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
 use WC_Order;
 use WC_Payment_Gateway_Stripe;
 
@@ -24,7 +25,7 @@ class OrderBumpsController {
 		foreach ( $this->get_payment_method_ids() as $id ) {
 			$supported_gateways[ $id ] = array(
 				'path'  => $this->path . '/PaymentGateways/BasePaymentGateway.php',
-				'class' => '\PaymentPlugins\CheckoutWC\Stripe\PaymentGateways\BasePaymentGateway',
+				'class' => '\PaymentPlugins\Stripe\CheckoutWC\PaymentGateways\BasePaymentGateway',
 			);
 		}
 
@@ -32,9 +33,9 @@ class OrderBumpsController {
 	}
 
 	/**
-	 * @param bool $force_save Whether to force save.
-	 * @param WC_Order|null $order The WooCommerce order.
-	 * @param WC_Payment_Gateway_Stripe $payment_method The payment method.
+	 * @param bool            $force_save Whether to force save.
+	 * @param WC_Order|null   $order The WooCommerce order.
+	 * @param AbstractGateway $payment_method The payment method.
 	 *
 	 * @return bool
 	 */
@@ -48,7 +49,7 @@ class OrderBumpsController {
 			return $force_save;
 		}
 
-		if ( $payment_method->use_saved_source() ) {
+		if ( $payment_method->should_use_saved_payment_method() ) {
 			return $force_save;
 		}
 

@@ -2,6 +2,7 @@
 /**
  * @version 3.2.8
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-paymentRequest-icons-container">
     <img class="wc-stripe-paymentRequest-icon gpay"

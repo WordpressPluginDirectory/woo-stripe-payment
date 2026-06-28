@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit();
+
 if ( function_exists( 'WC' ) ) {
 	$advanced_settings = stripe_wc()->advanced_settings;
 	$payment_gateways  = WC()->payment_gateways()->payment_gateways();

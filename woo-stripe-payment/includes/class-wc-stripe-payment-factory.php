@@ -18,14 +18,14 @@ class WC_Stripe_Payment_Factory {
 
 	/**
 	 *
-	 * @param string $type
+	 * @param string                    $type
 	 * @param WC_Payment_Gateway_Stripe $payment_method
-	 * @param WC_Stripe_Gateway $gateway
+	 * @param WC_Stripe_Gateway         $gateway
 	 */
 	public static function load( $type, $payment_method, $gateway ) {
 		$classes = apply_filters( 'wc_stripe_payment_classes', self::$classes );
 		if ( ! isset( $classes[ $type ] ) ) {
-			throw Exception( 'No class defined for type ' . $type );
+			throw new Exception( 'No class defined for type ' . $type );
 		}
 		$classname = $classes[ $type ];
 
@@ -37,6 +37,7 @@ class WC_Stripe_Payment_Factory {
 		} else {
 			$instance = new $classname( $payment_method, $gateway );
 		}
+
 		return $instance;
 	}
 }

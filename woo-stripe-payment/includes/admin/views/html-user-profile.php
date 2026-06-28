@@ -2,7 +2,7 @@
 /**
  * @var WP_User $user
  */
-
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-user-info">
     <h2><?php esc_html_e( 'Stripe Customer ID\'s', 'woo-stripe-payment' ); ?></h2>

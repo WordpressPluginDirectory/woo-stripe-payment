@@ -15,16 +15,14 @@ class WC_Stripe_API_Request_Filter {
 	 */
 	public function __construct( $advanced_settings ) {
 		$this->advanced_settings = $advanced_settings;
-		$this->initialize();
 	}
 
-	private function initialize() {
+	public function initialize() {
 		add_filter( 'wc_stripe_payment_intent_args', array( $this, 'expand_payment_intent_properties' ) );
 		if ( $this->advanced_settings->is_fee_enabled() ) {
 			add_filter( 'wc_stripe_payment_intent_confirmation_args', array( $this, 'expand_balance_transaction' ) );
 			add_filter( 'wc_stripe_payment_intent_retrieve_args', array( $this, 'expand_balance_transaction' ) );
 			add_filter( 'wc_stripe_payment_intent_capture_args', array( $this, 'expand_balance_transaction' ) );
-			add_filter( 'wc_stripe_charge_order_args', array( $this, 'expand_balance_transaction_for_charge' ) );
 		}
 	}
 
@@ -33,14 +31,13 @@ class WC_Stripe_API_Request_Filter {
 			$args = array();
 		}
 		$args['expand']   = isset( $args['expand'] ) ? $args['expand'] : array();
-		$args['expand'][] = 'charges.data.balance_transaction';
+		$args['expand'][] = 'latest_charge.balance_transaction';
 
 		return $args;
 	}
 
 	public function expand_payment_intent_properties( $args ) {
-		$args['expand']   = isset( $args['expand'] ) ? $args['expand'] : array();
-		$args['expand'][] = 'payment_method';
+		$args['expand'] = isset( $args['expand'] ) ? $args['expand'] : array();
 		if ( $this->advanced_settings->is_fee_enabled() ) {
 			$args = $this->expand_balance_transaction( $args );
 		}

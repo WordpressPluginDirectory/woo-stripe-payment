@@ -22,7 +22,8 @@ class WC_Stripe_Admin_Product_Edit {
 	public static function process_bulk_actions( $redirect, $doaction, $post_ids ) {
 		if ( $doaction === 'wc_stripe_delete' && current_user_can( 'manage_woocommerce' ) ) {
 			$gateways = array_filter( WC()->payment_gateways()->payment_gateways(), function ( $gateway ) {
-				return $gateway instanceof \WC_Payment_Gateway_Stripe && $gateway->supports( 'wc_stripe_product_checkout' );
+				return $gateway instanceof \WC_Payment_Gateway_Stripe && $gateway->supports( 'wc_stripe_product_checkout' )
+				       || $gateway->supports( 'stripe_bnpl_msg' );
 			} );
 			// delete the Stripe options for the $post_ids
 			foreach ( $post_ids as $id ) {

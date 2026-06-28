@@ -24,6 +24,10 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	 */
 	public $currencies = array();
 
+	/**
+	 * @var string
+	 * @deprecated 4.0.0
+	 */
 	public $local_payment_type = '';
 
 	public $countries = array();
@@ -38,9 +42,9 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 
 	public $token_type = 'Stripe_Local';
 
-	public function __construct() {
+	public function __construct( ...$args ) {
+		parent::__construct( ...$args );
 		$this->template_name = 'local-payment.php';
-		parent::__construct();
 
 		if ( ! isset( $this->form_fields['method_format'] ) ) {
 			$this->settings['method_format'] = 'gateway_title';
@@ -61,11 +65,12 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		add_filter( 'wc_stripe_local_gateways_tab', array( $this, 'admin_nav_tab' ) );
 	}
 
-	/**
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_checkout_scripts( $scripts ) {
-		$scripts->enqueue_local_payment_scripts();
+	public function get_checkout_script_handles() {
+		return [ 'wc-stripe-local-payment-checkout' ];
+	}
+
+	public function get_add_payment_method_script_handles() {
+		return [ 'wc-stripe-local-payment-add-payment' ];
 	}
 
 	/**
@@ -84,10 +89,6 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 
 	public function init_form_fields() {
 		$this->form_fields = apply_filters( 'wc_stripe_form_fields_' . $this->id, $this->get_local_payment_settings() );
-	}
-
-	public function init_supports() {
-		$this->supports = array( 'tokenization', 'products', 'refunds' );
 	}
 
 	/**
@@ -118,7 +119,7 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 				'title'       => __( 'Title', 'woo-stripe-payment' ),
 				'default'     => $this->tab_title,
 				'desc_tip'    => true,
-				'description' => sprintf( __( 'Title of the %s gateway' ), $this->get_method_title() ),
+				'description' => sprintf( __( 'Title of the %s gateway', 'woo-stripe-payment' ), $this->get_method_title() ),
 			),
 			'description'        => array(
 				'title'       => __( 'Description', 'woo-stripe-payment' ),
@@ -177,24 +178,12 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		);
 	}
 
-	public function get_localized_params() {
-		return array_merge_recursive(
-			parent::get_localized_params(),
-			array(
-				'local_payment_type' => $this->local_payment_type,
-				'return_url'         => add_query_arg(
-					array(
-						'key'                   => wp_create_nonce( 'local-payment' ),
-						'_stripe_local_payment' => $this->id,
-					),
-					wc_get_checkout_url()
-				),
-				'routes'             => array(
-					'delete_order_source' => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'order/source' ) ),
-					'update_source'       => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->source->rest_uri( 'update' ) )
-				),
-				'payment_sections'   => $this->get_option( 'payment_sections', array() )
-			)
+	public function get_payment_method_data() {
+		return array_merge(
+			parent::get_payment_method_data(),
+			[
+
+			]
 		);
 	}
 
@@ -218,81 +207,13 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		);
 	}
 
-	/**
-	 *
-	 * @param WC_Order $order
-	 *
-	 * @return array
-	 */
-	public function get_source_args( $order ) {
-		$args = array(
-			'type'                 => $this->local_payment_type,
-			'amount'               => wc_stripe_add_number_precision( $order->get_total(), $order->get_currency() ),
-			'currency'             => $order->get_currency(),
-			'statement_descriptor' => sprintf( __( 'Order %s', 'woo-stripe-payment' ), $order->get_order_number() ),
-			'owner'                => $this->get_source_owner_args( $order ),
-			'redirect'             => array( 'return_url' => $this->get_local_payment_return_url( $order ) ),
-		);
-
-		/**
-		 * @param $args
-		 *
-		 * @since 3.1.8
-		 */
-		return apply_filters( 'wc_stripe_get_source_args', $args );
-	}
-
-	/**
-	 * @param WC_Order $order
-	 *
-	 * @retun array
-	 * @since 3.2.4
-	 */
-	public function get_update_source_args( $order ) {
-		return array(
-			'owner'    => $this->get_source_owner_args( $order ),
-			'metadata' => array(
-				'order_id' => $order->get_id(),
-				'created'  => time(),
-			),
-		);
-	}
-
-	/**
-	 * @param WC_Order $order
-	 *
-	 * @return array
-	 */
-	protected function get_source_owner_args( $order ) {
-		$owner = array(
-			'name'    => $this->payment_object->get_name_from_order( $order, 'billing' ),
-			'address' => array(
-				'city'        => $order->get_billing_city(),
-				'country'     => $order->get_billing_country(),
-				'line1'       => $order->get_billing_address_1(),
-				'line2'       => $order->get_billing_address_2(),
-				'postal_code' => $order->get_billing_postcode(),
-				'state'       => $order->get_billing_state(),
-			)
-		);
-		if ( ( $email = $order->get_billing_email() ) ) {
-			$owner['email'] = $email;
-		}
-		if ( ( $phone = $order->get_billing_phone() ) ) {
-			$owner['phone'] = $phone;
+	public function is_available() {
+		$result = parent::is_available();
+		if ( $result ) {
+			$result = $this->is_local_payment_available();
 		}
 
-		return $owner;
-	}
-
-	/**
-	 * @param WC_Order $order
-	 *
-	 * @return string
-	 * @deprecated 3.3.60
-	 */
-	public function get_local_payment_return_url( $order ) {
-		return parent::get_complete_payment_return_url( $order );
+		return $result;
 	}
 
 	public function is_local_payment_available() {
@@ -315,13 +236,13 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		if ( in_array( $currency, $this->currencies ) ) {
 			$type = $this->get_option( 'allowed_countries' );
 			if ( 'all_except' === $type ) {
-				$_available = ! in_array( $billing_country, $this->get_option( 'except_countries', array() ) );
+				$_available = ! in_array( $billing_country, (array) $this->get_option( 'except_countries', array() ) );
 				if ( $_available && ! empty( $this->limited_countries ) ) {
 					// the billing_country still needs to be in the list of limited countries
 					$_available = in_array( $billing_country, $this->limited_countries );
 				}
 			} elseif ( 'specific' === $type ) {
-				$_available = in_array( $billing_country, $this->get_option( 'specific_countries', array() ) );
+				$_available = in_array( $billing_country, (array) $this->get_option( 'specific_countries', array() ) );
 			} else {
 				$_available = ! $this->limited_countries || in_array( $billing_country, $this->limited_countries );
 			}
@@ -337,6 +258,17 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		 * @since 3.2.10
 		 */
 		return apply_filters( 'wc_stripe_local_payment_available', $_available, $this );
+	}
+
+	/**
+	 * @param string $currency
+	 * @param string $billing_country
+	 * @param float  $total
+	 *
+	 * @return bool
+	 */
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
+		return true;
 	}
 
 	public function get_payment_token( $method_id, $method_details = array() ) {
@@ -378,9 +310,6 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	 */
 	public function get_local_payment_description() {
 		$text = $this->local_payment_description;
-		if ( $this->is_active( 'stripe_mandate' ) ) {
-			$text = '';
-		}
 
 		return apply_filters( 'wc_stripe_local_payment_description', $text, $this );
 	}
@@ -389,15 +318,11 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	 *
 	 * @param string $text
 	 *
-	 * @since 3.1.3
 	 * @return string
+	 * @since 3.1.3
 	 */
 	public function get_order_button_text( $text ) {
 		return apply_filters( 'wc_stripe_order_button_text', sprintf( __( 'Pay with %s', 'woo-stripe-payment' ), $text ), $this );
-	}
-
-	public function has_enqueued_scripts( $scripts ) {
-		return wp_script_is( $scripts->get_handle( 'local-payment' ) );
 	}
 
 	public function get_stripe_documentation_url() {

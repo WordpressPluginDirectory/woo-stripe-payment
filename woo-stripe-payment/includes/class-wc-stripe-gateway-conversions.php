@@ -28,12 +28,15 @@ class WC_Stripe_Gateway_Conversion {
 		$payment_method = $current_payment_method;
 		switch ( $current_payment_method ) {
 			case 'stripe':
-			case 'cpsw_stripe':
 			case 'fkwcs_stripe':
 				$payment_method = 'stripe_cc';
 				break;
 			case 'fkwcs_stripe_sepa':
 				$payment_method = 'stripe_sepa';
+				break;
+			// @since 4.0.0 - The Payment Request Gateway has been deprecated.
+			case 'stripe_payment_request':
+				$payment_method = 'stripe_googlepay';
 				break;
 		}
 		// Another Stripe plugin is active, don't convert $payment_method as that could affect

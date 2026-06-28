@@ -14,45 +14,59 @@ if ( ! class_exists( 'WC_Payment_Gateway_Stripe_Local_Payment' ) ) {
 class WC_Payment_Gateway_Stripe_AmazonPay extends WC_Payment_Gateway_Stripe_Local_Payment {
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_amazonpay';
 
 	protected $payment_method_type = 'amazon_pay';
 
-	private $account_countries = array( 'AT', 'BE', 'CY', 'DK', 'FR', 'DE', 'HU', 'IE', 'IT', 'LU', 'NL', 'PT', 'ES', 'SE', 'CH', 'GB', 'US' );
+	private $account_countries = array(
+		'AT',
+		'BE',
+		'CY',
+		'DK',
+		'FR',
+		'DE',
+		'HU',
+		'IE',
+		'IT',
+		'LU',
+		'NL',
+		'PT',
+		'ES',
+		'SE',
+		'CH',
+		'GB',
+		'US'
+	);
 
 	private $accepted_currencies = array(
 		'US' => array( 'USD' )
 	);
 
-	public function __construct() {
-		$this->local_payment_type = 'amazon_pay';
-		$this->currencies         = array( 'AUD', 'CHF', 'DKK', 'EUR', 'GBP', 'HKD', 'JPY', 'NOK', 'NZD', 'SEK', 'USD', 'ZAR' );
+	public function __construct( ...$args ) {
+		$this->currencies = array(
+			'AUD',
+			'CHF',
+			'DKK',
+			'EUR',
+			'GBP',
+			'HKD',
+			'JPY',
+			'NOK',
+			'NZD',
+			'SEK',
+			'USD',
+			'ZAR'
+		);
 		//$this->countries          = array( 'US' );
-		$this->id                 = 'stripe_amazonpay';
 		$this->tab_title          = __( 'Amazon Pay', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Amazon Pay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Amazon Pay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/amazon_pay.svg' );
-		parent::__construct();
-	}
-
-	public function init_supports() {
-		$this->supports = array(
-			'tokenization',
-			'products',
-			'subscriptions',
-			'add_payment_method',
-			'subscription_cancellation',
-			'multiple_subscriptions',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'default_credit_card_form',
-			'refunds',
-			'pre-orders',
-			'subscription_payment_method_change_admin',
-			'subscription_reactivation',
-			'subscription_suspension',
-			'subscription_payment_method_change_customer',
-		);
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/amazon_pay.svg' );
 	}
 
 	/**
@@ -62,7 +76,7 @@ class WC_Payment_Gateway_Stripe_AmazonPay extends WC_Payment_Gateway_Stripe_Loca
 	 *
 	 * @return bool
 	 */
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		$result = false;
 
 		$account_country = stripe_wc()->account_settings->get_account_country( wc_stripe_mode() );
@@ -81,16 +95,16 @@ class WC_Payment_Gateway_Stripe_AmazonPay extends WC_Payment_Gateway_Stripe_Loca
 	}
 
 	/**
-	 * @since 3.3.85
 	 * @return string[]
+	 * @since 3.3.85
 	 */
 	public function get_account_countries() {
 		return $this->account_countries;
 	}
 
 	/**
-	 * @since 3.3.85
 	 * @return mixed
+	 * @since 3.3.85
 	 */
 	public function get_accepted_currencies() {
 		return $this->accepted_currencies;

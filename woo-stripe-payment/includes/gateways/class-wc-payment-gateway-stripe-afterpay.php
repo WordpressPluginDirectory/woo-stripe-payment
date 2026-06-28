@@ -18,39 +18,18 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 
 	use \PaymentPlugins\Stripe\Traits\BNPLPaymentGatewayTrait;
 
+	public $id = 'stripe_afterpay';
+
 	protected $payment_method_type = 'afterpay_clearpay';
 
-	public function __construct() {
-		$this->local_payment_type = 'afterpay_clearpay';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'AUD', 'CAD', 'NZD', 'GBP', 'USD' );
 		$this->countries          = array( 'AU', 'CA', 'NZ', 'GB', 'US' );
-		$this->id                 = 'stripe_afterpay';
 		$this->tab_title          = __( 'Afterpay', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Afterpay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Afterpay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/afterpay.svg' );
-		parent::__construct();
-		add_filter( 'woocommerce_gateway_icon', array( $this, 'get_woocommerce_gateway_icon' ), 10, 2 );
-	}
-
-	public function init_supports() {
-		parent::init_supports();
-		$this->supports[] = 'wc_stripe_cart_checkout';
-		$this->supports[] = 'wc_stripe_product_checkout';
-		$this->supports[] = 'wc_stripe_mini_cart_checkout';
-		/**
-		 *
-		 * @todo - uncomment when Afterpay supports subscriptions in countries other than AU & NZ
-		 * $this->supports[] = 'subscriptions';
-		 * $this->supports[] = 'subscription_cancellation';
-		 * $this->supports[] = 'multiple_subscriptions';
-		 * $this->supports[] = 'subscription_reactivation';
-		 * $this->supports[] = 'subscription_suspension';
-		 * $this->supports[] = 'subscription_date_changes';
-		 * $this->supports[] = 'subscription_payment_method_change_admin';
-		 * $this->supports[] = 'subscription_amount_changes';
-		 * $this->supports[] = 'subscription_payment_method_change_customer';
-		 * $this->supports[] = 'pre-orders';*/
+		parent::__construct( ...$args );
+		$this->icon = $this->assets->assets_url( 'img/' . $this->get_option( 'icon' ) . '.svg' );
 	}
 
 	public function get_order_button_text( $text ) {
@@ -59,7 +38,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 
 	public function get_local_payment_settings() {
 		$settings = wp_parse_args( array(
-			'charge_type'                 => array(
+			'charge_type'      => array(
 				'type'        => 'select',
 				'title'       => __( 'Charge Type', 'woo-stripe-payment' ),
 				'default'     => 'capture',
@@ -82,7 +61,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 				'description' => __( 'This is the status of the order once payment is complete. If <b>Default</b> is selected, then WooCommerce will set the order status automatically based on internal logic which states if a product is virtual and downloadable then status is set to complete. Products that require shipping are set to Processing. Default is the recommended setting as it allows standard WooCommerce code to process the order status.',
 					'woo-stripe-payment' ),
 			),
-			'icon'                        => array(
+			'icon'             => array(
 				'title'       => __( 'Icon', 'woo-stripe-payment' ),
 				'type'        => 'select',
 				'options'     => array(
@@ -95,299 +74,27 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 				'desc_tip'    => true,
 				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page. If you have messaging enabled on the checkout page, that will override the icon.', 'woo-stripe-payment' ),
 			),
-			'payment_sections'            => array(
+			'message_enabled'  => array(
+				'title'       => __( 'Messaging Enabled', 'woo-stripe-payment' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'desc_tip'    => true,
+				'description' => __( 'When enabled, the Buy Now Pay Later messaging will be available in the sections you configure.', 'woo-stripe-payment' ),
+			),
+			'message_sections' => array(
 				'type'        => 'multiselect',
 				'title'       => __( 'Message Sections', 'woo-stripe-payment' ),
 				'class'       => 'wc-enhanced-select',
 				'options'     => array(
-					'checkout'  => __( 'Checkout page', 'woo-stripe-payment' ),
-					'product'   => __( 'Product Page', 'woo-stripe-payment' ),
-					'cart'      => __( 'Cart Page', 'woo-stripe-payment' ),
-					'mini_cart' => __( 'Mini Cart', 'woo-stripe-payment' ),
-					'shop'      => __( 'Shop/Category Page', 'woo-stripe-payment' )
+					'checkout' => __( 'Checkout page', 'woo-stripe-payment' ),
+					'product'  => __( 'Product Page', 'woo-stripe-payment' ),
+					'cart'     => __( 'Cart Page', 'woo-stripe-payment' ),
+					'shop'     => __( 'Shop/Category Page', 'woo-stripe-payment' )
 				),
 				'default'     => array(),
 				'description' => __( 'These are the additional sections where the Afterpay messaging will be enabled. You can control individual products via the Edit product page.',
 					'woo-stripe-payment' ),
-			),
-			/*'hide_ineligible'             => array(
-				'title'       => __( 'Hide If Ineligible', 'woo-stripe-payment' ),
-				'type'        => 'checkbox',
-				'value'       => 'yes',
-				'default'     => 'no',
-				'desc_tip'    => true,
-				'description' => __( 'If enabled, Afterpay won\'t show when the products in the cart are not eligible.', 'woo-stripe-payment' )
-			),*/
-			'checkout_styling'            => array(
-				'type'  => 'title',
-				'title' => __( 'Checkout Page Styling', 'woo-stripe-payments' )
-			),
-			'icon_checkout'               => array(
-				'title'       => __( 'Icon', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'black-on-mint',
-				'options'     => array(
-					'black-on-mint'  => __( 'Black on mint', 'woo-stripe-payment' ),
-					'black-on-white' => __( 'Black on white', 'woo-stripe-payment' ),
-					'mint-on-black'  => __( 'Mint on black', 'woo-stripe-payment' ),
-					'white-on-black' => __( 'White on black', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page.', 'woo-stripe-payment' ),
-			),
-			'intro_text_checkout'         => array(
-				'title'   => __( 'Intro text', 'woo-stripe-payment' ),
-				'type'    => 'select',
-				'default' => 'In',
-				'options' => array(
-					'In'     => 'In',
-					'Or'     => 'Or',
-					'Pay'    => 'Pay',
-					'Pay in' => 'Pay in'
-				)
-			),
-			'modal_link_style_checkout'   => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'circled-info-icon',
-				'options'     => array(
-					'more-info-text'    => __( 'More info text', 'woo-stripe-payment' ),
-					'circled-info-icon' => __( 'Circled info icon', 'woo-stripe-payment' ),
-					'learn-more-text'   => __( 'Learn more text', 'woo-stripe-payment' ),
-				),
-				'description' => __( 'This is the style of the Afterpay info link.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'modal_theme_checkout'        => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'mint',
-				'options'     => array(
-					'mint'  => __( 'Mint', 'woo-stripe-payment' ),
-					'white' => __( 'White', 'woo-stripe-payment' )
-				),
-				'description' => __( 'This is the theme color for the Afterpay info modal.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'show_interest_free_checkout' => array(
-				'type'        => 'checkbox',
-				'title'       => __( 'Show interest free', 'woo-stripe-payment' ),
-				'default'     => 'no',
-				'value'       => 'yes',
-				'description' => __( 'If enabled, the Afterpay message will contain the interest free text.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'cart_styling'                => array(
-				'type'  => 'title',
-				'title' => __( 'Cart Page Styling' )
-			),
-			'icon_cart'                   => array(
-				'title'       => __( 'Icon', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'black-on-mint',
-				'options'     => array(
-					'black-on-mint'  => __( 'Black on mint', 'woo-stripe-payment' ),
-					'black-on-white' => __( 'Black on white', 'woo-stripe-payment' ),
-					'mint-on-black'  => __( 'Mint on black', 'woo-stripe-payment' ),
-					'white-on-black' => __( 'White on black', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page.', 'woo-stripe-payment' ),
-			),
-			'intro_text_cart'             => array(
-				'title'   => __( 'Intro text', 'woo-stripe-payment' ),
-				'type'    => 'select',
-				'default' => 'Or',
-				'options' => array(
-					'In'     => 'In',
-					'Or'     => 'Or',
-					'Pay'    => 'Pay',
-					'Pay in' => 'Pay in'
-				)
-			),
-			'modal_link_style_cart'       => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'circled-info-icon',
-				'options'     => array(
-					'more-info-text'    => __( 'More info text', 'woo-stripe-payment' ),
-					'circled-info-icon' => __( 'Circled info icon', 'woo-stripe-payment' ),
-					'learn-more-text'   => __( 'Learn more text', 'woo-stripe-payment' ),
-				),
-				'description' => __( 'This is the style of the Afterpay info link.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'modal_theme_cart'            => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'mint',
-				'options'     => array(
-					'mint'  => __( 'Mint', 'woo-stripe-payment' ),
-					'white' => __( 'White', 'woo-stripe-payment' )
-				),
-				'description' => __( 'This is the theme color for the Afterpay info modal.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'show_interest_free_cart'     => array(
-				'type'        => 'checkbox',
-				'title'       => __( 'Show interest free', 'woo-stripe-payment' ),
-				'default'     => 'no',
-				'value'       => 'yes',
-				'description' => __( 'If enabled, the Afterpay message will contain the interest free text.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'cart_location'               => array(
-				'title'       => __( 'Message Location', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'below_total',
-				'options'     => array(
-					'below_total'           => __( 'Below Total', 'woo-stripe-payment' ),
-					'below_checkout_button' => __( 'Below Checkout Button', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
-			),
-			'product_styling'             => array(
-				'type'  => 'title',
-				'title' => __( 'Product Page Styling' )
-			),
-			'icon_product'                => array(
-				'title'       => __( 'Icon', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'black-on-mint',
-				'options'     => array(
-					'black-on-mint'  => __( 'Black on mint', 'woo-stripe-payment' ),
-					'black-on-white' => __( 'Black on white', 'woo-stripe-payment' ),
-					'mint-on-black'  => __( 'Mint on black', 'woo-stripe-payment' ),
-					'white-on-black' => __( 'White on black', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page.', 'woo-stripe-payment' ),
-			),
-			'intro_text_product'          => array(
-				'title'   => __( 'Intro text', 'woo-stripe-payment' ),
-				'type'    => 'select',
-				'default' => 'Pay in',
-				'options' => array(
-					'In'     => 'In',
-					'Or'     => 'Or',
-					'Pay'    => 'Pay',
-					'Pay in' => 'Pay in'
-				)
-			),
-			'modal_link_style_product'    => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'circled-info-icon',
-				'options'     => array(
-					'more-info-text'    => __( 'More info text', 'woo-stripe-payment' ),
-					'circled-info-icon' => __( 'Circled info icon', 'woo-stripe-payment' ),
-					'learn-more-text'   => __( 'Learn more text', 'woo-stripe-payment' ),
-				),
-				'description' => __( 'This is the style of the Afterpay info link.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'modal_theme_product'         => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'mint',
-				'options'     => array(
-					'mint'  => __( 'Mint', 'woo-stripe-payment' ),
-					'white' => __( 'White', 'woo-stripe-payment' )
-				),
-				'description' => __( 'This is the theme color for the Afterpay info modal.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'show_interest_free_product'  => array(
-				'type'        => 'checkbox',
-				'title'       => __( 'Show interest free', 'woo-stripe-payment' ),
-				'default'     => 'no',
-				'value'       => 'yes',
-				'description' => __( 'If enabled, the Afterpay message will contain the interest free text.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'product_location'            => array(
-				'title'       => __( 'Message Location', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'below_price',
-				'options'     => array(
-					'above_price'       => __( 'Above Price', 'woo-stripe-payment' ),
-					'below_price'       => __( 'Below Price', 'woo-stripe-payment' ),
-					'below_add_to_cart' => __( 'Below Add to Cart', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
-			),
-			'shop_styling'                => array(
-				'type'  => 'title',
-				'title' => __( 'Shop/Category Page Styling' )
-			),
-			'icon_shop'                   => array(
-				'title'       => __( 'Icon', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'black-on-mint',
-				'options'     => array(
-					'black-on-mint'  => __( 'Black on mint', 'woo-stripe-payment' ),
-					'black-on-white' => __( 'Black on white', 'woo-stripe-payment' ),
-					'mint-on-black'  => __( 'Mint on black', 'woo-stripe-payment' ),
-					'white-on-black' => __( 'White on black', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This is the icon style that appears next to the gateway on the checkout page.', 'woo-stripe-payment' ),
-			),
-			'intro_text_shop'             => array(
-				'title'   => __( 'Intro text', 'woo-stripe-payment' ),
-				'type'    => 'select',
-				'default' => 'Pay in',
-				'options' => array(
-					'In'     => 'In',
-					'Or'     => 'Or',
-					'Pay'    => 'Pay',
-					'Pay in' => 'Pay in'
-				)
-			),
-			'modal_link_style_shop'       => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'circled-info-icon',
-				'options'     => array(
-					'more-info-text'    => __( 'More info text', 'woo-stripe-payment' ),
-					'circled-info-icon' => __( 'Circled info icon', 'woo-stripe-payment' ),
-					'learn-more-text'   => __( 'Learn more text', 'woo-stripe-payment' ),
-				),
-				'description' => __( 'This is the style of the Afterpay info link.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'modal_theme_shop'            => array(
-				'title'       => __( 'Modal link style', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'mint',
-				'options'     => array(
-					'mint'  => __( 'Mint', 'woo-stripe-payment' ),
-					'white' => __( 'White', 'woo-stripe-payment' )
-				),
-				'description' => __( 'This is the theme color for the Afterpay info modal.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'show_interest_free_shop'     => array(
-				'type'        => 'checkbox',
-				'title'       => __( 'Show interest free', 'woo-stripe-payment' ),
-				'default'     => 'no',
-				'value'       => 'yes',
-				'description' => __( 'If enabled, the Afterpay message will contain the interest free text.', 'woo-stripe-payment' ),
-				'desc_tip'    => true
-			),
-			'shop_location'               => array(
-				'title'       => __( 'Shop/Category Location', 'woo-stripe-payment' ),
-				'type'        => 'select',
-				'default'     => 'below_price',
-				'options'     => array(
-					'below_price'       => __( 'Below Price', 'woo-stripe-payment' ),
-					'below_add_to_cart' => __( 'Below Add to Cart', 'woo-stripe-payment' )
-				),
-				'desc_tip'    => true,
-				'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
-			),
+			)
 		), parent::get_local_payment_settings() );
 
 		// @todo maybe add this option back in a future version.
@@ -400,57 +107,6 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 		}
 
 		return $settings;
-	}
-
-	public function enqueue_checkout_scripts( $scripts ) {
-		parent::enqueue_checkout_scripts( $scripts );
-		$scripts->assets_api->register_script( 'wc-stripe-afterpay-checkout', 'assets/build/afterpay-message.js', array( 'wc-stripe-vendors', 'wc-stripe-local-payment' ) );
-		wp_enqueue_script( 'wc-stripe-afterpay-checkout' );
-	}
-
-	public function enqueue_product_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-afterpay-product', 'assets/build/afterpay-message.js', array( 'wc-stripe-vendors' ) );
-		wp_enqueue_script( 'wc-stripe-afterpay-product' );
-		$scripts->localize_script( 'wc-stripe-afterpay-product', $this->get_localized_params( 'product' ) );
-	}
-
-	public function enqueue_cart_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-afterpay-cart', 'assets/build/afterpay-message.js', array( 'wc-stripe-vendors' ) );
-		wp_enqueue_script( 'wc-stripe-afterpay-cart' );
-		$this->enqueue_payment_method_styles();
-		$scripts->localize_script( 'wc-stripe-afterpay-cart', $this->get_localized_params( 'cart' ) );
-	}
-
-	/**
-	 * @param \PaymentPlugins\Stripe\Assets\AssetsApi    $assets_api
-	 * @param \PaymentPlugins\Stripe\Assets\AssetDataApi $asset_data
-	 *
-	 * @return void
-	 */
-	public function enqueue_category_scripts( $assets_api, $asset_data ) {
-		$assets_api->register_script( 'wc-stripe-afterpay-messaging', 'assets/build/afterpay-message.js', array( 'wc-stripe-vendors' ) );
-		$asset_data->add( $this->id, [
-			'supportedCurrencies' => $this->currencies,
-			'requiredParams'      => $this->get_required_parameters(),
-			'messageOptions'      => $this->get_afterpay_message_options( 'shop' ),
-			'hideIneligible'      => wc_string_to_bool( $this->get_option( 'hide_ineligible' ) ),
-			'elementOptions'      => $this->get_element_options()
-		] );
-		wp_enqueue_script( 'wc-stripe-afterpay-messaging' );
-	}
-
-	public function product_fields() {
-		$this->enqueue_frontend_scripts( 'product' );
-		$this->output_display_items( 'product' );
-	}
-
-	public function cart_fields() {
-		$this->enqueue_frontend_scripts( 'cart' );
-		$this->output_display_items( 'cart' );
-	}
-
-	public function mini_cart_fields() {
-		$this->output_display_items( 'cart' );
 	}
 
 	public function get_required_parameters() {
@@ -470,7 +126,7 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 	 *
 	 * @return bool
 	 */
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		$_available      = false;
 		$account_country = stripe_wc()->account_settings->get_account_country( wc_stripe_mode() );
 		// in test mode, the API keys might have been manually entered which
@@ -497,50 +153,17 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 		return $_available;
 	}
 
-	public function get_localized_params( $context = 'checkout' ) {
-		$params                      = parent::get_localized_params();
-		$params['currencies']        = $this->currencies;
-		$params['messageOptions']    = $this->get_afterpay_message_options( $context );
-		$params['supported_locales'] = $this->get_supported_locales();
-		$params['requirements']      = $this->get_required_parameters();
-		$params['hide_ineligible']   = $this->is_active( 'hide_ineligible' ) ? 'yes' : 'no';
-		$params['locale']            = wc_stripe_get_site_locale();
-
-		return $params;
-	}
-
 	public function get_supported_locales() {
-		return apply_filters( 'wc_stripe_afterpay_supported_locales', array( 'en-US', 'en-CA', 'en-AU', 'en-NZ', 'en-GB', 'fr-FR', 'it-IT', 'es-ES' ) );
-	}
-
-	public function get_element_options( $options = array() ) {
-		$locale = wc_stripe_get_site_locale();
-		if ( ! in_array( $locale, $this->get_supported_locales() ) ) {
-			$locale = 'auto';
-		}
-		$options['locale'] = $locale;
-
-		return parent::get_element_options( $options ); // TODO: Change the autogenerated stub
-	}
-
-	public function get_afterpay_message_options( $context = 'checkout' ) {
-		$options = array(
-			'logoType'         => 'badge',
-			'badgeTheme'       => $this->get_option( "icon_{$context}" ),
-			'lockupTheme'      => 'black',
-			'introText'        => $this->get_option( "intro_text_{$context}" ),
-			'showInterestFree' => $this->is_active( "show_interest_free_{$context}" ),
-			'modalTheme'       => $this->get_option( "modal_theme_{$context}" ),
-			'modalLinkStyle'   => $this->get_option( "modal_link_style_{$context}" ),
-			'isEligible'       => true
-		);
-
-		if ( in_array( $context, array( 'cart', 'checkout' ) ) ) {
-			unset( $options['isEligible'] );
-			$options['isCartEligible'] = true;
-		}
-
-		return apply_filters( 'wc_stripe_afterpay_message_options', $options, $context, $this );
+		return apply_filters( 'wc_stripe_afterpay_supported_locales', array(
+			'en-US',
+			'en-CA',
+			'en-AU',
+			'en-NZ',
+			'en-GB',
+			'fr-FR',
+			'it-IT',
+			'es-ES'
+		) );
 	}
 
 	public function get_payment_token( $method_id, $method_details = array() ) {
@@ -581,15 +204,6 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 		return $desc;
 	}
 
-	public function enqueue_mini_cart_scripts( $scripts ) {
-		if ( ! wp_script_is( $scripts->get_handle( 'mini-cart' ) ) ) {
-			$scripts->enqueue_script( 'mini-cart',
-				$scripts->assets_url( 'js/frontend/mini-cart.js' ),
-				apply_filters( 'wc_stripe_mini_cart_dependencies', array( $scripts->get_handle( 'wc-stripe' ) ), $scripts ) );
-		}
-		$scripts->localize_script( 'mini-cart', $this->get_localized_params( 'cart' ), 'wc_' . $this->id . '_mini_cart_params' );
-	}
-
 	public function add_stripe_order_args( &$args, $order, $intent = null ) {
 		if ( empty( $args['shipping'] ) ) {
 			// This ensures digital products can be processed
@@ -602,23 +216,12 @@ class WC_Payment_Gateway_Stripe_Afterpay extends WC_Payment_Gateway_Stripe_Local
 					'postal_code' => $order->get_billing_postcode(),
 					'state'       => $order->get_billing_state(),
 				),
-				'name'    => $this->payment_object->get_name_from_order( $order, 'billing' ),
+				'name'    => $this->payment_controller->get_name_from_order( $order, 'billing' ),
 			);
 		}
 	}
 
 	private function is_restricted_account_country() {
-		//$result = false;
-
-		/*$account_country = stripe_wc()->account_settings->get_account_country( wc_stripe_mode() );
-		if ( $account_country ) {
-			$params = $this->get_required_parameters();
-			list( $countries ) = $params['EUR'];
-			if ( in_array( $account_country, $countries, true ) ) {
-				$result = true;
-			}
-		}*/
-
 		return false;
 	}
 

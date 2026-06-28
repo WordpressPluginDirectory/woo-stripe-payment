@@ -2,6 +2,7 @@
 /**
  * @version 3.0.0
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <input type="radio" class="wc-stripe-payment-type" checked="checked" id="<?php echo esc_attr( $gateway->id ) ?>_use_saved" name="<?php echo esc_attr( $gateway->payment_type_key ) ?>" value="saved"/>
 <label for="<?php echo esc_attr( $gateway->id ) ?>_use_saved" class="wc-stripe-label-payment-type"><?php echo esc_html( $gateway->get_saved_methods_label() ) ?></label>

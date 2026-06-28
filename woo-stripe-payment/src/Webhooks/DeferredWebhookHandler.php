@@ -24,9 +24,9 @@ class DeferredWebhookHandler {
 							return;
 						}
 						$payment_method->set_order_lock( $order );
-						$result = $payment_method->payment_object->process_payment( $order );
+						$result = $payment_method->payment_controller->process_payment( $order );
 						if ( ! is_wp_error( $result ) && $result->complete_payment ) {
-							$payment_method->payment_object->payment_complete( $order, $result->charge );
+							$payment_method->payment_controller->payment_complete( $order, $result->charge );
 						}
 					}
 				}

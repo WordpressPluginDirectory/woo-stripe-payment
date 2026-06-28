@@ -1,9 +1,9 @@
 <?php
 
 
-namespace PaymentPlugins\Blocks\Stripe\Assets;
+namespace PaymentPlugins\Stripe\Blocks\Assets;
 
-use \PaymentPlugins\Blocks\Stripe\Config;
+use \PaymentPlugins\Stripe\Blocks\Config;
 
 class Api {
 

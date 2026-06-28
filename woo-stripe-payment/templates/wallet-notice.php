@@ -2,6 +2,7 @@
 /**
  *
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <?php if ( $gateway->is_active( 'notice_enabled' ) ): ?>
     <div class="wc-stripe-wallet-notice">

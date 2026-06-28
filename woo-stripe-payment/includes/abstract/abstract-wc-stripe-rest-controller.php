@@ -38,6 +38,7 @@ abstract class WC_Stripe_Rest_Controller {
 		if ( $uri ) {
 			$rest_uri = trailingslashit( $rest_uri ) . $uri;
 		}
+
 		return trim( $rest_uri, '/' );
 	}
 
@@ -46,6 +47,7 @@ abstract class WC_Stripe_Rest_Controller {
 		if ( $uri ) {
 			$rest_url = trailingslashit( $rest_url ) . $uri;
 		}
+
 		return $rest_url;
 	}
 
@@ -78,6 +80,7 @@ abstract class WC_Stripe_Rest_Controller {
 		wc_set_notices( $notices );
 		ob_start();
 		$messages = wc_print_notices();
+
 		return ob_get_clean();
 	}
 
@@ -96,9 +99,10 @@ abstract class WC_Stripe_Rest_Controller {
 		add_filter(
 			'rest_request_before_callbacks',
 			function ( $response ) {
-				return $this->error ? $this->error : response;
+				return $this->error ? $this->error : $response;
 			}
 		);
+
 		return $error;
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 $tooltip = __( 'Admins can process customer orders over the phone using this functionality.', 'woo-stripe-payment' );
 if ( $order->has_status( 'auto-draft' ) ) {
 	$tooltip .= ' ' . __( 'Please create the order before processing a payment.', 'woo-stripe-payment' );
@@ -47,10 +49,13 @@ if ( $order->has_status( 'auto-draft' ) ) {
                         </div>
                         <#}#>
                         <div class="modal-wide">
-                            <input type="radio" value="nonce" name="payment_type" class="" <#if(!data.payment_methods.length){#>checked<#}#>/>
+                            <input type="radio" value="nonce" name="payment_type" class=""
+                            <#if(!data.payment_methods.length){#>checked<#}#>/>
                             <label class=""><?php esc_html_e( 'New Card', 'woo-stripe-payment' ); ?></label>
                             <input type="hidden" name="payment_nonce"/>
-                            <div id="wc-stripe-card-container" class="wc-stripe-card-container show_if_nonce hide_if_token">
+                            <input type="hidden" name="payment_intent"/>
+                            <div id="wc-stripe-card-container"
+                                 class="wc-stripe-card-container show_if_nonce hide_if_token">
                                 <div id="card-element"></div>
                                 <div class="wc-stripe-save-payment-container">
                                     <input type="checkbox" name="stripe_cc_save_source_key"/>
@@ -64,7 +69,8 @@ if ( $order->has_status( 'auto-draft' ) ) {
                 </article>
                 <footer>
                     <div class="inner">
-                        <button id="pay-order" class="button button-primary button-large"><?php esc_html_e( 'Pay', 'woo-stripe-payment' ); ?></button>
+                        <button id="pay-order"
+                                class="button button-primary button-large"><?php esc_html_e( 'Pay', 'woo-stripe-payment' ); ?></button>
                     </div>
                 </footer>
             </section>

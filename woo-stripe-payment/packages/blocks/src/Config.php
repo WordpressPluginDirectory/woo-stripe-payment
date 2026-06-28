@@ -1,16 +1,16 @@
 <?php
 
 
-namespace PaymentPlugins\Blocks\Stripe;
+namespace PaymentPlugins\Stripe\Blocks;
 
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
-use Automattic\WooCommerce\Blocks\Registry\Container as Container;
 use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
 use Automattic\WooCommerce\StoreApi\StoreApi;
-use PaymentPlugins\Blocks\Stripe\Payments\PaymentsApi;
-use PaymentPlugins\Blocks\Stripe\Payments\CreditCardPayment;
-use PaymentPlugins\Blocks\Stripe\Assets\Api as AssetsApi;
-use PaymentPlugins\Blocks\Stripe\StoreApi\SchemaController;
+use PaymentPlugins\Stripe\Blocks\Payments\PaymentsApi;
+use PaymentPlugins\Stripe\Blocks\Payments\CreditCardPayment;
+use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Blocks\StoreApi\SchemaController;
+use PaymentPlugins\Stripe\Container\Container;
 
 class Config {
 
@@ -34,12 +34,6 @@ class Config {
 		$this->container = $container;
 		$this->path      = $path;
 		$this->url       = plugin_dir_url( $this->path . DIRECTORY_SEPARATOR . 'src' );
-		$this->dependencies();
-		$this->register_payment_methods();
-		$this->container->get( PaymentsApi::class );
-		$this->container->get( SchemaController::class );
-		$this->container->get( Payments\Gateways\Link\Controller::class );
-		$this->container->get( BlocksController::class )->initialize();
 	}
 
 	public function get_url( $relative_path = '' ) {
@@ -56,36 +50,6 @@ class Config {
 
 	public function get_version() {
 		return $this->version;
-	}
-
-	private function dependencies() {
-		$this->container->register( AssetsApi::class, function ( $container ) {
-			return new AssetsApi( $this );
-		} );
-		$this->container->register( SchemaController::class, function ( $container ) {
-			return new SchemaController(
-				StoreApi::container()->get( ExtendSchema::class ),
-				$container->get( PaymentsApi::class )
-			);
-		} );
-		$this->container->register( BlocksController::class, function ( $container ) {
-			return new BlocksController( $container );
-		} );
-	}
-
-	/**
-	 * Register all of the payment methods to the Container.
-	 *
-	 * @throws \Exception
-	 */
-	private function register_payment_methods() {
-		// register the payments API
-		$this->container->register( PaymentsApi::class, function ( Container $container ) {
-			return new PaymentsApi( $container, $this, $container->get( AssetDataRegistry::class ) );
-		} );
-		$this->container->register( Payments\Gateways\Link\Controller::class, function () {
-			return new Payments\Gateways\Link\Controller();
-		} );
 	}
 
 }

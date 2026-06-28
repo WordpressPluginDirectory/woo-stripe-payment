@@ -10,11 +10,15 @@ defined( 'ABSPATH' ) || exit();
 class WC_Stripe_Shortcode_Payment_Buttons {
 
 	public static function output_product_buttons( $atts ) {
-		WC_Stripe_Field_Manager::output_product_checkout_fields();
+		wc_stripe_get_container()->get(
+			\PaymentPlugins\Stripe\Checkout\ExpressCheckoutRenderer::class
+		)->render_product_buttons();
 	}
 
 	public static function output_cart_buttons( $atts ) {
-		WC_Stripe_Field_Manager::output_cart_fields();
+		wc_stripe_get_container()->get(
+			\PaymentPlugins\Stripe\Checkout\ExpressCheckoutRenderer::class
+		)->render_cart_buttons();
 	}
 
 }

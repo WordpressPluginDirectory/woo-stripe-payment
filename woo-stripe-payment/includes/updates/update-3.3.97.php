@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit();
+
 if ( function_exists( 'WC' ) ) {
 	// update the button_radius option for Apple Pay. If the button design is "rounded" then make
 	// the button radius 40.

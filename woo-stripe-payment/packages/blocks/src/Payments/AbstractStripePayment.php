@@ -1,11 +1,9 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\Payments;
+namespace PaymentPlugins\Stripe\Blocks\Payments;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
-use Automattic\WooCommerce\Blocks\Payments\PaymentContext;
-use Automattic\WooCommerce\Blocks\Payments\PaymentResult;
-use \PaymentPlugins\Blocks\Stripe\Assets\Api as AssetsApi;
+use \PaymentPlugins\Stripe\Assets\AssetsApi;
 
 /**
  * @property \WC_Payment_Gateway_Stripe $payment_method
@@ -62,30 +60,40 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 	}
 
 	public function get_payment_method_script_handles() {
-		return array();
+		return [];
 	}
 
 	public function get_payment_method_data() {
-		return array(
-			'name'                   => $this->get_name(),
-			'gatewayId'              => $this->get_name(),
-			'title'                  => $this->payment_method->get_option( 'title_text' ),
-			'showSaveOption'         => \in_array( 'tokenization', $this->get_supported_features() ) && wc_string_to_bool( $this->get_setting( 'save_card_enabled', true ) ),
-			'showSavedCards'         => \in_array( 'tokenization', $this->get_supported_features() ),
-			'features'               => $this->get_supported_features(),
-			'expressCheckoutEnabled' => $this->is_express_checkout_enabled(),
-			'cartCheckoutEnabled'    => $this->is_cart_checkout_enabled(),
-			'countryCode'            => wc_get_base_location()['country'],
-			'totalLabel'             => __( 'Total', 'woo-stripe-payment' ),
-			'isAdmin'                => is_admin(),
-			'icons'                  => $this->get_payment_method_icon(),
-			'placeOrderButtonLabel'  => \esc_html( $this->get_setting( 'order_button_text' ) ),
-			'description'            => $this->get_setting( 'description' ),
-			'i18n'                   => $this->get_script_translations(),
-			'elementOptions'         => $this->payment_method->get_element_options(),
-			'paymentElementOptions'  => $this->payment_method->get_payment_element_options(),
-			'currency'               => get_woocommerce_currency()
-		);
+		$formats               = $this->payment_method->get_payment_method_formats();
+		$payment_method_format = array_reduce( array_keys( $formats ), function ( $carry, $key ) use ( $formats ) {
+			if ( $key === $this->get_setting( 'method_format', 'type_ending_in' ) ) {
+				$carry = $formats[ $key ]['format'];
+			}
+
+			return $carry;
+		}, '' );
+
+
+		return [
+			'name'                  => $this->get_name(),
+			'gatewayId'             => $this->get_name(),
+			'title'                 => $this->get_setting( 'title_text' ),
+			'showSaveOption'        => \in_array( 'tokenization', $this->get_supported_features() ) && wc_string_to_bool( $this->get_setting( 'save_card_enabled', true ) ),
+			'showSavedCards'        => \in_array( 'tokenization', $this->get_supported_features() ),
+			'features'              => $this->get_supported_features(),
+			'sections'              => $this->get_setting( 'payment_sections', [] ),
+			'countryCode'           => wc_get_base_location()['country'],
+			'totalLabel'            => __( 'Total', 'woo-stripe-payment' ),
+			'isAdmin'               => is_admin(),
+			'icons'                 => $this->get_payment_method_icon(),
+			'placeOrderButtonLabel' => \esc_html( $this->get_setting( 'order_button_text' ) ),
+			'description'           => $this->get_setting( 'description' ),
+			'i18n'                  => $this->get_script_translations(),
+			'elementOptions'        => $this->payment_method->get_element_options(),
+			'paymentElementOptions' => $this->payment_method->get_payment_element_options(),
+			'termsDisplayRule'      => stripe_wc()->advanced_settings->get_terms_display_rule(),
+			'paymentMethodFormat'   => $payment_method_format
+		];
 	}
 
 	public function get_supported_features() {
@@ -104,23 +112,7 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 		return $list;
 	}
 
-	/**
-	 * Return true if the express checkout option is enabled for the payment method.
-	 *
-	 * @return bool
-	 */
-	protected function is_express_checkout_enabled() {
-		return \in_array( 'checkout_banner', $this->get_setting( 'payment_sections', [] ), true );
-	}
-
-	protected function is_cart_checkout_enabled() {
-		return \in_array( 'cart', $this->get_setting( 'payment_sections', [] ), true );
-	}
-
-	/**
-	 * @param \PaymentPlugins\Blocks\Stripe\Assets\Api $style_api
-	 */
-	public function enqueue_payment_method_styles( $style_api ) {
+	public function enqueue_payment_method_styles() {
 	}
 
 	protected function get_payment_method_icon() {

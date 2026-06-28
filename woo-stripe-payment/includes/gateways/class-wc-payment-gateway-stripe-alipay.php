@@ -16,19 +16,30 @@ class WC_Payment_Gateway_Stripe_Alipay extends WC_Payment_Gateway_Stripe_Local_P
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
 
+	public $id = 'stripe_alipay';
+
 	protected $payment_method_type = 'alipay';
 
-	public function __construct() {
-		$this->local_payment_type = 'alipay';
-		$this->currencies         = array( 'AUD', 'CAD', 'EUR', 'GBP', 'HKD', 'JPY', 'SGD', 'USD', 'CNY', 'NZD', 'MYR' );
-		$this->id                 = 'stripe_alipay';
+	public function __construct( ...$args ) {
+		$this->currencies         = array(
+			'AUD',
+			'CAD',
+			'EUR',
+			'GBP',
+			'HKD',
+			'JPY',
+			'SGD',
+			'USD',
+			'CNY',
+			'NZD',
+			'MYR'
+		);
 		$this->tab_title          = __( 'Alipay', 'woo-stripe-payment' );
-		$this->template_name      = 'local-payment.php';
 		$this->token_type         = 'Stripe_Local';
 		$this->method_title       = __( 'Alipay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Alipay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/alipay.svg' );
-		parent::__construct();
+		parent::__construct( ...$args );
+		$this->icon = $this->assets->assets_url( 'img/alipay.svg' );
 	}
 
 	public function init_form_fields() {
@@ -42,7 +53,7 @@ class WC_Payment_Gateway_Stripe_Alipay extends WC_Payment_Gateway_Stripe_Local_P
 	 *
 	 * @return bool
 	 */
-	public function validate_local_payment_available( $currency, $billing_country ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		$country          = stripe_wc()->account_settings->get_account_country( wc_stripe_mode() );
 		$default_currency = stripe_wc()->account_settings->get_account_currency( wc_stripe_mode() );
 		if ( empty( $country ) && wc_stripe_mode() === 'test' ) {
@@ -57,7 +68,34 @@ class WC_Payment_Gateway_Stripe_Alipay extends WC_Payment_Gateway_Stripe_Local_P
 				return true;
 			}
 			// If merchant's country is any of the following, currency must be EUR
-			if ( in_array( $country, array( 'AT', 'BE', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'NO', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH' ) ) ) {
+			if ( in_array( $country, array(
+				'AT',
+				'BE',
+				'BG',
+				'CY',
+				'CZ',
+				'DK',
+				'EE',
+				'FI',
+				'FR',
+				'DE',
+				'GR',
+				'IE',
+				'IT',
+				'LV',
+				'LT',
+				'LU',
+				'MT',
+				'NL',
+				'NO',
+				'PT',
+				'RO',
+				'SK',
+				'SI',
+				'ES',
+				'SE',
+				'CH'
+			) ) ) {
 				return $currency === 'EUR';
 			} else {
 				// For all other countries, Alipay is available if the currency matches the

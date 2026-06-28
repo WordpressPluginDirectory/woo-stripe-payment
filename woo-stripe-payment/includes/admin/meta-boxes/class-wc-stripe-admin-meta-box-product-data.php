@@ -11,6 +11,10 @@ class WC_Stripe_Admin_Meta_Box_Product_Data {
 
 	private static $_options = array();
 
+	private static $_bnpl_gateways = array();
+
+	private static $_bnpl_options = array();
+
 	public static function init() {
 		add_filter( 'woocommerce_product_data_tabs', array( __CLASS__, 'product_data_tabs' ) );
 		add_action( 'woocommerce_product_data_panels', array( __CLASS__, 'output_panel' ) );
@@ -34,6 +38,7 @@ class WC_Stripe_Admin_Meta_Box_Product_Data {
 		global $product_object;
 
 		self::init_gateways( $product_object );
+		self::init_bnpl_gateways( $product_object );
 		if ( current_user_can( 'manage_woocommerce' ) ) {
 			include 'views/html-product-data.php';
 		}
@@ -57,6 +62,23 @@ class WC_Stripe_Admin_Meta_Box_Product_Data {
 
 	private static function get_product_option( $gateway_id ) {
 		return self::$_options[ $gateway_id ];
+	}
+
+	private static function init_bnpl_gateways( $product ) {
+		foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
+			if ( $gateway instanceof \WC_Payment_Gateway_Stripe && $gateway->supports( 'stripe_bnpl_msg' ) ) {
+				self::$_bnpl_gateways[ $gateway->id ] = $gateway;
+				self::$_bnpl_options[ $gateway->id ]  = new \WC_Stripe_Product_Gateway_Option( $product, $gateway );
+			}
+		}
+	}
+
+	public static function get_bnpl_gateways() {
+		return self::$_bnpl_gateways;
+	}
+
+	private static function get_bnpl_option( $gateway_id ) {
+		return self::$_bnpl_options[ $gateway_id ];
 	}
 
 	private static function get_payment_gateways() {
@@ -98,5 +120,3 @@ class WC_Stripe_Admin_Meta_Box_Product_Data {
 	}
 
 }
-
-\PaymentPlugins\WC_Stripe_Admin_Meta_Box_Product_Data::init();

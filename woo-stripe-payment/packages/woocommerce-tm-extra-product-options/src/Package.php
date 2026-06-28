@@ -1,31 +1,35 @@
 <?php
 
-namespace PaymentPlugins\Stripe\WooCommerceExtraProductOptions;
+namespace PaymentPlugins\Stripe\WooCommerceTMExtraProductOptions;
 
 use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Packages\AbstractPackage;
+use PaymentPlugins\Stripe\WooCommerceProductAddons\FrontendScripts;
 
 /**
  * @package PaymentPlugins\WooCommerceExtraProductOptions\Stripe
  */
-class Package {
+class Package extends AbstractPackage {
 
-	public static function init() {
-		if ( self::is_enabled() ) {
-			add_action( 'woocommerce_init', [ __CLASS__, 'initialize' ] );
-		}
-	}
+	public $id = 'woocommerce_extra_product_options';
 
-	public static function initialize() {
-		new FrontendScripts( new AssetsApi(
-				dirname( __DIR__ ) . '/',
-				trailingslashit( plugin_dir_url( __DIR__ ) ),
-				stripe_wc()->version()
-			)
-		);
-	}
-
-	private static function is_enabled() {
+	public function is_active() {
 		return \defined( 'THEMECOMPLETE_EPO_PLUGIN_FILE' );
 	}
 
+	public function register() {
+		$this->container->register( FrontendScripts::class, function ( $container ) {
+			return new FrontendScripts(
+				new AssetsApi(
+					dirname( __DIR__ ) . '/',
+					trailingslashit( plugin_dir_url( __DIR__ ) ),
+					stripe_wc()->version()
+				)
+			);
+		} );
+	}
+
+	public function initialize() {
+		$this->container->get( FrontendScripts::class )->initialize();
+	}
 }

@@ -4,6 +4,7 @@
  * @var null|array $installments
  * @version 3.3.19
  */
+defined( 'ABSPATH' ) || exit;
 if ( is_null( $installments ) ) {
 	$installments = array( 'none' => array( 'text' => esc_html__( 'Fill out card form for eligibility.', 'woo-stripe-payment' ) ) );
 }

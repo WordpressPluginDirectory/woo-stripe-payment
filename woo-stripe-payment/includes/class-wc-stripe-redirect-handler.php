@@ -39,16 +39,19 @@ class WC_Stripe_Redirect_Handler {
 	 */
 	public static function process_redirect() {
 		if ( isset( $_GET['payment_intent'] ) ) {
-			$result        = WC_Stripe_Gateway::load()->paymentIntents->retrieve(
-				wc_clean( $_GET['payment_intent'] ),
-				array( 'expand' => array( 'payment_method' ) )
-			);
+			$result        = wc_stripe_get_container()
+				->get( \PaymentPlugins\Stripe\Client\StripeClient::class )
+				->paymentIntents
+				->retrieve( wc_clean( $_GET['payment_intent'] ) );
 			$client_secret = isset( $_GET['payment_intent_client_secret'] ) ? $_GET['payment_intent_client_secret'] : '';
 		} elseif ( isset( $_GET['setup_intent'] ) ) {
-			$result        = WC_Stripe_Gateway::load()->setupIntents->retrieve(
-				wc_clean( $_GET['setup_intent'] ),
-				array( 'expand' => array( 'payment_method', 'latest_attempt' ) )
-			);
+			$result        = wc_stripe_get_container()
+				->get( \PaymentPlugins\Stripe\Client\StripeClient::class )
+				->setupIntents
+				->retrieve(
+					wc_clean( $_GET['setup_intent'] ),
+					array( 'expand' => array( 'latest_attempt' ) )
+				);
 			$client_secret = isset( $_GET['setup_intent_client_secret'] ) ? $_GET['setup_intent_client_secret'] : '';
 		} else {
 			return;
@@ -120,7 +123,7 @@ class WC_Stripe_Redirect_Handler {
 			} elseif ( 'chargeable' === $result->status ) {
 				if ( ! $payment_method->has_order_lock( $order ) && ! $order->get_transaction_id() ) {
 					$payment_method->set_order_lock( $order );
-					$payment_method->set_new_source_token( $result->payment_method->id );
+					$payment_method->set_payment_method_id( $result->payment_method->id );
 					$result = $payment_method->process_payment( $order_id );
 					// we don't release the order lock so there aren't conflicts with the source.chargeable webhook
 					if ( $result['result'] === 'success' ) {
@@ -130,16 +133,16 @@ class WC_Stripe_Redirect_Handler {
 			} elseif ( in_array( $result->status, array( 'succeeded', 'requires_capture' ) ) ) {
 				if ( ! $payment_method->has_order_lock( $order ) && ! $order->get_date_paid() ) {
 					$payment_method->set_order_lock( $order );
-					$payment_method->set_new_source_token( $result->payment_method->id );
+					$payment_method->set_payment_method_id( $result->payment_method->id );
 					$result = $payment_method->process_payment( $order_id );
 					if ( $result['result'] === 'success' ) {
 						$redirect = $result['redirect'];
 					}
 				}
-			} elseif ( $result->status === 'processing' && isset( $result->charges->data ) ) {
+			} elseif ( $result->status === 'processing' && isset( $result->latest_charge ) ) {
 				if ( ! $payment_method->has_order_lock( $order ) ) {
 					$payment_method->set_order_lock( $order );
-					$payment_method->payment_object->payment_complete( $order, $result->charges->data[0] );
+					$payment_method->payment_controller->payment_complete( $order, $result->latest_charge );
 					WC_Stripe_Utils::delete_payment_intent_to_session();
 					$payment_method->release_order_lock( $order );
 				}
@@ -193,7 +196,7 @@ class WC_Stripe_Redirect_Handler {
 				$gateway = WC()->payment_gateways()->payment_gateways()[ $payment_method ] ?? null;
 				if ( $gateway && ! empty( $setup_intent ) ) {
 					$setup_intent = $gateway->gateway->setupIntents->retrieve( $setup_intent, array(
-						'expand' => array( 'payment_method', 'latest_attempt' )
+						'expand' => array( 'latest_attempt' )
 					) );
 					if ( is_wp_error( $setup_intent ) ) {
 						throw new \Exception( $setup_intent->get_error_message() );
@@ -215,7 +218,7 @@ class WC_Stripe_Redirect_Handler {
 
 
 					$gateway->set_setup_intent( $setup_intent );
-					$gateway->set_new_source_token( $setup_intent->payment_method->id );
+					$gateway->set_payment_method_id( $setup_intent->payment_method->id );
 
 					if ( $context === 'add_payment_method' ) {
 						if ( $setup_intent->status === 'requires_payment_method' ) {

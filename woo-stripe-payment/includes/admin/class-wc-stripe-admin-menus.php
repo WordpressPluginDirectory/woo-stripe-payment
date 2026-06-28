@@ -12,7 +12,7 @@ class WC_Stripe_Admin_Menus {
 
 	public static function init() {
 		//add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ), 10 );
-		add_action( 'admin_menu', array( __CLASS__, 'sub_menu' ), 20 );
+		//add_action( 'admin_menu', array( __CLASS__, 'sub_menu' ), 20 );
 	}
 
 	public static function admin_menu() {

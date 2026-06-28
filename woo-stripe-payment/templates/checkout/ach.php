@@ -3,6 +3,7 @@
  * @version 3.0.5
  * @var WC_Payment_Gateway_Stripe_ACH $gateway
  */
+defined( 'ABSPATH' ) || exit;
 wc_stripe_hidden_field ( $gateway->metadata_key );
 ?>
 <div id="wc-stripe-plaid-container">

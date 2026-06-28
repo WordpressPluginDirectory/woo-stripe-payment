@@ -2,6 +2,7 @@
 /**
  * @version 3.0.5
  */
+defined( 'ABSPATH' ) || exit;
 $steps = $gateway->postal_enabled() ? 4 : 3;
 stripe_wc()->scripts()->enqueue_script( 'cc-forms', stripe_wc()->assets_url( 'js/frontend/cc-forms.js' ), array( stripe_wc()->scripts()->get_handle( 'credit-card' ) ) );
 ?>

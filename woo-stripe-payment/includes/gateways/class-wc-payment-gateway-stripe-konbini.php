@@ -18,22 +18,22 @@ class WC_Payment_Gateway_Stripe_Konbini extends WC_Payment_Gateway_Stripe_Local_
 
 	use WC_Stripe_Voucher_Payment_Trait;
 
+	public $id = 'stripe_konbini';
+
 	protected $payment_method_type = 'konbini';
 
 	public $synchronous = false;
 
 	public $is_voucher_payment = true;
 
-	public function __construct() {
-		$this->local_payment_type = 'konbini';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'JPY' );
 		$this->countries          = array( 'JP' );
-		$this->id                 = 'stripe_konbini';
 		$this->tab_title          = __( 'Konbini', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Konbini (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Konbini gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/konbini.svg' );
-		parent::__construct();
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/konbini.svg' );
 	}
 
 	public function get_local_payment_settings() {
@@ -84,14 +84,14 @@ class WC_Payment_Gateway_Stripe_Konbini extends WC_Payment_Gateway_Stripe_Local_
 	/**
 	 * @param $value
 	 *
-	 * @since 3.3.38
 	 * @return array|string|string[]|null
+	 * @since 3.3.38
 	 */
 	private function sanitize_confirmation_number( $value ) {
 		return preg_replace( '/[^\d]/', '', $value );
 	}
 
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		return 120 <= $total && $total <= 300000;
 	}
 

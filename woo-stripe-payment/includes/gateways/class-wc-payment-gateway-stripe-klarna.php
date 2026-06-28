@@ -16,7 +16,12 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
 
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
 	use \PaymentPlugins\Stripe\Traits\BNPLPaymentGatewayTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_klarna';
 
 	protected $payment_method_type = 'klarna';
 
@@ -87,8 +92,7 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 		'US'  // United States
 	);
 
-	public function __construct() {
-		$this->local_payment_type = 'klarna';
+	public function __construct( ...$args ) {
 		$this->currencies         = array(
 			'AUD',
 			'CAD',
@@ -130,31 +134,12 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 			'SE',
 			'US'
 		);
-		$this->id                 = 'stripe_klarna';
 		$this->tab_title          = __( 'Klarna', 'woo-stripe-payment' );
 		$this->token_type         = 'Stripe_Local';
 		$this->method_title       = __( 'Klarna (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Klarna gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		parent::__construct();
-		$this->icon = stripe_wc()->assets_url( 'img/' . $this->get_option( 'icon' ) . '.svg' );
-		add_filter( 'woocommerce_gateway_icon', array( $this, 'get_woocommerce_gateway_icon' ), 10, 2 );
-	}
-
-	public function init_supports() {
-		parent::init_supports();
-		$this->supports[] = 'wc_stripe_cart_checkout';
-		$this->supports[] = 'wc_stripe_product_checkout';
-		$this->supports[] = 'wc_stripe_mini_cart_checkout';
-		$this->supports[] = 'subscriptions';
-		$this->supports[] = 'subscription_cancellation';
-		$this->supports[] = 'multiple_subscriptions';
-		$this->supports[] = 'subscription_reactivation';
-		$this->supports[] = 'subscription_suspension';
-		$this->supports[] = 'subscription_date_changes';
-		$this->supports[] = 'subscription_payment_method_change_admin';
-		$this->supports[] = 'subscription_amount_changes';
-		$this->supports[] = 'subscription_payment_method_change_customer';
-		$this->supports[] = 'pre-orders';
+		parent::__construct( ...$args );
+		$this->icon = $this->assets->assets_url( 'img/' . $this->get_option( 'icon' ) . '.svg' );
 	}
 
 	public function get_required_parameters() {
@@ -178,11 +163,11 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 	/**
 	 * @param string $currency
 	 * @param string $billing_country
-	 * @param float $total
+	 * @param float  $total
 	 *
 	 * @return bool
 	 */
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		$result = false;
 		/**
 		 * https://docs.stripe.com/payments/klarna
@@ -301,7 +286,14 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 					'desc_tip'    => true,
 					'description' => __( 'This is the icon style that appears next to the gateway on the checkout page.', 'woo-stripe-payment' ),
 				),
-				'payment_sections' => array(
+				'message_enabled'  => array(
+					'title'       => __( 'Messaging Enabled', 'woo-stripe-payment' ),
+					'type'        => 'checkbox',
+					'default'     => 'no',
+					'desc_tip'    => true,
+					'description' => __( 'When enabled, the Buy Now Pay Later messaging will be available in the sections you configure.', 'woo-stripe-payment' ),
+				),
+				'message_sections' => array(
 					'type'        => 'multiselect',
 					'title'       => __( 'Message Sections', 'woo-stripe-payment' ),
 					'class'       => 'wc-enhanced-select',
@@ -315,102 +307,10 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 					'desc_tip'    => true,
 					'description' => __( 'These are the sections where the Klarna messaging will be enabled.',
 						'woo-stripe-payment' ),
-				),
-				'cart_location'    => array(
-					'title'       => __( 'Cart Message Location', 'woo-stripe-payment' ),
-					'type'        => 'select',
-					'default'     => 'below_total',
-					'options'     => array(
-						'below_total'           => __( 'Below Total', 'woo-stripe-payment' ),
-						'below_checkout_button' => __( 'Below Checkout Button', 'woo-stripe-payment' )
-					),
-					'desc_tip'    => true,
-					'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
-				),
-				'product_location' => array(
-					'title'       => __( 'Product Message Location', 'woo-stripe-payment' ),
-					'type'        => 'select',
-					'default'     => 'below_price',
-					'options'     => array(
-						'above_price'       => __( 'Above Price', 'woo-stripe-payment' ),
-						'below_price'       => __( 'Below Price', 'woo-stripe-payment' ),
-						'below_add_to_cart' => __( 'Below Add to Cart', 'woo-stripe-payment' )
-					),
-					'desc_tip'    => true,
-					'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
-				),
-				'shop_location'    => array(
-					'title'       => __( 'Shop/Category Message Location', 'woo-stripe-payment' ),
-					'type'        => 'select',
-					'default'     => 'below_price',
-					'options'     => array(
-						'below_price'       => __( 'Below Price', 'woo-stripe-payment' ),
-						'below_add_to_cart' => __( 'Below Add to Cart', 'woo-stripe-payment' )
-					),
-					'desc_tip'    => true,
-					'description' => __( 'This option controls the location in which the messaging for the payment method will appear.', 'woo-stripe-payment' )
 				)
 			),
 			parent::get_local_payment_settings()
 		);
-	}
-
-	public function enqueue_checkout_scripts( $scripts ) {
-		parent::enqueue_checkout_scripts( $scripts );
-		$scripts->assets_api->register_script( 'wc-stripe-klarna-checkout', 'assets/build/klarna-message.js', array(
-			'wc-stripe-vendors',
-			'wc-stripe-local-payment'
-		) );
-		wp_enqueue_script( 'wc-stripe-klarna-checkout' );
-	}
-
-	public function enqueue_product_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-klarna-product', 'assets/build/klarna-message.js', array( 'wc-stripe-vendors' ) );
-		wp_enqueue_script( 'wc-stripe-klarna-product' );
-		$scripts->localize_script( 'wc-stripe-klarna-product', $this->get_localized_params() );
-	}
-
-	public function enqueue_cart_scripts( $scripts ) {
-		$scripts->assets_api->register_script( 'wc-stripe-klarna-cart', 'assets/build/klarna-message.js', array( 'wc-stripe-vendors' ) );
-		wp_enqueue_script( 'wc-stripe-klarna-cart' );
-		$this->enqueue_payment_method_styles();
-		$scripts->localize_script( 'wc-stripe-klarna-cart', $this->get_localized_params() );
-	}
-
-	/**
-	 * @param \PaymentPlugins\Stripe\Assets\AssetsApi $assets_api
-	 * @param \PaymentPlugins\Stripe\Assets\AssetDataApi $asset_data
-	 *
-	 * @return void
-	 */
-	public function enqueue_category_scripts( $assets_api, $asset_data ) {
-		$assets_api->register_script( 'wc-stripe-klarna-category', 'assets/build/klarna-message.js', array( 'wc-stripe-vendors' ) );
-		$asset_data->add( $this->id, array(
-			'messageOptions' => array(
-				'countryCode'        => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
-				'paymentMethodTypes' => array( 'klarna' )
-			)
-		) );
-		wp_enqueue_script( 'wc-stripe-klarna-category' );
-	}
-
-	public function get_localized_params() {
-		return array_merge( parent::get_localized_params(), array(
-			'messageOptions' => array(
-				'countryCode'        => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
-				'paymentMethodTypes' => array( 'klarna' )
-			)
-		) );
-	}
-
-	public function cart_fields() {
-		$this->enqueue_frontend_scripts( 'cart' );
-		$this->output_display_items( 'cart' );
-	}
-
-	public function product_fields() {
-		$this->enqueue_frontend_scripts( 'product' );
-		$this->output_display_items( 'product' );
 	}
 
 	/**

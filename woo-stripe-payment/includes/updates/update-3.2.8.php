@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 /**
  * This update replaces use of wc_stripe function with stripe_wc. In version 4.5.4 of the WooCommerce
  * Stripe Payment Gateway plugin, a function named wc_stripe was introduced which creates a critical error

@@ -2,6 +2,7 @@
 /**
  * @version 3.3.87
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <style>

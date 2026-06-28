@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PaymentPlugins\CartFlows\Stripe;
+namespace PaymentPlugins\Stripe\CartFlows;
 
 
 class Constants {

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 return array(
 	'desc'              => array(
@@ -22,7 +23,7 @@ return array(
 		'title'       => __( 'Title', 'woo-stripe-payment' ),
 		'default'     => __( 'ACH Payment', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
-		'description' => __( 'Title of the ACH gateway' ),
+		'description' => __( 'Title of the ACH gateway', 'woo-stripe-payment' )
 	),
 	'description'       => array(
 		'title'       => __( 'Description', 'woo-stripe-payment' ),
@@ -30,13 +31,6 @@ return array(
 		'default'     => '',
 		'description' => __( 'Leave blank if you don\'t want a description to show for the gateway.', 'woo-stripe-payment' ),
 		'desc_tip'    => true,
-	),
-	'stripe_mandate'    => array(
-		'title'       => __( 'Use Stripe Mandate', 'woo-stripe-payment' ),
-		'type'        => 'checkbox',
-		'default'     => 'yes',
-		'desc_tip'    => true,
-		'description' => __( 'If enabled, Stripe\'s default mandate text will be used. If disabled, the plugin will use it\'s mandate text.', 'woo-stripe-payment' )
 	),
 	'order_button_text' => array(
 		'title'       => __( 'Order Button Text', 'woo-stripe-payment' ),
@@ -60,7 +54,7 @@ return array(
 		'value'       => '',
 		'default'     => 'type_ending_in',
 		'desc_tip'    => true,
-		'description' => __( 'This option allows you to customize how the payment method will display for your customers on orders, subscriptions, etc.' ),
+		'description' => __( 'This option allows you to customize how the payment method will display for your customers on orders, subscriptions, etc.', 'woo-stripe-payment' )
 	),
 	'order_status'      => array(
 		'type'        => 'select',
@@ -81,7 +75,7 @@ return array(
 		'description' => __( 'If enabled, a checkbox will be available on the checkout page allowing your customers to save their payment method. The payment methods are stored securely in Stripe\'s vault and never touch your server. Note: if the cart contains a subscription, there will be no checkbox because the payment method will be saved automatically.',
 			'woo-stripe-payment' ),
 	),
-	'fee'               => array(
+	/*'fee'               => array(
 		'title'       => __( 'ACH Fee', 'woo-stripe-payment' ),
 		'type'        => 'ach_fee',
 		'class'       => '',
@@ -98,5 +92,5 @@ return array(
 		),
 		'desc_tip'    => true,
 		'description' => __( 'You can assign a fee to the order for ACH payments. Amount is a static amount and percentage is a percentage of the cart amount.', 'woo-stripe-payment' ),
-	),
+	),*/
 );

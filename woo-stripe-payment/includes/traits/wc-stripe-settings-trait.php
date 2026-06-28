@@ -150,6 +150,7 @@ trait WC_Stripe_Settings_Trait {
 				'description' => '',
 				'desc_tip'    => false,
 				'id'          => 'wc-stripe-button-demo',
+				'contexts'    => array(),
 			)
 		);
 		ob_start();

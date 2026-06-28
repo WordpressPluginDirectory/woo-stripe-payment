@@ -20,8 +20,86 @@ class Feature extends \Stripe\ApiResource
 {
     const OBJECT_NAME = 'entitlements.feature';
 
-    use \Stripe\ApiOperations\All;
-    use \Stripe\ApiOperations\Create;
-    use \Stripe\ApiOperations\Retrieve;
     use \Stripe\ApiOperations\Update;
+
+    /**
+     * Creates a feature.
+     *
+     * @param null|array{expand?: string[], lookup_key: string, metadata?: array<string, string>, name: string} $params
+     * @param null|array|string $options
+     *
+     * @return Feature the created resource
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Retrieve a list of features.
+     *
+     * @param null|array{archived?: bool, ending_before?: string, expand?: string[], limit?: int, lookup_key?: string, starting_after?: string} $params
+     * @param null|array|string $opts
+     *
+     * @return \Stripe\Collection<Feature> of ApiResources
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves a feature.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @return Feature
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
+
+    /**
+     * Update a feature’s metadata or permanently deactivate it.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array{active?: bool, expand?: string[], metadata?: null|array<string, string>, name?: string} $params
+     * @param null|array|string $opts
+     *
+     * @return Feature the updated resource
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace PaymentPlugins\WooFunnels\Stripe\Upsell;
+namespace PaymentPlugins\Stripe\WooFunnels\Upsell;
 
 class LinkIntegration {
 

@@ -107,6 +107,13 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 					)
 				)
 			),
+			'register_domain'      => array(
+				'type'        => 'stripe_button',
+				'title'       => __( 'Register Domain', 'woo-stripe-payment' ),
+				'label'       => __( 'Register Domain', 'woo-stripe-payment' ),
+				'class'       => 'button-secondary api-register-domain',
+				'description' => __( 'Apple Pay, Google Pay, and Link Checkout require your domain to be registered with Stripe before they can accept payments. Click the button to register this site\'s domain automatically.', 'woo-stripe-payment' )
+			),
 			'connection_test_live' => array(
 				'type'              => 'stripe_button',
 				'title'             => __( 'Connection Test', 'woo-stripe-payment' ),
@@ -211,7 +218,7 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 				$this->form_fields["webhook_button_{$mode}"]['title']       = __( 'Delete Webhook', 'woo-stripe-payment' );
 				$this->form_fields["webhook_button_{$mode}"]['label']       = __( 'Delete Webhook', 'woo-stripe-payment' );
 				$this->form_fields["webhook_button_{$mode}"]['class']       .= ' wc-stripe-delete-webhook';
-				$this->form_fields["webhook_button_{$mode}"]['description'] = sprintf( __( '%1$s Webhook created. ID: %2$s' ),
+				$this->form_fields["webhook_button_{$mode}"]['description'] = sprintf( __( '%1$s Webhook created. ID: %2$s', 'woo-stripe-payment' ),
 					'<span class="dashicons dashicons-yes stripe-webhook-created"></span>',
 					$webhook_id );
 			}
@@ -337,21 +344,22 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 	 * @param string $mode
 	 * @param array  $events
 	 *
-	 * @since 3.3.13
 	 * @return bool|\Stripe\WebhookEndpoint
 	 * @throws \Stripe\Exception\ApiErrorException
+	 * @since 3.3.13
 	 */
 	public function create_webhook( $mode, $events = array() ) {
-		$client = WC_Stripe_Gateway::load();
+		/**
+		 * @var \PaymentPlugins\Stripe\Client\StripeClient $client
+		 */
+		$client = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class );
 		$url    = get_rest_url( null, '/wc-stripe/v1/webhook' );
 		if ( ! in_array( '*', $events ) ) {
 			$events = apply_filters(
 				'wc_stripe_webhook_events',
 				array_values( array_unique( array_merge( array(
 					'charge.failed',
-					'charge.succeeded',
 					'charge.pending',
-					'source.chargeable',
 					'payment_intent.succeeded',
 					'payment_intent.requires_action',
 					'charge.refunded',
@@ -363,7 +371,7 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 			);
 		}
 		$webhook = $client->mode( $mode )->webhookEndpoints->create( array(
-			'api_version'    => '2022-08-01',
+			'api_version'    => wc_stripe_get_container()->get( 'API_VERSION' ),
 			'url'            => $url,
 			'enabled_events' => $events,
 		) );

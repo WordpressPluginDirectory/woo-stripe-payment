@@ -1,6 +1,6 @@
 <?php
 
-namespace PaymentPlugins\WooFunnels\Stripe;
+namespace PaymentPlugins\Stripe\WooFunnels;
 
 class AssetsApi {
 

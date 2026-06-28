@@ -4,6 +4,7 @@
  * @version 3.3.34
  *
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div id="wc_stripe_local_payment_<?php echo esc_attr( $gateway->id ) ?>" data-active="<?php echo esc_attr( $gateway->is_local_payment_available() ) ?>">

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways;
+namespace PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways;
 
 
 class ApplePayGateway extends BasePaymentGateway {

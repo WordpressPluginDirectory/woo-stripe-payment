@@ -2,7 +2,7 @@
 /**
  *
  */
-
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-support__page">
     <div class="wc-stripe-main__container">

@@ -21,7 +21,9 @@ trait WC_Stripe_Controller_Cart_Trait {
 	public function add_ready_to_calc_shipping() {
 		add_filter(
 			'woocommerce_cart_ready_to_calc_shipping',
-			'__return_true',
+			function ( $show_shipping ) {
+				return true;
+			},
 			1000
 		);
 	}
@@ -135,7 +137,7 @@ trait WC_Stripe_Controller_Frontend_Trait {
 	 */
 	public function validate_rest_nonce( $request ) {
 		if ( ! isset( $request['wp_rest_nonce'] ) || ! wp_verify_nonce( $request['wp_rest_nonce'], 'wp_rest' ) ) {
-			return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid' ), array( 'status' => 403 ) );
+			return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid', 'woo-stripe-payment' ), array( 'status' => 403 ) );
 		}
 
 		return true;

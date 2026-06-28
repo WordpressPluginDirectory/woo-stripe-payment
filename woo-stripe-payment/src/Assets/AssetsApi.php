@@ -11,9 +11,9 @@ class AssetsApi {
 	private $version;
 
 	/**
-	 * @param $path       Base path to the directory
-	 * @param $assets_url Directory to the assets
-	 * @param $version
+	 * @param string $path path to the directory
+	 * @param string $assets_url the assets
+	 * @param string $version
 	 */
 	public function __construct( $path, $assets_url, $version ) {
 		$this->base_path  = $path;
@@ -38,13 +38,39 @@ class AssetsApi {
 		wp_register_script( $handle, $this->assets_url( $relative_path ), $deps, $version, $footer );
 	}
 
+	public function register_script_module( $handle, $relative_path, $deps = [] ) {
+		$file_name = str_replace( '.js', '.asset.php', $relative_path );
+		$file      = $this->base_path . $file_name;
+		$version   = $this->version;
+		if ( file_exists( $file ) ) {
+			$assets  = include $file;
+			$version = isset( $assets['version'] ) ? $assets['version'] : $version;
+			if ( isset( $assets['dependencies'] ) ) {
+				$deps = array_merge( $assets['dependencies'], $deps );
+			}
+		}
+
+		wp_register_script_module( $handle, $this->assets_url( $relative_path ), $deps, $version );
+	}
+
 	public function register_style( $handle, $relative_path, $deps = [], $version = null ) {
 		$version = is_null( $version ) ? $this->version : $version;
 		wp_register_style( $handle, $this->assets_url( $relative_path ), $deps, $version );
 	}
 
 	public function assets_url( $relative_path ) {
-		return $this->assets_url . trim( $relative_path, '/' );
+		$url = $this->assets_url;
+
+		preg_match( '/^(\.{2}\/)+/', $relative_path, $matches );
+		if ( $matches ) {
+			foreach ( range( 0, substr_count( $matches[0], '../' ) - 1 ) as $idx ) {
+				$url = dirname( $url );
+			}
+			$relative_path = substr( $relative_path, strlen( $matches[0] ) );
+			$relative_path = '/' . ltrim( $relative_path, '/' );
+		}
+
+		return $url . $relative_path;
 	}
 
 }

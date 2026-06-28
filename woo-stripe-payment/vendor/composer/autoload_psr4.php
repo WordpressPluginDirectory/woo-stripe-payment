@@ -7,14 +7,16 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
-    'PaymentPlugins\\WooFunnels\\Stripe\\' => array($baseDir . '/packages/woofunnels/src'),
+    'PaymentPlugins\\Stripe\\WooFunnels\\' => array($baseDir . '/packages/woofunnels/src'),
+    'PaymentPlugins\\Stripe\\WooCommerceTMExtraProductOptions\\' => array($baseDir . '/packages/woocommerce-tm-extra-product-options/src'),
     'PaymentPlugins\\Stripe\\WooCommerceSubscriptions\\' => array($baseDir . '/packages/subscriptions/src'),
     'PaymentPlugins\\Stripe\\WooCommerceProductAddons\\' => array($baseDir . '/packages/woocommerce-product-addons/src'),
     'PaymentPlugins\\Stripe\\WooCommercePreOrders\\' => array($baseDir . '/packages/preorders/src'),
-    'PaymentPlugins\\Stripe\\WooCommerceExtraProductOptions\\' => array($baseDir . '/packages/woocommerce-tm-extra-product-options/src'),
+    'PaymentPlugins\\Stripe\\ProductAddons\\' => array($baseDir . '/packages/product-addons/src'),
     'PaymentPlugins\\Stripe\\GermanMarket\\' => array($baseDir . '/packages/germanmarket/src'),
+    'PaymentPlugins\\Stripe\\CheckoutWC\\' => array($baseDir . '/packages/checkoutwc/src'),
+    'PaymentPlugins\\Stripe\\CartFlows\\' => array($baseDir . '/packages/cartflows/src'),
+    'PaymentPlugins\\Stripe\\Blocks\\' => array($baseDir . '/packages/blocks/src'),
+    'PaymentPlugins\\Stripe\\AdvancedProductFieldsForWooCommerce\\' => array($baseDir . '/packages/advanced-product-fields-for-woocommerce/src'),
     'PaymentPlugins\\Stripe\\' => array($baseDir . '/src'),
-    'PaymentPlugins\\CheckoutWC\\Stripe\\' => array($baseDir . '/packages/checkoutwc/src'),
-    'PaymentPlugins\\CartFlows\\Stripe\\' => array($baseDir . '/packages/cartflows/src'),
-    'PaymentPlugins\\Blocks\\Stripe\\' => array($baseDir . '/packages/blocks/src'),
 );

@@ -1,11 +1,9 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
-use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
-use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment;
-use PaymentPlugins\Blocks\Stripe\StoreApi\EndpointData;
-use PaymentPlugins\Stripe\Controllers\PaymentIntent;
+use PaymentPlugins\Stripe\Blocks\Payments\AbstractStripePayment;
+use PaymentPlugins\Stripe\Controllers\PaymentIntentController;
 use PaymentPlugins\Stripe\Installments\InstallmentController;
 
 class CreditCardPayment extends AbstractStripePayment {
@@ -18,7 +16,7 @@ class CreditCardPayment extends AbstractStripePayment {
 	private $installments;
 
 	/**
-	 * @var \PaymentPlugins\Stripe\Controllers\PaymentIntent
+	 * @var \PaymentPlugins\Stripe\Controllers\PaymentIntentController
 	 */
 	private $payment_intent_ctrl;
 
@@ -33,7 +31,18 @@ class CreditCardPayment extends AbstractStripePayment {
 	}
 
 	public function get_payment_method_data() {
-		$assets_url = $this->assets_api->get_asset_url( '../../assets/img/cards/' );
+		$assets_url = $this->assets_api->assets_url( '../../assets/img/cards/' );
+
+		$installmentsActive = $this->installments->is_available();
+		$client_secret      = null;
+		if ( $installmentsActive && $this->is_payment_element_active() ) {
+			$payment_intent = $this->installments->get_or_create_installment_intent();
+			if ( ! is_wp_error( $payment_intent ) ) {
+				$client_secret = $payment_intent->client_secret;
+			} else {
+				$installmentsActive = false;
+			}
+		}
 
 		return wp_parse_args( array(
 			'cardOptions'            => $this->payment_method->get_card_form_options(),
@@ -45,7 +54,8 @@ class CreditCardPayment extends AbstractStripePayment {
 			'postalCodeEnabled'      => $this->payment_method->postal_enabled(),
 			'saveCardEnabled'        => $this->payment_method->is_active( 'save_card_enabled' ),
 			'savePaymentMethodLabel' => __( 'Save Card', 'woo-stripe-payment' ),
-			'installmentsActive'     => $this->installments->is_available(),
+			'installmentsActive'     => $installmentsActive,
+			'clientSecret'           => $client_secret,
 			'cards'                  => array(
 				'visa'       => $assets_url . 'visa.svg',
 				'amex'       => $assets_url . 'amex.svg',
@@ -61,28 +71,37 @@ class CreditCardPayment extends AbstractStripePayment {
 	}
 
 	protected function get_payment_method_icon() {
-		$icons = array();
-		$cards = $this->get_setting( 'cards', [] );
-		$cards = ! \is_array( $cards ) ? [] : $cards;
-		foreach ( $cards as $id ) {
-			$icons[] = array(
-				'id'  => $id,
-				'alt' => '',
-				'src' => stripe_wc()->assets_url( "img/cards/{$id}.svg" )
-			);
+		$icons    = array();
+		$cards    = $this->get_setting( 'card_icons', [] );
+		$icon_url = $this->get_setting( 'icon_url', '' );
+		if ( $icon_url ) {
+			$icons[] = [
+				'id'  => 'stripe_cc_icon',
+				'alt' => 'Credit Cards',
+				'src' => $icon_url
+			];
+		} else {
+			$cards = ! \is_array( $cards ) ? [] : $cards;
+			foreach ( $cards as $id ) {
+				$icons[] = array(
+					'id'  => $id,
+					'alt' => '',
+					'src' => stripe_wc()->assets_url( "img/cards/{$id}.svg" )
+				);
+			}
 		}
 
 		return $icons;
 	}
 
 	/**
-	 * @param \PaymentPlugins\Blocks\Stripe\Assets\Api $style_api
+	 * @param \PaymentPlugins\Stripe\Blocks\Assets\Api $style_api
 	 */
-	public function enqueue_payment_method_styles( $style_api ) {
+	public function enqueue_payment_method_styles() {
 		if ( $this->payment_method->is_custom_form_active() ) {
 			$form = $this->payment_method->get_option( 'custom_form' );
 			if ( \in_array( $form, [ 'bootstrap', 'simple' ] ) ) {
-				wp_enqueue_style( 'wc-stripe-credit-card-style', $style_api->get_asset_url( "build/credit-card/{$form}.css" ) );
+				wp_enqueue_style( 'wc-stripe-credit-card-style', $this->assets_api->assets_url( "build/credit-card/{$form}.css" ) );
 				wp_style_add_data( 'wc-stripe-credit-card-style', 'rtl', 'replace' );
 			}
 		}
@@ -92,7 +111,7 @@ class CreditCardPayment extends AbstractStripePayment {
 		$this->installments = $installments;
 	}
 
-	public function set_payment_intent_controller( PaymentIntent $controller ) {
+	public function set_payment_intent_controller( PaymentIntentController $controller ) {
 		$this->payment_intent_ctrl = $controller;
 	}
 

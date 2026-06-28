@@ -15,18 +15,18 @@ class WC_Payment_Gateway_Stripe_Billie extends WC_Payment_Gateway_Stripe_Local_P
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
 
+	public $id = 'stripe_billie';
+
 	protected $payment_method_type = 'billie';
 
-	public function __construct() {
-		$this->local_payment_type = 'billie';
+	public function __construct( ...$args ) {
+		parent::__construct( ...$args );
 		$this->currencies         = array( 'EUR', 'SEK', 'NOK', 'DKK', 'GBP', 'CHF' );
 		$this->countries          = array( 'NL' );
-		$this->id                 = 'stripe_billie';
 		$this->tab_title          = __( 'Billie', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Billie (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Billie gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/billie.svg' );
-		parent::__construct();
+		$this->icon               = $this->assets->assets_url( 'img/billie.svg' );
 	}
 
 	public function get_required_parameters() {
@@ -43,11 +43,11 @@ class WC_Payment_Gateway_Stripe_Billie extends WC_Payment_Gateway_Stripe_Local_P
 	/**
 	 * @param string $currency
 	 * @param string $billing_country
-	 * @param float $total
+	 * @param float  $total
 	 *
 	 * @return bool
 	 */
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		$result = false;
 
 		if ( $billing_country ) {

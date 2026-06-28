@@ -4,6 +4,7 @@
  * @version 3.0.0
  *
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-banner-checkout">
     <fieldset>

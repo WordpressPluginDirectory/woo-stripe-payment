@@ -4,11 +4,13 @@
  * @version 3.13.8
  *
  */
+defined( 'ABSPATH' ) || exit;
 ?>
-<div id="wc_stripe_local_payment_<?php echo esc_attr( $gateway->id ) ?>" data-active="<?php echo esc_attr( $gateway->is_local_payment_available() ) ?>">
+<div id="wc_stripe_local_payment_<?php echo esc_attr( $gateway->id ) ?>"
+     data-active="<?php echo esc_attr( $gateway->is_local_payment_available() ) ?>">
 	<?php woocommerce_form_field( 'wc_stripe_boleto_tax_id', array(
 		'type'        => 'text',
-		'label'       => __( 'CPF / CNPJ' ),
+		'label'       => __( 'CPF / CNPJ', 'woo-stripe-payment' ),
 		'placeholder' => __( 'Enter your CPF/CNPJ', 'woo-stripe-payment' ),
 		'required'    => true
 	) ) ?>

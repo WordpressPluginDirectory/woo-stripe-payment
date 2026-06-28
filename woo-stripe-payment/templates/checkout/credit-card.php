@@ -4,7 +4,7 @@
  * @version 3.3.42
  *
  */
-
+defined( 'ABSPATH' ) || exit;
 ?>
 <?php if ( $gateway->is_custom_form_active() ): ?>
     <div id="wc-stripe-cc-custom-form">

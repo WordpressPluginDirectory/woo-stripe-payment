@@ -1,6 +1,6 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\Payments;
+namespace PaymentPlugins\Stripe\Blocks\Payments;
 
 class MagicPaymentMethod {
 

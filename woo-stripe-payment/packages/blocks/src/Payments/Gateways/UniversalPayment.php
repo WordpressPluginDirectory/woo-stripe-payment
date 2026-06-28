@@ -1,15 +1,15 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
 use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
-use PaymentPlugins\Blocks\Stripe\Assets\Api as AssetsApi;
-use PaymentPlugins\Blocks\Stripe\StoreApi\EndpointData;
-use PaymentPlugins\Stripe\Controllers\PaymentIntent;
+use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Blocks\StoreApi\EndpointData;
+use PaymentPlugins\Stripe\Controllers\PaymentIntentController;
 use PaymentPlugins\Stripe\Installments\InstallmentController;
 use PaymentPlugins\Stripe\RequestContext;
 
-class UniversalPayment extends \PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment {
+class UniversalPayment extends \PaymentPlugins\Stripe\Blocks\Payments\AbstractStripePayment {
 
 	protected $name = 'stripe_upm';
 
@@ -19,11 +19,11 @@ class UniversalPayment extends \PaymentPlugins\Blocks\Stripe\Payments\AbstractSt
 	private $installments;
 
 	/**
-	 * @var \PaymentPlugins\Stripe\Controllers\PaymentIntent
+	 * @var \PaymentPlugins\Stripe\Controllers\PaymentIntentController
 	 */
 	private $payment_intent_ctrl;
 
-	public function __construct( AssetsApi $assets_api, PaymentIntent $controller, InstallmentController $installments ) {
+	public function __construct( AssetsApi $assets_api, PaymentIntentController $controller, InstallmentController $installments ) {
 		parent::__construct( $assets_api );
 		$this->payment_intent_ctrl = $controller;
 		$this->installments        = $installments;

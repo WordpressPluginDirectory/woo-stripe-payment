@@ -16,16 +16,22 @@ class FrontendScripts {
 	}
 
 	public function initialize() {
-		$this->register_scripts();
-		add_action( 'wc_stripe_product_before_payment_methods', [ $this, 'enqueue_scripts' ] );
+		add_action( 'init', function () {
+			$this->register_scripts();
+		} );
+		add_action( 'wp_enqueue_scripts', function () {
+			$this->enqueue_scripts();
+		} );
 	}
 
 	private function register_scripts() {
-		$this->assets->register_script( 'wc-stripe-product-addons', 'build/product-addons.js' );
+		$this->assets->register_script( 'wc-stripe-woocommerce-product-addons', 'build/product.js' );
 	}
 
-	public function enqueue_scripts() {
-		\wp_enqueue_script( 'wc-stripe-product-addons' );
+	private function enqueue_scripts() {
+		if ( is_product() ) {
+			\wp_enqueue_script( 'wc-stripe-woocommerce-product-addons' );
+		}
 	}
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+use PaymentPlugins\Stripe\Controllers\PaymentIntentController;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -12,89 +14,86 @@ defined( 'ABSPATH' ) || exit();
 class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 
 	use WC_Stripe_Payment_Intent_Trait;
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_cc';
 
 	protected $payment_method_type = 'card';
 
-	public $installments;
-
 	protected $supports_save_payment_method = true;
 
-	public function __construct() {
-		$this->id                 = 'stripe_cc';
+	public $token_type = 'Stripe_CC';
+
+	public $template_name = 'credit-card.php';
+
+	public function __construct( ...$args ) {
+		parent::__construct( ...$args );
 		$this->tab_title          = __( 'Credit/Debit Cards', 'woo-stripe-payment' );
-		$this->template_name      = 'credit-card.php';
-		$this->token_type         = 'Stripe_CC';
 		$this->method_title       = __( 'Credit Cards (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Credit card gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		parent::__construct();
-		$this->installments = \PaymentPlugins\Stripe\Installments\InstallmentController::instance();
+		$this->icon               = $this->get_option( 'icon_url', '' );
 	}
 
 	public function get_icon() {
-		$cards = $this->get_option( 'cards', array() );
-		$icons = array();
-		foreach ( $cards as $card ) {
-			if ( $card && is_string( $card ) ) {
-				$icons[ $card ] = stripe_wc()->assets_url( "img/cards/{$card}.svg" );
+		$icon_url = $this->get_option( 'icon_url', '' );
+		if ( ! $icon_url ) {
+			$cards = (array) $this->get_option( 'card_icons', array() );
+			if ( ! empty( $cards ) ) {
+				$this->validate_card_icons_field( 'card_icons', $cards );
 			}
+			$this->icon = $this->get_option( 'icon_url', '' );
 		}
 
-		return wc_stripe_get_template_html(
-			'card-icons.php',
-			apply_filters( 'wc_stripe_cc_icon_template_args', array(
-				'cards'      => $cards,
-				'icons'      => $icons,
-				'assets_url' => stripe_wc()->assets_url()
-			), $this )
-		);
+		return parent::get_icon();
 	}
 
-	public function enqueue_checkout_scripts( $scripts ) {
-		if ( $this->is_payment_element_active() ) {
-			$scripts->assets_api->register_script( 'wc-stripe-credit-card', 'assets/build/credit-card-payment-element.js' );
-			wp_enqueue_script( 'wc-stripe-credit-card' );
-		} else {
-			$scripts->enqueue_script(
-				'credit-card',
-				$scripts->assets_url( 'js/frontend/credit-card.js' ),
-				array(
-					$scripts->prefix . 'external',
-					$scripts->prefix . 'wc-stripe',
-				)
-			);
-		}
-		$scripts->localize_script( 'credit-card', $this->get_localized_params() );
+	public function get_checkout_script_handles() {
+		//if ( $this->is_payment_element_active() ) {
+		$this->assets->register_script( 'wc-stripe-credit-card', 'build/credit-card.js' );
+
+		//}
+
+		return [ 'wc-stripe-credit-card' ];
 	}
 
-	public function get_localized_params() {
-		$data = parent::get_localized_params();
+	public function get_add_payment_method_script_handles() {
+		//if ( $this->is_payment_element_active() ) {
+		$this->assets->register_script( 'wc-stripe-credit-card-add-payment', 'build/credit-card-add-payment.js' );
 
+		//}
+
+		return [ 'wc-stripe-credit-card-add-payment' ];
+	}
+
+	public function get_payment_method_data() {
 		return array_merge(
-			$data,
-			array(
-				'cardOptions'        => $this->get_card_form_options(),
-				'customFieldOptions' => $this->get_card_custom_field_options(),
-				'cardFormType'       => $this->get_active_card_form_type(),
-				'custom_form'        => $this->is_custom_form_active(),
-				'custom_form_name'   => $this->get_option( 'custom_form' ),
-				'html'               => array( 'card_brand' => sprintf( '<img id="wc-stripe-card" src="%s" />', $this->get_custom_form()['cardBrand'] ) ),
-				'cards'              => array(
-					'visa'       => stripe_wc()->assets_url( 'img/cards/visa.svg' ),
-					'amex'       => stripe_wc()->assets_url( 'img/cards/amex.svg' ),
-					'mastercard' => stripe_wc()->assets_url( 'img/cards/mastercard.svg' ),
-					'discover'   => stripe_wc()->assets_url( 'img/cards/discover.svg' ),
-					'diners'     => stripe_wc()->assets_url( 'img/cards/diners.svg' ),
-					'jcb'        => stripe_wc()->assets_url( 'img/cards/jcb.svg' ),
-					'unionpay'   => stripe_wc()->assets_url( 'img/cards/china_union_pay.svg' ),
+			parent::get_payment_method_data(),
+			[
+				'cardFormType'         => $this->get_active_card_form_type(),
+				'inlineFormOptions'    => $this->get_card_form_options(),
+				'paymentElementActive' => $this->is_payment_element_active(),
+				'customFieldOptions'   => $this->get_card_custom_field_options(),
+				'cardIcons'            => array(
+					'visa'       => $this->assets->assets_url( 'img/cards/visa.svg' ),
+					'amex'       => $this->assets->assets_url( 'img/cards/amex.svg' ),
+					'mastercard' => $this->assets->assets_url( 'img/cards/mastercard.svg' ),
+					'discover'   => $this->assets->assets_url( 'img/cards/discover.svg' ),
+					'diners'     => $this->assets->assets_url( 'img/cards/diners.svg' ),
+					'jcb'        => $this->assets->assets_url( 'img/cards/jcb.svg' ),
+					'unionpay'   => $this->assets->assets_url( 'img/cards/china_union_pay.svg' ),
 					'unknown'    => $this->get_custom_form()['cardBrand'],
 				),
-				'postal_regex'       => $this->get_postal_code_regex(),
-				'notice_location'    => $this->get_option( 'notice_location' ),
-				'notice_selector'    => $this->get_notice_css_selector(),
-				'installments'       => array(
-					'loading' => __( 'Loading installments...', 'woo-stripe-payment' )
-				)
-			)
+				'html'                 => [
+					'card_brand' => sprintf( '<img id="wc-stripe-card" src="%s" />', $this->get_custom_form()['cardBrand'] )
+				],
+				'noticeLocation'       => $this->get_option( 'notice_location' ),
+				'noticeSelector'       => $this->get_notice_css_selector(),
+				'installments'         => [
+					'clientSecret' => null,
+				],
+			]
 		);
 	}
 
@@ -148,7 +147,8 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function get_custom_form() {
-		return wc_stripe_get_custom_forms()[ $this->get_option( 'custom_form' ) ];
+		return wc_stripe_get_custom_forms()[ $this->get_option( 'custom_form' ) ] ??
+		       wc_stripe_get_custom_forms()['bootstrap'];
 	}
 
 	public function get_element_options( $options = array() ) {
@@ -163,9 +163,9 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 
 			return apply_filters( 'wc_stripe_get_element_options', $options, $this );
 		} elseif ( $this->is_payment_element_active() ) {
-			$options                       = \PaymentPlugins\Stripe\Controllers\PaymentIntent::instance()->get_element_options();
+			$options                       = wc_stripe_get_container()->get( PaymentIntentController::class )->get_element_options();
 			$options['paymentMethodTypes'] = array( 'card' );
-			if ( \wc_string_to_bool( $this->get_option( 'link_enabled', 'yes' ) ) ) {
+			if ( $this->is_link_enabled() ) {
 				$options['paymentMethodTypes'][] = 'link';
 			}
 			$options['appearance'] = array( 'theme' => $this->get_option( 'theme', 'stripe' ) );
@@ -191,9 +191,10 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function get_custom_form_template() {
-		$form = $this->get_option( 'custom_form' );
+		$form         = $this->get_option( 'custom_form' );
+		$custom_forms = wc_stripe_get_custom_forms();
 
-		return wc_stripe_get_custom_forms()[ $form ]['template'];
+		return $custom_forms[ $form ]['template'] ?? $custom_forms['bootstrap']['template'];
 	}
 
 	/**
@@ -219,27 +220,6 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		return $this->is_active( 'cvv_enabled' );
 	}
 
-	public function get_postal_code_regex() {
-		return array(
-			'AT' => '^([0-9]{4})$',
-			'BR' => '^([0-9]{5})([-])?([0-9]{3})$',
-			'CH' => '^([0-9]{4})$',
-			'DE' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$',
-			'ES' => '^([0-9]{5})$',
-			'FR' => '^([0-9]{5})$',
-			'IT' => '^([0-9]{5})$/i',
-			'IE' => '([AC-FHKNPRTV-Y]\d{2}|D6W)[0-9AC-FHKNPRTV-Y]{4}',
-			'JP' => '^([0-9]{3})([-])([0-9]{4})$',
-			'PT' => '^([0-9]{4})([-])([0-9]{3})$',
-			'US' => '^([0-9]{5})(-[0-9]{4})?$',
-			'CA' => '^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ])([\ ])?(\d[ABCEGHJKLMNPRSTVWXYZ]\d)$',
-			'PL' => '^([0-9]{2})([-])([0-9]{3})',
-			'CZ' => '^([0-9]{3})(\s?)([0-9]{2})$',
-			'SK' => '^([0-9]{3})(\s?)([0-9]{2})$',
-			'NL' => '^([1-9][0-9]{3})(\s?)(?!SA|SD|SS)[A-Z]{2}$',
-		);
-	}
-
 	/**
 	 *
 	 * {@inheritDoc}
@@ -256,20 +236,20 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 				$args['payment_method_options']['card']['request_extended_authorization'] = 'if_available';
 			}
 		}
-	}
-
-	public function has_enqueued_scripts( $scripts ) {
-		return wp_script_is( $scripts->get_handle( 'credit-card' ) );
-	}
-
-	/**
-	 * Returns true if the save payment method checkbox can be displayed.
-	 *
-	 * @return boolean
-	 * @deprecated 3.3.42 - use ::show_save_payment_method_html
-	 */
-	public function show_save_source() {
-		return $this->show_save_payment_method_html();
+		// Merge existing card payment_method_options from the intent so we don't overwrite
+		// properties that were already set on it (e.g. installments).
+		if ( $intent && ! empty( $intent->payment_method_options->card->installments->enabled ) && isset( $args['payment_method_options']['card'] ) ) {
+			$args['payment_method_options']['card'] = array_merge(
+				[ 'installments' => [ 'enabled' => $intent->payment_method_options->card->installments->enabled ] ],
+				$args['payment_method_options']['card'] );
+		}
+		/**
+		 * @var \PaymentPlugins\Stripe\Link\LinkIntegration $link_integration
+		 */
+		$link_integration = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Link\LinkIntegration::class );
+		if ( $this->is_link_enabled() && $link_integration->is_active() ) {
+			$args['payment_method_types'][] = 'link';
+		}
 	}
 
 	/**
@@ -297,16 +277,6 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		return $selector;
 	}
 
-	public function is_installment_available() {
-		$order_id = null;
-		if ( is_checkout_pay_page() ) {
-			global $wp;
-			$order_id = absint( $wp->query_vars['order-pay'] );
-		}
-
-		return $this->installments->is_available( $order_id );
-	}
-
 	/**
 	 * @return string Serves as a wrapper for the form_type option with some validations to ensure
 	 *                a payment intent exists in the session.
@@ -332,8 +302,55 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		return __( 'Save Card', 'woo-stripe-payment' );
 	}
 
-	public function get_payment_element_options() {
-		return array( 'terms' => array( 'card' => stripe_wc()->advanced_settings->get_terms_display_rule() ) );
+	/**
+	 * Return true if link is enabled.
+	 * @return bool
+	 * @since 4.0.0
+	 */
+	private function is_link_enabled() {
+		return \wc_string_to_bool( $this->get_option( 'link_enabled', 'yes' ) );
 	}
 
+	public function validate_card_icons_field( $key, $value ) {
+		if ( ! \is_array( $value ) ) {
+			$value = [];
+		}
+
+		if ( empty( $value ) ) {
+			return $value;
+		}
+
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			return $value;
+		}
+
+		$count      = \count( $value );
+		$svg_width  = ( $count * 750 ) + ( ( $count - 1 ) * 78 );
+		$svg_height = '22.5';//$count * 5.5;
+		$svg        = '<svg xmlns="http://www.w3.org/2000/svg" height="' . $svg_height . '" viewBox="0 0 ' . $svg_width . ' 468.75">';
+
+		foreach ( $value as $idx => $card ) {
+			$file_path = wc_stripe_get_container()->get( 'PLUGIN_PATH' ) . 'assets/img/cards/' . $card . '.svg';
+			if ( $wp_filesystem->exists( $file_path ) ) {
+				$icon        = $wp_filesystem->get_contents( $file_path );
+				$inner       = preg_replace( '/<svg[^>]*>|<\/svg>/i', '', $icon );
+				$transform_x = $idx * ( 750 + 78 );
+				$svg         .= '<g transform="translate(' . $transform_x . ',0)">' . $inner . '</g>';
+			}
+		}
+
+		$svg .= '</svg>';
+
+		$uploads = wp_upload_dir( current_time( 'mysql' ) );
+		$file    = $uploads['path'] . '/stripe-card-icons.svg';
+		if ( $wp_filesystem->put_contents( $file, $svg ) ) {
+			$this->settings['icon_url'] = $uploads['url'] . '/stripe-card-icons.svg?ver=' . uniqid();
+		}
+
+		return $value;
+	}
 }

@@ -18,22 +18,22 @@ class WC_Payment_Gateway_Stripe_OXXO extends WC_Payment_Gateway_Stripe_Local_Pay
 
 	use WC_Stripe_Voucher_Payment_Trait;
 
+	public $id = 'stripe_oxxo';
+
 	protected $payment_method_type = 'oxxo';
 
 	public $synchronous = false;
 
 	public $is_voucher_payment = true;
 
-	public function __construct() {
-		$this->local_payment_type = 'oxxo';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'MXN' );
 		$this->countries          = array( 'MX' );
-		$this->id                 = 'stripe_oxxo';
 		$this->tab_title          = __( 'OXXO', 'woo-stripe-payment' );
 		$this->method_title       = __( 'OXXO (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'OXXO gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/oxxo.svg' );
-		parent::__construct();
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/oxxo.svg' );
 	}
 
 	public function get_local_payment_settings() {

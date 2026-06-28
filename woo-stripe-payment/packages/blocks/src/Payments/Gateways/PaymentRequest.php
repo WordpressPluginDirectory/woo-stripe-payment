@@ -1,14 +1,14 @@
 <?php
 
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
-use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripePayment;
+use PaymentPlugins\Stripe\Blocks\Payments\AbstractStripePayment;
 
 /**
  * Class PaymentRequest
  *
- * @package PaymentPlugins\Blocks\Stripe\Payments
+ * @package PaymentPlugins\Stripe\Blocks\Payments
  */
 class PaymentRequest extends AbstractStripePayment {
 
@@ -23,8 +23,8 @@ class PaymentRequest extends AbstractStripePayment {
 	public function get_payment_method_data() {
 		$data = [
 			'editorIcons'  => array(
-				'long'  => $this->assets_api->get_asset_url( 'assets/img/gpay_button_buy_black.svg' ),
-				'short' => $this->assets_api->get_asset_url( 'assets/img/gpay_button_black.svg' )
+				'long'  => $this->assets_api->assets_url( 'assets/img/gpay_button_buy_black.svg' ),
+				'short' => $this->assets_api->assets_url( 'assets/img/gpay_button_black.svg' )
 			),
 			'buttonHeight' => $this->get_setting( 'button_height', 40 ),
 			'buttonRadius' => $this->get_setting( 'button_radius', 4 ) . 'px'
@@ -35,7 +35,7 @@ class PaymentRequest extends AbstractStripePayment {
 				$data['buttonType'] = 'plain';
 				break;
 			default:
-				$data['buttonType'] = $this->get_setting( 'button_type', 'buy' );
+				$data['buttonType'] = 'buy';
 		}
 
 		switch ( $this->get_setting( 'button_theme' ) ) {

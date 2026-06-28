@@ -10,10 +10,10 @@ use Stripe\ApiOperations\Delete;
  */
 $environments = array( 'live', 'test' );
 $api_settings = stripe_wc()->api_settings;
-$url          = stripe_wc()->rest_api->webhook->rest_url( 'webhook' );
+$url          = get_rest_url( null, '/wc-stripe/v1/webhook' );
 
 foreach ( $environments as $env ) {
-	$gateway  = new WC_Stripe_Gateway();
+	$gateway = new WC_Stripe_Gateway();
 	$webhooks = $gateway->webhooks( $env );
 
 	if ( ! is_wp_error( $webhooks ) ) {
@@ -29,7 +29,11 @@ foreach ( $environments as $env ) {
 		}
 	}
 	// now that endpoint is deleted, re-create it and store details.
-	$webhook = $gateway->create_webhook( $url, array( 'charge.failed', 'charge.succeeded', 'source.chargeable' ), $env );
+	$webhook = $gateway->create_webhook( $url, array(
+		'charge.failed',
+		'charge.succeeded',
+		'source.chargeable'
+	), $env );
 	if ( ! is_wp_error( $webhook ) ) {
 		$api_settings->update_option( "webhook_url_{$env}", $webhook['url'] );
 		$api_settings->update_option( "webhook_secret_{$env}", $webhook['secret'] );

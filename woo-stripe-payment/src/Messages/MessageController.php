@@ -6,11 +6,7 @@ class MessageController {
 
 	private $messages;
 
-	public function __construct() {
-		$this->initialize();
-	}
-
-	private function initialize() {
+	public function initialize() {
 		add_filter( 'wc_stripe_api_get_wp_error', [ $this, 'filter_error_message' ] );
 	}
 

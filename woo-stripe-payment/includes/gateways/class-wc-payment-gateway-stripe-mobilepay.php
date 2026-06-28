@@ -15,18 +15,18 @@ class WC_Payment_Gateway_Stripe_MobilePay extends WC_Payment_Gateway_Stripe_Loca
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
 
+	public $id = 'stripe_mobilepay';
+
 	protected $payment_method_type = 'mobilepay';
 
-	public function __construct() {
-		$this->local_payment_type = 'mobilepay';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'DKK', 'EUR', 'NOK', 'SEK' );
 		$this->countries          = array( 'DK', 'FI' );
-		$this->id                 = 'stripe_mobilepay';
 		$this->tab_title          = __( 'MobilePay', 'woo-stripe-payment' );
 		$this->method_title       = __( 'MobilePay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'MobilePay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/mobilepay.svg' );
-		parent::__construct();
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/mobilepay.svg' );
 	}
 
 	public function get_local_payment_settings() {

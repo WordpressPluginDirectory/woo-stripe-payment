@@ -1,12 +1,14 @@
 <?php
 
 
-namespace PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways;
+namespace PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways;
+
+use PaymentPlugins\Stripe\Client\StripeClient;
 
 /**
  * Class BaseGateway
  *
- * @package PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways
+ * @package PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways
  */
 class BasePaymentGateway extends \WFOCU_Gateway {
 
@@ -21,15 +23,20 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 
 	private $payment;
 
-	public function __construct( \WC_Stripe_Gateway $client, \WC_Stripe_Payment $payment, \WFOCU_Logger $logger ) {
+	public function __construct( StripeClient $client, \WC_Stripe_Payment $payment, \WFOCU_Logger $logger ) {
 		$this->client  = $client;
 		$this->payment = $payment;
 		$this->logger  = $logger;
-		$this->initialize();
 	}
 
 	public static function get_instance() {
-		return new static( \WC_Stripe_Gateway::load(), new \WC_Stripe_Payment_Intent( null, null ), WFOCU_Core()->log );
+		$container = wc_stripe_get_container();
+
+		return new static(
+			$container->get( StripeClient::class ),
+			new \WC_Stripe_Payment_Intent( null, $container->get( StripeClient::class ) ),
+			WFOCU_Core()->log
+		);
 	}
 
 	public function initialize() {
@@ -75,12 +82,12 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 			}
 			if ( $intent->status === \WC_Stripe_Constants::REQUIRES_ACTION ) {
 				// send back response
-				return \wp_send_json( [
+				\wp_send_json( [
 					'success' => true,
 					'data'    => [ 'redirect_url' => $this->get_payment_intent_redirect_url( $intent ) ]
 				] );
 			}
-			$charge = $intent->charges->data[0];
+			$charge = $intent->latest_charge;
 			WFOCU_Core()->data->set( '_transaction_id', $charge->id );
 			$this->update_payment_balance( $charge, $order );
 
@@ -107,7 +114,10 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 				'order_id'    => $order->get_id(),
 				'created_via' => 'woocommerce'
 			),
-			'expand'   => stripe_wc()->advanced_settings->is_fee_enabled() ? [ 'charge.balance_transaction', 'charge.refunds.data.balance_transaction' ] : []
+			'expand'   => stripe_wc()->advanced_settings->is_fee_enabled() ? [
+				'charge.balance_transaction',
+				'charge.refunds.data.balance_transaction'
+			] : []
 		] );
 		if ( is_wp_error( $result ) ) {
 			$this->logger->log( sprintf( 'Error refunding charge %s. Reason: %s', $charge, $result->get_error_message() ) );

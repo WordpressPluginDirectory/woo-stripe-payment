@@ -3,6 +3,7 @@
 /**
  *
  */
+defined( 'ABSPATH' ) || exit;
 $user      = wp_get_current_user();
 ?>
 <div class="wc-stripe-main__page">

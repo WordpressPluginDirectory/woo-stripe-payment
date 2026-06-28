@@ -1,10 +1,10 @@
 === Payment Plugins for Stripe WooCommerce ===
 Contributors: paymentplugins, mrclayton
 Tags: stripe, klarna, credit card, apple pay, google pay
-Requires at least: 3.0.1
+Requires at least: 4.7
 Tested up to: 7.0
-Requires PHP: 5.6
-Stable tag: 3.3.108
+Requires PHP: 7.4
+Stable tag: 4.0.3
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,19 @@ If your site is not loading over https, then Stripe won't render the Payment Req
 9. Stripe Link for high conversion
 
 == Changelog ==
+= 4.0.3 - 06/28/26 =
+*[4.0.3 Change Log](https://paymentplugins.com/documentation/stripe/releases/4.0.3/)
+= 4.0.2 - 06/26/26 =
+* [4.0.2 Change Log](https://paymentplugins.com/documentation/stripe/releases/4.0.2/)
+= 4.0.1 - 06/24/26 =
+* [4.0.1 Change Log](https://paymentplugins.com/documentation/stripe/releases/4.0.1/)
+* Fixed - In the version 4.0.0 update, BNPL messaging could have been enabled via the "Messaging Enabled" option even if messaging was not enabled in version 3.3.108. BNPL messaging can be disabled
+on the Affirm, Afterpay, and Klarna Settings pages by unchecking the "Messaging Enabled" option.
+* Fixed - The China Union Pay SVG had incorrect HTML causing it to not render correctly in the new card icon
+* Fixed - Added the .wc-stripe-clear CSS which clears floating Add To Cart buttons on the product page. Some themes can cause the express payment buttons to block the Add To Cart button and this CSS resolves that.
+* Added - The credit card icon now includes a version query parameter for proper cache busting when the icon changes
+= 4.0.0 - 06/22/26 =
+* [Change Log](https://paymentplugins.com/documentation/stripe/releases/4.0.0/)
 = 3.3.108 - 05/15/26 =
 * Updated - Add currency check to checkout block because sometimes the currency provided by WooCommerce is a non-valid value
 * Fixed - A recent change in the Stripe JS SDK was resulting in Link showing in the payment element even if "Faster checkout with link" was disabled

@@ -4,5 +4,6 @@
  * 
  * @var WC_Payment_Gateway_Stripe $gateway
  */
+defined( 'ABSPATH' ) || exit;
 ?>
-<a class="wc-stripe-applepay-mini-cart" style="display: none"></a>
+<a class="wc-stripe_applepay-mini-cart" style="display: none"></a>

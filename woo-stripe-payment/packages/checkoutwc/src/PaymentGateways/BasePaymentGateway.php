@@ -1,9 +1,9 @@
 <?php
 
 
-namespace PaymentPlugins\CheckoutWC\Stripe\PaymentGateways;
+namespace PaymentPlugins\Stripe\CheckoutWC\PaymentGateways;
 
-use PaymentPlugins\CheckoutWC\Stripe\Constants;
+use PaymentPlugins\Stripe\CheckoutWC\Constants;
 use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
@@ -15,7 +15,7 @@ use WP_Error;
 /**
  * Class BasePaymentGateway
  *
- * @package PaymentPlugins\CheckoutWC\Stripe\PaymentGateways
+ * @package PaymentPlugins\Stripe\CheckoutWC\PaymentGateways
  */
 class BasePaymentGateway {
 
@@ -48,12 +48,12 @@ class BasePaymentGateway {
 
 	public function init_payment_client( $payment_method ) {
 		$this->payment_method = WC()->payment_gateways()->payment_gateways()[ $payment_method ];
-		$this->payment_client = $this->payment_method->gateway;
+		$this->payment_client = $this->payment_method->client;
 	}
 
 	/**
 	 * @param WC_Order $order The order.
-	 * @param array $product The product.
+	 * @param array    $product The product.
 	 *
 	 * @throws ApiErrorException The exception.
 	 */
@@ -108,7 +108,7 @@ class BasePaymentGateway {
 			WC_Stripe_Constants::SUCCEEDED,
 			WC_Stripe_Constants::REQUIRES_CAPTURE
 		), true ) ) {
-			$order->update_meta_data( 'cfw_offer_txn_resp_' . $product['bump_id'], $intent->charges->data[0]->id );
+			$order->update_meta_data( 'cfw_offer_txn_resp_' . $product['bump_id'], $intent->latest_charge->id );
 			$order->save();
 
 			return true;
@@ -119,11 +119,12 @@ class BasePaymentGateway {
 
 	/**
 	 * @param WC_Order $order The order.
-	 * @param array $product_data The product data.
+	 * @param array    $product_data The product data.
 	 *
+	 * @return PaymentIntent|\WP_Error
 	 * @throws ApiErrorException The exception.
 	 */
-	private function create_payment_intent( WC_Order $order, array $product_data ): PaymentIntent {
+	private function create_payment_intent( WC_Order $order, array $product_data ) {
 		$customer_id = $order->get_customer_id();
 		$args        = array(
 			'amount'               => wc_stripe_add_number_precision( $product_data['price'], $order->get_currency() ),
@@ -137,11 +138,11 @@ class BasePaymentGateway {
 			'payment_method_types' => [ $this->payment_method->get_payment_method_type() ],
 			'customer'             => $customer_id ? wc_stripe_get_customer_id( $customer_id ) : $order->get_meta( WC_Stripe_Constants::CUSTOMER_ID ),
 		);
-		$this->payment_method->payment_object->add_order_shipping_address( $args, $order );
-		$this->payment_method->payment_object->add_order_metadata( $args, $order );
+		$this->payment_method->payment_controller->add_order_shipping_address( $args, $order );
+		$this->payment_method->payment_controller->add_order_metadata( $args, $order );
 
 		/**
-		 * @param array $args
+		 * @param array     $args
 		 * @param \WC_Order $order
 		 */
 		$args = apply_filters( 'wc_stripe_checkoutwc_payment_intent_args', $args, $order, $this->payment_client ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment
@@ -151,7 +152,7 @@ class BasePaymentGateway {
 
 	/**
 	 * @param WC_Order $order The order.
-	 * @param array $offer_data The offer data.
+	 * @param array    $offer_data The offer data.
 	 *
 	 * @return string|false
 	 */

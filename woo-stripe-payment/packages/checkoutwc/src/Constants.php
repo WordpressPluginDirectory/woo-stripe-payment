@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PaymentPlugins\CheckoutWC\Stripe;
+namespace PaymentPlugins\Stripe\CheckoutWC;
 
 
 class Constants {

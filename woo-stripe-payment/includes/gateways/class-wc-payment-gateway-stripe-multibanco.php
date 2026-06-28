@@ -17,24 +17,23 @@ class WC_Payment_Gateway_Stripe_Multibanco extends WC_Payment_Gateway_Stripe_Loc
 
 	use WC_Stripe_Voucher_Payment_Trait;
 
+	public $id = 'stripe_multibanco';
+
 	protected $payment_method_type = 'multibanco';
 
 	public $synchronous = false;
 
 	public $is_voucher_payment = true;
 
-	public function __construct() {
-		$this->local_payment_type = 'multibanco';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'EUR' );
 		$this->countries          = array( 'PT' );
-		$this->id                 = 'stripe_multibanco';
 		$this->tab_title          = __( 'Multibanco', 'woo-stripe-payment' );
-		$this->template_name      = 'local-payment.php';
 		$this->token_type         = 'Stripe_Local';
 		$this->method_title       = __( 'Multibanco (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Multibanco gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/multibanco.svg' );
-		parent::__construct();
+		parent::__construct( ...$args );
+		$this->icon = $this->assets->assets_url( 'img/multibanco.svg' );
 	}
 
 }

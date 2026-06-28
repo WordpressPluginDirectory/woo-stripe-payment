@@ -1,14 +1,15 @@
 <?php
 
 
-namespace PaymentPlugins\CartFlows\Stripe\PaymentGateways;
+namespace PaymentPlugins\Stripe\CartFlows\PaymentGateways;
 
 
-use PaymentPlugins\CartFlows\Stripe\Constants;
+use PaymentPlugins\Stripe\CartFlows\Constants;
+use PaymentPlugins\Stripe\Client\StripeClient;
 
 /**
  * Class BasePaymentGateway
- * @package PaymentPlugins\CartFlows\Stripe\PaymentGateways
+ * @package PaymentPlugins\Stripe\CartFlows\PaymentGateways
  */
 class BasePaymentGateway {
 
@@ -17,9 +18,14 @@ class BasePaymentGateway {
 	protected $supports_api_refund = true;
 
 	/**
-	 * @var \WC_Stripe_Payment
+	 * @var \WC_Stripe_Payment_Intent
 	 */
-	protected $payment_client;
+	protected $payment_controller;
+
+	/**
+	 * @var StripeClient
+	 */
+	protected $client;
 
 	/**
 	 * @var \WC_Payment_Gateway_Stripe
@@ -46,13 +52,16 @@ class BasePaymentGateway {
 	}
 
 	public function init_payment_client( $payment_method ) {
-		$this->payment_method = WC()->payment_gateways()->payment_gateways()[ $payment_method ];
-		$this->payment_client = \WC_Stripe_Payment_Factory::load( 'payment_intent', $this->payment_method, \WC_Stripe_Gateway::load() );
+		$this->client             = wc_stripe_get_container()->get( StripeClient::class );
+		$this->payment_method     = WC()->payment_gateways()->payment_gateways()[ $payment_method ];
+		$this->payment_controller = new \WC_Stripe_Payment_Intent( $this->payment_method, wc_stripe_get_container()->get( StripeClient::class ) );
 	}
 
 	/**
 	 * @param \WC_Order $order
-	 * @param array $product
+	 * @param array     $product
+	 *
+	 * @return bool|void
 	 */
 	public function process_offer_payment( \WC_Order $order, array $product ) {
 		$this->init_payment_client( $order->get_payment_method() );
@@ -60,7 +69,7 @@ class BasePaymentGateway {
 		$this->payment_method->set_payment_method_token( $order->get_meta( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ) );
 
 		if ( ( $payment_intent = $order->get_meta( Constants::CARTFLOWS_PAYMENT_INTENT_ID . $product['step_id'] ) ) ) {
-			$intent = $this->payment_client->get_gateway()->paymentIntents->retrieve( $payment_intent );
+			$intent = $this->client->paymentIntents->retrieve( $payment_intent );
 		} else {
 			// If customer doesn't exist on order, create a customer ID and attach payment method.
 			$customer_id = $order->get_meta( \WC_Stripe_Constants::CUSTOMER_ID );
@@ -85,7 +94,7 @@ class BasePaymentGateway {
 
 		// check if intent needs confirmation
 		if ( $intent->status === \WC_Stripe_Constants::REQUIRES_CONFIRMATION ) {
-			$intent = $this->payment_client->get_gateway()->paymentIntents->confirm( $intent->id );
+			$intent = $this->client->paymentIntents->confirm( $intent->id );
 			if ( is_wp_error( $intent ) ) {
 				return false;
 			}
@@ -93,14 +102,17 @@ class BasePaymentGateway {
 
 		if ( $intent->status === \WC_Stripe_Constants::REQUIRES_ACTION ) {
 			// send json response so Stripe can handle 3DS
-			return wp_send_json( array(
+			wp_send_json( array(
 				'status'   => 'success',
 				'redirect' => $this->payment_method->get_payment_intent_checkout_url( $intent, $order )
 			) );
 		}
 
-		if ( in_array( $intent->status, array( \WC_Stripe_Constants::SUCCEEDED, \WC_Stripe_Constants::REQUIRES_CAPTURE ) ) ) {
-			$order->update_meta_data( 'cartflows_offer_txn_resp_' . $product['step_id'], $intent->charges->data[0]->id );
+		if ( in_array( $intent->status, array(
+			\WC_Stripe_Constants::SUCCEEDED,
+			\WC_Stripe_Constants::REQUIRES_CAPTURE
+		) ) ) {
+			$order->update_meta_data( 'cartflows_offer_txn_resp_' . $product['step_id'], $intent->latest_charge->id );
 			$order->save();
 
 			return true;
@@ -110,7 +122,7 @@ class BasePaymentGateway {
 
 	/**
 	 * @param \WC_Order $order
-	 * @param array $product_data
+	 * @param array     $product_data
 	 */
 	private function create_payment_intent( $order, $product_data ) {
 		$customer_id = $order->get_customer_id();
@@ -125,22 +137,22 @@ class BasePaymentGateway {
 			'payment_method_types' => array( $this->payment_method->get_payment_method_type() ),
 			'customer'             => $customer_id ? wc_stripe_get_customer_id( $customer_id ) : $order->get_meta( \WC_Stripe_Constants::CUSTOMER_ID )
 		);
-		$this->payment_client->add_order_shipping_address( $args, $order );
-		$this->payment_client->add_order_metadata( $args, $order );
+		$this->payment_controller->add_order_shipping_address( $args, $order );
+		$this->payment_controller->add_order_metadata( $args, $order );
 
-		$args = apply_filters( 'wc_stripe_payment_intent_args', $args, $order, $this->payment_client );
+		$args = apply_filters( 'wc_stripe_payment_intent_args', $args, $order, $this->payment_controller );
 
-		return $this->payment_client->get_gateway()->paymentIntents->create( $args );
+		return $this->client->paymentIntents->create( $args );
 	}
 
 	/**
 	 * @param \WC_Order $order
-	 * @param array $offer_data
+	 * @param array     $offer_data
 	 */
 	public function process_offer_refund( \WC_Order $order, array $offer_data ) {
 		$this->init_payment_client( $order->get_payment_method() );
 		$mode   = wc_stripe_order_mode( $order );
-		$refund = $this->payment_client->get_gateway()->refunds->mode( $mode )->create( array(
+		$refund = $this->payment_controller->get_gateway()->refunds->mode( $mode )->create( array(
 			'charge'   => $offer_data['transaction_id'],
 			'amount'   => wc_stripe_add_number_precision( $offer_data['refund_amount'], $order->get_currency() ),
 			'metadata' => array(

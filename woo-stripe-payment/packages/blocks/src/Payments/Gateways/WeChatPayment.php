@@ -1,13 +1,13 @@
 <?php
 
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
 
 use Automattic\WooCommerce\Blocks\Payments\PaymentContext;
 use Automattic\WooCommerce\Blocks\Payments\PaymentResult;
-use PaymentPlugins\Blocks\Stripe\Assets\Api as AssetsApi;
-use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripeLocalPayment;
+use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Blocks\Payments\AbstractStripeLocalPayment;
 
 class WeChatPayment extends AbstractStripeLocalPayment {
 

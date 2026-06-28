@@ -12,17 +12,17 @@ defined( 'ABSPATH' ) || exit();
  */
 class WC_Stripe_Customer_Manager {
 
-	private static $_instance;
+	private $client;
 
 	public static function instance() {
-		if ( ! self::$_instance ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
+		return wc_stripe_get_container()->get( self::class );
 	}
 
-	public function __construct() {
+	public function __construct( \PaymentPlugins\Stripe\Client\StripeClient $client ) {
+		$this->client = $client;
+	}
+
+	public function initialize() {
 		add_action( 'woocommerce_checkout_update_customer', array( $this, 'checkout_update_customer' ), 10, 2 );
 		add_action( 'wp_loaded', array( $this, 'wp_loaded' ) );
 		add_action( 'wc_stripe_before_process_payment', array( $this, 'handle_before_process_payment' ), 10, 2 );
@@ -74,7 +74,11 @@ class WC_Stripe_Customer_Manager {
 	 * @return \Stripe\Customer|WP_Error
 	 */
 	public function create_customer( $customer, $mode = null ) {
-		return WC_Stripe_Gateway::load( $mode )->customers->create( apply_filters( 'wc_stripe_customer_args', $this->get_customer_args( $customer ) ) );
+		return wc_stripe_get_container()
+			->get( \PaymentPlugins\Stripe\Client\StripeClient::class )
+			->mode( $mode )->customers->create(
+				apply_filters( 'wc_stripe_customer_args', $this->get_customer_args( $customer ) )
+			);
 	}
 
 	/**
@@ -82,10 +86,11 @@ class WC_Stripe_Customer_Manager {
 	 * @param WC_Customer $customer
 	 */
 	public function update_customer( $customer ) {
-		return WC_Stripe_Gateway::load()->customers->update(
-			wc_stripe_get_customer_id( $customer->get_id() ),
-			apply_filters( 'wc_stripe_update_customer_args', $this->get_customer_args( $customer, 'update' ) )
-		);
+		return wc_stripe_get_container()
+			->get( \PaymentPlugins\Stripe\Client\StripeClient::class )->customers->update(
+				wc_stripe_get_customer_id( $customer->get_id() ),
+				apply_filters( 'wc_stripe_update_customer_args', $this->get_customer_args( $customer, 'update' ) )
+			);
 	}
 
 	/**
@@ -104,7 +109,9 @@ class WC_Stripe_Customer_Manager {
 							// customer ID is no longer needed since it's being added to the user.
 							unset( WC()->session->{WC_Stripe_Constants::STRIPE_CUSTOMER_ID} );
 
-							return wc_stripe_save_customer( $customer_id, $customer->get_id() );
+							wc_stripe_save_customer( $customer_id, $customer->get_id() );
+
+							return;
 						}
 					}
 					$response = $this->create_customer( $customer );
@@ -133,7 +140,7 @@ class WC_Stripe_Customer_Manager {
 			$id = $this->get_customer_id_from_user_id( $user_id );
 			if ( $id ) {
 				// validate that this customer exists in the Stripe gateway
-				$response = WC_Stripe_Gateway::load()->customers->retrieve( $id );
+				$response = $this->client->customers->retrieve( $id );
 				if ( ! is_wp_error( $response ) ) {
 					// id exists so save customer ID to this plugin's format.
 					wc_stripe_save_customer( $id, $user_id );
@@ -150,7 +157,7 @@ class WC_Stripe_Customer_Manager {
 	}
 
 	private function get_customer_id_from_user_id( $user_id ) {
-		$keys = [ WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id', '_cpsw_customer_id' ];
+		$keys = [ WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' ];
 		foreach ( $keys as $key ) {
 			$id = get_user_option( $key, $user_id );
 			if ( $id && ! empty( $id ) && is_string( $id ) ) {
@@ -170,7 +177,8 @@ class WC_Stripe_Customer_Manager {
 	 * @since 3.1.0
 	 */
 	public static function sync_payment_methods( $customer_id, $user_id, $mode = '' ) {
-		$payment_methods = WC_Stripe_Gateway::load()->paymentMethods->mode( $mode )->all( array(
+		$client          = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class );
+		$payment_methods = $client->mode( $mode )->paymentMethods->all( array(
 			'customer' => $customer_id,
 			'limit'    => 100,
 		) );
@@ -230,7 +238,7 @@ class WC_Stripe_Customer_Manager {
 	 *
 	 * @param WC_Customer $customer
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	private function should_update_customer( $customer ) {
 		$changes = $customer->get_changes();
@@ -357,5 +365,3 @@ class WC_Stripe_Customer_Manager {
 	}
 
 }
-
-WC_Stripe_Customer_Manager::instance();

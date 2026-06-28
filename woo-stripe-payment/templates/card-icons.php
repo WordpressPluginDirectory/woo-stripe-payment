@@ -2,6 +2,7 @@
 /**
  * @version 3.2.15
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <span class="wc-stripe-card-icons-container">
 	<?php foreach ( $icons as $icon => $url ): ?>

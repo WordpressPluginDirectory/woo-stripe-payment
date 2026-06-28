@@ -14,6 +14,11 @@ defined( 'ABSPATH' ) || exit();
 class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Payment {
 
 	use WC_Stripe_Payment_Intent_Trait;
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_ach';
 
 	protected $payment_method_type = 'us_bank_account';
 
@@ -23,37 +28,20 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 
 	public $token_type = 'Stripe_ACH';
 
-	public function __construct() {
-		$this->id                 = 'stripe_ach';
+	public function __construct( ...$args ) {
+		parent::__construct( ...$args );
 		$this->currencies         = array( 'USD' );
 		$this->countries          = array( 'US' );
 		$this->limited_countries  = array( 'US' );
 		$this->tab_title          = __( 'ACH', 'woo-stripe-payment' );
 		$this->method_title       = __( 'ACH (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'ACH gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/ach.svg' );
-		parent::__construct();
-		$this->new_payment_method_label    = __( 'New Bank', 'woo-stripe-payment' );
-		$this->saved_payment_methods_label = __( 'Saved Banks', 'woo-stripe-payment' );
+		$this->icon               = $this->assets->assets_url( 'img/ach.svg' );
 	}
 
 	public static function init() {
 		add_action( 'woocommerce_checkout_update_order_review', array( __CLASS__, 'update_order_review' ) );
 		add_action( 'woocommerce_checkout_process', array( __CLASS__, 'add_fees_for_checkout' ) );
-	}
-
-	public function init_supports() {
-		parent::init_supports();
-		$this->supports[] = 'subscriptions';
-		$this->supports[] = 'subscription_cancellation';
-		$this->supports[] = 'multiple_subscriptions';
-		$this->supports[] = 'subscription_reactivation';
-		$this->supports[] = 'subscription_suspension';
-		$this->supports[] = 'subscription_date_changes';
-		$this->supports[] = 'subscription_payment_method_change_admin';
-		$this->supports[] = 'subscription_amount_changes';
-		$this->supports[] = 'subscription_payment_method_change_customer';
-		$this->supports[] = 'pre-orders';
 	}
 
 	public function get_local_payment_settings() {
@@ -62,7 +50,7 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 		return $settings;
 	}
 
-	public function validate_local_payment_available( $currency, $billing_country, $total ) {
+	protected function validate_local_payment_available( $currency, $billing_country, $total ) {
 		if ( $currency !== 'USD' ) {
 			return false;
 		}
@@ -71,17 +59,6 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 		}
 
 		return true;
-	}
-
-	/**
-	 *
-	 * {@inheritDoc}
-	 *
-	 * @see WC_Payment_Gateway_Stripe::enqueue_checkout_scripts()
-	 */
-	public function enqueue_checkout_scripts( $scripts ) {
-		wp_enqueue_script( 'wc-stripe-ach-connections' );
-		$scripts->localize_script( 'ach-connections', $this->get_localized_params() );
 	}
 
 	public function generate_ach_fee_html( $key, $data ) {
@@ -158,7 +135,7 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 
 	public static function update_order_review() {
 		if ( ! empty( $_POST['payment_method'] ) && wc_clean( $_POST['payment_method'] ) === 'stripe_ach' ) {
-			$payment_method = new WC_Payment_Gateway_Stripe_ACH();
+			$payment_method = wc_stripe_get_container()->get( WC_Payment_Gateway_Stripe_ACH::class );
 			if ( $payment_method->fees_enabled() ) {
 				add_action( 'woocommerce_cart_calculate_fees', array( $payment_method, 'calculate_cart_fees' ) );
 			}
@@ -174,17 +151,14 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 		}
 	}
 
-	public function has_enqueued_scripts( $scripts ) {
-		return wp_script_is( $scripts->get_handle( 'ach-connections' ) );
-	}
-
 	public function add_stripe_order_args( &$args, $order, $intent = null ) {
 		if ( ! $intent ) {
 			$args['payment_method_options'] = array(
 				'us_bank_account' => array(
 					'verification_method'   => 'automatic',
 					'financial_connections' => array(
-						'permissions' => array( 'payment_method' ) //@todo - add balances in future release 'permissions' => array( 'payment_method', 'balances' )
+						'permissions' => array( 'payment_method' )
+						//@todo - add balances in future release 'permissions' => array( 'payment_method', 'balances' )
 					)
 				)
 			);
@@ -213,13 +187,13 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 		}
 	}
 
-	public function get_local_payment_description() {
-		$this->local_payment_description = $this->get_mandate_text();
-
-		return parent::get_local_payment_description();
-	}
-
+	/**
+	 * @return mixed|null
+	 * @deprecated 4.0.0
+	 */
 	public function get_mandate_text() {
+		wc_deprecated_argument( 'WC_Payment_Gateway_Stripe_ACH::get_mandate_text', '4.0.0', '' );
+
 		return apply_filters( 'wc_stripe_ach_get_mandate_text', sprintf(
 			__( 'By clicking %1$s, you authorize %2$s to debit the bank 
 		account you select for any amount owed for charges arising from your use of %2$s 
@@ -229,29 +203,8 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 				'woo-stripe-payment' ), $this->order_button_text, $this->get_option( 'business_name' ) ), $this );
 	}
 
-	public function get_localized_params() {
-		return array_merge_recursive(
-			parent::get_localized_params(),
-			array(
-				'fees_enabled' => $this->fees_enabled()
-			)
-		);
-	}
-
-	public function admin_options() {
-		if ( wc_string_to_bool( $this->get_option( 'plaid_enabled', 'no' ) ) ) {
-			$description                              = '<p>' . sprintf( __( 'The %1$sPlaid ACH%2$s gateway has been deprecated. If you still want to use the Plaid gateway, you can download it %1$shere%2$s.', 'woo-stripe-payment' ),
-					'<a target="_blank" href="https://github.com/paymentplugins/paymentplugins-plaid-gateway/releases">', '</a>' ) . '</p>';
-			$this->form_fields['desc']['description'] = $this->form_fields['desc']['description'] . $description;
-		}
-		parent::admin_options();
-	}
-
 	public function get_payment_element_options() {
 		return array(
-			'terms'    => array(
-				'usBankAccount' => $this->is_active( 'stripe_mandate' ) ? 'auto' : 'never'
-			),
 			'business' => array(
 				'name' => $this->get_option( 'business_name', '' )
 			)
@@ -267,5 +220,3 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 	}
 
 }
-
-WC_Payment_Gateway_Stripe_ACH::init();

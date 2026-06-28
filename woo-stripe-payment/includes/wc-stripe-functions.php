@@ -182,6 +182,7 @@ function wc_stripe_delete_customer( $user_id, $mode = '', $global = false ) {
  * @param WC_Payment_Token $token
  *
  * @since   3.0.0
+ * @deprecated 4.0.0
  */
 function wc_stripe_woocommerce_payment_token_deleted( $token_id, $token ) {
 	if ( ! did_action( 'woocommerce_payment_gateways' ) ) {
@@ -509,37 +510,6 @@ function wc_stripe_add_allowed_html( $tags, $context ) {
 }
 
 /**
- * Save WCS meta data when it's changed in the admin section.
- * By default WCS saves the
- * payment method title as the gateway title. This method saves the payment method title in
- * a human readable format suitable for the frontend.
- *
- * @param int     $post_id
- * @param WP_Post $post
- *
-
- */
-function wc_stripe_process_shop_subscription_meta( $post_id, $post ) {
-	$subscription = wcs_get_subscription( $post_id );
-	$gateway_id   = $subscription->get_payment_method();
-	$gateways     = WC()->payment_gateways()->payment_gateways();
-	if ( isset( $gateways[ $gateway_id ] ) ) {
-		$gateway = $gateways[ $gateway_id ];
-		if ( $gateway instanceof WC_Payment_Gateway_Stripe ) {
-			$token = \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::get_payment_token(
-				$subscription->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ),
-				$subscription->get_customer_id(),
-				$gateway
-			);
-			if ( $token && method_exists( $token, 'get_payment_method_title' ) ) {
-				$subscription->set_payment_method_title( $token->get_payment_method_title() );
-				$subscription->save();
-			}
-		}
-	}
-}
-
-/**
  * Filter the WC payment gateways based on criteria specific to Stripe functionality.
  *
  * @param WC_Payment_Gateway[] $gateways
@@ -556,7 +526,9 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 					'stripe_upm',
 					'stripe_sepa',
 					'stripe_ideal',
-					'stripe_ach'
+					'stripe_ach',
+					'stripe_applepay',
+					'stripe_googlepay'
 				) ) ) {
 					unset( $gateways[ $gateway->id ] );
 				}
@@ -566,12 +538,12 @@ function wc_stripe_available_payment_gateways( $gateways ) {
 	/**
 	 * Link Checkout should not be available in the payment methods section of the checkout shortcode.
 	 */
-	if ( doing_action( 'woocommerce_checkout_order_review' )
+	/*if ( doing_action( 'woocommerce_checkout_order_review' )
 	     || ( wp_doing_ajax() && did_action( 'woocommerce_checkout_update_order_review' ) )
 	     || is_checkout_pay_page()
 	) {
 		unset( $gateways['stripe_link_checkout'] );
-	}
+	}*/
 
 	return $gateways;
 }
@@ -580,6 +552,7 @@ function wc_stripe_available_payment_gateways( $gateways ) {
  *
  * @return array
  * @since   3.0.0
+ * @deprecated 4.0.0
  */
 function wc_stripe_get_local_payment_params() {
 	global $wp;
@@ -744,7 +717,7 @@ function wc_stripe_get_custom_forms() {
 	return apply_filters(
 		'wc_stripe_get_custom_forms',
 		array(
-			'bootstrap'  => array(
+			'bootstrap' => array(
 				'template'       => 'cc-forms/bootstrap.php',
 				'label'          => __( 'Bootstrap form', 'woo-stripe-payment' ),
 				'cardBrand'      => stripe_wc()->assets_url( 'img/card_brand2.svg' ),
@@ -770,7 +743,7 @@ function wc_stripe_get_custom_forms() {
 					'fonts' => array( array( 'cssSrc' => 'https://fonts.googleapis.com/css?family=Source+Code+Pro' ) ),
 				),
 			),
-			'simple'     => array(
+			'simple'    => array(
 				'template'       => 'cc-forms/simple.php',
 				'label'          => __( 'Simple form', 'woo-stripe-payment' ),
 				'cardBrand'      => stripe_wc()->assets_url( 'img/card_brand2.svg' ),
@@ -793,33 +766,7 @@ function wc_stripe_get_custom_forms() {
 					'fonts' => array( array( 'cssSrc' => 'https://fonts.googleapis.com/css?family=Source+Code+Pro' ) ),
 				),
 			),
-			'minimalist' => array(
-				'template'       => 'cc-forms/minimalist.php',
-				'label'          => __( 'Minimalist form', 'woo-stripe-payment' ),
-				'cardBrand'      => stripe_wc()->assets_url( 'img/card_brand2.svg' ),
-				'elementStyles'  => array(
-					'base'    => array(
-						'color'             => '#495057',
-						'fontWeight'        => 300,
-						'fontFamily'        => 'Roboto, sans-serif, Source Code Pro, Consolas, Menlo, monospace',
-						'fontSize'          => '30px',
-						'fontSmoothing'     => 'antialiased',
-						'::placeholder'     => array(
-							'color'    => '#fff',
-							'fontSize' => '0px',
-						),
-						':-webkit-autofill' => array( 'color' => '#495057' ),
-					),
-					'invalid' => array(
-						'color'         => '#495057',
-						'::placeholder' => array( 'color' => '#495057' ),
-					),
-				),
-				'elementOptions' => array(
-					'fonts' => array( array( 'cssSrc' => 'https://fonts.googleapis.com/css?family=Source+Code+Pro' ) ),
-				),
-			),
-			'inline'     => array(
+			'inline'    => array(
 				'template'       => 'cc-forms/inline.php',
 				'label'          => __( 'Inline Form', 'woo-stripe-payment' ),
 				'cardBrand'      => stripe_wc()->assets_url( 'img/card_brand.svg' ),
@@ -840,33 +787,7 @@ function wc_stripe_get_custom_forms() {
 				'elementOptions' => array(
 					'fonts' => array( array( 'cssSrc' => 'https://fonts.googleapis.com/css?family=Roboto' ) ),
 				),
-			),
-			'rounded'    => array(
-				'template'       => 'cc-forms/round.php',
-				'label'          => __( 'Rounded Form', 'woo-stripe-payment' ),
-				'cardBrand'      => stripe_wc()->assets_url( 'img/card_brand.svg' ),
-				'elementStyles'  => array(
-					'base'    => array(
-						'color'               => '#fff',
-						'fontWeight'          => 600,
-						'fontFamily'          => 'Quicksand, Open Sans, Segoe UI, sans-serif',
-						'fontSize'            => '16px',
-						'fontSmoothing'       => 'antialiased',
-						':focus'              => array( 'color' => '#424770' ),
-						'::placeholder'       => array( 'color' => '#9BACC8' ),
-						':focus::placeholder' => array( 'color' => '#CFD7DF' ),
-						':-webkit-autofill'   => array( 'color' => '#fff' ),
-					),
-					'invalid' => array(
-						'color'         => '#fff',
-						':focus'        => array( 'color' => '#FA755A' ),
-						'::placeholder' => array( 'color' => '#FFCCA5' ),
-					),
-				),
-				'elementOptions' => array(
-					'fonts' => array( array( 'cssSrc' => 'https://fonts.googleapis.com/css?family=Quicksand' ) ),
-				),
-			),
+			)
 		)
 	);
 }
@@ -979,8 +900,7 @@ function wc_stripe_get_order_from_transaction( $transaction_id ) {
  * @param bool    $product_cart
  *
  * @since   3.0.6
- * @todo    Maybe empty cart silently so actions are not triggered that cause session data to be removed
- *       from 3rd party plugins.
+ * @deprecated
  *
 
  */
@@ -1176,7 +1096,9 @@ function wc_stripe_get_error_messages() {
 			'required_field'                                      => __( '%s is a required field.', 'woocommerce' ),
 			'required_fields'                                     => __( 'Please fill out all required fields.', 'woo-stripe-payment' ),
 			'payment_unavailable'                                 => __( 'This payment method is currently unavailabe. Reason: %s', 'woo-stripe-payment' ),
-			'billing_details.phone.required'                      => __( 'A billing phone number is required for this payment.', 'woo-stripe-payment' )
+			'billing_details.phone.required'                      => __( 'A billing phone number is required for this payment.', 'woo-stripe-payment' ),
+			'terms'                                               => __( 'Please read and accept the terms and conditions to proceed with your order.', 'woocommerce' ),
+			'order_button_click'                                  => __( 'Please click the %s button before placing your order.', 'woo-stripe-payment' )
 		)
 	);
 }
@@ -1322,6 +1244,7 @@ function wc_stripe_filter_address_state( $state, $country ) {
 /**
  * @since 3.2.3
  * @retun string
+ * @deprecated 4.0.0
  */
 function wc_stripe_get_current_page() {
 	global $wp;
@@ -1344,9 +1267,6 @@ function wc_stripe_get_current_page() {
 	}
 	if ( is_add_payment_method_page() ) {
 		return 'add_payment_method';
-	}
-	if ( is_shop() ) {
-		return 'shop';
 	}
 
 	return '';
@@ -1399,4 +1319,14 @@ function wc_stripe_get_script_handle( $handle ) {
 	}
 
 	return $handle;
+}
+
+/**
+ * Get the global container instance.
+ *
+ * @return \PaymentPlugins\Stripe\Container\Container
+ * @since 4.0.0
+ */
+function wc_stripe_get_container() {
+	return \PaymentPlugins\Stripe\Plugin::container();
 }

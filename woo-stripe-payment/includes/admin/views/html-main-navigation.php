@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 $page    = isset( $_GET['page'] ) ? wc_clean( $_GET['page'] ) : '';
 $section = isset( $_GET['section'] ) ? wc_clean( $_GET['section'] ) : '';
@@ -8,7 +9,8 @@ $section = isset( $_GET['section'] ) ? wc_clean( $_GET['section'] ) : '';
         <img src="<?php echo stripe_wc()->assets_url( 'img/paymentplugins.svg' ) ?>"/>
     </div>
     <div class="navigation-tabs">
-        <a class="<?php if ( $page === 'wc-stripe-main' && ! $section ) { ?>active<?php } ?>" href="<?php echo admin_url( 'admin.php?page=wc-stripe-main' ) ?>">
+        <a class="<?php if ( $page === 'wc-stripe-main' && ! $section ) { ?>active<?php } ?>"
+           href="<?php echo admin_url( 'admin.php?page=wc-stripe-main' ) ?>">
 			<?php esc_html_e( 'Main Page', 'woo-stripe-payment' ) ?>
         </a>
         <a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=stripe_api' ) ?>">
@@ -17,7 +19,8 @@ $section = isset( $_GET['section'] ) ? wc_clean( $_GET['section'] ) : '';
         <a target="_blank" href="https://paymentplugins.com/documentation/stripe/">
 			<?php esc_html_e( 'Documentation', 'woo-stripe-payment' ) ?>
         </a>
-        <a class="<?php if ( $section === 'support' ) { ?>active<?php } ?>" href="<?php echo admin_url( 'admin.php?page=wc-stripe-main&section=support' ) ?>">
+        <a class="<?php if ( $section === 'support' ) { ?>active<?php } ?>"
+           href="<?php echo admin_url( 'admin.php?page=wc-stripe-main&section=support' ) ?>">
 			<?php esc_html_e( 'Support', 'woo-stripe-payment' ) ?>
         </a>
     </div>

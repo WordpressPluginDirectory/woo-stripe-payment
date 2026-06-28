@@ -154,4 +154,16 @@ class WC_Payment_Token_Stripe_CC extends WC_Payment_Token_Stripe {
 		return parent::get_payment_method_title( $format );
 	}
 
+	public function get_payment_token_item_format( $item ) {
+		$item['method']['last4'] = $this->get_last4();
+		$item['method']['brand'] = $this->get_brand();
+		if ( $this->has_expiration() ) {
+			$item['expires'] = sprintf( '%s / %s', $this->get_exp_month(), $this->get_exp_year() );
+		} else {
+			$item['expires'] = __( 'n/a', 'woo-stripe-payment' );
+		}
+		$item['wc_stripe_method'] = true;
+
+		return $item;
+	}
 }

@@ -1,3 +1,6 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+?>
 <div id="stripe_product_data"
      class="panel woocommerce_stripe_panel woocommerce_options_panel hidden">
     <p>
@@ -71,6 +74,32 @@
 		);
 		?>
     </div>
+	<?php if ( self::get_bnpl_gateways() ) : ?>
+        <div class="wc-stripe-bnpl-section">
+            <h4><?php esc_html_e( 'Buy Now, Pay Later Messages', 'woo-stripe-payment' ); ?></h4>
+            <p><?php esc_html_e( 'Control which BNPL promotional messages are displayed on this product page.', 'woo-stripe-payment' ); ?></p>
+            <table class="wc-stripe-product-table wc_gateways wc-stripe-bnpl-table">
+                <thead>
+                <tr>
+                    <th><?php esc_html_e( 'Method', 'woo-stripe-payment' ); ?></th>
+                    <th><?php esc_html_e( 'Show Message', 'woo-stripe-payment' ); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+				<?php foreach ( self::get_bnpl_gateways() as $gateway ) : ?>
+                    <tr data-gateway_id="<?php echo esc_attr( $gateway->id ); ?>">
+                        <td><?php echo esc_html( $gateway->get_method_title() ); ?></td>
+                        <td>
+                            <a class="wc-stripe-product-gateway-enabled" href="#">
+                                <span class="woocommerce-input-toggle woocommerce-input-toggle--<?php echo self::get_bnpl_option( $gateway->id )->enabled() ? 'enabled' : 'disabled'; ?>"></span>
+                            </a>
+                        </td>
+                    </tr>
+				<?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+	<?php endif; ?>
     <p>
         <button class="button button-secondary wc-stripe-save-product-data"><?php esc_html_e( 'Save', 'woo-stripe-payment' ); ?></button>
         <span class="spinner"></span>

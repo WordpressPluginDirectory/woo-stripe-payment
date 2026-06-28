@@ -1,11 +1,11 @@
 <?php
 
-namespace PaymentPlugins\Stripe\WooCommerceExtraProductOptions;
+namespace PaymentPlugins\Stripe\WooCommerceTMExtraProductOptions;
 
 use PaymentPlugins\Stripe\Assets\AssetsApi;
 
 /**
- * @package PaymentPlugins\WooCommerceExtraProductOptions\Stripe
+ * @package PaymentPlugins\WooCommerceProductAddons\Stripe
  */
 class FrontendScripts {
 
@@ -13,18 +13,24 @@ class FrontendScripts {
 
 	public function __construct( AssetsApi $assets ) {
 		$this->assets = $assets;
-		$this->initialize();
 	}
 
-	private function initialize() {
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	public function initialize() {
+		add_action( 'init', function () {
+			$this->register_scripts();
+		} );
+		add_action( 'wp_enqueue_scripts', function () {
+			$this->enqueue_scripts();
+		} );
 	}
 
-	public function enqueue_scripts() {
-		$this->assets->register_script( 'wc-stripe-epo', 'build/wc-stripe-epo.js' );
+	private function register_scripts() {
+		$this->assets->register_script( 'wc-stripe-tm-extra-product-options', 'build/product.js' );
+	}
 
+	private function enqueue_scripts() {
 		if ( is_product() ) {
-			wp_enqueue_script( 'wc-stripe-epo' );
+			\wp_enqueue_script( 'wc-stripe-tm-extra-product-options' );
 		}
 	}
 

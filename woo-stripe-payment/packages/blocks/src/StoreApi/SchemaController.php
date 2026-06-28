@@ -1,10 +1,12 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\StoreApi;
+namespace PaymentPlugins\Stripe\Blocks\StoreApi;
 
 use Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema;
 use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
-use PaymentPlugins\Blocks\Stripe\Payments\PaymentsApi;
+use PaymentPlugins\Stripe\Blocks\Payments\PaymentsApi;
+use PaymentPlugins\Stripe\ContextHandler;
+use PaymentPlugins\Stripe\Payments\PaymentGatewaysController;
 use PaymentPlugins\Stripe\Transformers\DataTransformer;
 
 class SchemaController {
@@ -45,6 +47,10 @@ class SchemaController {
 		$data->set_endpoint( CartSchema::IDENTIFIER );
 		$data->set_schema_type( ARRAY_A );
 		$data->set_data_callback( function () {
+			// @todo - improve this logic. For now, it ensures the PaymentGatewayController calls is_local_payment_available for
+			// local payment gateways
+			wc_stripe_get_container()->get( PaymentGatewaysController::class )->set_check_payment_availability( true );
+
 			return [
 				'cart' => ( new DataTransformer() )->transform_cart( WC()->cart )
 			];

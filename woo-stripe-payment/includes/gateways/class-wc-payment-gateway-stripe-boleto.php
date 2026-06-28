@@ -18,23 +18,22 @@ class WC_Payment_Gateway_Stripe_Boleto extends WC_Payment_Gateway_Stripe_Local_P
 
 	use WC_Stripe_Voucher_Payment_Trait;
 
+	public $id = 'stripe_boleto';
+
 	protected $payment_method_type = 'boleto';
 
 	public $synchronous = false;
 
 	public $is_voucher_payment = true;
 
-	public function __construct() {
-		$this->local_payment_type = 'boleto';
+	public function __construct( ...$args ) {
 		$this->currencies         = array( 'BRL' );
 		$this->countries          = $this->limited_countries = array( 'BR' );
-		$this->id                 = 'stripe_boleto';
 		$this->tab_title          = __( 'Boleto', 'woo-stripe-payment' );
 		$this->method_title       = __( 'Boleto (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Boleto gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/boleto.svg' );
-		parent::__construct();
-		$this->template_name = 'boleto.php';
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/boleto.svg' );
 	}
 
 	public function get_local_payment_settings() {

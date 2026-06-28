@@ -1,21 +1,31 @@
 <?php
 
-namespace PaymentPlugins\WooFunnels\Stripe\Cart;
+namespace PaymentPlugins\Stripe\WooFunnels\Cart;
+
+use PaymentPlugins\Stripe\Checkout\ExpressCheckoutRenderer;
 
 class CartIntegration {
 
-	public function initialize() {
-		//add_action( 'fkcart_before_checkout_button', [ $this, 'render_before_checkout_button' ] );
-		add_action( 'fkcart_after_checkout_button', [ $this, 'render_after_checkout_button' ] );
+	private $renderer;
+
+	public function __construct( ExpressCheckoutRenderer $renderer ) {
+		$this->renderer = $renderer;
 	}
 
-	public function render_before_checkout_button() {
+	public function initialize() {
+		add_action( 'fkcart_after_checkout_button', [ $this, 'render_after_checkout_button' ] );
 	}
 
 	public function render_after_checkout_button() {
 		$cart = WC()->cart;
 		if ( $cart && $cart->needs_payment() ) {
-			\WC_Stripe_Field_Manager::mini_cart_buttons();
+			?>
+            <div class="wc-stripe-mini-cart-container">
+				<?php
+				$this->renderer->render_mini_cart_buttons();
+				?>
+            </div>
+			<?php
 			if ( is_ajax() ) {
 				?>
                 <script>
@@ -24,13 +34,16 @@ class CartIntegration {
                     }
                 </script>
                 <style>
-                    .wc-stripe-gpay-mini-cart,
-                    .wc-stripe-applepay-mini-cart,
-                    .wc-stripe-payment-request-mini-cart.StripeElement {
-                        margin-top: 10px;
-                        display: block;
+                    .wc-stripe-mini-cart-container {
                         padding-left: 16px;
                         padding-right: 16px;
+                    }
+
+                    .wc-stripe_googlepay-mini-cart,
+                    .wc-stripe_applepay-mini-cart,
+                    .wc-stripe_payment-request-mini-cart {
+                        margin-top: 10px;
+                        display: block;
                     }
                 </style>
 				<?php

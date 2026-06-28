@@ -2,6 +2,7 @@
 /**
  * @version 3.0.6
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wc-stripe-bootstrap-form">
 	<div class="row">

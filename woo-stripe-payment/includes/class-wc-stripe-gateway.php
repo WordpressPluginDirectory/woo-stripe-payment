@@ -6,12 +6,13 @@ require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-api-operati
 
 /**
  * Gateway class that abstracts all API calls to Stripe.
- *
+ * @deprecated 4.0.0
  * @author  Payment Plugins
  * @package PaymentPlugins\Classes
  *
  * @property \Stripe\Service\AccountLinkService                        $accountLinks
  * @property \Stripe\Service\AccountService                            $accounts
+ * @property \Stripe\Service\AccountSessionService                     $accountSessions
  * @property \Stripe\Service\ApplePayDomainService                     $applePayDomains
  * @property \Stripe\Service\ApplicationFeeService                     $applicationFees
  * @property \Stripe\Service\BalanceService                            $balance
@@ -97,7 +98,7 @@ class WC_Stripe_Gateway {
 	}
 
 	protected function get_client_config() {
-		return apply_filters( 'wc_stripe_client_config_params', array( 'stripe_version' => '2022-08-01' ), $this );
+		return apply_filters( 'wc_stripe_client_config_params', array( 'stripe_version' => '2026-02-25.clover' ), $this );
 	}
 
 	public static function init() {

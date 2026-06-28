@@ -4,7 +4,6 @@
  * @version 3.3.70
  *
  */
+defined( 'ABSPATH' ) || exit;
 ?>
-<div id="wc-stripe-applepay-container">
-	<?php wc_stripe_get_template( 'wallet-notice.php', array( 'gateway' => $gateway ) ); ?>
-</div>
+<div id="wc-stripe-applepay-container"></div>

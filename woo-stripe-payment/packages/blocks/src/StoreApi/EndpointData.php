@@ -1,6 +1,6 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\StoreApi;
+namespace PaymentPlugins\Stripe\Blocks\StoreApi;
 
 class EndpointData {
 

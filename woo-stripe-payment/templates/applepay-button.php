@@ -3,6 +3,7 @@
  * @version 3.3.5
  * @package PaymentPlugins\Templates
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <button class="apple-pay-button <?php echo esc_attr( $style ) ?> apple-pay-button-<?php echo esc_attr( $design ) ?>"

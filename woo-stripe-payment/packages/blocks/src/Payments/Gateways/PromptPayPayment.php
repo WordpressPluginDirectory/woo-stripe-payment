@@ -1,8 +1,8 @@
 <?php
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
-class PromptPayPayment extends \PaymentPlugins\Blocks\Stripe\Payments\AbstractStripeLocalPayment {
+class PromptPayPayment extends \PaymentPlugins\Stripe\Blocks\Payments\AbstractStripeLocalPayment {
 
 	protected $name = 'stripe_promptpay';
 

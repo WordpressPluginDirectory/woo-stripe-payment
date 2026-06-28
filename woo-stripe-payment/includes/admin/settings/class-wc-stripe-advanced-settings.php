@@ -142,7 +142,68 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 				'type'        => 'checkbox',
 				'default'     => 'yes',
 				'description' => __( 'When enabled, mandates and/or legal agreements will be displayed in the Stripe payment element. Example: If a customer selects the save credit card checkbox
-				a legal notice will be displayed.' )
+				a legal notice will be displayed.', 'woo-stripe-payment' )
+			),
+			'bnpl_section'                => array(
+				'title' => __( 'Buy Now Pay Later Messaging', 'woo-stripe-payment' ),
+				'type'  => 'title'
+			),
+			'bnpl_product_location'       => array(
+				'title'       => __( 'BNPL Product Page Location', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'default'     => 'below_price',
+				'options'     => array(
+					'above_price'       => __( 'Above Price', 'woo-stripe-payment' ),
+					'below_price'       => __( 'Below Price', 'woo-stripe-payment' ),
+					'below_add_to_cart' => __( 'Below Add to Cart', 'woo-stripe-payment' ),
+				),
+				'desc_tip'    => true,
+				'description' => __( 'The location of the BNPL message on the product page.', 'woo-stripe-payment' ),
+			),
+			'bnpl_cart_location'          => array(
+				'title'       => __( 'BNPL Cart Page Location', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'default'     => 'below_total',
+				'options'     => array(
+					'below_total'           => __( 'Below Cart Total', 'woo-stripe-payment' ),
+					'below_checkout_button' => __( 'Below Checkout Button', 'woo-stripe-payment' ),
+				),
+				'desc_tip'    => true,
+				'description' => __( 'The location of the BNPL message on the cart page.', 'woo-stripe-payment' ),
+			),
+			'bnpl_shop_location'          => array(
+				'title'       => __( 'BNPL Shop Page Location', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'default'     => 'below_price',
+				'options'     => array(
+					'below_price'  => __( 'Below Price', 'woo-stripe-payment' ),
+					'after_button' => __( 'After Add to Cart Button', 'woo-stripe-payment' ),
+				),
+				'desc_tip'    => true,
+				'description' => __( 'The location of the BNPL message on the shop page.', 'woo-stripe-payment' ),
+			),
+			'bnpl_checkout_location'      => array(
+				'title'       => __( 'BNPL Checkout Page Location', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'default'     => 'payment_method_title',
+				'options'     => array(
+					'payment_method_title' => __( 'Payment Method Title', 'woo-stripe-payment' ),
+					'below_total'          => __( 'Below Order Total', 'woo-stripe-payment' ),
+				),
+				'desc_tip'    => true,
+				'description' => __( 'The location of the BNPL message on the checkout page.', 'woo-stripe-payment' ),
+			),
+			'bnpl_theme'                  => array(
+				'title'       => __( 'BNPL Theme', 'woo-stripe-payment' ),
+				'type'        => 'select',
+				'default'     => 'stripe',
+				'options'     => array(
+					'stripe' => __( 'Default', 'woo-stripe-payment' ),
+					'night'  => __( 'Night', 'woo-stripe-payment' ),
+					'flat'   => __( 'Flat', 'woo-stripe-payment' ),
+				),
+				'desc_tip'    => true,
+				'description' => __( 'The theme determines the appearance of the Buy Now Pay Later messaging.', 'woo-stripe-payment' ),
 			),
 			'gdpr'                        => array(
 				'title' => __( 'GDPR Settings', 'woo-stripe-payment' ),
@@ -268,7 +329,7 @@ class WC_Stripe_Advanced_Settings extends WC_Stripe_Settings_API {
 
 	/**
 	 * @return void
-	 * @3.3.99
+	 * @since 3.3.99
 	 */
 	public function get_terms_display_rule() {
 		$value = stripe_wc()->advanced_settings->get_option( 'terms_enabled', 'no' );

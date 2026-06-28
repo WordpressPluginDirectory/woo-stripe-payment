@@ -2,6 +2,7 @@
 /**
  * @version 3.3.60
  */
+defined( 'ABSPATH' ) || exit;
 ?>
 <div id="wc-stripe-upm-element"></div>
 <?php if ( $gateway->show_save_payment_method_html() ): ?>

@@ -4,6 +4,7 @@
  * @var string $title
  * @version 3.3.34
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="wc-stripe-offsite-notice-container">

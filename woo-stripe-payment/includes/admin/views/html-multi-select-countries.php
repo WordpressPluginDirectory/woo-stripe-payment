@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 $selections = (array) $value;
 
 if ( ! empty( $data['options'] ) ) {

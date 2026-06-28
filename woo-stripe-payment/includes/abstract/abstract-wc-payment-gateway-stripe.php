@@ -6,10 +6,10 @@ if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 	return;
 }
 
-require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-payment-intent.php' );
-require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-payment-charge.php' );
-require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-payment-charge-local.php' );
+use \PaymentPlugins\Stripe\Controllers\PaymentIntentController;
+use \PaymentPlugins\Stripe\Legacy\AbstractLegacyGateway;
 
+require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-payment-intent.php' );
 require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/traits/wc-stripe-payment-traits.php' );
 
 /**
@@ -19,15 +19,9 @@ require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/traits/wc-stripe-payment-tr
  * @package PaymentPlugins\Abstract
  *
  */
-abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
+abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 
 	use WC_Stripe_Settings_Trait;
-
-	/**
-	 *
-	 * @var WC_Stripe_Payment
-	 */
-	public $payment_object;
 
 	/**
 	 * @var bool
@@ -36,19 +30,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	protected $has_digital_wallet = false;
 
 	/**
-	 *
-	 * @var string
-	 */
-	public $token_key;
-
-	/**
-	 *
-	 * @var string
-	 */
-	public $saved_method_key;
-
-	/**
-	 *
+	 * This property is used to determine if a customer is using a saved payment method or a new payment method.
 	 * @var string
 	 */
 	public $payment_type_key;
@@ -58,12 +40,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @var string
 	 */
 	public $payment_intent_key;
-
-	/**
-	 *
-	 * @var string
-	 */
-	public $save_source_key;
 
 	/**
 	 *
@@ -82,13 +58,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 *
 	 * @var string
 	 */
-	protected $token_type;
-
-	/**
-	 *
-	 * @var WC_Stripe_Gateway
-	 */
-	public $gateway;
+	public $token_type;
 
 	/**
 	 *
@@ -106,12 +76,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @var \WC_Payment_Token_Stripe
 	 */
 	public $payment_token_object = null;
-
-	/**
-	 *
-	 * @var string
-	 */
-	protected $new_source_token = null;
 
 	/**
 	 * Is the payment method synchronous or asynchronous
@@ -158,74 +122,21 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	protected $request_context;
 
-	public function __construct() {
-		$this->gateway            = WC_Stripe_Gateway::load();
-		$this->token_key          = $this->id . '_token_key';
-		$this->saved_method_key   = $this->id . '_saved_method_key';
-		$this->save_source_key    = $this->id . '_save_source_key';
-		$this->payment_type_key   = $this->id . '_payment_type_key';
-		$this->payment_intent_key = $this->id . '_payment_intent_key';
-		$this->has_fields         = true;
-		$this->init_form_fields();
-		$this->init_settings();
-		$this->title       = $this->get_option( 'title_text' );
-		$this->description = $this->get_option( 'description' );
+	public function __construct( ...$args ) {
+		// This property determines if WooCommerce calls the $gateway->payment_fields()
+		$this->has_fields       = true;
+		$this->payment_type_key = $this->id . '_payment_type_key';
 		$this->hooks();
-		$this->init_supports();
-
-		$this->payment_object = $this->get_payment_object();
-
-		$this->new_payment_method_label    = __( 'New Card', 'woo-stripe-payment' );
-		$this->saved_payment_methods_label = __( 'Saved Cards', 'woo-stripe-payment' );
+		parent::__construct( ...$args );
 	}
 
-	public function hooks() {
+	protected function hooks() {
 		add_filter( 'wc_stripe_settings_nav_tabs', array( $this, 'admin_nav_tab' ) );
 		add_action( 'woocommerce_stripe_settings_checkout_' . $this->id, array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
 			'process_admin_options'
 		) );
-		add_filter( 'woocommerce_payment_methods_list_item', array( $this, 'payment_methods_list_item' ), 10, 2 );
-		add_action( 'wc_stripe_payment_token_deleted_' . $this->id, array( $this, 'delete_payment_method' ), 10, 2 );
-		add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'subscription_payment_meta' ), 10, 2 );
-		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, array(
-			$this,
-			'scheduled_subscription_payment'
-		), 10, 2 );
-		add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->id, array(
-			$this,
-			'update_failing_payment_method'
-		), 10, 2 );
-		add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->id, array(
-			$this,
-			'process_pre_order_payment'
-		) );
-
-		/**
-		 * @since 3.1.8
-		 */
-		add_filter( 'wc_stripe_mini_cart_dependencies', array( $this, 'get_mini_cart_dependencies' ), 10, 2 );
-	}
-
-	public function init_supports() {
-		$this->supports = array(
-			'tokenization',
-			'products',
-			'subscriptions',
-			'add_payment_method',
-			'subscription_cancellation',
-			'multiple_subscriptions',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'default_credit_card_form',
-			'refunds',
-			'pre-orders',
-			'subscription_payment_method_change_admin',
-			'subscription_reactivation',
-			'subscription_suspension',
-			'subscription_payment_method_change_customer',
-		);
 	}
 
 	public function init_form_fields() {
@@ -237,13 +148,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 				'-'
 			), $this->id ) . '-settings.php';
 		$this->form_fields = apply_filters( 'wc_stripe_form_fields_' . $this->id, $this->form_fields );
-	}
-
-	/**
-	 * @deprecated 3.3.18
-	 */
-	public function get_method_formats() {
-		return $this->get_payment_method_formats();
 	}
 
 	public function get_payment_method_formats() {
@@ -266,19 +170,20 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	public function payment_fields() {
-		$this->enqueue_frontend_scripts();
+		// @ todo - remove wc_stripe_token_field eventually as this is used to store the payment method Id.
+		// It's replaced by "_payment_method_id"
 		wc_stripe_token_field( $this );
-		wc_stripe_payment_intent_field( $this );
-		$this->output_display_items( 'checkout' );
+		wc_stripe_hidden_field( $this->id . '_setup_intent_id' );
+		wc_stripe_hidden_field( $this->id . '_payment_method_id' );
+
+		if ( $this->supports( 'tokenization' ) && is_checkout() ) {
+			$this->saved_payment_methods();
+		}
 		wc_stripe_get_template(
 			'checkout/stripe-payment-method.php',
 			array(
 				'gateway' => $this,
-				'tokens'  => is_add_payment_method_page()
-					? null
-					: \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::sort_by_default(
-						\PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::filter_by_type( $this->get_tokens() )
-					),
+				'tokens'  => ! empty( $this->tokens )
 			)
 		);
 	}
@@ -288,8 +193,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function product_fields() {
 		global $product;
-		$this->enqueue_frontend_scripts( 'product' );
-		$this->output_display_items( 'product' );
 		wc_stripe_get_template(
 			'product/' . $this->template_name,
 			array(
@@ -300,107 +203,11 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	public function cart_fields() {
-		$this->enqueue_frontend_scripts( 'cart' );
-		$this->output_display_items( 'cart' );
 		wc_stripe_get_template( 'cart/' . $this->template_name, array( 'gateway' => $this ) );
 	}
 
 	public function mini_cart_fields() {
-		$this->output_display_items( 'cart' );
 		wc_stripe_get_template( 'mini-cart/' . $this->template_name, array( 'gateway' => $this ) );
-	}
-
-	/**
-	 * Enqueue scripts needed by the gateway on the frontend of the WC shop.
-	 *
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_frontend_scripts( $page = '' ) {
-		if ( $page ) {
-			if ( 'product' === $page ) {
-				$this->enqueue_product_scripts( stripe_wc()->scripts() );
-			} elseif ( 'cart' === $page ) {
-				$this->enqueue_cart_scripts( stripe_wc()->scripts() );
-			} elseif ( 'checkout' === $page ) {
-				$this->enqueue_checkout_scripts( stripe_wc()->scripts() );
-			} elseif ( 'mini_cart' === $page ) {
-				$this->enqueue_mini_cart_scripts( stripe_wc()->scripts() );
-			} else {
-				$this->enqueue_frontend_scripts();
-			}
-		} else {
-			if ( is_add_payment_method_page() ) {
-				$this->enqueue_add_payment_method_scripts( stripe_wc()->scripts() );
-			}
-			if ( is_checkout() ) {
-				$this->enqueue_checkout_scripts( stripe_wc()->scripts() );
-			}
-			if ( is_cart() ) {
-				$this->enqueue_cart_scripts( stripe_wc()->scripts() );
-			}
-			if ( is_product() ) {
-				$this->enqueue_product_scripts( stripe_wc()->scripts() );
-			}
-		}
-		//if ( ! empty( stripe_wc()->scripts()->enqueued_scripts ) ) {
-		$this->enqueue_payment_method_styles();
-		//}
-	}
-
-	/**
-	 * @return void
-	 * @since 3.3.37
-	 */
-	public function enqueue_payment_method_styles() {
-		wp_enqueue_style( stripe_wc()->scripts()->prefix . 'styles' );
-		wp_style_add_data( stripe_wc()->scripts()->prefix . 'styles', 'rtl', 'replace' );
-	}
-
-	/**
-	 * Enqueue scripts needed by the gateway on the checkout page.
-	 *
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_checkout_scripts( $scripts ) {
-	}
-
-	/**
-	 * Enqueue scripts needed by the gateway on the add payment method page.
-	 *
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_add_payment_method_scripts( $scripts ) {
-		$this->enqueue_checkout_scripts( $scripts );
-	}
-
-	/**
-	 * Enqueue scripts needed by the gateway on the cart page.
-	 *
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_cart_scripts( $scripts ) {
-	}
-
-	/**
-	 * Enqueue scripts needed by the gateway on the product page.
-	 *
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 */
-	public function enqueue_product_scripts( $scripts ) {
-	}
-
-	/**
-	 * @param WC_Stripe_Frontend_Scripts $scripts
-	 *
-	 * @since 3.1.8
-	 */
-	public function enqueue_mini_cart_scripts( $scripts ) {
-		if ( ! wp_script_is( $scripts->get_handle( 'mini-cart' ) ) ) {
-			$scripts->enqueue_script( 'mini-cart',
-				$scripts->assets_url( 'js/frontend/mini-cart.js' ),
-				apply_filters( 'wc_stripe_mini_cart_dependencies', array( $scripts->get_handle( 'wc-stripe' ) ), $scripts ) );
-		}
-		$scripts->localize_script( 'mini-cart', $this->get_localized_params(), 'wc_' . $this->id . '_mini_cart_params' );
 	}
 
 	/**
@@ -413,27 +220,46 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		$order->set_payment_method( $this->id );
 
-		if ( $this->is_change_payment_method_request() && wcs_is_subscription( $order ) ) {
-			return $this->process_subscription_payment_method_updated( $order );
-		}
-
 		do_action( 'wc_stripe_before_process_payment', $order, $this->id );
 
 		if ( wc_notice_count( 'error' ) > 0 ) {
 			return $this->get_order_error();
 		}
-		$this->processing_payment = true;
 
-		if ( $this->order_contains_pre_order( $order ) && $this->pre_order_requires_tokenization( $order ) ) {
-			return $this->process_pre_order( $order );
+		/**
+		 * Filter that allows third party code to control the payment result.
+		 *
+		 * @param null
+		 * @param WC_Order                                                 $order
+		 * @param \PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway $payment_method
+		 *
+		 * @since 4.0.0
+		 */
+		$result = apply_filters( 'wc_stripe_process_payment_result', null, $order, $this );
+
+		if ( is_wp_error( $result ) ) {
+			wc_add_notice( $result->get_error_message(), 'error' );
+
+			return [
+				'result'   => WC_Stripe_Constants::FAILURE,
+				'redirect' => ''
+			];
 		}
 
-		// if order total is zero, then save meta but don't process payment.
-		if ( $order->get_total() == 0 ) {
+		if ( \is_array( $result ) ) {
+			return $result;
+		}
+
+		$this->processing_payment = true;
+
+		/**
+		 * 3rd party code might have zero total orders that still need processing.
+		 */
+		if ( $order->get_total() <= 0 ) {
 			return $this->process_zero_total_order( $order );
 		}
 
-		$result = $this->payment_object->process_payment( $order );
+		$result = $this->payment_controller->process_payment( $order );
 
 		if ( is_wp_error( $result ) ) {
 			wc_add_notice( $this->is_active( 'generic_error' ) ? $this->get_generic_error( $result ) : $result->get_error_message(), 'error' );
@@ -443,7 +269,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 
 		if ( $result->complete_payment ) {
 			WC()->cart->empty_cart();
-			$this->payment_object->payment_complete( $order, $result->charge );
+			$this->payment_controller->payment_complete( $order, $result->charge );
 			$this->trigger_post_payment_processes( $order, $this );
 
 			return array(
@@ -461,66 +287,16 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	/**
 	 *
 	 * @return array
+	 * @deprecated 4.0.0
 	 */
 	public function get_localized_params() {
-		$page = wc_stripe_get_current_page();
-		$data = array(
-			'page'                  => $page,
-			'gateway_id'            => $this->id,
-			'api_key'               => wc_stripe_get_publishable_key(),
-			'saved_method_selector' => '[name="' . $this->saved_method_key . '"]',
-			'token_selector'        => '[name="' . $this->token_key . '"]',
-			'messages'              => array(
-				'terms'          => __( 'Please read and accept the terms and conditions to proceed with your order.', 'woocommerce' ),
-				'required_field' => __( 'Please fill out all required fields.', 'woo-stripe-payment' )
-			),
-			'routes'                => array(
-				'create_payment_intent'       => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->payment_intent->rest_uri( 'payment-intent' ) ),
-				'order_create_payment_intent' => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->payment_intent->rest_uri( 'order/payment-intent' ) ),
-				'setup_intent'                => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->payment_intent->rest_uri( 'setup-intent' ) ),
-				'sync_intent'                 => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->payment_intent->rest_uri( 'sync-payment-intent' ) ),
-				'add_to_cart'                 => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->cart->rest_uri( 'add-to-cart' ) ),
-				'cart_calculation'            => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->cart->rest_uri( 'cart-calculation' ) ),
-				'shipping_method'             => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->cart->rest_uri( 'shipping-method' ) ),
-				'shipping_address'            => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->cart->rest_uri( 'shipping-address' ) ),
-				'checkout'                    => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'checkout' ) ),
-				'checkout_payment'            => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'checkout/payment' ) ),
-				'order_pay'                   => WC_Stripe_Rest_API::get_endpoint( stripe_wc()->rest_api->checkout->rest_uri( 'order-pay' ) ),
-				'base_path'                   => WC_Stripe_Rest_API::get_endpoint( '%s' )
-			),
-			'rest_nonce'            => wp_create_nonce( 'wp_rest' ),
-			'banner_enabled'        => $this->banner_checkout_enabled(),
-			'currency'              => get_woocommerce_currency(),
-			'total_label'           => __( 'Total', 'woo-stripe-payment' ),
-			'country_code'          => wc_get_base_location()['country'],
-			'user_id'               => get_current_user_id(),
-			'description'           => $this->get_description(),
-			'elementOptions'        => $this->get_element_options(),
-			'confirmParams'         => array(
-				'return_url' => \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::create_return_url( $this, $page )
-			),
-			'paymentElementOptions' => $this->get_payment_element_options()
+		wc_deprecated_function(
+			'WC_Payment_Gateway_Stripe::get_localized_params',
+			'4.0.0',
+			'WC_Payment_Gateway_Stripe::get_payment_method_data'
 		);
 
-		$ip_address                            = WC_Geolocation::get_ip_address();
-		$user_agent                            = wc_get_user_agent();
-		$data['confirmParams']['mandate_data'] = array(
-			'customer_acceptance' => [
-				'type'   => 'online',
-				'online' => [
-					'ip_address' => $ip_address ? $ip_address : \WC_Geolocation::get_external_ip_address(),
-					'user_agent' => $user_agent ? $user_agent : 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' )
-				]
-			]
-		);
-
-		global $wp;
-		if ( isset( $wp->query_vars['order-pay'] ) ) {
-			$data['order_id']  = absint( $wp->query_vars['order-pay'] );
-			$data['order_key'] = isset( $_GET['key'] ) ? $_GET['key'] : '';
-		}
-
-		return $data;
+		return $this->get_payment_method_data();
 	}
 
 	public function get_payment_element_options() {
@@ -566,7 +342,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @since 3.0.6
 	 */
 	public function get_payment_method_from_charge( $charge ) {
-		return $this->payment_object->get_payment_method_from_charge( $charge );
+		return $this->payment_controller->get_payment_method_from_charge( $charge );
 	}
 
 	/**
@@ -599,7 +375,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 				$result->set_customer_id( $customer_id );
 				$result->update_meta_data( WC_Stripe_Constants::STRIPE_MANDATE, $setup_intent->mandate );
 			} else {
-				$result = $this->create_payment_method( $this->get_new_source_token(), $customer_id );
+				$result = $this->create_payment_method( $this->get_payment_method_from_request(), $customer_id );
 			}
 
 			if ( is_wp_error( $result ) ) {
@@ -631,7 +407,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order  = wc_get_order( $order_id );
-		$result = $this->payment_object->process_refund( $order, $amount, $reason );
+		$result = $this->payment_controller->process_refund( $order, $amount, $reason );
 
 		if ( ! is_wp_error( $result ) ) {
 			$order->add_order_note(
@@ -666,7 +442,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			if ( ! $charge->captured ) {
 				$this->processing_payment = true;
 
-				$result = $this->payment_object->capture_charge( $amount, $order, $charge );
+				$result = $this->payment_controller->capture_charge( $amount, $order, $charge );
 
 				if ( ! is_wp_error( $result ) ) {
 					WC_Stripe_Utils::add_balance_transaction_to_order( $result, $order, true );
@@ -677,11 +453,19 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 						}
 					}
 					$order->payment_complete();
-					$order->add_order_note( sprintf( __( 'Order amount captured in Stripe. Amount: %s', 'woo-stripe-payment' ),
-							wc_price( $amount, array( 'currency' => $order->get_currency(), ) ) )
+					$order->add_order_note(
+						sprintf(
+							__( 'Order amount captured in Stripe. Amount: %s', 'woo-stripe-payment' ),
+							wc_price( $amount, array( 'currency' => $order->get_currency() ) )
+						)
 					);
 				} else {
-					$order->add_order_note( sprintf( __( 'Error capturing charge in Stripe. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
+					$order->add_order_note(
+						sprintf(
+							__( 'Error capturing charge in Stripe. Reason: %s', 'woo-stripe-payment' ),
+							$result->get_error_message()
+						)
+					);
 
 					/**
 					 * @var WC_Order                   $order
@@ -704,10 +488,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function void_charge( $order ) {
 		// @3.1.1 - check added so errors aren't encountered if the order can't be voided
-		if ( ! $this->payment_object->can_void_order( $order ) ) {
+		if ( ! $this->payment_controller->can_void_order( $order ) ) {
 			return;
 		}
-		$result = $this->payment_object->void_charge( $order );
+		$result = $this->payment_controller->void_charge( $order );
 
 		if ( is_wp_error( $result ) ) {
 			$order->add_order_note( sprintf( __( 'Error voiding charge. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
@@ -771,68 +555,33 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Return the payment source the customer has chosen to use.
-	 * This can be a saved source
-	 * or a one time use source.
-	 */
-	public function get_payment_source() {
-		if ( $this->use_saved_source() ) {
-			return $this->get_saved_source_id();
-		} else {
-			if ( $this->payment_method_token ) {
-				return $this->payment_method_token;
-			}
-
-			return $this->get_new_source_token();
-		}
-	}
-
-	/**
 	 * Returns the payment method the customer wants to use.
-	 * This can be a saved payment method
-	 * or a new payment method.
+	 * This can be a saved payment method or a new payment method.
 	 */
 	public function get_payment_method_from_request() {
-		return $this->get_payment_source();
+		// check if customer is using a saved payment method.
+		if ( $this->should_use_saved_payment_method() ) {
+			$id    = \wc_clean( \wp_unslash( $_POST["wc-{$this->id}-payment-token"] ) );
+			$token = \WC_Payment_Tokens::get( (int) $id );
+
+			return $token ? $token->get_token() : '';
+		}
+		if ( $this->payment_method_token ) {
+			return $this->payment_method_token;
+		}
+		if ( $this->payment_method_id ) {
+			return $this->payment_method_id;
+		}
+		$key = $this->id . '_payment_method_id';
+		if ( ! empty( $_POST[ $key ] ) ) {
+			return \wc_clean( \wp_unslash( $_POST[ $key ] ) );
+		}
+
+		return '';
 	}
 
 	public function get_payment_intent_id() {
 		return ! empty( $_POST[ $this->payment_intent_key ] ) ? wc_clean( $_POST[ $this->payment_intent_key ] ) : '';
-	}
-
-	/**
-	 * Return true of the customer is using a saved payment method.
-	 */
-	public function use_saved_source() {
-		return ( ! empty( $_POST[ $this->payment_type_key ] ) && wc_clean( $_POST[ $this->payment_type_key ] ) === 'saved' ) || $this->payment_method_token
-		       || ( ! empty( $_POST["wc-{$this->id}-payment-token"] ) );
-	}
-
-	/**
-	 *
-	 * @deprecated
-	 *
-	 */
-	public function get_new_source_id() {
-		return $this->get_new_source_token();
-	}
-
-	public function get_new_source_token() {
-		return null != $this->new_source_token ? $this->new_source_token : ( ! empty( $_POST[ $this->token_key ] ) ? wc_clean( $_POST[ $this->token_key ] ) : '' );
-	}
-
-	public function get_saved_source_id() {
-		// Check if Blocks are being used
-		if ( ! empty( $_POST["wc-{$this->id}-payment-token"] ) ) {
-			$token = WC_Payment_Tokens::get( wc_clean( $_POST["wc-{$this->id}-payment-token"] ) );
-
-			return $token->get_token();
-		}
-		if ( ! empty( $_POST[ $this->saved_method_key ] ) && ! empty( $_POST[ $this->payment_type_key ] ) && 'saved' == $_POST[ $this->payment_type_key ] ) {
-			return wc_clean( $_POST[ $this->saved_method_key ] );
-		}
-
-		return $this->payment_method_token;
 	}
 
 	/**
@@ -886,47 +635,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 		}
 	}
 
-	/**
-	 *
-	 * @param array                      $item
-	 * @param WC_Payment_Token_Stripe_CC $payment_token
-	 */
-	public function payment_methods_list_item( $item, $payment_token ) {
-		if ( $payment_token->get_type() === $this->token_type && $this->id === $payment_token->get_gateway_id() ) {
-			if ( method_exists( $payment_token, 'get_last4' ) ) {
-				$item['method']['last4'] = $payment_token->get_last4();
-			}
-			$item['method']['brand'] = ucfirst( $payment_token->get_brand() );
-			if ( $payment_token->has_expiration() ) {
-				$item['expires'] = sprintf( '%s / %s', $payment_token->get_exp_month(), $payment_token->get_exp_year() );
-			} else {
-				$item['expires'] = __( 'n/a', 'woo-stripe-payment' );
-			}
-			$item['wc_stripe_method'] = true;
-		}
-
-		return $item;
-	}
-
-	/**
-	 *
-	 * @param string                  $token_id
-	 * @param WC_Payment_Token_Stripe $token
-	 */
-	public function delete_payment_method( $token_id, $token ) {
-		$token->delete_from_stripe();
-	}
-
-	public function saved_payment_methods( $tokens = array() ) {
-		wc_stripe_get_template(
-			'payment-methods.php',
-			array(
-				'tokens'  => $tokens,
-				'gateway' => $this,
-			)
-		);
-	}
-
 	public function get_new_method_label() {
 		return apply_filters( 'wc_stripe_get_new_method_label', $this->new_payment_method_label, $this );
 	}
@@ -971,29 +679,21 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Return true of the payment method should be saved.
+	 * Return true if the payment method should be saved.
 	 *
 	 * @param WC_Order $order
 	 *
 	 * @return bool
 	 */
 	public function should_save_payment_method( $order ) {
-		$bool = false;
-		if ( ! $this->use_saved_source() && ! $this->is_processing_scheduled_payment() ) {
-			if ( wcs_stripe_active() && $this->supports( 'subscriptions' ) ) {
-				if ( wcs_order_contains_subscription( $order ) || wcs_order_contains_renewal( $order ) ) {
-					$bool = true;
-				}
-			}
-			if ( ! empty( $_POST[ $this->save_source_key ] ) ) {
-				$bool = true;
-			}
-		}
+		// If the customer has checked the save to account checkbox and they aren't using a saved payment method.
+		$bool = ! empty( $_POST["wc-{$this->id}-new-payment-method"] ) && ! $this->should_use_saved_payment_method();
+
 
 		/**
 		 * @param bool                      $bool
 		 * @param WC_Order                  $order
-		 * @param WC_Payment_Gateway_Stripe $this
+		 * @param WC_Payment_Gateway_Stripe $payment_method
 		 *
 		 * @since 3.3.12
 		 */
@@ -1048,45 +748,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function get_shipping_methods() {
 		return $this->get_formatted_shipping_methods();
-	}
-
-	/**
-	 * Return true if product page checkout is enabled for this gateway
-	 *
-	 * @return bool
-	 */
-	public function product_checkout_enabled() {
-		return in_array( 'product', $this->get_option( 'payment_sections', array() ) );
-	}
-
-	/**
-	 * Return true if cart page checkout is enabled for this gateway
-	 *
-	 * @return bool
-	 */
-	public function cart_checkout_enabled() {
-		return in_array( 'cart', $this->get_option( 'payment_sections', array() ) );
-	}
-
-	/**
-	 * Return true if mini-cart checkout is enabled for this gateway
-	 *
-	 * @return bool
-	 * @since 3.1.8
-	 */
-	public function mini_cart_enabled() {
-		return in_array( 'mini_cart', $this->get_option( 'payment_sections', array() ) );
-	}
-
-	/**
-	 * Return true if checkout page banner is enabled for this gateway
-	 *
-	 * @return bool
-	 */
-	public function banner_checkout_enabled() {
-		global $wp;
-
-		return empty( $wp->query_vars['order-pay'] ) && $this->supports( 'wc_stripe_banner_checkout' ) && in_array( 'checkout_banner', $this->get_option( 'payment_sections', array() ) );
 	}
 
 	/**
@@ -1194,82 +855,13 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @param string $token_id
 	 * @param int    $user_id
 	 *
-	 * @return null|WC_Payment_Token_Stripe_CC
+	 * @return null|WC_Payment_Token_Stripe
 	 */
 	public function get_token( $token_id, $user_id ) {
 		return \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::get_payment_token(
 			$token_id,
 			$user_id
 		);
-	}
-
-	/**
-	 *
-	 * @param array           $payment_meta
-	 * @param WC_Subscription $subscription
-	 */
-	public function subscription_payment_meta( $payment_meta, $subscription ) {
-		$payment_meta[ $this->id ] = array(
-			'post_meta' => array(
-				WC_Stripe_Constants::PAYMENT_METHOD_TOKEN => array(
-					'value' => $this->get_order_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $subscription ),
-					'label' => __( 'Payment Method Token', 'woo-stripe-payment' ),
-				),
-				WC_Stripe_Constants::CUSTOMER_ID          => array(
-					'value' => $this->get_order_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $subscription ),
-					'label' => __( 'Stripe Customer ID', 'woo-stripe-payment' ),
-				),
-			),
-		);
-
-		return $payment_meta;
-	}
-
-	/**
-	 *
-	 * @param float    $amount
-	 * @param WC_Order $order
-	 */
-	public function scheduled_subscription_payment( $amount, $order ) {
-		$this->processing_payment = true;
-
-		$result = $this->payment_object->scheduled_subscription_payment( $amount, $order );
-
-		if ( is_wp_error( $result ) ) {
-			$order->update_status( 'failed' );
-			$order->add_order_note( sprintf( __( 'Recurring payment for order failed. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
-
-			return;
-		}
-
-		if ( $result->charge ) {
-			$this->save_order_meta( $order, $result->charge );
-		}
-
-		// set the payment method token that was used to process the renewal order.
-		$this->payment_method_token = $order->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN );
-
-		if ( $result->complete_payment ) {
-			if ( $result->charge ) {
-				if ( $result->charge->captured ) {
-					if ( $result->charge->status === 'pending' ) {
-						// pending status means this is an asynchronous payment method.
-						$order->update_status( apply_filters( 'wc_stripe_renewal_pending_order_status', 'on-hold', $order, $this, $result->charge ), __( 'Renewal payment initiated in Stripe. Waiting for the payment to clear.', 'woo-stripe-payment' ) );
-					} else {
-						WC_Stripe_Utils::add_balance_transaction_to_order( $result->charge, $order );
-						$order->payment_complete( $result->charge->id );
-						$order->add_order_note( sprintf( __( 'Recurring payment captured in Stripe. Payment method: %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-					}
-				} else {
-					$order->update_status( apply_filters( 'wc_stripe_authorized_renewal_order_status', 'on-hold', $order, $this ),
-						sprintf( __( 'Recurring payment authorized in Stripe. Payment method: %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-				}
-			} else {
-				$order->update_status( 'on-hold' );
-			}
-		} else {
-			$order->update_status( 'pending', sprintf( __( 'Customer must manually complete payment for payment method %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-		}
 	}
 
 	/**
@@ -1290,10 +882,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 		$this->payment_method_token = $id;
 	}
 
-	public function set_new_source_token( $token ) {
-		$this->new_source_token = $token;
-	}
-
 	/**
 	 *
 	 * @param WC_Order $order
@@ -1303,65 +891,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 */
 	public function get_order_description( $order ) {
 		return sprintf( __( 'Order %1$s from %2$s', 'woo-stripe-payment' ), $order->get_order_number(), get_bloginfo( 'name' ) );
-	}
-
-	/**
-	 *
-	 * @param WC_Order $order
-	 */
-	public function process_zero_total_order( $order ) {
-		// save payment method if necessary
-		if ( ! defined( WC_Stripe_Constants::PROCESSING_PAYMENT ) && $this->should_save_payment_method( $order ) ) {
-			$result = $this->save_payment_method( $this->get_new_source_token(), $order );
-			if ( is_wp_error( $result ) ) {
-				wc_add_notice( $result->get_error_message(), 'error' );
-
-				return $this->get_order_error();
-			}
-		} else {
-			$this->payment_method_token = $this->get_saved_source_id();
-
-			return $this->payment_object->process_zero_total_order( $order, $this );
-		}
-
-		return $this->payment_object->process_zero_total_order( $order, $this );
-	}
-
-	/**
-	 * @param WC_Order $order
-	 *
-	 * @return array
-	 */
-	public function process_pre_order( $order ) {
-		$token = null;
-		// maybe save payment method
-		if ( ! $this->use_saved_source() ) {
-			// if user not logged in, create a Stripe customer that won't be assigned to a user.
-			if ( ! $order->get_customer_id() ) {
-				$customer = WC_Stripe_Customer_Manager::instance()->create_customer( WC()->customer );
-				if ( is_wp_error( $customer ) ) {
-					return wc_add_notice( $customer->get_error_message(), 'error' );
-				}
-				$order->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $customer->id );
-				$result = $token = $this->create_payment_method( $this->get_new_source_token(), $customer->id );
-			} else {
-				$result = $this->save_payment_method( $this->get_new_source_token(), $order );
-			}
-			if ( is_wp_error( $result ) ) {
-				wc_add_notice( $result->get_error_message(), 'error' );
-
-				return $this->get_order_error();
-			}
-		} else {
-			$this->payment_method_token = $this->get_saved_source_id();
-		}
-		WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
-		$this->save_zero_total_meta( $order, $token );
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order ),
-		);
 	}
 
 	/**
@@ -1391,25 +920,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 		do_action( 'wc_stripe_save_order_meta', $order, $this, null, $token );
 
 		$order->save();
-	}
-
-	/**
-	 * Pre orders can't be mixed with regular products.
-	 *
-	 * @param WC_Order $order
-	 */
-	protected function order_contains_pre_order( $order ) {
-		return wc_stripe_pre_orders_active() && WC_Pre_Orders_Order::order_contains_pre_order( $order );
-	}
-
-	/**
-	 *
-	 * @param WC_Order $order
-	 *
-	 * @return boolean
-	 */
-	protected function pre_order_requires_tokenization( $order ) {
-		return WC_Pre_Orders_Order::order_requires_payment_tokenization( $order );
 	}
 
 	/**
@@ -1469,40 +979,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 *
-	 * @param WC_Order $order
-	 */
-	public function process_pre_order_payment( $order ) {
-		$this->processing_payment = true;
-
-		$result = $this->payment_object->process_pre_order_payment( $order );
-
-		if ( is_wp_error( $result ) ) {
-			$order->update_status( 'failed' );
-			$order->add_order_note( sprintf( __( 'Pre-order payment for order failed. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ) );
-		} else {
-			if ( $result->complete_payment ) {
-				$this->save_order_meta( $order, $result->charge );
-
-				if ( $result->charge->captured ) {
-					if ( $result->charge->status === 'pending' ) {
-						$order->update_status( apply_filters( 'wc_stripe_pending_preorder_order_status', 'on-hold', $order, $this ), __( 'Pre-order payment initiated in Stripe. Waiting for the payment to clear.', 'woo-stripe-payment' ) );
-					} else {
-						WC_Stripe_Utils::add_balance_transaction_to_order( $result->charge, $order );
-						$order->payment_complete( $result->charge->id );
-						$order->add_order_note( sprintf( __( 'Pre-order payment captured in Stripe. Payment method: %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-					}
-				} else {
-					$order->update_status( apply_filters( 'wc_stripe_authorized_preorder_order_status', 'on-hold', $order, $this ),
-						sprintf( __( 'Pre-order payment authorized in Stripe. Payment method: %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-				}
-			} else {
-				$order->update_status( 'pending', sprintf( __( 'Customer must manually complete payment for payment method %s', 'woo-stripe-payment' ), $order->get_payment_method_title() ) );
-			}
-		}
-	}
-
-	/**
 	 * Given a meta key, see if there is a value for that key in another plugin.
 	 * This acts as a lazy conversion
 	 * method for merchants that have switched to our plugin from other plugins.
@@ -1520,10 +996,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 			$keys = array();
 			switch ( $meta_key ) {
 				case WC_Stripe_Constants::PAYMENT_METHOD_TOKEN:
-					$keys = array( WC_Stripe_Constants::SOURCE_ID, '_fkwcs_source_id', '_cpsw_source_id' );
+					$keys = array( WC_Stripe_Constants::SOURCE_ID, '_fkwcs_source_id' );
 					break;
 				case WC_Stripe_Constants::CUSTOMER_ID:
-					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id', '_cpsw_customer_id' );
+					$keys = array( WC_Stripe_Constants::STRIPE_CUSTOMER_ID, '_fkwcs_customer_id' );
 					break;
 				case WC_Stripe_Constants::PAYMENT_INTENT_ID:
 					$keys = array( WC_Stripe_Constants::STRIPE_INTENT_ID );
@@ -1585,61 +1061,10 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 *
 	 * @param string $page
 	 * @param array  $data
+	 *
+	 * @deprecated 4.0.0
 	 */
 	public function output_display_items( $page = 'checkout', $data = array() ) {
-		global $wp;
-		$data = wp_parse_args( $data, array(
-			'items'            => $this->has_digital_wallet ? $this->get_display_items( $page ) : array(),
-			'shipping_options' => $this->has_digital_wallet ? $this->get_formatted_shipping_methods() : array(),
-			'total'            => wc_format_decimal( WC()->cart->total, 2 ),
-			'total_cents'      => wc_stripe_add_number_precision( WC()->cart->total, get_woocommerce_currency() ),
-			'currency'         => get_woocommerce_currency(),
-			'installments'     => array( 'enabled' => $this->is_installment_available() )
-		) );
-		if ( in_array( $page, array( 'checkout', 'cart' ) ) ) {
-			if ( ! empty( $wp->query_vars['order-pay'] ) ) {
-				$order                  = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
-				$page                   = 'order_pay';
-				$data['needs_shipping'] = false;
-				$data['items']          = $this->has_digital_wallet ? $this->get_display_items( $page, $order ) : array();
-				$data['total']          = $order->get_total();
-				$data['total_cents']    = wc_stripe_add_number_precision( $order->get_total(), $order->get_currency() );
-				$data['currency']       = $order->get_currency();
-				$data['pre_order']      = $this->order_contains_pre_order( $order );
-				$data['order']          = array( 'id' => $order->get_id(), 'key' => $order->get_order_key() );
-			} else {
-				$data['needs_shipping'] = WC()->cart->needs_shipping();
-				if ( 'checkout' === $page && is_cart() ) {
-					$page = 'cart';
-				} elseif ( is_add_payment_method_page() ) {
-					$page = 'add_payment_method';
-				}
-			}
-		} elseif ( 'product' === $page ) {
-			global $product;
-			$price = wc_get_price_to_display( $product );
-			if ( $product->get_type() === 'variable' ) {
-				$data['needs_shipping'] = false;
-				$variations             = \PaymentPlugins\Stripe\Utilities\ProductUtils::get_product_variations( $product );
-				if ( ! empty( $variations ) ) {
-					foreach ( $variations as $variation ) {
-						if ( $variation && $variation->needs_shipping() ) {
-							$data['needs_shipping'] = true;
-							break;
-						}
-					}
-				}
-			} else {
-				$data['needs_shipping'] = $product->needs_shipping();
-			}
-			$data['product'] = array(
-				'id'          => $product->get_id(),
-				'price'       => $price,
-				'price_cents' => wc_stripe_add_number_precision( $price, get_woocommerce_currency() ),
-				'variation'   => false,
-				'is_in_stock' => $product->is_in_stock()
-			);
-		}
 		/**
 		 * @param array                     $data
 		 * @param string                    $page
@@ -1653,18 +1078,9 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param array $deps
-	 * @param       $scripts
-	 *
-	 * @since 3.1.8
-	 */
-	public function get_mini_cart_dependencies( $deps, $scripts ) {
-		return $deps;
-	}
-
-	/**
 	 * @return array
 	 * @since 3.2.0
+	 * @deprecated 4.0.0
 	 */
 	public function get_shipping_packages() {
 		$packages = WC()->shipping()->get_packages();
@@ -1956,69 +1372,6 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param WC_Subscription $subscription
-	 *
-	 * @return array
-	 * @since 3.2.13
-	 * @deprecated
-	 */
-	protected function process_change_payment_method_request( $subscription ) {
-		return $this->process_subscription_payment_method_updated( $subscription );
-	}
-
-	/**
-	 * @param \WC_Subscription $subscription
-	 *
-	 * @return array|string[]
-	 */
-	public function process_subscription_payment_method_updated( $subscription ) {
-		if ( ! $this->use_saved_source() ) {
-			$result = $this->save_payment_method( $this->get_new_source_token(), $subscription );
-			if ( is_wp_error( $result ) ) {
-				wc_add_notice( sprintf( __( 'Error saving payment method for subscription. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ), 'error' );
-
-				return array( 'result' => 'error' );
-			}
-		} else {
-			$this->payment_method_token = $this->get_saved_source_id();
-		}
-		$token = $this->get_token( $this->payment_method_token, $subscription->get_user_id() );
-
-		// update the meta data needed by the gateway to process a subscription payment.
-		if ( $token ) {
-			$subscription->set_payment_method( $token->get_gateway_id() );
-			$subscription->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $token->get_customer_id() );
-			$subscription->set_payment_method_title( $token->get_payment_method_title() );
-		}
-
-		$subscription->update_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $this->payment_method_token );
-		$subscription->save();
-
-		return array( 'result' => 'success', 'redirect' => wc_get_page_permalink( 'myaccount' ) );
-	}
-
-	/**
-	 * @param WC_Subscription $subscription
-	 * @param WC_Order        $order
-	 */
-	public function update_failing_payment_method( $subscription, $order ) {
-		$payment_method_token = $order->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN );
-		if ( $payment_method_token ) {
-			$subscription->update_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $payment_method_token );
-			$token = $this->get_token( $order->get_meta( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ), $order->get_customer_id() );
-			if ( $token ) {
-				$subscription->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, $token->get_customer_id() );
-				$subscription->set_payment_method_title( $token->get_payment_method_title( $this->get_option( 'method_format' ) ) );
-				$gateway_id = $token->get_gateway_id();
-				if ( $gateway_id && $gateway_id !== $this->id ) {
-					$subscription->set_payment_method( $gateway_id );
-				}
-			}
-			$subscription->save();
-		}
-	}
-
-	/**
 	 * @param array $options
 	 *
 	 * @return mixed|void
@@ -2027,7 +1380,7 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	public function get_element_options( $options = array() ) {
 		$options = array_merge(
 			array( 'locale' => wc_stripe_get_site_locale() ),
-			\PaymentPlugins\Stripe\Controllers\PaymentIntent::instance()->get_element_options(),
+			wc_stripe_get_container()->get( PaymentIntentController::class )->get_element_options(),
 			$options
 		);
 		if ( $this->get_payment_method_type() ) {
@@ -2050,32 +1403,12 @@ abstract class WC_Payment_Gateway_Stripe extends WC_Payment_Gateway {
 	 * @since 3.3.42
 	 */
 	public function show_save_payment_method_html() {
-		if ( $this->supports_save_payment_method ) {
-			$page = wc_stripe_get_current_page();
+		$show = $this->supports_save_payment_method
+		        && ! is_add_payment_method_page()
+		        && $this->is_active( 'save_card_enabled' )
+		        && ( ! is_checkout_pay_page() || is_user_logged_in() );
 
-			if ( 'checkout' === $page ) {
-				if ( wcs_stripe_active() ) {
-					if ( WC_Subscriptions_Cart::cart_contains_subscription() ) {
-						return false;
-					}
-					if ( wcs_cart_contains_renewal() ) {
-						return false;
-					}
-				}
-				// @since 3.1.5
-				if ( wc_stripe_pre_orders_active() && WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
-					return ! WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() );
-				}
-
-				return apply_filters( "wc_{$this->id}_show_save_source", $this->is_active( 'save_card_enabled' ) );
-			} elseif ( in_array( $page, array( 'add_payment_method', 'change_payment_method' ) ) ) {
-				return false;
-			} elseif ( 'order_pay' === $page ) {
-				return is_user_logged_in() && $this->is_active( 'save_card_enabled' );
-			}
-		}
-
-		return false;
+		return apply_filters( 'wc_stripe_show_save_payment_method', $show, $this );
 	}
 
 	public function is_mandate_required( $order = null ) {

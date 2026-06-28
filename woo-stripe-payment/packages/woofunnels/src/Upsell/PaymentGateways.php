@@ -1,10 +1,11 @@
 <?php
 
 
-namespace PaymentPlugins\WooFunnels\Stripe\Upsell;
+namespace PaymentPlugins\Stripe\WooFunnels\Upsell;
 
 
-use PaymentPlugins\WooFunnels\Stripe\AssetsApi;
+use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
+use PaymentPlugins\Stripe\WooFunnels\AssetsApi;
 
 class PaymentGateways {
 
@@ -13,10 +14,9 @@ class PaymentGateways {
 	public function __construct( AssetsApi $assets ) {
 		$this->assets = $assets;
 		new LinkIntegration();
-		$this->initialize();
 	}
 
-	private function initialize() {
+	public function initialize() {
 		add_filter( 'wfocu_wc_get_supported_gateways', [ $this, 'add_supported_gateways' ] );
 		add_filter( 'wc_stripe_force_save_payment_method', [ $this, 'maybe_set_save_payment_method' ], 10, 3 );
 		add_action( 'wc_stripe_order_payment_complete', [ $this, 'maybe_setup_upsell' ], 10, 2 );
@@ -44,11 +44,11 @@ class PaymentGateways {
 
 	private function get_payment_gateways() {
 		return [
-			'stripe_cc'              => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\CreditCardGateway',
-			'stripe_googlepay'       => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\GooglePayGateway',
-			'stripe_applepay'        => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\ApplePayGateway',
-			'stripe_payment_request' => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\PaymentRequestGateway',
-			'stripe_upm'             => 'PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\UniversalPaymentGateway'
+			'stripe_cc'              => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\CreditCardGateway',
+			'stripe_googlepay'       => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\GooglePayGateway',
+			'stripe_applepay'        => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\ApplePayGateway',
+			//'stripe_payment_request' => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\PaymentRequestGateway',
+			'stripe_upm'             => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\UniversalPaymentGateway'
 		];
 	}
 
@@ -66,19 +66,22 @@ class PaymentGateways {
 	}
 
 	/**
-	 * @param bool                       $bool
-	 * @param \WC_Order                  $order
-	 * @param \WC_Payment_Gateway_Stripe $payment_method
+	 * @param bool            $bool
+	 * @param \WC_Order       $order
+	 * @param AbstractGateway $payment_method
 	 *
 	 * @return bool
 	 */
 	public function maybe_set_save_payment_method( $bool, $order, $payment_method = null ) {
-		if ( ! $payment_method ) {
+		if ( ! $payment_method || $bool ) {
+			return $bool;
+		}
+		if ( $payment_method->should_use_saved_payment_method() ) {
 			return $bool;
 		}
 		if ( ! $bool ) {
 			$payment_gateway = $this->get_wfocu_payment_gateway( $order->get_payment_method() );
-			if ( $payment_gateway && $payment_gateway->should_tokenize() && ! $payment_method->use_saved_source() ) {
+			if ( $payment_gateway && $payment_gateway->should_tokenize() ) {
 				$bool = true;
 			}
 		}
@@ -143,7 +146,7 @@ class PaymentGateways {
 		$funnel_id = $order->get_meta( '_wfocu_funnel_id' );
 		if ( $funnel_id && stripe_wc()->advanced_settings->is_fee_enabled() ) {
 			/**
-			 * @var \PaymentPlugins\WooFunnels\Stripe\Upsell\PaymentGateways\BasePaymentGateway $payment_method
+			 * @var \PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\BasePaymentGateway $payment_method
 			 */
 			$payment_method = $this->get_wfocu_payment_gateway( $order->get_payment_method() );
 			if ( $payment_method ) {

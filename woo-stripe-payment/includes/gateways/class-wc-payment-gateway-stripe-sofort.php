@@ -16,29 +16,20 @@ class WC_Payment_Gateway_Stripe_Sofort extends WC_Payment_Gateway_Stripe_Local_P
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
 
+	public $id = 'stripe_sofort';
+
 	protected $payment_method_type = 'sofort';
 
-	public function __construct() {
+	public function __construct( ...$args ) {
 		$this->synchronous        = false;
-		$this->local_payment_type = 'sofort';
 		$this->currencies         = array( 'EUR' );
 		$this->countries          = $this->limited_countries = array( 'AT', 'BE', 'DE', 'ES', 'IT', 'NL' );
-		$this->id                 = 'stripe_sofort';
 		$this->tab_title          = __( 'Sofort', 'woo-stripe-payment' );
-		$this->template_name      = 'local-payment.php';
 		$this->token_type         = 'Stripe_Local';
 		$this->method_title       = __( 'Sofort (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Sofort gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = stripe_wc()->assets_url( 'img/sofort.svg' );
-		parent::__construct();
-	}
-
-	public function get_payment_element_options() {
-		return array(
-			'terms' => array(
-				'sofort' => stripe_wc()->advanced_settings->get_terms_display_rule()
-			)
-		);
+		parent::__construct( ...$args );
+		$this->icon               = $this->assets->assets_url( 'img/sofort.svg' );
 	}
 
 }

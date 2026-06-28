@@ -1,10 +1,10 @@
 <?php
 
 
-namespace PaymentPlugins\Blocks\Stripe\Payments\Gateways;
+namespace PaymentPlugins\Stripe\Blocks\Payments\Gateways;
 
 
-use PaymentPlugins\Blocks\Stripe\Payments\AbstractStripeLocalPayment;
+use PaymentPlugins\Stripe\Blocks\Payments\AbstractStripeLocalPayment;
 
 class EPSPayment extends AbstractStripeLocalPayment {
 

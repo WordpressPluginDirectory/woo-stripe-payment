@@ -2,6 +2,7 @@
 /**
  * @var \WC_Payment_Gateway_Stripe_ACH $gateway
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div id="wc-stripe-ach-container">

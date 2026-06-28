@@ -33,7 +33,7 @@ WC_Emails::instance()->email_header( __( 'Stripe For WooCommerce Update', 'woo-s
 
 
     <p><?php esc_html_e( 'Kind Regards,', 'woo-stripe-payment' ); ?></p>
-    <p><?php esc_html_e( 'Payment Plugins' ); ?></p>
+    <p><?php esc_html_e( 'Payment Plugins', 'woo-stripe-payment' ); ?></p>
 <?php
 WC_Emails::instance()->email_footer();
 $content           = ob_get_clean();

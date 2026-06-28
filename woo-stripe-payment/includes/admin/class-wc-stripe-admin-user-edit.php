@@ -70,7 +70,10 @@ class WC_Stripe_Admin_User_Edit {
 			wc_stripe_save_customer( wc_clean( $_POST['wc_stripe_test_id'] ), $user_id, 'test' );
 		}
 
-		$client = WC_Stripe_Gateway::load();
+		/**
+		 * @var \PaymentPlugins\Stripe\Client\StripeClient $client
+		 */
+		$client = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class );
 
 		// check if admin want's to delete any payment methods
 		foreach ( $modes as $mode ) {

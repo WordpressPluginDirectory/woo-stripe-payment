@@ -2,6 +2,7 @@
 /**
  * @version 3.3.38
  */
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="wc-stripe-konbini-instructions">

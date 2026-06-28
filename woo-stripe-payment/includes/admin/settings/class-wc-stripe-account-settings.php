@@ -42,8 +42,12 @@ class WC_Stripe_Account_Settings extends WC_Stripe_Settings_API {
 	 * @param string $account_id
 	 */
 	public function save_account_settings( $account_id, $mode = 'live', $is_connect = false ) {
+		/**
+		 * @var \PaymentPlugins\Stripe\Client\StripeClient $client
+		 */
+		$client = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class );
 		// fetch the account and store the account data.
-		$account = WC_Stripe_Gateway::load( $mode )->accounts->retrieve( $account_id );
+		$account = $client->mode( $mode )->accounts->retrieve( $account_id );
 		if ( ! is_wp_error( $account ) ) {
 			if ( $mode === 'live' ) {
 				$this->settings['account_id']       = $account->id;

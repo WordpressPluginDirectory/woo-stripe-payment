@@ -24,8 +24,20 @@ class WC_Stripe_Rest_API {
 	 */
 	private $controllers = array();
 
+	private $deprecated_controllers = array(
+		'order_actions',
+		'settings',
+		'webhook',
+		'product_data',
+		'checkout',
+		'cart',
+		'payment_intent',
+		'googlepay',
+		'payment_method',
+		'source'
+	);
+
 	public function __construct() {
-		$this->include_classes();
 		add_action( 'wc_ajax_wc_stripe_frontend_request', array( $this, 'process_frontend_request' ) );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'wp_ajax_wc_stripe_admin_request', array( $this, 'process_frontend_request' ) );
@@ -38,11 +50,15 @@ class WC_Stripe_Rest_API {
 	 * @return WC_Stripe_Rest_Controller
 	 */
 	public function __get( $key ) {
-		$controller = isset( $this->controllers[ $key ] ) ? $this->controllers[ $key ] : '';
-		if ( empty( $controller ) ) {
-			wc_doing_it_wrong( __FUNCTION__,
-				sprintf( __( '%1$s is an invalid controller name.', 'woo-stripe-payment' ), $key ),
-				stripe_wc()->version );
+		$controller = isset( $this->controllers[ $key ] ) ? $this->controllers[ $key ] : null;
+		if ( ! $controller ) {
+			if ( in_array( $key, $this->deprecated_controllers ) ) {
+				wc_deprecated_argument( sprintf( 'WC_Stripe_Rest_API::%s', $key ), '4.0.0', '' );
+			} else {
+				wc_doing_it_wrong( __FUNCTION__,
+					sprintf( __( '%1$s is an invalid controller name.', 'woo-stripe-payment' ), $key ),
+					stripe_wc()->version );
+			}
 		}
 
 		return $controller;
@@ -50,26 +66,6 @@ class WC_Stripe_Rest_API {
 
 	public function __set( $key, $value ) {
 		$this->controllers[ $key ] = $value;
-	}
-
-	private function include_classes() {
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/abstract/abstract-wc-stripe-rest-controller.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-order-actions.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-payment-intent.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-cart.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-checkout.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-googlepay.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-payment-method.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-gateway-settings.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-webhook.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-product-data.php';
-		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/controllers/class-wc-stripe-controller-source.php';
-
-		foreach ( $this->get_controllers() as $key => $class_name ) {
-			if ( class_exists( $class_name ) ) {
-				$this->{$key} = new $class_name();
-			}
-		}
 	}
 
 	public function register_routes() {
@@ -84,16 +80,16 @@ class WC_Stripe_Rest_API {
 
 	public function get_controllers() {
 		$controllers = array(
-			'order_actions'  => 'WC_Stripe_Controller_Order_Actions',
-			'checkout'       => 'WC_Stripe_Controller_Checkout',
-			'cart'           => 'WC_Stripe_Controller_Cart',
-			'payment_intent' => 'WC_Stripe_Controller_Payment_Intent',
-			'googlepay'      => 'WC_Stripe_Controller_GooglePay',
-			'payment_method' => 'WC_Stripe_Controller_Payment_Method',
-			'settings'       => 'WC_Stripe_Controller_Gateway_Settings',
-			'webhook'        => 'WC_Stripe_Controller_Webhook',
-			'product_data'   => 'WC_Stripe_Controller_Product_Data',
-			'source'         => 'WC_Stripe_Controller_Source'
+			//'order_actions' => 'WC_Stripe_Controller_Order_Actions',
+			//'checkout'       => 'WC_Stripe_Controller_Checkout',
+			//'cart'           => 'WC_Stripe_Controller_Cart',
+			//'payment_intent' => 'WC_Stripe_Controller_Payment_Intent',
+			//'googlepay'      => 'WC_Stripe_Controller_GooglePay',
+			//'payment_method' => 'WC_Stripe_Controller_Payment_Method',
+			//'settings'      => 'WC_Stripe_Controller_Gateway_Settings',
+			//'webhook'       => 'WC_Stripe_Controller_Webhook',
+			//'product_data'  => 'WC_Stripe_Controller_Product_Data',
+			//'source'         => 'WC_Stripe_Controller_Source'
 		);
 
 		/**
@@ -105,7 +101,7 @@ class WC_Stripe_Rest_API {
 	/**
 	 * @return string
 	 */
-	public function rest_url() {
+	public function rest_url($path = '') {
 		return stripe_wc()->rest_url();
 	}
 
@@ -135,8 +131,8 @@ class WC_Stripe_Rest_API {
 	 * Return true if this is a WP rest request. This function is a wrapper for WC()->is_rest_api_request()
 	 * if it exists.
 	 *
-	 * @since 3.2.7
 	 * @return bool
+	 * @since 3.2.7
 	 */
 	public static function is_wp_rest_request() {
 		if ( function_exists( 'WC' ) && property_exists( WC(), 'is_rest_api_request' ) ) {
@@ -162,8 +158,8 @@ class WC_Stripe_Rest_API {
 	 *
 	 * @param string $path
 	 *
-	 * @since 3.2.7
 	 * @return string
+	 * @since 3.2.7
 	 */
 	public static function get_endpoint( $path ) {
 		if ( version_compare( WC()->version, '3.2.0', '<' ) ) {
@@ -188,7 +184,10 @@ class WC_Stripe_Rest_API {
 	public static function get_admin_endpoint( $path ) {
 		$url = admin_url( 'admin-ajax.php' );
 
-		return add_query_arg( array( 'action' => 'wc_stripe_admin_request', 'path' => '/' . trim( $path, '/' ) ), $url );
+		return add_query_arg( array(
+			'action' => 'wc_stripe_admin_request',
+			'path'   => '/' . trim( $path, '/' )
+		), $url );
 	}
 
 }

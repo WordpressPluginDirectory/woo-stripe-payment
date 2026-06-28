@@ -12,6 +12,11 @@ defined( 'ABSPATH' ) || exit();
 class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Payment {
 
 	use WC_Stripe_Local_Payment_Intent_Trait;
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_becs';
 
 	protected $payment_method_type = 'au_becs_debit';
 
@@ -19,20 +24,18 @@ class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Pay
 
 	public $token_type = 'Stripe_Becs';
 
-	public function __construct() {
-		$this->local_payment_type = 'au_becs_debit';
-		$this->currencies         = array( 'AUD' );
-		$this->countries          = array( 'AU' );
-		$this->id                 = 'stripe_becs';
-		$this->tab_title          = __( 'BECS', 'woo-stripe-payment' );
-		$this->method_title       = __( 'BECS (Stripe) by Payment Plugins', 'woo-stripe-payment' );
-		$this->method_description = __( 'BECS direct debit gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
-		$this->icon               = '';
-		parent::__construct();
-
+	public function __construct( ...$args ) {
+		$this->currencies                  = array( 'AUD' );
+		$this->countries                   = array( 'AU' );
+		$this->tab_title                   = __( 'BECS', 'woo-stripe-payment' );
+		$this->method_title                = __( 'BECS (Stripe) by Payment Plugins', 'woo-stripe-payment' );
+		$this->method_description          = __( 'BECS direct debit gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		$this->new_payment_method_label    = __( 'New Account', 'woo-stripe-payment' );
 		$this->saved_payment_methods_label = __( 'Saved Accounts', 'woo-stripe-payment' );
-		$this->local_payment_description   = sprintf(
+		parent::__construct( ...$args );
+		$this->icon = '';
+
+		$this->local_payment_description = sprintf(
 			__(
 				'By providing your bank account details and confirming this payment, you agree to this 
 		Direct Debit Request and the %1$sDirect Debit Request service agreement%2$s, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct 
@@ -42,20 +45,6 @@ class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Pay
 				'woo-stripe-payment'
 			)
 			, '<a href="https://stripe.com/au-becs-dd-service-agreement/legal" target="_blank">', '</a>', $this->get_option( 'company_name' ) );
-	}
-
-	public function init_supports() {
-		parent::init_supports();
-		$this->supports[] = 'subscriptions';
-		$this->supports[] = 'subscription_cancellation';
-		$this->supports[] = 'multiple_subscriptions';
-		$this->supports[] = 'subscription_reactivation';
-		$this->supports[] = 'subscription_suspension';
-		$this->supports[] = 'subscription_date_changes';
-		$this->supports[] = 'subscription_payment_method_change_admin';
-		$this->supports[] = 'subscription_amount_changes';
-		$this->supports[] = 'subscription_payment_method_change_customer';
-		$this->supports[] = 'pre-orders';
 	}
 
 	public function get_local_payment_settings() {
@@ -73,7 +62,7 @@ class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Pay
 				'options'     => wp_list_pluck( $this->get_payment_method_formats(), 'example' ),
 				'default'     => 'type_ending_last4',
 				'desc_tip'    => true,
-				'description' => __( 'This option allows you to customize how the payment method will display for your customers on orders, subscriptions, etc.' ),
+				'description' => __( 'This option allows you to customize how the payment method will display for your customers on orders, subscriptions, etc.', 'woo-stripe-payment' ),
 			),
 		) );
 	}

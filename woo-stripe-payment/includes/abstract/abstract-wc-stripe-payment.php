@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit();
  * @package PaymentPlugins\Abstract
  *
  */
-abstract class WC_Stripe_Payment {
+abstract class WC_Stripe_Payment extends \PaymentPlugins\Stripe\Payments\AbstractPaymentController {
 
 	/**
 	 *
@@ -18,23 +18,26 @@ abstract class WC_Stripe_Payment {
 	protected $payment_method;
 
 	/**
-	 *
-	 * @var WC_Stripe_Gateway
+	 * @var \PaymentPlugins\Stripe\Client\StripeClient|null
 	 */
-	protected $gateway;
+	protected $client;
 
 	/**
 	 *
-	 * @param WC_Payment_Gateway_Stripe $payment_method
-	 * @param WC_Stripe_Gateway         $gateway
+	 * @param WC_Payment_Gateway_Stripe|null                  $payment_method
+	 * @param \PaymentPlugins\Stripe\Client\StripeClient|null $client
 	 */
-	public function __construct( $payment_method, $gateway ) {
+	public function __construct( $payment_method = null, $client = null ) {
 		$this->payment_method = $payment_method;
-		$this->gateway        = $gateway;
+		$this->client         = $client;
 	}
 
+	/**
+	 * @return \PaymentPlugins\Stripe\Client\StripeClient|null
+	 * @deprecated 4.0.0
+	 */
 	public function get_gateway() {
-		return $this->gateway;
+		return $this->client;
 	}
 
 	/**
@@ -158,9 +161,12 @@ abstract class WC_Stripe_Payment {
 					'created_via' => 'woocommerce',
 					'reason'      => substr( $reason, 0, 500 )
 				),
-				'expand'   => stripe_wc()->advanced_settings->is_fee_enabled() ? array( 'charge.balance_transaction', 'charge.refunds.data.balance_transaction' ) : array()
+				'expand'   => stripe_wc()->advanced_settings->is_fee_enabled() ? array(
+					'charge.balance_transaction',
+					'charge.refunds.data.balance_transaction'
+				) : array()
 			), $this, $order, $amount );
-			$result = $this->gateway->refunds->mode( wc_stripe_order_mode( $order ) )->create( $args );
+			$result = $this->client->mode( $order )->refunds->create( $args );
 			if ( ! is_wp_error( $result ) ) {
 				WC_Stripe_Utils::add_balance_transaction_to_order( $result->charge, $order, true );
 
@@ -176,29 +182,6 @@ abstract class WC_Stripe_Payment {
 		} catch ( Exception $e ) {
 			return new WP_Error( 'refund-error', $e->getMessage() );
 		}
-	}
-
-	/**
-	 * @param WC_Order                  $order
-	 * @param WC_Payment_Gateway_Stripe $payment_method
-	 *
-	 * @since 3.3.8
-	 */
-	public function process_zero_total_order( $order, $payment_method ) {
-		$payment_method->save_zero_total_meta( $order );
-		if ( 'capture' === $payment_method->get_option( 'charge_type' ) ) {
-			$order->payment_complete();
-		} else {
-			$order_status = $payment_method->get_option( 'order_status' );
-			$order->update_status( apply_filters( 'wc_stripe_authorized_order_status', 'default' === $order_status ? 'on-hold' : $order_status, $order, $payment_method ) );
-		}
-		WC()->cart->empty_cart();
-		$this->destroy_session_data();
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $payment_method->get_return_url( $order ),
-		);
 	}
 
 	/**
@@ -366,9 +349,6 @@ abstract class WC_Stripe_Payment {
 	 */
 	protected function get_payment_method_charge_type() {
 		return $this->payment_method->get_payment_method_charge_type();
-	}
-
-	public function destroy_session_data() {
 	}
 
 }

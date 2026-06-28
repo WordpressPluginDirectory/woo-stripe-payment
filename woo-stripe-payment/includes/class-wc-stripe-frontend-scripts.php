@@ -31,18 +31,10 @@ class WC_Stripe_Frontend_Scripts {
 
 	public function __construct( \PaymentPlugins\Stripe\Assets\AssetsApi $assets_api ) {
 		$this->assets_api = $assets_api;
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'wp_print_scripts', array( $this, 'localize_scripts' ), 5 );
-		add_action( 'wp_print_footer_scripts', array( $this, 'localize_scripts' ), 5 );
-		add_action( 'wp_print_footer_scripts', array( $this, 'print_footer_scripts' ), 6 );
-
-		$this->initialize();
 	}
 
 	public function initialize() {
-		if ( did_action( 'init' ) || doing_action( 'init' ) ) {
-			$this->register_scripts();
-		}
+
 	}
 
 	protected function register_scripts() {
@@ -51,39 +43,25 @@ class WC_Stripe_Frontend_Scripts {
 			$this->register_script( $handle, $src );
 		}
 
-		$this->assets_api->register_script( 'wc-stripe-vendors', 'assets/build/vendors.js' );
+		$this->assets_api->register_script( 'wc-stripe-vendors', 'build/vendors.js' );
 
-		$this->assets_api->register_script( 'wc-stripe-checkout-modules', 'assets/build/checkout-modules.js', array( 'wc-stripe-vendors' ) );
+		$this->assets_api->register_script( 'wc-stripe-checkout-modules', 'build/checkout-modules.js', array( 'wc-stripe-vendors' ) );
 
-		$this->assets_api->register_script( 'wc-stripe-message-modules', 'assets/build/message-modules.js', array( 'wc-stripe-vendors' ) );
+		$this->assets_api->register_script( 'wc-stripe-message-modules', 'build/message-modules.js', array( 'wc-stripe-vendors' ) );
 
-		$this->assets_api->register_script( 'wc-stripe-local-payment', 'assets/build/local-payment.js' );
+		$this->assets_api->register_script( 'wc-stripe-local-payment', 'build/local-payment.js' );
 
-		$this->assets_api->register_script( 'wc-stripe-ach-connections', 'assets/build/ach-connections.js' );
+		$this->assets_api->register_script( 'wc-stripe-ach-connections', 'build/ach-connections.js' );
 
 		$this->register_script( 'form-handler', $this->assets_url( 'js/frontend/form-handler.js' ), array( 'jquery' ) );
 
-		$this->assets_api->register_script( 'wc-stripe-link-checkout-modal', 'assets/build/link-checkout-modal.js' );
+		$this->assets_api->register_script( 'wc-stripe-link-checkout-modal', 'build/link-checkout-modal.js' );
 
-		// Link Checkout
-		$this->assets_api->register_script( 'wc-stripe-link-express-checkout', 'assets/build/link-express-checkout.js' );
-		$this->assets_api->register_script( 'wc-stripe-link-express-cart', 'assets/build/link-express-cart.js' );
-		$this->assets_api->register_script( 'wc-stripe-link-express-product', 'assets/build/link-express-product.js' );
+		$this->assets_api->register_script( 'wc-stripe-link-express-checkout', 'build/link-express-checkout.js' );
 
-		// Apple Pay
-		$this->assets_api->register_script( 'wc-stripe-applepay-checkout', 'assets/build/applepay-checkout.js' );
-		$this->assets_api->register_script( 'wc-stripe-applepay-express-checkout', 'assets/build/applepay-express-checkout.js' );
-		$this->assets_api->register_script( 'wc-stripe-applepay-cart', 'assets/build/applepay-cart.js' );
-		$this->assets_api->register_script( 'wc-stripe-applepay-minicart', 'assets/build/applepay-minicart.js' );
-		$this->assets_api->register_script( 'wc-stripe-applepay-product', 'assets/build/applepay-product.js' );
+		$this->assets_api->register_script( 'wc-stripe-link-express-cart', 'build/link-express-cart.js' );
 
-		// Payment Request
-		$this->assets_api->register_script( 'wc-stripe-payment-request-checkout', 'assets/build/payment-request-checkout.js' );
-		$this->assets_api->register_script( 'wc-stripe-payment-request-express-checkout', 'assets/build/payment-request-express-checkout.js' );
-		$this->assets_api->register_script( 'wc-stripe-payment-request-cart', 'assets/build/payment-request-cart.js' );
-		$this->assets_api->register_script( 'wc-stripe-payment-request-minicart', 'assets/build/payment-request-minicart.js' );
-		$this->assets_api->register_script( 'wc-stripe-payment-request-product', 'assets/build/payment-request-product.js' );
-
+		$this->assets_api->register_script( 'wc-stripe-link-express-product', 'build/link-express-product.js' );
 
 		// register scripts that aren't part of gateways
 		$this->register_script( 'wc-stripe', $this->assets_url( 'js/frontend/wc-stripe.js' ),
@@ -157,18 +135,11 @@ class WC_Stripe_Frontend_Scripts {
 	}
 
 	public function enqueue_checkout_scripts() {
-		$this->enqueue_local_payment_scripts();
+
 	}
 
 	public function enqueue_local_payment_scripts() {
-		if ( ! wp_script_is( 'wc-stripe-local-payment', 'enqueued' ) ) {
-			$data = wc_stripe_get_local_payment_params();
-			// only enqueue local payment script if there are local payment gateways that have been enabled.
-			if ( ! empty( $data['gateways'] ) ) {
-				wp_enqueue_script( 'wc-stripe-local-payment' );
-				$this->localize_script( 'local-payment', $data );
-			}
-		}
+
 	}
 
 	public function register_script( $handle, $src, $deps = array(), $version = '', $footer = true ) {

@@ -159,10 +159,11 @@ class WC_Stripe_Utils {
 		return substr( $value, 0, 22 );
 	}
 
+
 	/**
 	 * Sanitizes intent data before it's stored.
 	 *
-	 * @param \Stripe\PaymentIntent|\Stripe\SetupIntent $intent
+	 * @param \Stripe\PaymentIntent|\Stripe\SetupIntent|array $intent
 	 */
 	public static function sanitize_intent( $intent ) {
 		return $intent;

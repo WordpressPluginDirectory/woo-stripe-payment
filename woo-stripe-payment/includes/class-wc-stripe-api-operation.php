@@ -83,15 +83,15 @@ class WC_Stripe_API_Operation {
 			/**
 			 * Filters arguments before they are sent to the service for an API request.
 			 *
-			 * @param array  $args     The array of arguments that will be passed to the service method.
+			 * @param array  $args The array of arguments that will be passed to the service method.
 			 * @param string $property The name of the service being called.
-			 * @param string $method   The method of the service. Ex: create, delete, retrieve
+			 * @param string $method The method of the service. Ex: create, delete, retrieve
 			 *
 			 * @since 3.1.6
 			 */
 			$args = apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method );
 
-			return $this->service->{$method}( ...$this->sanitize_request_args( $args, $method ) );
+			return $this->service->{$method}( ...$this->prepare_request_args( $args, $method ) );
 		} catch ( \Stripe\Exception\ApiErrorException $e ) {
 			return $this->gateway->get_wp_error( $e, $this->property . '-error' );
 		} catch ( \Stripe\Exception\UnexpectedValueException $e ) {
@@ -138,38 +138,61 @@ class WC_Stripe_API_Operation {
 	/**
 	 * Prevents any unwanted arguments from being added to a Stripe request.
 	 *
+	 * @return array
 	 * @since 3.3.61
-	 * @return void
 	 */
-	private function sanitize_request_args( $args, $method ) {
-		$idx = null;
+	private function prepare_request_args( $args, $method ) {
+		$method_idx = [
+			'create'   => 0,
+			'update'   => 1,
+			'retrieve' => 1,
+			'confirm'  => 1,
+			'capture'  => 1,
+			'cancel'   => 1,
+		];
+		$idx        = $method_idx[ $method ] ?? null;
+
 		switch ( $this->property ) {
 			case 'paymentIntents':
-			case 'setupIntents':
-				switch ( $method ) {
-					case 'create':
-						$idx = 0;
-						break;
-					case 'update':
-						$idx = 1;
-						break;
-				}
 				if ( $idx !== null ) {
-					$params = $args[ $idx ] ?? null;
-					if ( is_array( $params ) ) {
-						if ( isset( $params['payment_method_configuration'] ) ) {
-							unset( $params['payment_method_types'], $params['confirmation_method'] );
-							if ( $method === 'create' ) {
-								$params['automatic_payment_methods'] = [ 'enabled' => true ];
-							}
-						}
-						$args[ $idx ] = $params;
-					}
+					$params       = $args[ $idx ] ?? [];
+					$params       = is_array( $params ) ? $params : [];
+					$params       = $this->add_expanded_properties( $params, [ 'latest_charge', 'latest_charge.refunds', 'payment_method' ] );
+					$args[ $idx ] = $this->sanitize_intent_params( $params, $method );
+				}
+				break;
+			case 'setupIntents':
+				if ( $idx !== null ) {
+					$params       = $args[ $idx ] ?? [];
+					$params       = is_array( $params ) ? $params : [];
+					$params       = $this->add_expanded_properties( $params, [ 'payment_method' ] );
+					$args[ $idx ] = $this->sanitize_intent_params( $params, $method );
 				}
 				break;
 		}
 
 		return $args;
+	}
+
+	private function add_expanded_properties( $params, $properties ) {
+		foreach ( $properties as $property ) {
+			if ( ! in_array( $property, $params['expand'] ?? [], true ) ) {
+				$params['expand'][] = $property;
+			}
+		}
+
+		return $params;
+	}
+
+	private function sanitize_intent_params( $params, $method ) {
+		if ( isset( $params['payment_method_configuration'] ) ) {
+			unset( $params['payment_method_types'], $params['confirmation_method'] );
+			if ( $method === 'create' ) {
+				$params['automatic_payment_methods'] = [ 'enabled' => true ];
+			}
+		}
+
+		return $params;
 	}
 
 }

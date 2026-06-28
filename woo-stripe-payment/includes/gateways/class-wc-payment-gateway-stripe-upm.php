@@ -8,6 +8,11 @@ defined( 'ABSPATH' ) || exit();
 class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 
 	use WC_Stripe_Payment_Intent_Trait;
+	use \PaymentPlugins\Stripe\Traits\TokenizationTrait;
+	use \PaymentPlugins\Stripe\WooCommercePreOrders\Traits\PreOrdersTrait;
+	use \PaymentPlugins\Stripe\WooCommerceSubscriptions\Traits\WooCommerceSubscriptionsTrait;
+
+	public $id = 'stripe_upm';
 
 	protected $payment_method_type = null;
 
@@ -17,29 +22,23 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	private $child_payment_gateway;
 
 	private $excluded_payment_methods = [
-		'stripe_applepay',
-		'stripe_googlepay',
 		'stripe_payment_request',
 		'stripe_link_checkout',
 		'paypal',
-		'apple_pay',
-		'google_pay',
-		'customer_balance'
+		'customer_balance',
+		'giropay',
+		'sofort'
 	];
-
-	public $installments;
 
 	protected $supports_save_payment_method = true;
 
-	public function __construct() {
-		$this->id                 = 'stripe_upm';
+	public function __construct( ...$args ) {
+		parent::__construct( ...$args );
 		$this->tab_title          = __( 'Universal Payment Method', 'woo-stripe-payment' );
 		$this->template_name      = 'universal-payment-method.php';
 		$this->token_type         = 'Stripe_CC';
 		$this->method_title       = __( 'Universal Payment Methods (Stripe) By Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Stripe payment method that lets you combine all payment methods into a single integration.', 'woo-stripe-payment' );
-		$this->installments       = \PaymentPlugins\Stripe\Installments\InstallmentController::instance();
-		parent::__construct();
 	}
 
 	public function hooks() {
@@ -59,9 +58,9 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	 * @throws \Exception
 	 */
 	public function process_payment( $order_id ) {
-		if ( $this->use_saved_source() ) {
+		if ( $this->should_use_saved_payment_method() ) {
 			$this->set_child_payment_gateway(
-				$this->get_child_payment_gateway_from_token( $this->get_saved_source_id() )
+				$this->get_child_payment_gateway_from_token( $this->get_payment_method_from_request() )
 			);
 		} else {
 			$this->payment_method_type = $this->get_payment_method_type_from_request();
@@ -70,18 +69,18 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 					throw new \Exception( sprintf( __( '%s is an unsupported payment method. Please remove it from your payment method configuration.', 'woo-stripe-payment' ), ucfirst( $this->payment_method_type ) ) );
 				}
 				$this->set_child_payment_gateway(
-					$this->get_payment_gateway_from_type( $this->payment_method_type )
+					$this->get_payment_gateway_from_type( $this->get_payment_method_type_from_request() )
 				);
 			}
 		}
 
 		if ( $this->child_payment_gateway ) {
 			$this->child_payment_gateway->has_parent_gateway = true;
-			$this->child_payment_gateway->set_new_source_token( $this->get_new_source_token() );
-			$this->child_payment_gateway->set_payment_method_token( $this->get_saved_source_id() );
-			$_POST[ $this->child_payment_gateway->payment_intent_key ] = wc_get_var( $_POST[ $this->payment_intent_key ], '' );
-			$_POST[ $this->child_payment_gateway->payment_type_key ]   = wc_get_var( $_POST[ $this->payment_type_key ], '' );
-			$_POST[ $this->child_payment_gateway->save_source_key ]    = wc_get_var( $_POST[ $this->save_source_key ], '' );
+			$this->child_payment_gateway->set_payment_method_id( $this->get_payment_method_from_request() );
+			$this->child_payment_gateway->set_payment_method_token( $this->get_payment_method_from_request() );
+			$_POST[ $this->child_payment_gateway->payment_intent_key ]         = wc_get_var( $_POST[ $this->payment_intent_key ], '' );
+			$_POST[ $this->child_payment_gateway->payment_type_key ]           = wc_get_var( $_POST[ $this->payment_type_key ], '' );
+			$_POST["wc-{$this->child_payment_gateway->id}-new-payment-method"] = wc_get_var( $_POST["wc-{$this->id}-new-payment-method"], '' );
 
 			return $this->child_payment_gateway->process_payment( $order_id );
 		}
@@ -96,7 +95,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		}
 		$child_gateway = $this->get_payment_gateway_from_type( $payment_method_type );
 		if ( $child_gateway ) {
-			$child_gateway->set_new_source_token( $this->get_new_source_token() );
+			$child_gateway->set_payment_method_id( $this->get_payment_method_from_request() );
 			$child_gateway->set_setup_intent( $this->get_setup_intent() );
 
 			return $child_gateway->add_payment_method();
@@ -105,61 +104,49 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		return parent::add_payment_method();
 	}
 
-	public function is_installment_available() {
-		$order_id = null;
-		if ( is_checkout_pay_page() ) {
-			global $wp;
-			$order_id = absint( $wp->query_vars['order-pay'] );
-		}
-
-		return $this->installments->is_available( $order_id );
-	}
-
 	public function get_tokens() {
 		if ( count( $this->tokens ) > 0 ) {
 			return $this->tokens;
 		}
 
 		if ( is_user_logged_in() && $this->supports( 'tokenization' ) ) {
-			$this->tokens = WC_Payment_Tokens::get_customer_tokens( get_current_user_id() );
+			$this->tokens = \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::filter_by_type(
+				WC_Payment_Tokens::get_customer_tokens( get_current_user_id() )
+			);
 		}
 
 		return $this->tokens;
 	}
 
-	/**
-	 * @param \WC_Stripe_Frontend_Scripts $scripts
-	 *
-	 * @return void
-	 */
-	public function enqueue_checkout_scripts( $scripts ) {
-		$scripts->assets_api->register_script(
-			'wc-stripe-upm-checkout',
-			'assets/build/universal-payment-method.js',
-			[ 'wc-stripe-vendors' ]
-		);
-		wp_enqueue_script( 'wc-stripe-upm-checkout' );
-		// localize the script parameters
-		$scripts->localize_script( 'wc-stripe-upm-checkout', $this->get_localized_params() );
+	public function get_checkout_script_handles() {
+		$this->assets->register_script( 'wc-stripe-upm-checkout', 'build/upm-checkout.js' );
+
+		return [ 'wc-stripe-upm-checkout' ];
 	}
 
-	public function get_localized_params() {
-		$data = array(
-			'paymentElementOptions' => array(
-				'layout' => array(
-					'type' => $this->get_option( 'layout_type', 'tabs' )
-				)
-			),
-			'installments'          => array(
-				'loading' => __( 'Loading installments...', 'woo-stripe-payment' )
-			)
+	public function get_add_payment_method_script_handles() {
+		$this->assets->register_script( 'wc-stripe-upm-add-payment', 'build/upm-add-payment.js' );
+
+		return [ 'wc-stripe-upm-add-payment' ];
+	}
+
+	public function get_payment_method_data() {
+		$data = array_merge(
+			parent::get_payment_method_data(),
+			[
+				'paymentElementOptions' => array(
+					'layout' => array(
+						'type' => $this->get_option( 'layout_type', 'tabs' )
+					)
+				),
+			]
 		);
 		if ( $this->get_option( 'layout_type' ) === 'accordion' ) {
 			$data['paymentElementOptions']['layout']['radios']               = wc_string_to_bool( $this->get_option( 'layout_radios', 'no' ) );
 			$data['paymentElementOptions']['layout']['spacedAccordionItems'] = wc_string_to_bool( $this->get_option( 'spaced_items', 'no' ) );
 		}
 
-		return array_merge( parent::get_localized_params(), $data );
+		return $data;
 	}
 
 	public function get_element_options( $options = array() ) {
@@ -171,7 +158,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 			'theme' => $this->get_option( 'theme', 'stripe' )
 		);
 
-		return parent::get_element_options( $options ); // TODO: Change the autogenerated stub
+		return parent::get_element_options( $options );
 	}
 
 	/**
@@ -211,7 +198,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		return array_filter( WC()->payment_gateways()->payment_gateways(), function ( $gateway ) {
 			return $gateway instanceof WC_Payment_Gateway_Stripe
 			       && ! in_array( $gateway->id, $this->excluded_payment_methods )
-			       && $gateway->payment_object instanceof WC_Stripe_Payment_Intent
+			       && $gateway->payment_controller instanceof WC_Stripe_Payment_Intent
 			       && $gateway->id !== $this->id;
 		} );
 	}
@@ -225,7 +212,18 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function get_payment_gateway_from_type( $type ) {
-		foreach ( $this->get_supported_payment_methods() as $gateway ) {
+		$supported_gateways = $this->get_supported_payment_methods();
+
+		// Apple Pay and Google Pay return 'card' as their payment_method_type.
+		// Map wallet types directly to their respective gateways.
+		switch ( $type ) {
+			case 'apple_pay':
+				return $supported_gateways['stripe_applepay'] ?? null;
+			case 'google_pay':
+				return $supported_gateways['stripe_googlepay'] ?? null;
+		}
+
+		foreach ( $supported_gateways as $gateway ) {
 			if ( $type === $gateway->get_payment_method_type() ) {
 				return $gateway;
 			}
@@ -327,7 +325,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		);
 		$data         = wp_parse_args( $data, $defaults );
 		$stripe_cc    = $payment_methods['stripe_cc'];
-		unset( $payment_methods['stripe_cc'] );
+		//unset( $payment_methods['stripe_cc'] );
 		ob_start();
 		?>
         <tr valign="top">
@@ -345,27 +343,27 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 							<?php esc_html_e( 'Payment method settings are still maintained on their respective settings page.', 'woo-stripe-payment' ) ?>
                         </p>
                     </div>
-                    <div class="stripe-upm-payment-methods-container stripe_cc">
+                    <!--<div class="stripe-upm-payment-methods-container stripe_cc">
 						<?php
-						$supported = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['supported'];
-						$checked   = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['enabled'];
-						?>
-                        <div class="stripe-upm-payment-method <?php echo $supported ? 'supported-method' : 'unsupported-method' ?>">
+					/*						$supported = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['supported'];
+											$checked   = isset( $value[ $stripe_cc->id ] ) && true === $value[ $stripe_cc->id ]['enabled'];
+											*/ ?>
+                        <div class="stripe-upm-payment-method <?php /*echo $supported ? 'supported-method' : 'unsupported-method' */ ?>">
                             <div class="stripe-upm-checkbox-container">
-                                <input <?php disabled( $supported, false ); ?>
-                                        class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox"
-                                        name="<?php echo esc_attr( $field_key ); ?>[]"
-                                        id="<?php echo esc_attr( $field_key ); ?>"
-                                        style="<?php echo esc_attr( $data['css'] ); ?>"
-                                        value="<?php echo $stripe_cc->id ?>" <?php checked( $checked, true ) ?>"/>
-								<?php echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
+                                <input <?php /*disabled( $supported, false ); */ ?>
+                                        class="<?php /*echo esc_attr( $data['class'] ); */ ?>" type="checkbox"
+                                        name="<?php /*echo esc_attr( $field_key ); */ ?>[]"
+                                        id="<?php /*echo esc_attr( $field_key ); */ ?>"
+                                        style="<?php /*echo esc_attr( $data['css'] ); */ ?>"
+                                        value="<?php /*echo $stripe_cc->id */ ?>" <?php /*checked( $checked, true ) */ ?>"/>
+								<?php /*echo $this->get_custom_attribute_html( $data ); // WPCS: XSS ok. */ ?>
                             </div>
                             <div class="stripe-upm-label-container">
-                                <label><a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $stripe_cc->id ) ?>"
-                                          target="_blank"><?php echo $stripe_cc->get_title() ?></a></label>
+                                <label><a href="<?php /*echo admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $stripe_cc->id ) */ ?>"
+                                          target="_blank"><?php /*echo $stripe_cc->get_title() */ ?></a></label>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="stripe-upm-divider"></div>
                     <div class="stripe-upm-payment-methods-container">
 						<?php foreach ( $payment_methods as $payment_method ): ?>
@@ -421,28 +419,6 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		return ob_get_clean();
 	}
 
-	/*public function get_icon() {
-		$payment_icons   = $this->get_option( 'icons', array() );
-		$payment_methods = $this->get_supported_payment_methods();
-		$result          = array();
-		foreach ( $payment_icons as $id ) {
-			if ( isset( $payment_methods[ $id ] ) ) {
-				$payment_method = $payment_methods[ $id ];
-				$icon_url       = stripe_wc()->assets_url( "img/upm/{$payment_method->id}.svg" );
-				$icon           = $icon_url ? '<img src="' . WC_HTTPS::force_https_url( $icon_url ) . '"/>' : '';
-				$result[]       = array(
-					'icon' => $icon
-				);
-			}
-		}
-
-		return wc_stripe_get_template_html( 'upm-payment-icons.php', array(
-			'icons'      => $result,
-			'assets_url' => stripe_wc()->assets_url(),
-			'gateway'    => $this
-		) );
-	}*/
-
 	public function is_deferred_intent_creation() {
 		return true;
 	}
@@ -456,12 +432,21 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 				'supported' => false,
 				'enabled'   => false
 			);
-			if ( isset( $config->{$gateway->get_payment_method_type()} ) ) {
+			$payment_method_type             = $gateway->get_payment_method_type();
+			switch ( $gateway->id ) {
+				case 'stripe_applepay':
+					$payment_method_type = 'apple_pay';
+					break;
+				case 'stripe_googlepay':
+					$payment_method_type = 'google_pay';
+					break;
+			}
+			if ( isset( $config->{$payment_method_type} ) ) {
 				// if payment type key exists on the payment method configuration object,
 				// that means it's supported.
-				$supported_payment_types[]                    = $gateway->get_payment_method_type();
+				$supported_payment_types[]                    = $payment_method_type;
 				$payment_methods[ $gateway->id ]['supported'] = true;
-				if ( $config->{$gateway->get_payment_method_type()}->display_preference->value === 'on' ) {
+				if ( $config->{$payment_method_type}->display_preference->value === 'on' ) {
 					$payment_methods[ $gateway->id ]['enabled'] = true;
 				}
 			}
@@ -678,7 +663,15 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 				$params                    = [];
 				foreach ( $payment_methods as $key => $value ) {
 					if ( $payment_methods[ $key ]['supported'] ) {
-						$payment_method_type            = isset( $supported_payment_methods[ $key ] ) ? $supported_payment_methods[ $key ]->get_payment_method_type() : $key;
+						$payment_method_type = isset( $supported_payment_methods[ $key ] ) ? $supported_payment_methods[ $key ]->get_payment_method_type() : $key;
+						switch ( $key ) {
+							case 'stripe_applepay':
+								$payment_method_type = 'apple_pay';
+								break;
+							case 'stripe_googlepay':
+								$payment_method_type = 'google_pay';
+								break;
+						}
 						$params[ $payment_method_type ] = [
 							'display_preference' => [
 								'preference' => $payment_methods[ $key ]['enabled'] ? 'on' : 'off'
@@ -686,16 +679,6 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 						];
 					}
 				}
-				/*$params['apple_pay']  = [
-					'display_preference' => [
-						'preference' => 'off'
-					]
-				];
-				$params['google_pay'] = [
-					'display_preference' => [
-						'preference' => 'off'
-					]
-				];*/
 				if ( $payment_config_id ) {
 					$response = $this->gateway->paymentMethodConfigurations->update( $payment_config_id, $params );
 					if ( ! is_wp_error( $response ) ) {
@@ -742,6 +725,13 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 			$args['payment_method_configuration'] = $this->get_payment_method_configuration( wc_stripe_order_mode( $order ) );
 			if ( ! $intent ) {
 				$args['automatic_payment_methods'] = array( 'enabled' => true );
+			}
+		} else if ( $this->payment_method_type === 'link' ) {
+			// This resolves https://github.com/paymentplugins/woo-stripe-payment/issues/17
+			if ( ! in_array( 'card', $args['payment_method_types'] ) ) {
+				if ( $this->is_enabled_payment_method( 'stripe_cc' ) ) {
+					$args['payment_method_types'][] = 'card';
+				}
 			}
 		}
 	}

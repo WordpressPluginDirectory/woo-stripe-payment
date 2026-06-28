@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => '3.3.108.x-dev',
-        'version' => '3.3.108.9999999-dev',
-        'reference' => '972806be8f1d68033f844aa3a3274bfbba781276',
+        'pretty_version' => '4.0.3.x-dev',
+        'version' => '4.0.3.9999999-dev',
+        'reference' => '92568b9b92182092efec3a35f26d02e9abf5638b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,18 +11,18 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => '3.3.108.x-dev',
-            'version' => '3.3.108.9999999-dev',
-            'reference' => '972806be8f1d68033f844aa3a3274bfbba781276',
+            'pretty_version' => '4.0.3.x-dev',
+            'version' => '4.0.3.9999999-dev',
+            'reference' => '92568b9b92182092efec3a35f26d02e9abf5638b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'stripe/stripe-php' => array(
-            'pretty_version' => 'v13.18.0',
-            'version' => '13.18.0.0',
-            'reference' => '02abb043b103766f4ed920642ae56ffdc58c7467',
+            'pretty_version' => 'v19.4.1',
+            'version' => '19.4.1.0',
+            'reference' => '095384404587d07de2ad1154c389c4051c5ed92f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../stripe/stripe-php',
             'aliases' => array(),
