@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
@@ -19,11 +19,11 @@ class EventService extends AbstractService
      * version or <code>Stripe-Version</code> header).
      *
      * @param null|array{created?: array|int, delivery_success?: bool, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, type?: string, types?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Event>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Event>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -36,11 +36,11 @@ class EventService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Event
+     * @return \PaymentPlugins\Vendor\Stripe\Event
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

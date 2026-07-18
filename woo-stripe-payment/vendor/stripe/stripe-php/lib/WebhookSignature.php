@@ -1,11 +1,10 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 abstract class WebhookSignature
 {
     const EXPECTED_SCHEME = 'v1';
-
     /**
      * Verifies the signature header sent by Stripe. Throws an
      * Exception\SignatureVerificationException exception if the verification fails for
@@ -29,52 +28,31 @@ abstract class WebhookSignature
         $timestamp = self::getTimestamp($header);
         $signatures = self::getSignatures($header, self::EXPECTED_SCHEME);
         if (-1 === $timestamp) {
-            throw Exception\SignatureVerificationException::factory(
-                'Unable to extract timestamp and signatures from header',
-                $payload,
-                $header
-            );
+            throw \PaymentPlugins\Vendor\Stripe\Exception\SignatureVerificationException::factory('Unable to extract timestamp and signatures from header', $payload, $header);
         }
         if (empty($signatures)) {
-            throw Exception\SignatureVerificationException::factory(
-                'No signatures found with expected scheme',
-                $payload,
-                $header
-            );
+            throw \PaymentPlugins\Vendor\Stripe\Exception\SignatureVerificationException::factory('No signatures found with expected scheme', $payload, $header);
         }
-
         // Check if expected signature is found in list of signatures from
         // header
         $signedPayload = "{$timestamp}.{$payload}";
         $expectedSignature = self::computeSignature($signedPayload, $secret);
         $signatureFound = false;
         foreach ($signatures as $signature) {
-            if (Util\Util::secureCompare($expectedSignature, $signature)) {
+            if (\PaymentPlugins\Vendor\Stripe\Util\Util::secureCompare($expectedSignature, $signature)) {
                 $signatureFound = true;
-
                 break;
             }
         }
         if (!$signatureFound) {
-            throw Exception\SignatureVerificationException::factory(
-                'No signatures found matching the expected signature for payload',
-                $payload,
-                $header
-            );
+            throw \PaymentPlugins\Vendor\Stripe\Exception\SignatureVerificationException::factory('No signatures found matching the expected signature for payload', $payload, $header);
         }
-
         // Check if timestamp is within tolerance
-        if (($tolerance > 0) && (\abs(\time() - $timestamp) > $tolerance)) {
-            throw Exception\SignatureVerificationException::factory(
-                'Timestamp outside the tolerance zone',
-                $payload,
-                $header
-            );
+        if ($tolerance > 0 && \abs(\time() - $timestamp) > $tolerance) {
+            throw \PaymentPlugins\Vendor\Stripe\Exception\SignatureVerificationException::factory('Timestamp outside the tolerance zone', $payload, $header);
         }
-
         return true;
     }
-
     /**
      * Extracts the timestamp in a signature header.
      *
@@ -86,21 +64,17 @@ abstract class WebhookSignature
     private static function getTimestamp($header)
     {
         $items = \explode(',', $header);
-
         foreach ($items as $item) {
             $itemParts = \explode('=', $item, 2);
             if ('t' === $itemParts[0]) {
                 if (!\is_numeric($itemParts[1])) {
                     return -1;
                 }
-
                 return (int) $itemParts[1];
             }
         }
-
         return -1;
     }
-
     /**
      * Extracts the signatures matching a given scheme in a signature header.
      *
@@ -113,17 +87,14 @@ abstract class WebhookSignature
     {
         $signatures = [];
         $items = \explode(',', $header);
-
         foreach ($items as $item) {
             $itemParts = \explode('=', $item, 2);
             if (\trim($itemParts[0]) === $scheme) {
                 $signatures[] = $itemParts[1];
             }
         }
-
         return $signatures;
     }
-
     /**
      * Computes the signature for a given payload and secret.
      *

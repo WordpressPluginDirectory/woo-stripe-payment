@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Reporting;
+namespace PaymentPlugins\Vendor\Stripe\Service\Reporting;
 
 /**
  * Service factory class for API resources in the Reporting namespace.
@@ -10,7 +10,7 @@ namespace Stripe\Service\Reporting;
  * @property ReportRunService $reportRuns
  * @property ReportTypeService $reportTypes
  */
-class ReportingServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class ReportingServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

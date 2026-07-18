@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers\Issuing;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers\Issuing;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class PersonalizationDesignService extends \Stripe\Service\AbstractService
+class PersonalizationDesignService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Updates the <code>status</code> of the specified testmode personalization design
@@ -17,11 +17,11 @@ class PersonalizationDesignService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\PersonalizationDesign
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function activate($id, $params = null, $opts = null)
     {
@@ -34,11 +34,11 @@ class PersonalizationDesignService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\PersonalizationDesign
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deactivate($id, $params = null, $opts = null)
     {
@@ -51,11 +51,11 @@ class PersonalizationDesignService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], rejection_reasons: array{card_logo?: string[], carrier_text?: string[]}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\PersonalizationDesign
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reject($id, $params = null, $opts = null)
     {

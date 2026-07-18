@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\V2\Core;
+namespace PaymentPlugins\Vendor\Stripe\V2\Core;
 
 /**
  * Person Tokens are single-use tokens which tokenize person information, and are used for creating or updating a Person.
@@ -14,7 +14,7 @@ namespace Stripe\V2\Core;
  * @property bool $livemode Has the value <code>true</code> if the token exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property bool $used Determines if the token has already been used (tokens can only be used once).
  */
-class AccountPersonToken extends \Stripe\ApiResource
+class AccountPersonToken extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'v2.core.account_person_token';
 }

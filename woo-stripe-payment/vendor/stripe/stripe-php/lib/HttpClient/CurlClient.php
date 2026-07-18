@@ -1,10 +1,10 @@
 <?php
 
-namespace Stripe\HttpClient;
+namespace PaymentPlugins\Vendor\Stripe\HttpClient;
 
-use Stripe\Exception;
-use Stripe\Stripe;
-use Stripe\Util;
+use PaymentPlugins\Vendor\Stripe\Exception;
+use PaymentPlugins\Vendor\Stripe\Stripe;
+use PaymentPlugins\Vendor\Stripe\Util;
 
 // @codingStandardsIgnoreStart
 // PSR2 requires all constants be upper case. Sadly, the CURL_SSLVERSION
@@ -14,14 +14,14 @@ use Stripe\Util;
 // defines them in cURL's source code.
 
 // Available since PHP 5.5.19 and 5.6.3
-if (!\defined('CURL_SSLVERSION_TLSv1_2')) {
-    \define('CURL_SSLVERSION_TLSv1_2', 6);
+if (!\defined('PAYMENTPLUGINS_VENDOR_CURL_SSLVERSION_TLSv1_2')) {
+    \define('PAYMENTPLUGINS_VENDOR_CURL_SSLVERSION_TLSv1_2', 6);
 }
 // @codingStandardsIgnoreEnd
 
 // Available since PHP 7.0.7 and cURL 7.47.0
-if (!\defined('CURL_HTTP_VERSION_2TLS')) {
-    \define('CURL_HTTP_VERSION_2TLS', 4);
+if (!\defined('PAYMENTPLUGINS_VENDOR_CURL_HTTP_VERSION_2TLS')) {
+    \define('PAYMENTPLUGINS_VENDOR_CURL_HTTP_VERSION_2TLS', 4);
 }
 
 class CurlClient implements ClientInterface, StreamingClientInterface
@@ -313,7 +313,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
         if (!isset($opts[\CURLOPT_HTTP_VERSION]) && $this->getEnableHttp2()) {
             // For HTTPS requests, enable HTTP/2, if supported
-            $opts[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_2TLS;
+            $opts[\CURLOPT_HTTP_VERSION] = \PAYMENTPLUGINS_VENDOR_CURL_HTTP_VERSION_2TLS;
         }
 
         return $opts;

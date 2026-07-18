@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Treasury;
+namespace PaymentPlugins\Vendor\Stripe\Service\Treasury;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class FinancialAccountService extends \Stripe\Service\AbstractService
+class FinancialAccountService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of FinancialAccounts.
      *
      * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, status?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Treasury\FinancialAccount>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccount>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -33,11 +33,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], forwarding_settings?: array{financial_account?: string, payment_method?: string, type: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccount
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccount
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function close($id, $params = null, $opts = null)
     {
@@ -49,11 +49,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      * FinancialAccounts by default.
      *
      * @param null|array{expand?: string[], features?: array{card_issuing?: array{requested: bool}, deposit_insurance?: array{requested: bool}, financial_addresses?: array{aba?: array{requested: bool}}, inbound_transfers?: array{ach?: array{requested: bool}}, intra_stripe_flows?: array{requested: bool}, outbound_payments?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}, outbound_transfers?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}}, metadata?: array<string, string>, nickname?: null|string, platform_restrictions?: array{inbound_flows?: string, outbound_flows?: string}, supported_currencies: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccount
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccount
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -65,11 +65,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccount
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccount
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -81,11 +81,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccountFeatures
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccountFeatures
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveFeatures($id, $params = null, $opts = null)
     {
@@ -97,11 +97,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], features?: array{card_issuing?: array{requested: bool}, deposit_insurance?: array{requested: bool}, financial_addresses?: array{aba?: array{requested: bool}}, inbound_transfers?: array{ach?: array{requested: bool}}, intra_stripe_flows?: array{requested: bool}, outbound_payments?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}, outbound_transfers?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}}, forwarding_settings?: array{financial_account?: string, payment_method?: string, type: string}, metadata?: array<string, string>, nickname?: null|string, platform_restrictions?: array{inbound_flows?: string, outbound_flows?: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccount
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccount
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {
@@ -113,11 +113,11 @@ class FinancialAccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{card_issuing?: array{requested: bool}, deposit_insurance?: array{requested: bool}, expand?: string[], financial_addresses?: array{aba?: array{requested: bool}}, inbound_transfers?: array{ach?: array{requested: bool}}, intra_stripe_flows?: array{requested: bool}, outbound_payments?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}, outbound_transfers?: array{ach?: array{requested: bool}, us_domestic_wire?: array{requested: bool}}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\FinancialAccountFeatures
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\FinancialAccountFeatures
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function updateFeatures($id, $params = null, $opts = null)
     {

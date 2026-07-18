@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers\Issuing;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers\Issuing;
 
 /**
  * Service factory class for API resources in the Issuing namespace.
@@ -12,7 +12,7 @@ namespace Stripe\Service\TestHelpers\Issuing;
  * @property PersonalizationDesignService $personalizationDesigns
  * @property TransactionService $transactions
  */
-class IssuingServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class IssuingServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

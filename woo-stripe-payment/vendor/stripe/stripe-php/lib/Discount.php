@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A discount represents the actual application of a <a href="https://api.stripe.com#coupons">coupon</a> or <a href="https://api.stripe.com#promotion_codes">promotion code</a>.

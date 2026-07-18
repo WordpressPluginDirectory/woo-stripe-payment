@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Exception;
+namespace PaymentPlugins\Vendor\Stripe\Exception;
 
 /**
  * CardException is thrown when a user enters a card that can't be charged for
@@ -18,7 +18,7 @@ class CardException extends ApiErrorException
      * @param null|int $httpStatus the HTTP status code
      * @param null|string $httpBody the HTTP body as a string
      * @param null|array $jsonBody the JSON deserialized body
-     * @param null|array|\Stripe\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
+     * @param null|array|\PaymentPlugins\Vendor\Stripe\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
      * @param null|string $stripeCode the Stripe error code
      * @param null|string $declineCode the decline code
      * @param null|string $stripeParam the parameter related to the error

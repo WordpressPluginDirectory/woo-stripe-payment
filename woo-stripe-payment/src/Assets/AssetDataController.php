@@ -162,7 +162,18 @@ class AssetDataController {
 	private function add_default_data() {
 		global $product;
 
-		if ( WC()->cart ) {
+		/**
+		 * cart/customer data reflects the current visitor's cart contents and personal details, so
+		 * it's only added on pages that actually need it, rather than broadcasting it site-wide.
+		 * Mini-cart gateway buttons (Apple Pay/Google Pay/Link) can render on any page though, so
+		 * cart data is also added whenever any gateway has mini-cart enabled - customer data isn't
+		 * needed there, since those buttons collect billing/shipping via their own native sheet.
+		 *
+		 * order-pay needs cart data too, even though billing/shipping details are sourced from the
+		 * separate order data added below - BaseController::isPaymentMethodAvailable() unconditionally
+		 * reads Cart.isPaymentMethodAvailable(), which was never ported to fall back to order data.
+		 */
+		if ( WC()->cart && ( $this->is_cart_relevant_page() || $this->context->is_order_pay() || $this->has_minicart_gateways_enabled() ) ) {
 			$this->asset_data->add( 'cart', $this->transformer->transform_cart( WC()->cart ) );
 		}
 
@@ -173,7 +184,8 @@ class AssetDataController {
 			if ( $product instanceof \WP_Post && $product->post_type === 'product' ) {
 				$product = wc_get_product( $product->ID );
 			}
-			$args = [];
+			if ( $product instanceof \WC_Product ) {
+				$args = [];
 				if ( $product instanceof \WC_Product_Variable ) {
 					$selected_attributes = [];
 					foreach ( array_keys( $product->get_variation_attributes() ) as $attribute_name ) {
@@ -188,6 +200,7 @@ class AssetDataController {
 					}
 				}
 				$this->asset_data->add( 'product', $this->transformer->transform_product( $product, $args ) );
+			}
 		}
 
 		if ( $this->context->is_order_pay() ) {
@@ -217,11 +230,15 @@ class AssetDataController {
 		$this->asset_data->add( 'publicKey', wc_stripe_get_publishable_key() );
 		$this->asset_data->add( 'mode', wc_stripe_mode() );
 		$this->asset_data->add( 'sdkParams', [
-			'stripeAccount' => wc_stripe_get_account_id(),
-			'apiVersion'    => wc_stripe_get_container()->get( 'API_VERSION' ),
-			'betas'         => [
+			'stripeAccount'  => wc_stripe_get_account_id(),
+			'betas'          => [
 				'deferred_intent_blik_beta_1',
 				'disable_deferred_intent_client_validation_beta_1'
+			],
+			'developerTools' => [
+				'assistant' => [
+					'enabled' => false
+				]
 			]
 		] );
 		$this->asset_data->add( 'addressLocales', wp_json_encode( WC()->countries->get_country_locale() ) );
@@ -230,10 +247,31 @@ class AssetDataController {
 		// Add required fields data
 		$this->asset_data->add( 'requiredFields', $this->get_required_fields() );
 
-		if ( WC()->customer ) {
+		// customer data is only ever consumed by BaseGateway.js's isAddPaymentMethod() branches.
+		if ( WC()->customer && $this->context->is_add_payment_method() ) {
 			$customer = WC()->customer;
 			$this->asset_data->add( 'customer', $this->transformer->transform_customer( $customer ) );
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_cart_relevant_page() {
+		return $this->context->has_context( [
+			ContextHandler::PRODUCT,
+			ContextHandler::CART,
+			ContextHandler::CHECKOUT,
+			ContextHandler::SHOP,
+			ContextHandler::ADD_PAYMENT_METHOD,
+		] );
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function has_minicart_gateways_enabled() {
+		return ! empty( $this->payment_registry->get_minicart_payment_gateways() );
 	}
 
 	/**

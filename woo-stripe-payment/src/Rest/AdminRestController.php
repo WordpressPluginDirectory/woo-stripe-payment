@@ -66,7 +66,7 @@ class AdminRestController {
 
 		return array_map( function ( $arg ) {
 			if ( isset( $arg['permissions'] ) ) {
-				$capabilities             = $arg['permissions'];
+				$capabilities               = $arg['permissions'];
 				$arg['permission_callback'] = function () use ( $capabilities ) {
 					foreach ( $capabilities as $cap ) {
 						if ( \current_user_can( $cap ) ) {

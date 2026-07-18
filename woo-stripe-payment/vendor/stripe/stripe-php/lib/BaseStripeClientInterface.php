@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Interface for a Stripe client.

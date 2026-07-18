@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Reviews can be used to supplement automated fraud detection with human expertise.
@@ -28,7 +27,6 @@ namespace Stripe;
 class Review extends ApiResource
 {
     const OBJECT_NAME = 'review';
-
     const CLOSED_REASON_ACKNOWLEDGED = 'acknowledged';
     const CLOSED_REASON_APPROVED = 'approved';
     const CLOSED_REASON_CANCELED = 'canceled';
@@ -37,10 +35,8 @@ class Review extends ApiResource
     const CLOSED_REASON_REDACTED = 'redacted';
     const CLOSED_REASON_REFUNDED = 'refunded';
     const CLOSED_REASON_REFUNDED_AS_FRAUD = 'refunded_as_fraud';
-
     const OPENED_REASON_MANUAL = 'manual';
     const OPENED_REASON_RULE = 'rule';
-
     /**
      * Returns a list of <code>Review</code> objects that have <code>open</code> set to
      * <code>true</code>. The objects are sorted in descending order by creation date,
@@ -56,10 +52,8 @@ class Review extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a <code>Review</code> object.
      *
@@ -72,13 +66,11 @@ class Review extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Possible string representations of the current, the opening or the closure reason of the review.
      * Not all of these enumeration apply to all of the ´reason´ fields. Please consult the Review object to
@@ -92,7 +84,6 @@ class Review extends ApiResource
     const REASON_REFUNDED = 'refunded';
     const REASON_REFUNDED_AS_FRAUD = 'refunded_as_fraud';
     const REASON_RULE = 'rule';
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -106,7 +97,6 @@ class Review extends ApiResource
         $url = $this->instanceUrl() . '/approve';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

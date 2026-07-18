@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Stripe_Affirm extends WC_Payment_Gateway_Stripe_Local_P
 		$this->method_title       = __( 'Affirm (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Affirm gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/affirm.svg' );
+		$this->icon = $this->assets->assets_url( 'img/affirm.svg' );
 	}
 
 	public function get_order_button_text( $text ) {

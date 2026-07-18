@@ -101,7 +101,7 @@ class WC_Stripe_Rest_API {
 	/**
 	 * @return string
 	 */
-	public function rest_url($path = '') {
+	public function rest_url( $path = '' ) {
 		return stripe_wc()->rest_url();
 	}
 

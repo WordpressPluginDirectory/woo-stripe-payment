@@ -26,7 +26,7 @@ class WC_Payment_Gateway_Stripe_MobilePay extends WC_Payment_Gateway_Stripe_Loca
 		$this->method_title       = __( 'MobilePay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'MobilePay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/mobilepay.svg' );
+		$this->icon = $this->assets->assets_url( 'img/mobilepay.svg' );
 	}
 
 	public function get_local_payment_settings() {

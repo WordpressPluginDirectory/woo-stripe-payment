@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * <a href="https://stripe.com/docs/tax/tax-categories">Tax codes</a> classify goods and services for tax purposes.
@@ -15,7 +14,6 @@ namespace Stripe;
 class TaxCode extends ApiResource
 {
     const OBJECT_NAME = 'tax_code';
-
     /**
      * A list of <a href="https://stripe.com/docs/tax/tax-categories">all tax codes
      * available</a> to add to Products in order to allow specific tax calculations.
@@ -30,10 +28,8 @@ class TaxCode extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of an existing tax code. Supply the unique tax code ID and
      * Stripe will return the corresponding tax code information.
@@ -47,10 +43,9 @@ class TaxCode extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

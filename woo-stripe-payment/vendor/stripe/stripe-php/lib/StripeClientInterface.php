@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Interface for a Stripe client.
@@ -15,10 +15,9 @@ interface StripeClientInterface extends BaseStripeClientInterface
      * @param array $params the parameters of the request
      * @param array|Util\RequestOptions $opts the special modifiers of the request
      *
-     * @return StripeObject the object returned by Stripe's API
+     * @return \StripeObject the object returned by Stripe's API
      */
     public function request($method, $path, $params, $opts);
-
     /**
      * Sends a request to Stripe's API and expects to return a SearchResult.
      *
@@ -30,7 +29,6 @@ interface StripeClientInterface extends BaseStripeClientInterface
      * @return SearchResult of ApiResources
      */
     public function requestSearchResult($method, $path, $params, $opts);
-
     /**
      * Sends a request to Stripe's API and expects to return a Collection|V2\Collection.
      *

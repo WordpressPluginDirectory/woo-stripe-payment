@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Sigma;
+namespace PaymentPlugins\Vendor\Stripe\Service\Sigma;
 
 /**
  * Service factory class for API resources in the Sigma namespace.
  *
  * @property ScheduledQueryRunService $scheduledQueryRuns
  */
-class SigmaServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class SigmaServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

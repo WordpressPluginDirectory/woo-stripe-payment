@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Treasury;
+namespace PaymentPlugins\Vendor\Stripe\Treasury;
 
 /**
  * ReceivedDebits represent funds pulled from a <a href="https://api.stripe.com#financial_accounts">FinancialAccount</a>. These are not initiated from the FinancialAccount.
@@ -16,15 +16,15 @@ namespace Stripe\Treasury;
  * @property null|string $failure_code Reason for the failure. A ReceivedDebit might fail because the FinancialAccount doesn't have sufficient funds, is closed, or is frozen.
  * @property null|string $financial_account The FinancialAccount that funds were pulled from.
  * @property null|string $hosted_regulatory_receipt_url A <a href="https://docs.stripe.com/treasury/moving-money/regulatory-receipts">hosted transaction receipt</a> URL that is provided when money movement is considered regulated under Stripe's money transmission licenses.
- * @property null|(object{balance?: string, billing_details: (object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject), email: null|string, name: null|string}&\Stripe\StripeObject), financial_account?: (object{id: string, network: string}&\Stripe\StripeObject), issuing_card?: string, type: string, us_bank_account?: (object{bank_name: null|string, last4: null|string, routing_number: null|string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $initiating_payment_method_details
- * @property (object{debit_reversal: null|string, inbound_transfer: null|string, issuing_authorization: null|string, issuing_transaction: null|string, payout: null|string, topup: null|string}&\Stripe\StripeObject) $linked_flows
+ * @property null|(object{balance?: string, billing_details: (object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), email: null|string, name: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), financial_account?: (object{id: string, network: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), issuing_card?: string, type: string, us_bank_account?: (object{bank_name: null|string, last4: null|string, routing_number: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $initiating_payment_method_details
+ * @property (object{debit_reversal: null|string, inbound_transfer: null|string, issuing_authorization: null|string, issuing_transaction: null|string, payout: null|string, topup: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $linked_flows
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $network The network used for the ReceivedDebit.
- * @property null|(object{deadline: null|int, restricted_reason: null|string}&\Stripe\StripeObject) $reversal_details Details describing when a ReceivedDebit might be reversed.
+ * @property null|(object{deadline: null|int, restricted_reason: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $reversal_details Details describing when a ReceivedDebit might be reversed.
  * @property string $status Status of the ReceivedDebit. ReceivedDebits are created with a status of either <code>succeeded</code> (approved) or <code>failed</code> (declined). The failure reason can be found under the <code>failure_code</code>.
  * @property null|string|Transaction $transaction The Transaction associated with this object.
  */
-class ReceivedDebit extends \Stripe\ApiResource
+class ReceivedDebit extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'treasury.received_debit';
 
@@ -47,15 +47,15 @@ class ReceivedDebit extends \Stripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], financial_account: string, limit?: int, starting_after?: string, status?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<ReceivedDebit> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<ReceivedDebit> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -67,11 +67,11 @@ class ReceivedDebit extends \Stripe\ApiResource
      *
      * @return ReceivedDebit
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

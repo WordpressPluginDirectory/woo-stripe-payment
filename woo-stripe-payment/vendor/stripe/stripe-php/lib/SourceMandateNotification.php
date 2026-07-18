@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Source mandate notifications should be created when a notification related to

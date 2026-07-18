@@ -28,8 +28,8 @@ class PaymentMethodUtils {
 	/**
 	 * @param $tokens
 	 *
-	 * @since 3.3.51
 	 * @return array|mixed
+	 * @since 3.3.51
 	 */
 	public static function filter_by_type( $tokens ) {
 		if ( \is_array( $tokens ) ) {
@@ -46,8 +46,8 @@ class PaymentMethodUtils {
 	 * @param                            $user_id
 	 * @param \WC_Payment_Gateway_Stripe $gateway
 	 *
-	 * @since 3.3.51
 	 * @return bool
+	 * @since 3.3.51
 	 */
 	public static function token_exists( $token_id, $user_id, $gateway = null ) {
 		global $wpdb;
@@ -143,8 +143,8 @@ class PaymentMethodUtils {
 	 * @param $gateway_id
 	 * @param $page
 	 *
-	 * @since 3.3.61
 	 * @return string
+	 * @since 3.3.61
 	 */
 	public static function create_return_url( $gateway, $page ) {
 		$url = add_query_arg( [

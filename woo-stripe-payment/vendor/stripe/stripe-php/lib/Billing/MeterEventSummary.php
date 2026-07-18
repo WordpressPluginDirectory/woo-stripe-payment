@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Billing;
+namespace PaymentPlugins\Vendor\Stripe\Billing;
 
 /**
  * A billing meter event summary represents an aggregated view of a customer's billing meter events within a specified timeframe. It indicates how much
@@ -18,7 +18,7 @@ namespace Stripe\Billing;
  * @property string $meter The meter associated with this event summary.
  * @property int $start_time Start timestamp for this event summary (inclusive). Must be aligned with minute boundaries.
  */
-class MeterEventSummary extends \Stripe\ApiResource
+class MeterEventSummary extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'billing.meter_event_summary';
 }

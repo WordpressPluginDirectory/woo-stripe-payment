@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * @property string $id Unique identifier for the object.
@@ -15,7 +14,6 @@ namespace Stripe;
 class EphemeralKey extends ApiResource
 {
     const OBJECT_NAME = 'ephemeral_key';
-
     /**
      * Invalidates a short-lived API key for a given resource.
      *
@@ -29,18 +27,14 @@ class EphemeralKey extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
-    use ApiOperations\Create {
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Create {
         create as protected _create;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -55,7 +49,6 @@ class EphemeralKey extends ApiResource
         if (!$opts || !isset($opts['stripe_version'])) {
             throw new Exception\InvalidArgumentException('stripe_version must be specified to create an ephemeral key');
         }
-
         return self::_create($params, $opts);
     }
 }

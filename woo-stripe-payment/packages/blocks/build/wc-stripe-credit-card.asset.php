@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-stripe-blocks-vendors', 'lodash', 'react', 'wc-blocks-registry', 'wc-settings', 'wc-stripe-blocks-components', 'wc-stripe-blocks-utils', 'wp-api-fetch', 'wp-element', 'wp-url'), 'version' => '529077354427e4dbc6d4');
+<?php return array('dependencies' => array('wc-stripe-blocks-vendors', 'react', 'wc-blocks-registry', 'wc-settings', 'wc-stripe-blocks-components', 'wc-stripe-blocks-utils', 'wp-api-fetch', 'wp-element', 'wp-hooks', 'wp-url'), 'version' => 'a19493ef8dee1eddd25c');

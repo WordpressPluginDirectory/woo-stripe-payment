@@ -1,12 +1,12 @@
 <?php
 
-namespace Stripe\Exception\OAuth;
+namespace PaymentPlugins\Vendor\Stripe\Exception\OAuth;
 
 /**
  * Implements properties and methods common to all (non-SPL) Stripe OAuth
  * exceptions.
  */
-abstract class OAuthErrorException extends \Stripe\Exception\ApiErrorException
+abstract class OAuthErrorException extends \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException
 {
     protected function constructErrorObject()
     {
@@ -14,6 +14,6 @@ abstract class OAuthErrorException extends \Stripe\Exception\ApiErrorException
             return null;
         }
 
-        return \Stripe\OAuthErrorObject::constructFrom($this->jsonBody);
+        return \PaymentPlugins\Vendor\Stripe\OAuthErrorObject::constructFrom($this->jsonBody);
     }
 }

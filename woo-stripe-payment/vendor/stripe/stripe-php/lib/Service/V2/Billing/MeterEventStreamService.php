@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\V2\Billing;
+namespace PaymentPlugins\Vendor\Stripe\Service\V2\Billing;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class MeterEventStreamService extends \Stripe\Service\AbstractService
+class MeterEventStreamService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Creates meter events. Events are processed asynchronously, including validation.
@@ -17,15 +17,15 @@ class MeterEventStreamService extends \Stripe\Service\AbstractService
      * requests per second in livemode. For even higher rate-limits, contact sales.
      *
      * @param null|array{events: array{event_name: string, identifier?: string, payload: array<string, string>, timestamp?: string}[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @return void
      *
-     * @throws \Stripe\Exception\TemporarySessionExpiredException
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\TemporarySessionExpiredException
      */
     public function create($params = null, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         if (!isset($opts->apiBase)) {
             $opts->apiBase = $this->getClient()->getMeterEventsBase();
         }

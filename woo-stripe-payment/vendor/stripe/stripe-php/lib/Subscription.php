@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Subscriptions allow you to charge a customer on a recurring basis.
@@ -38,7 +37,7 @@ namespace Stripe;
  * @property Collection<SubscriptionItem> $items List of subscription items, each with an attached price.
  * @property null|Invoice|string $latest_invoice The most recent invoice this subscription has generated over its lifecycle (for example, when it cycles or is updated).
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|int $next_pending_invoice_item_invoice Specifies the approximate timestamp on which any pending invoice items will be billed according to the schedule provided at <code>pending_invoice_item_interval</code>.
  * @property null|Account|string $on_behalf_of The account (if any) the charge was made on behalf of for charges associated with this subscription. See the <a href="https://docs.stripe.com/connect/subscriptions#on-behalf-of">Connect documentation</a> for details.
  * @property null|(object{behavior: string, resumes_at: null|int}&StripeObject) $pause_collection If specified, payment collection for this subscription will be paused. Note that the subscription status will be unchanged and will not be updated to <code>paused</code>. Learn more about <a href="https://docs.stripe.com/billing/subscriptions/pause-payment">pausing collection</a>.
@@ -58,12 +57,9 @@ namespace Stripe;
 class Subscription extends ApiResource
 {
     const OBJECT_NAME = 'subscription';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const COLLECTION_METHOD_CHARGE_AUTOMATICALLY = 'charge_automatically';
     const COLLECTION_METHOD_SEND_INVOICE = 'send_invoice';
-
     const STATUS_ACTIVE = 'active';
     const STATUS_CANCELED = 'canceled';
     const STATUS_INCOMPLETE = 'incomplete';
@@ -72,7 +68,6 @@ class Subscription extends ApiResource
     const STATUS_PAUSED = 'paused';
     const STATUS_TRIALING = 'trialing';
     const STATUS_UNPAID = 'unpaid';
-
     /**
      * Creates a new subscription on an existing customer. Each customer can have up to
      * 500 active or scheduled subscriptions.
@@ -99,14 +94,11 @@ class Subscription extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * By default, returns a list of subscriptions that have not been canceled. In
      * order to list canceled subscriptions, specify <code>status=canceled</code>.
@@ -121,10 +113,8 @@ class Subscription extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the subscription with the given ID.
      *
@@ -137,13 +127,11 @@ class Subscription extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates an existing subscription to match the specified parameters. When
      * changing prices or quantities, we optionally prorate the price we charge next
@@ -207,30 +195,22 @@ class Subscription extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
-    use ApiOperations\Delete {
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Delete {
         delete as protected _delete;
     }
-
     public static function getSavedNestedResources()
     {
         static $savedNestedResources = null;
         if (null === $savedNestedResources) {
-            $savedNestedResources = new Util\Set([
-                'source',
-            ]);
+            $savedNestedResources = new Util\Set(['source']);
         }
-
         return $savedNestedResources;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -244,19 +224,15 @@ class Subscription extends ApiResource
         $url = $this->instanceUrl() . '/discount';
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom(['discount' => null], $opts, true);
-
         return $this;
     }
-
     const PAYMENT_BEHAVIOR_ALLOW_INCOMPLETE = 'allow_incomplete';
     const PAYMENT_BEHAVIOR_DEFAULT_INCOMPLETE = 'default_incomplete';
     const PAYMENT_BEHAVIOR_ERROR_IF_INCOMPLETE = 'error_if_incomplete';
     const PAYMENT_BEHAVIOR_PENDING_IF_INCOMPLETE = 'pending_if_incomplete';
-
     const PRORATION_BEHAVIOR_ALWAYS_INVOICE = 'always_invoice';
     const PRORATION_BEHAVIOR_CREATE_PRORATIONS = 'create_prorations';
     const PRORATION_BEHAVIOR_NONE = 'none';
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -270,10 +246,8 @@ class Subscription extends ApiResource
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -287,10 +261,8 @@ class Subscription extends ApiResource
         $url = $this->instanceUrl() . '/migrate';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -304,10 +276,8 @@ class Subscription extends ApiResource
         $url = $this->instanceUrl() . '/resume';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -319,7 +289,6 @@ class Subscription extends ApiResource
     public static function search($params = null, $opts = null)
     {
         $url = '/v1/subscriptions/search';
-
         return static::_requestPage($url, SearchResult::class, $params, $opts);
     }
 }

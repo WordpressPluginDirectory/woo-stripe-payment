@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Class RecipientTransfer.
@@ -20,7 +20,7 @@ namespace Stripe;
  * @property string $failure_code
  * @property string $failure_message
  * @property bool $livemode
- * @property StripeObject $metadata
+ * @property \StripeObject $metadata
  * @property string $method
  * @property string $recipient
  * @property Collection $reversals

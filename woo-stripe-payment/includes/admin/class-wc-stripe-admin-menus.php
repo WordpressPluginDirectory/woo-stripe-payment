@@ -20,7 +20,10 @@ class WC_Stripe_Admin_Menus {
 	}
 
 	public static function sub_menu() {
-		add_submenu_page( 'woocommerce', __( 'Stripe by Payment Plugins', 'woo-stripe-payment' ), __( 'Stripe by Payment Plugins', 'woo-stripe-payment' ), 'manage_woocommerce', 'wc-stripe-main', array( __CLASS__, 'main_page' ) );
+		add_submenu_page( 'woocommerce', __( 'Stripe by Payment Plugins', 'woo-stripe-payment' ), __( 'Stripe by Payment Plugins', 'woo-stripe-payment' ), 'manage_woocommerce', 'wc-stripe-main', array(
+			__CLASS__,
+			'main_page'
+		) );
 	}
 
 	public static function main_page() {

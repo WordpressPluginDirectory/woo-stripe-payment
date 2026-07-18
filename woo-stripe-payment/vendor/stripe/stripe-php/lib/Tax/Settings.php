@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Tax;
+namespace PaymentPlugins\Vendor\Stripe\Tax;
 
 /**
  * You can use Tax <code>Settings</code> to manage configurations used by Stripe Tax calculations.
@@ -10,13 +10,13 @@ namespace Stripe\Tax;
  * Related guide: <a href="https://docs.stripe.com/tax/settings-api">Using the Settings API</a>
  *
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property (object{provider: string, tax_behavior: null|string, tax_code: null|string}&\Stripe\StripeObject) $defaults
- * @property null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $head_office The place where your business is located.
+ * @property (object{provider: string, tax_behavior: null|string, tax_code: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $defaults
+ * @property null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $head_office The place where your business is located.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $status The status of the Tax <code>Settings</code>.
- * @property (object{active?: (object{}&\Stripe\StripeObject), pending?: (object{missing_fields: null|string[]}&\Stripe\StripeObject)}&\Stripe\StripeObject) $status_details
+ * @property (object{active?: (object{}&\PaymentPlugins\Vendor\Stripe\StripeObject), pending?: (object{missing_fields: null|string[]}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $status_details
  */
-class Settings extends \Stripe\SingletonApiResource
+class Settings extends \PaymentPlugins\Vendor\Stripe\SingletonApiResource
 {
     const OBJECT_NAME = 'tax.settings';
 
@@ -30,11 +30,11 @@ class Settings extends \Stripe\SingletonApiResource
      *
      * @return Settings
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static(null, $opts);
         $instance->refresh();
 
@@ -47,7 +47,7 @@ class Settings extends \Stripe\SingletonApiResource
      *
      * @return static the updated resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($params = null, $opts = null)
     {
@@ -55,7 +55,7 @@ class Settings extends \Stripe\SingletonApiResource
         $url = '/v1/tax/settings';
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -66,7 +66,7 @@ class Settings extends \Stripe\SingletonApiResource
      *
      * @return static the saved resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
      * @deprecated The `save` method is deprecated and will be removed in a
      *     future major version of the library. Use the static method `update`

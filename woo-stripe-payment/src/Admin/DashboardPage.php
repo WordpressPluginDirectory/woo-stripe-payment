@@ -5,9 +5,8 @@ namespace PaymentPlugins\Stripe\Admin;
 use PaymentPlugins\Stripe\Client\StripeClient;
 
 class DashboardPage extends AbstractAdminPage {
-
 	/**
-	 * @var StripeClient
+	 * @var \StripeClient
 	 */
 	private $client;
 
@@ -54,7 +53,6 @@ class DashboardPage extends AbstractAdminPage {
 				'configGuide'    => __( 'Read the configuration guide', 'woo-stripe-payment' ),
 				'notConnected'   => __( 'Not connected', 'woo-stripe-payment' ),
 				'modeText'       => $mode === 'live' ? __( 'Live mode', 'woo-stripe-payment' ) : __( 'Test mode', 'woo-stripe-payment' )
-
 			],
 			'links'          => [
 				'dashboard'     => admin_url( 'admin.php?page=wc-stripe-main' ),
@@ -67,20 +65,20 @@ class DashboardPage extends AbstractAdminPage {
 		$account      = wc_stripe_get_account_id();
 
 		/*if ( $account ) {
-			$session = $this->client->accountSessions->create( [
-				'account'    => $account,
-				'components' => [
-					'payments' => [
-						'enabled' => true
-					]
-				]
-			] );
-			if ( ! is_wp_error( $session ) ) {
-				$data['accountSession'] = [
-					'clientSecret' => $session->clientSecret
-				];
-			}
-		}*/
+					$session = $this->client->accountSessions->create( [
+						'account'    => $account,
+						'components' => [
+							'payments' => [
+								'enabled' => true
+							]
+						]
+					] );
+					if ( ! is_wp_error( $session ) ) {
+						$data['accountSession'] = [
+							'clientSecret' => $session->clientSecret
+						];
+					}
+				}*/
 
 		return $data;
 	}
@@ -93,6 +91,4 @@ class DashboardPage extends AbstractAdminPage {
         </div>
 		<?php
 	}
-
-
 }

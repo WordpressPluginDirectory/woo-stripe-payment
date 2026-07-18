@@ -43,8 +43,8 @@ class WC_Stripe_Utils {
 	}
 
 	/**
-	 * @param \Stripe\BalanceTransaction $balance_transaction
-	 * @param \WC_Order                  $order
+	 * @param \PaymentPlugins\Vendor\Stripe\BalanceTransaction $balance_transaction
+	 * @param \WC_Order                                        $order
 	 *
 	 * @return void
 	 */
@@ -63,9 +63,9 @@ class WC_Stripe_Utils {
 	}
 
 	/**
-	 * @param \Stripe\Charge $charge
-	 * @param \WC_Order      $order
-	 * @param bool           $save
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+	 * @param \WC_Order                            $order
+	 * @param bool                                 $save
 	 */
 	public static function add_balance_transaction_to_order( $charge, $order, $save = false ) {
 		if ( isset( $charge->balance_transaction ) && is_object( $charge->balance_transaction ) ) {
@@ -86,7 +86,7 @@ class WC_Stripe_Utils {
 			if ( $charge->refunds->count() > 0 ) {
 				foreach ( $charge->refunds->data as $refund ) {
 					/**
-					 * @var \Stripe\Refund $refund
+					 * @var \PaymentPlugins\Vendor\Stripe\Refund $refund
 					 */
 					if ( is_object( $refund->balance_transaction ) ) {
 						self::update_balance_transaction( $refund->balance_transaction, $order, false, $payment_balance );
@@ -100,8 +100,8 @@ class WC_Stripe_Utils {
 	}
 
 	/**
-	 * @param \Stripe\BalanceTransaction $balance_transaction
-	 * @param \WC_Order                  $order
+	 * @param \PaymentPlugins\Vendor\Stripe\BalanceTransaction $balance_transaction
+	 * @param \WC_Order                                        $order
 	 */
 	public static function update_balance_transaction( $balance_transaction, $order, $save = false, $payment_balance = null ) {
 		if ( $balance_transaction->reporting_category === 'partial_capture_reversal' ) {
@@ -163,7 +163,7 @@ class WC_Stripe_Utils {
 	/**
 	 * Sanitizes intent data before it's stored.
 	 *
-	 * @param \Stripe\PaymentIntent|\Stripe\SetupIntent|array $intent
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent|\PaymentPlugins\Vendor\Stripe\SetupIntent|array $intent
 	 */
 	public static function sanitize_intent( $intent ) {
 		return $intent;

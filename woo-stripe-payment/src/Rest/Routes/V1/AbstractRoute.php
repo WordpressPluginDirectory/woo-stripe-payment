@@ -140,7 +140,7 @@ abstract class AbstractRoute {
 	 * Get WooCommerce notice
 	 *
 	 * @param string $notice_type Notice type (error, success, notice)
-	 * @param string $default     Default message if no notice found
+	 * @param string $default Default message if no notice found
 	 *
 	 * @return string
 	 */

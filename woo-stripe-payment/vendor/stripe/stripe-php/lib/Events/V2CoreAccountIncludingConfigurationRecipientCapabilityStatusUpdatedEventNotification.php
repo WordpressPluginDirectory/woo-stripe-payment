@@ -2,12 +2,12 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Events;
+namespace PaymentPlugins\Vendor\Stripe\Events;
 
 /**
- * @property \Stripe\RelatedObject $related_object Object containing the reference to API resource relevant to the event
+ * @property \PaymentPlugins\Vendor\Stripe\RelatedObject $related_object Object containing the reference to API resource relevant to the event
  */
-class V2CoreAccountIncludingConfigurationRecipientCapabilityStatusUpdatedEventNotification extends \Stripe\V2\Core\EventNotification
+class V2CoreAccountIncludingConfigurationRecipientCapabilityStatusUpdatedEventNotification extends \PaymentPlugins\Vendor\Stripe\V2\Core\EventNotification
 {
     const LOOKUP_TYPE = 'v2.core.account[configuration.recipient].capability_status_updated';
     public $related_object;
@@ -17,7 +17,7 @@ class V2CoreAccountIncludingConfigurationRecipientCapabilityStatusUpdatedEventNo
      *
      * @return V2CoreAccountIncludingConfigurationRecipientCapabilityStatusUpdatedEvent
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function fetchEvent()
     {
@@ -27,9 +27,9 @@ class V2CoreAccountIncludingConfigurationRecipientCapabilityStatusUpdatedEventNo
     /**
      * Retrieves the related object from the API. Make an API request on every call.
      *
-     * @return \Stripe\V2\Core\Account
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function fetchRelatedObject()
     {

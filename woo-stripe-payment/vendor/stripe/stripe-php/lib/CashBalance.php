@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A customer's <code>Cash balance</code> represents real funds. Customers can add funds to their cash balance by sending a bank transfer. These funds can be used for payment and can eventually be paid out to your bank account.
@@ -17,21 +16,17 @@ namespace Stripe;
 class CashBalance extends ApiResource
 {
     const OBJECT_NAME = 'cash_balance';
-
     /**
      * @return string the API URL for this balance transaction
      */
     public function instanceUrl()
     {
         $customer = $this['customer'];
-        $customer = Util\Util::utf8($customer);
-
+        $customer = \PaymentPlugins\Vendor\Stripe\Util\Util::utf8($customer);
         $base = Customer::classUrl();
         $customerExtn = \urlencode($customer);
-
         return "{$base}/{$customerExtn}/cash_balance";
     }
-
     /**
      * @param array|string $_id
      * @param null|array|string $_opts
@@ -40,13 +35,9 @@ class CashBalance extends ApiResource
      */
     public static function retrieve($_id, $_opts = null)
     {
-        $msg = 'Customer Cash Balance cannot be retrieved without a '
-               . 'customer ID. Retrieve a Customer Cash Balance using '
-               . "`Customer::retrieveCashBalance('customer_id')`.";
-
+        $msg = 'Customer Cash Balance cannot be retrieved without a ' . 'customer ID. Retrieve a Customer Cash Balance using ' . "`Customer::retrieveCashBalance('customer_id')`.";
         throw new Exception\BadMethodCallException($msg);
     }
-
     /**
      * @param string $_id
      * @param null|array $_params
@@ -56,10 +47,7 @@ class CashBalance extends ApiResource
      */
     public static function update($_id, $_params = null, $_options = null)
     {
-        $msg = 'Customer Cash Balance cannot be updated without a '
-        . 'customer ID. Retrieve a Customer Cash Balance using '
-        . "`Customer::updateCashBalance('customer_id')`.";
-
+        $msg = 'Customer Cash Balance cannot be updated without a ' . 'customer ID. Retrieve a Customer Cash Balance using ' . "`Customer::updateCashBalance('customer_id')`.";
         throw new Exception\BadMethodCallException($msg);
     }
 }

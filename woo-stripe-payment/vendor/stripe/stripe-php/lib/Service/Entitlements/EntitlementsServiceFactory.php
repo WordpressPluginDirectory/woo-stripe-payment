@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Entitlements;
+namespace PaymentPlugins\Vendor\Stripe\Service\Entitlements;
 
 /**
  * Service factory class for API resources in the Entitlements namespace.
@@ -10,7 +10,7 @@ namespace Stripe\Service\Entitlements;
  * @property ActiveEntitlementService $activeEntitlements
  * @property FeatureService $features
  */
-class EntitlementsServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class EntitlementsServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

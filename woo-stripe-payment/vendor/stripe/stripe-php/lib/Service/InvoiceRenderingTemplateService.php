@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
@@ -16,11 +16,11 @@ class InvoiceRenderingTemplateService extends AbstractService
      * template appearing first.
      *
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string, status?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\InvoiceRenderingTemplate>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\InvoiceRenderingTemplate>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -35,11 +35,11 @@ class InvoiceRenderingTemplateService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\InvoiceRenderingTemplate
+     * @return \PaymentPlugins\Vendor\Stripe\InvoiceRenderingTemplate
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function archive($id, $params = null, $opts = null)
     {
@@ -53,11 +53,11 @@ class InvoiceRenderingTemplateService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], version?: int} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\InvoiceRenderingTemplate
+     * @return \PaymentPlugins\Vendor\Stripe\InvoiceRenderingTemplate
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -70,11 +70,11 @@ class InvoiceRenderingTemplateService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\InvoiceRenderingTemplate
+     * @return \PaymentPlugins\Vendor\Stripe\InvoiceRenderingTemplate
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function unarchive($id, $params = null, $opts = null)
     {

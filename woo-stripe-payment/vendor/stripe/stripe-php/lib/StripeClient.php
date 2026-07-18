@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Client used to send requests to Stripe's API.

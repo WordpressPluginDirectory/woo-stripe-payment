@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe\Terminal;
+namespace PaymentPlugins\Vendor\Stripe\Terminal;
 
 /**
  * A Location represents a grouping of readers.
@@ -11,23 +10,21 @@ namespace Stripe\Terminal;
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject) $address
- * @property null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string, town: null|string}&\Stripe\StripeObject) $address_kana
- * @property null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string, town: null|string}&\Stripe\StripeObject) $address_kanji
+ * @property (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $address
+ * @property null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string, town: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $address_kana
+ * @property null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string, town: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $address_kanji
  * @property null|string $configuration_overrides The ID of a configuration that will be used to customize all readers in this location.
  * @property string $display_name The display name of the location.
  * @property null|string $display_name_kana The Kana variation of the display name of the location.
  * @property null|string $display_name_kanji The Kanji variation of the display name of the location.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property \Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \PaymentPlugins\Vendor\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $phone The phone number of the location.
  */
-class Location extends \Stripe\ApiResource
+class Location extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'terminal.location';
-
-    use \Stripe\ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * Creates a new <code>Location</code> object. For further details, including which
      * address fields are required in each country, see the <a
@@ -38,20 +35,17 @@ class Location extends \Stripe\ApiResource
      *
      * @return Location the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Deletes a <code>Location</code> object.
      *
@@ -60,36 +54,31 @@ class Location extends \Stripe\ApiResource
      *
      * @return Location the deleted resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of <code>Location</code> objects.
      *
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<Location> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<Location> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a <code>Location</code> object.
      *
@@ -98,17 +87,15 @@ class Location extends \Stripe\ApiResource
      *
      * @return Location
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates a <code>Location</code> object by setting the values of the parameters
      * passed. Any parameters not provided will be left unchanged.
@@ -119,17 +106,15 @@ class Location extends \Stripe\ApiResource
      *
      * @return Location the updated resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

@@ -43,10 +43,15 @@ class Webhook extends AbstractRoute {
 			throw new \Exception( 'Invalid request payload.' );
 		}
 
-		$mode            = $json_payload['livemode'] == true ? 'live' : 'test';
-		$webhook_id_key  = "webhook_id_{$mode}";
-		$webhook_id      = \stripe_wc()->api_settings->get_option( $webhook_id_key );
-		$webhook_secret  = \stripe_wc()->api_settings->get_option( 'webhook_secret_' . $mode );
+		$mode           = $json_payload['livemode'] == true ? 'live' : 'test';
+		$webhook_id_key = "webhook_id_{$mode}";
+		$webhook_id     = \stripe_wc()->api_settings->get_option( $webhook_id_key );
+		$webhook_secret = \stripe_wc()->api_settings->get_option( 'webhook_secret_' . $mode );
+
+		if ( empty( $webhook_secret ) ) {
+			\wc_stripe_log_error( sprintf( 'Webhook secret is not configured for %s mode. Rejecting webhook notification.', $mode ) );
+			throw new \Exception( __( 'Not authorized.', 'woo-stripe-payment' ), 401 );
+		}
 
 		// If the webhook ID exists and doesn't match the ID from the notification, skip processing.
 		// This handles Stripe accounts with multiple webhooks configured.
@@ -55,7 +60,7 @@ class Webhook extends AbstractRoute {
 		}
 
 		try {
-			$event = \Stripe\Webhook::constructEvent(
+			$event = \PaymentPlugins\Vendor\Stripe\Webhook::constructEvent(
 				$payload,
 				$header,
 				$webhook_secret,
@@ -71,7 +76,7 @@ class Webhook extends AbstractRoute {
 			\do_action( 'wc_stripe_webhook_' . $type, $event->data->object, $request, $event );
 
 			return \apply_filters( 'wc_stripe_webhook_response', [], $event, $request );
-		} catch ( \Stripe\Exception\SignatureVerificationException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\SignatureVerificationException $e ) {
 			\wc_stripe_log_error( sprintf(
 				__( 'Invalid signature received. Verify that your webhook secret is correct. Error: %s', 'woo-stripe-payment' ),
 				$e->getMessage()

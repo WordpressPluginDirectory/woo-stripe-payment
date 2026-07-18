@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * <a href="https://docs.stripe.com/connect">Stripe Connect</a> platforms can reverse transfers made to a
@@ -33,11 +32,9 @@ namespace Stripe;
 class TransferReversal extends ApiResource
 {
     const OBJECT_NAME = 'transfer_reversal';
-
-    use ApiOperations\Update {
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update {
         save as protected _save;
     }
-
     /**
      * @return string the API URL for this Stripe transfer reversal
      */
@@ -46,22 +43,15 @@ class TransferReversal extends ApiResource
         $id = $this['id'];
         $transfer = $this['transfer'];
         if (!$id) {
-            throw new Exception\UnexpectedValueException(
-                'Could not determine which URL to request: '
-                . "class instance has invalid ID: {$id}",
-                null
-            );
+            throw new Exception\UnexpectedValueException('Could not determine which URL to request: ' . "class instance has invalid ID: {$id}", null);
         }
-        $id = Util\Util::utf8($id);
-        $transfer = Util\Util::utf8($transfer);
-
+        $id = \PaymentPlugins\Vendor\Stripe\Util\Util::utf8($id);
+        $transfer = \PaymentPlugins\Vendor\Stripe\Util\Util::utf8($transfer);
         $base = Transfer::classUrl();
         $transferExtn = \urlencode($transfer);
         $extn = \urlencode($id);
-
         return "{$base}/{$transferExtn}/reversals/{$extn}";
     }
-
     /**
      * @param null|array|string $opts
      *

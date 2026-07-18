@@ -96,7 +96,18 @@ class SubscriptionsController {
 			$result = $this->payment_controller->process_change_payment_method( $order, $payment_method );
 		} elseif ( wcs_order_contains_subscription( $order ) || wcs_order_contains_renewal( $order ) ) {
 			if ( $order->get_total() <= 0 ) {
-				$result = $this->payment_controller->process_payment( $order, $payment_method );
+				/**
+				 * Gateways that don't support 'subscriptions' can't be saved for future off-session
+				 * use, so creating a setup intent for them (as PaymentController::process_payment()
+				 * would) results in a Stripe API error. There's nothing to save for them anyway under
+				 * manual renewals - the customer will pay fresh when the real renewal is due - so just
+				 * complete the zero total order directly.
+				 */
+				if ( $payment_method->supports( 'subscriptions' ) ) {
+					$result = $this->payment_controller->process_payment( $order, $payment_method );
+				} else {
+					$result = $this->payment_controller->process_zero_total_order( $order, $payment_method );
+				}
 			}
 		}
 
@@ -213,9 +224,9 @@ class SubscriptionsController {
 	}
 
 	/**
-	 * @param array                      $result
-	 * @param \WC_Payment_Gateway_Stripe $gateway
-	 * @param \Stripe\SetupIntent        $setup_intent
+	 * @param array                                     $result
+	 * @param \WC_Payment_Gateway_Stripe                $gateway
+	 * @param \PaymentPlugins\Vendor\Stripe\SetupIntent $setup_intent
 	 *
 	 * @return array
 	 */

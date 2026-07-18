@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\V2\Core;
+namespace PaymentPlugins\Vendor\Stripe\Service\V2\Core;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class AccountLinkService extends \Stripe\Service\AbstractService
+class AccountLinkService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Creates an AccountLink object that includes a single-use URL that an account can
@@ -17,11 +17,11 @@ class AccountLinkService extends \Stripe\Service\AbstractService
      * information.
      *
      * @param null|array{account: string, use_case: array{type: string, account_onboarding?: array{collection_options?: array{fields?: string, future_requirements?: string}, configurations: string[], refresh_url: string, return_url?: string}, account_update?: array{collection_options?: array{fields?: string, future_requirements?: string}, configurations: string[], refresh_url: string, return_url?: string}}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\AccountLink
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\AccountLink
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

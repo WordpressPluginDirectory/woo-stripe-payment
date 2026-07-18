@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Issuing;
+namespace PaymentPlugins\Vendor\Stripe\Service\Issuing;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class CardService extends \Stripe\Service\AbstractService
+class CardService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Issuing <code>Card</code> objects. The objects are sorted in
@@ -17,11 +17,11 @@ class CardService extends \Stripe\Service\AbstractService
      * appearing first.
      *
      * @param null|array{cardholder?: string, created?: array|int, ending_before?: string, exp_month?: int, exp_year?: int, expand?: string[], last4?: string, limit?: int, personalization_design?: string, starting_after?: string, status?: string, type?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Issuing\Card>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Issuing\Card>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -32,11 +32,11 @@ class CardService extends \Stripe\Service\AbstractService
      * Creates an Issuing <code>Card</code> object.
      *
      * @param null|array{cardholder?: string, currency: string, exp_month?: int, exp_year?: int, expand?: string[], financial_account?: string, metadata?: array<string, string>, personalization_design?: string, pin?: array{encrypted_number?: string}, replacement_for?: string, replacement_reason?: string, second_line?: null|string, shipping?: array{address: array{city: string, country: string, line1: string, line2?: string, postal_code: string, state?: string}, address_validation?: array{mode: string}, customs?: array{eori_number?: string}, name: string, phone_number?: string, require_signature?: bool, service?: string, type?: string}, spending_controls?: array{allowed_categories?: string[], allowed_merchant_countries?: string[], blocked_categories?: string[], blocked_merchant_countries?: string[], spending_limits?: array{amount: int, categories?: string[], interval: string}[]}, status?: string, type: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Card
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Card
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -48,11 +48,11 @@ class CardService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Card
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Card
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -65,11 +65,11 @@ class CardService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{cancellation_reason?: string, expand?: string[], metadata?: null|array<string, string>, personalization_design?: string, pin?: array{encrypted_number?: string}, shipping?: array{address: array{city: string, country: string, line1: string, line2?: string, postal_code: string, state?: string}, address_validation?: array{mode: string}, customs?: array{eori_number?: string}, name: string, phone_number?: string, require_signature?: bool, service?: string, type?: string}, spending_controls?: array{allowed_categories?: string[], allowed_merchant_countries?: string[], blocked_categories?: string[], blocked_merchant_countries?: string[], spending_limits?: array{amount: int, categories?: string[], interval: string}[]}, status?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Card
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Card
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

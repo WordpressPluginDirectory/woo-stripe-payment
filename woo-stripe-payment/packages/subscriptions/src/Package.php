@@ -2,6 +2,7 @@
 
 namespace PaymentPlugins\Stripe\WooCommerceSubscriptions;
 
+use PaymentPlugins\Stripe\Assets\AssetsApi;
 use PaymentPlugins\Stripe\ContextHandler;
 use PaymentPlugins\Stripe\Packages\AbstractPackage;
 use PaymentPlugins\Stripe\Payments\PaymentGatewayRegistry;
@@ -21,8 +22,11 @@ class Package extends AbstractPackage {
 	}
 
 	public function register() {
+		$this->container->register( FrontendRequests::class, function ( $container ) {
+			return new FrontendRequests( $container->get( ContextHandler::class ) );
+		} );
 		$this->container->register( PaymentIntent::class, function ( $container ) {
-			return new PaymentIntent( new FrontendRequests() );
+			return new PaymentIntent( $container->get( FrontendRequests::class ) );
 		} );
 		$this->container->register( OrderMetadata::class, function ( $container ) {
 			return new OrderMetadata();
@@ -37,6 +41,12 @@ class Package extends AbstractPackage {
 				$container->get( PaymentGatewayRegistry::class )
 			);
 		} );
+		$this->container->register( FrontendScripts::class, function ( $container ) {
+			return new FrontendScripts(
+				new AssetsApi( dirname( __DIR__ ) . '/', trailingslashit( plugin_dir_url( __DIR__ ) ), stripe_wc()->version() ),
+				$container->get( FrontendRequests::class )
+			);
+		} );
 	}
 
 	public function initialize() {
@@ -44,5 +54,6 @@ class Package extends AbstractPackage {
 		$this->container->get( OrderMetadata::class );
 		$this->container->get( SubscriptionsController::class )->initialize();
 		$this->container->get( ChangePaymentGatewayController::class )->initialize();
+		$this->container->get( FrontendScripts::class )->initialize();
 	}
 }

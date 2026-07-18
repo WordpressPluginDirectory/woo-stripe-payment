@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\FinancialConnections;
+namespace PaymentPlugins\Vendor\Stripe\Service\FinancialConnections;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class TransactionService extends \Stripe\Service\AbstractService
+class TransactionService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Financial Connections <code>Transaction</code> objects.
      *
      * @param null|array{account: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, transacted_at?: array|int, transaction_refresh?: array{after: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\FinancialConnections\Transaction>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\FinancialConnections\Transaction>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -31,11 +31,11 @@ class TransactionService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Transaction
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Transaction
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

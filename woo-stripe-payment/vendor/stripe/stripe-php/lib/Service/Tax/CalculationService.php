@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Tax;
+namespace PaymentPlugins\Vendor\Stripe\Service\Tax;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class CalculationService extends \Stripe\Service\AbstractService
+class CalculationService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Retrieves the line items of a tax calculation as a collection, if the
@@ -17,11 +17,11 @@ class CalculationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Tax\CalculationLineItem>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Tax\CalculationLineItem>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allLineItems($id, $params = null, $opts = null)
     {
@@ -33,11 +33,11 @@ class CalculationService extends \Stripe\Service\AbstractService
      * object.
      *
      * @param null|array{currency: string, customer?: string, customer_details?: array{address?: array{city?: null|string, country: string, line1?: null|string, line2?: null|string, postal_code?: null|string, state?: null|string}, address_source?: string, ip_address?: string, tax_ids?: array{type: string, value: string}[], taxability_override?: string}, expand?: string[], line_items: array{amount: int, metadata?: array<string, string>, product?: string, quantity?: int, reference?: string, tax_behavior?: string, tax_code?: string}[], ship_from_details?: array{address: array{city?: null|string, country: string, line1?: null|string, line2?: null|string, postal_code?: null|string, state?: null|string}}, shipping_cost?: array{amount?: int, shipping_rate?: string, tax_behavior?: string, tax_code?: string}, tax_date?: int} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Tax\Calculation
+     * @return \PaymentPlugins\Vendor\Stripe\Tax\Calculation
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -50,11 +50,11 @@ class CalculationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Tax\Calculation
+     * @return \PaymentPlugins\Vendor\Stripe\Tax\Calculation
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

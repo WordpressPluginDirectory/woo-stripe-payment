@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Stripe\Charge $charge
+ * @var \PaymentPlugins\Vendor\Stripe\Charge $charge
  */
 defined( 'ABSPATH' ) || exit;
 ?>

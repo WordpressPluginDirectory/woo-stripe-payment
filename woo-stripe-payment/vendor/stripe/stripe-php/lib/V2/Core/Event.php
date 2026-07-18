@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\V2\Core;
+namespace PaymentPlugins\Vendor\Stripe\V2\Core;
 
 /**
  * Base class for V2 events.
@@ -11,11 +11,11 @@ namespace Stripe\V2\Core;
  * @property string $id Unique identifier for the event.
  * @property string $object String representing the object's type. Objects of the same type share the same value of the object field.
  * @property int $created Time at which the object was created.
- * @property \Stripe\StripeObject $reason Reason for the event.
+ * @property \PaymentPlugins\Vendor\Stripe\StripeObject $reason Reason for the event.
  * @property string $type The type of the event.
  * @property null|string $context The Stripe account of the event
  */
-class Event extends \Stripe\ApiResource
+class Event extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'v2.core.event';
 }

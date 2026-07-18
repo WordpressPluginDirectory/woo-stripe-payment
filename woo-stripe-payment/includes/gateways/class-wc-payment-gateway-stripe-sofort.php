@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Stripe_Sofort extends WC_Payment_Gateway_Stripe_Local_P
 		$this->method_title       = __( 'Sofort (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Sofort gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/sofort.svg' );
+		$this->icon = $this->assets->assets_url( 'img/sofort.svg' );
 	}
 
 }

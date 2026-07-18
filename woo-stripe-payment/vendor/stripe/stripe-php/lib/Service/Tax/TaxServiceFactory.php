@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Tax;
+namespace PaymentPlugins\Vendor\Stripe\Service\Tax;
 
 /**
  * Service factory class for API resources in the Tax namespace.
@@ -13,7 +13,7 @@ namespace Stripe\Service\Tax;
  * @property SettingsService $settings
  * @property TransactionService $transactions
  */
-class TaxServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class TaxServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

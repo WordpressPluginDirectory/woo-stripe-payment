@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Util;
+namespace PaymentPlugins\Vendor\Stripe\Util;
 
 /**
  * Describes a logger instance.

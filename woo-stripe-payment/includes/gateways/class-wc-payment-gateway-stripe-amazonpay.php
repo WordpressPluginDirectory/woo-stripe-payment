@@ -66,7 +66,7 @@ class WC_Payment_Gateway_Stripe_AmazonPay extends WC_Payment_Gateway_Stripe_Loca
 		$this->method_title       = __( 'Amazon Pay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Amazon Pay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/amazon_pay.svg' );
+		$this->icon = $this->assets->assets_url( 'img/amazon_pay.svg' );
 	}
 
 	/**

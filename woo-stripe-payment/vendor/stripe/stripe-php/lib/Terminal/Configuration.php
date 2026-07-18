@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe\Terminal;
+namespace PaymentPlugins\Vendor\Stripe\Terminal;
 
 /**
  * A Configurations object represents how features should be configured for terminal readers.
@@ -10,26 +9,24 @@ namespace Stripe\Terminal;
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property null|(object{splashscreen?: string|\Stripe\File}&\Stripe\StripeObject) $bbpos_wisepad3
- * @property null|(object{splashscreen?: string|\Stripe\File}&\Stripe\StripeObject) $bbpos_wisepos_e
- * @property null|(object{enabled: bool}&\Stripe\StripeObject) $cellular
+ * @property null|(object{splashscreen?: string|\PaymentPlugins\Vendor\Stripe\File}&\PaymentPlugins\Vendor\Stripe\StripeObject) $bbpos_wisepad3
+ * @property null|(object{splashscreen?: string|\PaymentPlugins\Vendor\Stripe\File}&\PaymentPlugins\Vendor\Stripe\StripeObject) $bbpos_wisepos_e
+ * @property null|(object{enabled: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject) $cellular
  * @property null|bool $is_account_default Whether this Configuration is the default for your account
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $name String indicating the name of the Configuration object, set by the user
- * @property null|(object{enabled: null|bool}&\Stripe\StripeObject) $offline
- * @property null|(object{end_hour: int, start_hour: int}&\Stripe\StripeObject) $reboot_window
- * @property null|(object{splashscreen?: string|\Stripe\File}&\Stripe\StripeObject) $stripe_s700
- * @property null|(object{splashscreen?: string|\Stripe\File}&\Stripe\StripeObject) $stripe_s710
- * @property null|(object{aed?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), aud?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), cad?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), chf?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), czk?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), dkk?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), eur?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), gbp?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), gip?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), hkd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), huf?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), jpy?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), mxn?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), myr?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), nok?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), nzd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), pln?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), ron?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), sek?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), sgd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject), usd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\Stripe\StripeObject)}&\Stripe\StripeObject) $tipping
- * @property null|(object{splashscreen?: string|\Stripe\File}&\Stripe\StripeObject) $verifone_p400
- * @property null|(object{enterprise_eap_peap?: (object{ca_certificate_file?: string, password: string, ssid: string, username: string}&\Stripe\StripeObject), enterprise_eap_tls?: (object{ca_certificate_file?: string, client_certificate_file: string, private_key_file: string, private_key_file_password?: string, ssid: string}&\Stripe\StripeObject), personal_psk?: (object{password: string, ssid: string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject) $wifi
+ * @property null|(object{enabled: null|bool}&\PaymentPlugins\Vendor\Stripe\StripeObject) $offline
+ * @property null|(object{end_hour: int, start_hour: int}&\PaymentPlugins\Vendor\Stripe\StripeObject) $reboot_window
+ * @property null|(object{splashscreen?: string|\PaymentPlugins\Vendor\Stripe\File}&\PaymentPlugins\Vendor\Stripe\StripeObject) $stripe_s700
+ * @property null|(object{splashscreen?: string|\PaymentPlugins\Vendor\Stripe\File}&\PaymentPlugins\Vendor\Stripe\StripeObject) $stripe_s710
+ * @property null|(object{aed?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), aud?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), cad?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), chf?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), czk?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), dkk?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), eur?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), gbp?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), gip?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), hkd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), huf?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), jpy?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), mxn?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), myr?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), nok?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), nzd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), pln?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), ron?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), sek?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), sgd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject), usd?: (object{fixed_amounts?: null|int[], percentages?: null|int[], smart_tip_threshold?: int}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $tipping
+ * @property null|(object{splashscreen?: string|\PaymentPlugins\Vendor\Stripe\File}&\PaymentPlugins\Vendor\Stripe\StripeObject) $verifone_p400
+ * @property null|(object{enterprise_eap_peap?: (object{ca_certificate_file?: string, password: string, ssid: string, username: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), enterprise_eap_tls?: (object{ca_certificate_file?: string, client_certificate_file: string, private_key_file: string, private_key_file_password?: string, ssid: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), personal_psk?: (object{password: string, ssid: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $wifi
  */
-class Configuration extends \Stripe\ApiResource
+class Configuration extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'terminal.configuration';
-
-    use \Stripe\ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * Creates a new <code>Configuration</code> object.
      *
@@ -38,20 +35,17 @@ class Configuration extends \Stripe\ApiResource
      *
      * @return Configuration the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Deletes a <code>Configuration</code> object.
      *
@@ -60,36 +54,31 @@ class Configuration extends \Stripe\ApiResource
      *
      * @return Configuration the deleted resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of <code>Configuration</code> objects.
      *
      * @param null|array{ending_before?: string, expand?: string[], is_account_default?: bool, limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<Configuration> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<Configuration> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a <code>Configuration</code> object.
      *
@@ -98,17 +87,15 @@ class Configuration extends \Stripe\ApiResource
      *
      * @return Configuration
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates a new <code>Configuration</code> object.
      *
@@ -118,17 +105,15 @@ class Configuration extends \Stripe\ApiResource
      *
      * @return Configuration the updated resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

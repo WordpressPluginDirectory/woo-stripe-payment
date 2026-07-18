@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
@@ -17,11 +17,11 @@ class TransferService extends AbstractService
      * first.
      *
      * @param null|array{created?: array|int, destination?: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, transfer_group?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Transfer>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Transfer>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -37,11 +37,11 @@ class TransferService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\TransferReversal>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\TransferReversal>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allReversals($parentId, $params = null, $opts = null)
     {
@@ -54,11 +54,11 @@ class TransferService extends AbstractService
      * cover the transfer amount, or you’ll receive an “Insufficient Funds” error.
      *
      * @param null|array{amount?: int, currency: string, description?: string, destination: string, expand?: string[], metadata?: array<string, string>, source_transaction?: string, source_type?: string, transfer_group?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Transfer
+     * @return \PaymentPlugins\Vendor\Stripe\Transfer
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -77,11 +77,11 @@ class TransferService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{amount?: int, description?: string, expand?: string[], metadata?: null|array<string, string>, refund_application_fee?: bool} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\TransferReversal
+     * @return \PaymentPlugins\Vendor\Stripe\TransferReversal
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createReversal($parentId, $params = null, $opts = null)
     {
@@ -95,11 +95,11 @@ class TransferService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Transfer
+     * @return \PaymentPlugins\Vendor\Stripe\Transfer
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -114,11 +114,11 @@ class TransferService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\TransferReversal
+     * @return \PaymentPlugins\Vendor\Stripe\TransferReversal
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveReversal($parentId, $id, $params = null, $opts = null)
     {
@@ -133,11 +133,11 @@ class TransferService extends AbstractService
      *
      * @param string $id
      * @param null|array{description?: string, expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Transfer
+     * @return \PaymentPlugins\Vendor\Stripe\Transfer
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {
@@ -153,11 +153,11 @@ class TransferService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\TransferReversal
+     * @return \PaymentPlugins\Vendor\Stripe\TransferReversal
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function updateReversal($parentId, $id, $params = null, $opts = null)
     {

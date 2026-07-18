@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Invoice Items represent the component lines of an <a href="https://docs.stripe.com/api/invoices">invoice</a>. When you create an invoice item with an <code>invoice</code> field, it is attached to the specified invoice and included as <a href="https://docs.stripe.com/api/invoices/line_item">an invoice line item</a> within <a href="https://docs.stripe.com/api/invoices/object#invoice_object-lines">invoice.lines</a>.
@@ -40,9 +39,7 @@ namespace Stripe;
 class InvoiceItem extends ApiResource
 {
     const OBJECT_NAME = 'invoiceitem';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * Creates an item to be added to a draft invoice (up to 250 items per invoice). If
      * no invoice is specified, the item will be on the next invoice created for the
@@ -59,14 +56,11 @@ class InvoiceItem extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Deletes an invoice item, removing it from an invoice. Deleting invoice items is
      * only possible when they’re not attached to invoices, or if it’s attached to a
@@ -82,14 +76,11 @@ class InvoiceItem extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of your invoice items. Invoice items are returned sorted by
      * creation date, with the most recently created invoice items appearing first.
@@ -104,10 +95,8 @@ class InvoiceItem extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the invoice item with the given ID.
      *
@@ -120,13 +109,11 @@ class InvoiceItem extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the amount or description of an invoice item on an upcoming invoice.
      * Updating an invoice item is only possible before the invoice it’s attached to is
@@ -144,11 +131,9 @@ class InvoiceItem extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

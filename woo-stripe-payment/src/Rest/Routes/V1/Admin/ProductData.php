@@ -60,7 +60,7 @@ class ProductData extends AbstractAdminRoute {
 		$loop             = 0;
 
 		foreach ( $gateways as $gateway ) {
-			$order[ $gateway ] = $loop++;
+			$order[ $gateway ] = $loop ++;
 		}
 
 		$product->update_meta_data( \WC_Stripe_Constants::PRODUCT_GATEWAY_ORDER, $order );

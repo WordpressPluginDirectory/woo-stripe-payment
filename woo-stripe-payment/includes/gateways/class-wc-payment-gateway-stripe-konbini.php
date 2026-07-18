@@ -33,7 +33,7 @@ class WC_Payment_Gateway_Stripe_Konbini extends WC_Payment_Gateway_Stripe_Local_
 		$this->method_title       = __( 'Konbini (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Konbini gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/konbini.svg' );
+		$this->icon = $this->assets->assets_url( 'img/konbini.svg' );
 	}
 
 	public function get_local_payment_settings() {

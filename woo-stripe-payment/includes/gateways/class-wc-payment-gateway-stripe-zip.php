@@ -26,7 +26,7 @@ class WC_Payment_Gateway_Stripe_Zip extends WC_Payment_Gateway_Stripe_Local_Paym
 		$this->method_title       = __( 'Zip (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Zip gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/zip.svg' );
+		$this->icon = $this->assets->assets_url( 'img/zip.svg' );
 	}
 
 	protected function validate_local_payment_available( $currency, $billing_country, $total ) {

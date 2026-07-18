@@ -4,9 +4,9 @@
 namespace PaymentPlugins\Stripe\CheckoutWC\PaymentGateways;
 
 use PaymentPlugins\Stripe\CheckoutWC\Constants;
-use Stripe\Customer;
-use Stripe\Exception\ApiErrorException;
-use Stripe\PaymentIntent;
+use PaymentPlugins\Vendor\Stripe\Customer;
+use PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException;
+use PaymentPlugins\Vendor\Stripe\PaymentIntent;
 use WC_Order;
 use WC_Payment_Token_Stripe;
 use WC_Stripe_Constants;

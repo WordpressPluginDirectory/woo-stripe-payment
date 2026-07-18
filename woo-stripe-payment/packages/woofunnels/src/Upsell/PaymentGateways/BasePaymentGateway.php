@@ -208,11 +208,11 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 	}
 
 	/**
-	 * @param \Stripe\PaymentIntent $intent
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent
 	 *
 	 * @return string
 	 */
-	protected function get_payment_intent_redirect_url( \Stripe\PaymentIntent $intent ) {
+	protected function get_payment_intent_redirect_url( \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent ) {
 		return sprintf( '#response=%s', rawurlencode( base64_encode(
 			wp_json_encode( [
 					'payment_intent' => $intent->id,
@@ -251,8 +251,8 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 	}
 
 	/**
-	 * @param \Stripe\Charge $charge
-	 * @param \WC_Order      $order
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+	 * @param \WC_Order                            $order
 	 *
 	 * @return void
 	 */
@@ -282,7 +282,7 @@ class BasePaymentGateway extends \WFOCU_Gateway {
 	 * @param array     $charge_ids
 	 *
 	 * @return void
-	 * @throws \Stripe\Exception\ApiErrorException
+	 * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException
 	 */
 	public function process_refund_success( $order, $charge_ids ) {
 		$pb = \WC_Stripe_Utils::get_payment_balance( $order );

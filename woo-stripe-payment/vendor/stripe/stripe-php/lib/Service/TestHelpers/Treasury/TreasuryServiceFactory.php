@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers\Treasury;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers\Treasury;
 
 /**
  * Service factory class for API resources in the Treasury namespace.
@@ -13,7 +13,7 @@ namespace Stripe\Service\TestHelpers\Treasury;
  * @property ReceivedCreditService $receivedCredits
  * @property ReceivedDebitService $receivedDebits
  */
-class TreasuryServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class TreasuryServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

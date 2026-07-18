@@ -26,7 +26,7 @@ class WC_Payment_Gateway_Stripe_Swish extends WC_Payment_Gateway_Stripe_Local_Pa
 		$this->method_title       = __( 'Swish (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Swish gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/swish.svg' );
+		$this->icon = $this->assets->assets_url( 'img/swish.svg' );
 	}
 
 }

@@ -19,7 +19,7 @@ class BilliePayment extends AbstractStripeLocalPayment {
 				'accountCountry'    => stripe_wc()->account_settings->get_account_country( wc_stripe_mode() ),
 				'eu_countries'      => CountryUtils::get_eu_counties(),
 				'account_countries' => [],
-				'requiredParams'  => $this->payment_method->get_required_parameters(),
+				'requiredParams'    => $this->payment_method->get_required_parameters(),
 			]
 		);
 	}

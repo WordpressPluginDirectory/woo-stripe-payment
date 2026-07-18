@@ -204,9 +204,12 @@ class WC_Payment_Gateway_Stripe_ACH extends WC_Payment_Gateway_Stripe_Local_Paym
 	}
 
 	public function get_payment_element_options() {
-		return array(
-			'business' => array(
-				'name' => $this->get_option( 'business_name', '' )
+		return array_merge(
+			parent::get_payment_element_options(),
+			array(
+				'business' => array(
+					'name' => $this->get_option( 'business_name', '' )
+				)
 			)
 		);
 	}

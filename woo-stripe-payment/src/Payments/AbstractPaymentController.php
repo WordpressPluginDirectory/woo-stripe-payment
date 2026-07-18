@@ -11,7 +11,7 @@ abstract class AbstractPaymentController {
 	 * @param \WC_Order       $order
 	 * @param AbstractGateway $payment_method
 	 *
-	 * @return \Stripe\SetupIntent|array|\WP_Error The setup intent object on success, a redirect array if action is required, or WP_Error on failure.
+	 * @return \PaymentPlugins\Vendor\Stripe\SetupIntent|array|\WP_Error The setup intent object on success, a redirect array if action is required, or WP_Error on failure.
 	 * @throws \Exception
 	 */
 	public function process_setup_intent( \WC_Order $order, AbstractGateway $payment_method ) {

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Sigma;
+namespace PaymentPlugins\Vendor\Stripe\Sigma;
 
 /**
  * If you have <a href="https://docs.stripe.com/sigma/scheduled-queries">scheduled a Sigma query</a>, you'll
@@ -14,15 +14,15 @@ namespace Stripe\Sigma;
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property int $data_load_time When the query was run, Sigma contained a snapshot of your Stripe data at this time.
- * @property null|(object{message: string}&\Stripe\StripeObject) $error
- * @property null|\Stripe\File $file The file object representing the results of the query.
+ * @property null|(object{message: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $error
+ * @property null|\PaymentPlugins\Vendor\Stripe\File $file The file object representing the results of the query.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property int $result_available_until Time at which the result expires and is no longer available for download.
  * @property string $sql SQL for the query.
  * @property string $status The query's execution status, which will be <code>completed</code> for successful runs, and <code>canceled</code>, <code>failed</code>, or <code>timed_out</code> otherwise.
  * @property string $title Title of the query.
  */
-class ScheduledQueryRun extends \Stripe\ApiResource
+class ScheduledQueryRun extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'scheduled_query_run';
 
@@ -32,15 +32,15 @@ class ScheduledQueryRun extends \Stripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<ScheduledQueryRun> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<ScheduledQueryRun> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -51,11 +51,11 @@ class ScheduledQueryRun extends \Stripe\ApiResource
      *
      * @return ScheduledQueryRun
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

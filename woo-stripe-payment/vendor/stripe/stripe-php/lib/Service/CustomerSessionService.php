@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
@@ -17,11 +17,11 @@ class CustomerSessionService extends AbstractService
      * customer resources.
      *
      * @param null|array{components: array{buy_button?: array{enabled: bool}, customer_sheet?: array{enabled: bool, features?: array{payment_method_allow_redisplay_filters?: string[], payment_method_remove?: string}}, mobile_payment_element?: array{enabled: bool, features?: array{payment_method_allow_redisplay_filters?: string[], payment_method_redisplay?: string, payment_method_remove?: string, payment_method_save?: string, payment_method_save_allow_redisplay_override?: string}}, payment_element?: array{enabled: bool, features?: array{payment_method_allow_redisplay_filters?: string[], payment_method_redisplay?: string, payment_method_redisplay_limit?: int, payment_method_remove?: string, payment_method_save?: string, payment_method_save_usage?: string}}, pricing_table?: array{enabled: bool}}, customer?: string, customer_account?: string, expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\CustomerSession
+     * @return \PaymentPlugins\Vendor\Stripe\CustomerSession
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\FinancialConnections;
+namespace PaymentPlugins\Vendor\Stripe\Service\FinancialConnections;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class AccountService extends \Stripe\Service\AbstractService
+class AccountService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Financial Connections <code>Account</code> objects.
      *
      * @param null|array{account_holder?: array{account?: string, customer?: string, customer_account?: string}, ending_before?: string, expand?: string[], limit?: int, session?: string, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\FinancialConnections\Account>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\FinancialConnections\Account>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -31,11 +31,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, ownership: string, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\FinancialConnections\AccountOwner>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\FinancialConnections\AccountOwner>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allOwners($id, $params = null, $opts = null)
     {
@@ -49,11 +49,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Account
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function disconnect($id, $params = null, $opts = null)
     {
@@ -65,11 +65,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], features: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Account
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function refresh($id, $params = null, $opts = null)
     {
@@ -81,11 +81,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Account
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -99,11 +99,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], features: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Account
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function subscribe($id, $params = null, $opts = null)
     {
@@ -116,11 +116,11 @@ class AccountService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], features: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\FinancialConnections\Account
+     * @return \PaymentPlugins\Vendor\Stripe\FinancialConnections\Account
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function unsubscribe($id, $params = null, $opts = null)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Information on the API request that instigated the event.

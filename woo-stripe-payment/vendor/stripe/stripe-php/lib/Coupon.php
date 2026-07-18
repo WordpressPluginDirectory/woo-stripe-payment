@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A coupon contains information about a percent-off or amount-off discount you
@@ -30,13 +29,10 @@ namespace Stripe;
 class Coupon extends ApiResource
 {
     const OBJECT_NAME = 'coupon';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const DURATION_FOREVER = 'forever';
     const DURATION_ONCE = 'once';
     const DURATION_REPEATING = 'repeating';
-
     /**
      * You can create coupons easily via the <a
      * href="https://dashboard.stripe.com/coupons">coupon management</a> page of the
@@ -64,14 +60,11 @@ class Coupon extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * You can delete coupons via the <a
      * href="https://dashboard.stripe.com/coupons">coupon management</a> page of the
@@ -89,14 +82,11 @@ class Coupon extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of your coupons.
      *
@@ -110,10 +100,8 @@ class Coupon extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the coupon with the given ID.
      *
@@ -126,13 +114,11 @@ class Coupon extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the metadata of a coupon. Other coupon details (currency, duration,
      * amount_off) are, by design, not editable.
@@ -149,11 +135,9 @@ class Coupon extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

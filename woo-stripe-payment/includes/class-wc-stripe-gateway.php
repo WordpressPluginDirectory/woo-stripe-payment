@@ -1,8 +1,7 @@
 <?php
 
-defined( 'ABSPATH' ) || exit();
-
-require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-api-operation.php' );
+defined( 'ABSPATH' ) || exit;
+require_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-api-operation.php';
 
 /**
  * Gateway class that abstracts all API calls to Stripe.
@@ -10,79 +9,75 @@ require_once( WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-api-operati
  * @author  Payment Plugins
  * @package PaymentPlugins\Classes
  *
- * @property \Stripe\Service\AccountLinkService                        $accountLinks
- * @property \Stripe\Service\AccountService                            $accounts
- * @property \Stripe\Service\AccountSessionService                     $accountSessions
- * @property \Stripe\Service\ApplePayDomainService                     $applePayDomains
- * @property \Stripe\Service\ApplicationFeeService                     $applicationFees
- * @property \Stripe\Service\BalanceService                            $balance
- * @property \Stripe\Service\BalanceTransactionService                 $balanceTransactions
- * @property \Stripe\Service\BillingPortal\BillingPortalServiceFactory $billingPortal
- * @property \Stripe\Service\ChargeService                             $charges
- * @property \Stripe\Service\Checkout\CheckoutServiceFactory           $checkout
- * @property \Stripe\Service\CountrySpecService                        $countrySpecs
- * @property \Stripe\Service\CouponService                             $coupons
- * @property \Stripe\Service\CreditNoteService                         $creditNotes
- * @property \Stripe\Service\CustomerService                           $customers
- * @property \Stripe\Service\DisputeService                            $disputes
- * @property \Stripe\Service\EphemeralKeyService                       $ephemeralKeys
- * @property \Stripe\Service\EventService                              $events
- * @property \Stripe\Service\ExchangeRateService                       $exchangeRates
- * @property \Stripe\Service\FileLinkService                           $fileLinks
- * @property \Stripe\Service\FileService                               $files
- * @property \Stripe\Service\InvoiceItemService                        $invoiceItems
- * @property \Stripe\Service\InvoiceService                            $invoices
- * @property \Stripe\Service\Issuing\IssuingServiceFactory             $issuing
- * @property \Stripe\Service\MandateService                            $mandates
- * @property \Stripe\Service\OrderReturnService                        $orderReturns
- * @property \Stripe\Service\OrderService                              $orders
- * @property \Stripe\Service\PaymentIntentService                      $paymentIntents
- * @property \Stripe\Service\PaymentMethodService                      $paymentMethods
- * @property \Stripe\Service\PaymentMethodDomainService                $paymentMethodDomains
- * @property \Stripe\Service\PayoutService                             $payouts
- * @property \Stripe\Service\PlanService                               $plans
- * @property \Stripe\Service\PriceService                              $prices
- * @property \Stripe\Service\ProductService                            $products
- * @property \Stripe\Service\Radar\RadarServiceFactory                 $radar
- * @property \Stripe\Service\RefundService                             $refunds
- * @property \Stripe\Service\Reporting\ReportingServiceFactory         $reporting
- * @property \Stripe\Service\ReviewService                             $reviews
- * @property \Stripe\Service\SetupIntentService                        $setupIntents
- * @property \Stripe\Service\Sigma\SigmaServiceFactory                 $sigma
- * @property \Stripe\Service\SkuService                                $skus
- * @property \Stripe\Service\SourceService                             $sources
- * @property \Stripe\Service\SubscriptionItemService                   $subscriptionItems
- * @property \Stripe\Service\SubscriptionScheduleService               $subscriptionSchedules
- * @property \Stripe\Service\SubscriptionService                       $subscriptions
- * @property \Stripe\Service\TaxRateService                            $taxRates
- * @property \Stripe\Service\Terminal\TerminalServiceFactory           $terminal
- * @property \Stripe\Service\TokenService                              $tokens
- * @property \Stripe\Service\TopupService                              $topups
- * @property \Stripe\Service\TransferService                           $transfers
- * @property \Stripe\Service\WebhookEndpointService                    $webhookEndpoints
- * @property \Stripe\Service\PaymentMethodConfigurationService         $paymentMethodConfigurations
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountLinkService                        $accountLinks
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountService                            $accounts
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountSessionService                     $accountSessions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ApplePayDomainService                     $applePayDomains
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ApplicationFeeService                     $applicationFees
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BalanceService                            $balance
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BalanceTransactionService                 $balanceTransactions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BillingPortal\BillingPortalServiceFactory $billingPortal
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ChargeService                             $charges
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Checkout\CheckoutServiceFactory           $checkout
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CountrySpecService                        $countrySpecs
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CouponService                             $coupons
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CreditNoteService                         $creditNotes
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CustomerService                           $customers
+ * @property \PaymentPlugins\Vendor\Stripe\Service\DisputeService                            $disputes
+ * @property \PaymentPlugins\Vendor\Stripe\Service\EphemeralKeyService                       $ephemeralKeys
+ * @property \PaymentPlugins\Vendor\Stripe\Service\EventService                              $events
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ExchangeRateService                       $exchangeRates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\FileLinkService                           $fileLinks
+ * @property \PaymentPlugins\Vendor\Stripe\Service\FileService                               $files
+ * @property \PaymentPlugins\Vendor\Stripe\Service\InvoiceItemService                        $invoiceItems
+ * @property \PaymentPlugins\Vendor\Stripe\Service\InvoiceService                            $invoices
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Issuing\IssuingServiceFactory             $issuing
+ * @property \PaymentPlugins\Vendor\Stripe\Service\MandateService                            $mandates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\OrderReturnService                        $orderReturns
+ * @property \PaymentPlugins\Vendor\Stripe\Service\OrderService                              $orders
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentIntentService                      $paymentIntents
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodService                      $paymentMethods
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodDomainService                $paymentMethodDomains
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PayoutService                             $payouts
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PlanService                               $plans
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PriceService                              $prices
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ProductService                            $products
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Radar\RadarServiceFactory                 $radar
+ * @property \PaymentPlugins\Vendor\Stripe\Service\RefundService                             $refunds
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Reporting\ReportingServiceFactory         $reporting
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ReviewService                             $reviews
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SetupIntentService                        $setupIntents
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Sigma\SigmaServiceFactory                 $sigma
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SkuService                                $skus
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SourceService                             $sources
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionItemService                   $subscriptionItems
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionScheduleService               $subscriptionSchedules
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionService                       $subscriptions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TaxRateService                            $taxRates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Terminal\TerminalServiceFactory           $terminal
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TokenService                              $tokens
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TopupService                              $topups
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TransferService                           $transfers
+ * @property \PaymentPlugins\Vendor\Stripe\Service\WebhookEndpointService                    $webhookEndpoints
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodConfigurationService         $paymentMethodConfigurations
  */
 class WC_Stripe_Gateway {
-
 	/**
 	 *
-	 * @var Stripe mode (test, live)
+	 * @var \Stripe mode (test, live)
 	 * @since 3.0.5
 	 */
 	private $mode = null;
-
 	private $messages = array();
-
 	/**
 	 *
 	 * @var string
 	 * @since 3.0.8
 	 */
 	private $secret_key = null;
-
 	/**
 	 *
-	 * @var \Stripe\StripeClient
+	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient
 	 */
 	private $client = null;
 
@@ -93,7 +88,7 @@ class WC_Stripe_Gateway {
 		if ( null != $secret_key ) {
 			$this->secret_key = $secret_key;
 		}
-		$this->client = new \Stripe\StripeClient( array_merge( $this->get_client_config(), $config ) );
+		$this->client = new \PaymentPlugins\Vendor\Stripe\StripeClient( array_merge( $this->get_client_config(), $config ) );
 		self::init();
 	}
 
@@ -102,7 +97,7 @@ class WC_Stripe_Gateway {
 	}
 
 	public static function init() {
-		\Stripe\Stripe::setAppInfo( 'WordPress woo-stripe-payment', stripe_wc()->version(), 'https://wordpress.org/plugins/woo-stripe-payment/', 'pp_partner_FdPtriN2Q7JLOe' );
+		\PaymentPlugins\Vendor\Stripe\Stripe::setAppInfo( 'WordPress woo-stripe-payment', stripe_wc()->version(), 'https://wordpress.org/plugins/woo-stripe-payment/', 'pp_partner_FdPtriN2Q7JLOe' );
 	}
 
 	public function __get( $key ) {
@@ -157,7 +152,7 @@ class WC_Stripe_Gateway {
 	 * @param array  $args
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\PaymentIntent
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\PaymentIntent
 	 */
 	public function create_payment_intent( $args, $mode = '' ) {
 		return $this->paymentIntents->create( $args, $this->get_api_options( $mode ) );
@@ -169,9 +164,9 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\PaymentIntent $intent
-	 * @param array                 $args
-	 * @param string                $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent
+	 * @param array                                       $args
+	 * @param string                                      $mode
 	 */
 	public function update_payment_intent( $id, $args, $mode = '' ) {
 		return $this->paymentIntents->update( $id, $args, $this->get_api_options( $mode ) );
@@ -179,9 +174,9 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\PaymentIntent $intent
-	 * @param array                 $args
-	 * @param string                $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent
+	 * @param array                                       $args
+	 * @param string                                      $mode
 	 */
 	public function confirm_payment_intent( $id, $args = array(), $mode = '' ) {
 		return $this->paymentIntents->confirm( $id, $args, $this->get_api_options( $mode ) );
@@ -192,7 +187,7 @@ class WC_Stripe_Gateway {
 	 * @param string $id
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\PaymentIntent
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\PaymentIntent
 	 */
 	public function fetch_payment_intent( $id, $mode = '' ) {
 		return $this->paymentIntents->retrieve( $id, array(), $this->get_api_options( $mode ) );
@@ -204,8 +199,8 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\PaymentIntent|string $id
-	 * @param string                       $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent|string $id
+	 * @param string                                             $mode
 	 */
 	public function cancel_payment_intent( $id, $mode = '' ) {
 		return $this->paymentIntents->cancel( $id, array(), $this->get_api_options( $mode ) );
@@ -216,7 +211,7 @@ class WC_Stripe_Gateway {
 	 * @param string $id
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\SetupIntent
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\SetupIntent
 	 */
 	public function fetch_setup_intent( $id, $mode = '' ) {
 		return $this->setupIntents->retrieve( $id, array(), $this->get_api_options( $mode ) );
@@ -231,7 +226,7 @@ class WC_Stripe_Gateway {
 	 * @param string $charge_id
 	 * @param string $mode
 	 *
-	 * @return \Stripe\Charge|WP_Error
+	 * @return \PaymentPlugins\Vendor\Stripe\Charge|WP_Error
 	 */
 	public function get_charge( $charge_id, $mode = '' ) {
 		return $this->charges->retrieve( $charge_id, array(), $this->get_api_options( $mode ) );
@@ -242,14 +237,14 @@ class WC_Stripe_Gateway {
 	}
 
 	public function get_payment_method( $id, $mode = '' ) {
-		return \Stripe\PaymentMethod::retrieve( $id, $this->get_api_options( $mode ) );
+		return \PaymentPlugins\Vendor\Stripe\PaymentMethod::retrieve( $id, $this->get_api_options( $mode ) );
 	}
 
 	/**
 	 *
-	 * @param \Stripe\PaymentMethod $payment_method
-	 * @param array                 $args
-	 * @param string                $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentMethod $payment_method
+	 * @param array                                       $args
+	 * @param string                                      $mode
 	 */
 	public function attach_payment_method( $id, $args = array(), $mode = '' ) {
 		return $this->paymentMethods->attach( $id, $args, $this->get_api_options( $mode ) );
@@ -261,8 +256,8 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\PaymentMethod $payment_method
-	 * @param string                $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentMethod $payment_method
+	 * @param string                                      $mode
 	 */
 	public function delete_payment_method( $id, $mode = '' ) {
 		return $this->paymentMethods->detach( $id, array(), $this->get_api_options( $mode ) );
@@ -283,7 +278,7 @@ class WC_Stripe_Gateway {
 	 * @param array  $args
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\PaymentMethod
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\PaymentMethod
 	 */
 	public function create_payment_method( $args, $mode = '' ) {
 		return $this->paymentMethods->create( $args, $this->get_api_options( $mode ) );
@@ -294,7 +289,7 @@ class WC_Stripe_Gateway {
 	 * @param string $id
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\Source
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\Source
 	 *
 	 */
 	public function fetch_payment_source( $id, $mode = '' ) {
@@ -307,7 +302,7 @@ class WC_Stripe_Gateway {
 	 * @param string $id
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\Source
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\Source
 	 */
 	public function create_customer_source( $customer_id, $id, $mode = '' ) {
 		return $this->customers->createSource( $customer_id, array( 'source' => $id ), $this->get_api_options( $mode ) );
@@ -318,7 +313,7 @@ class WC_Stripe_Gateway {
 	 * @param array  $args
 	 * @param string $mode
 	 *
-	 * @return WP_Error|\Stripe\Source
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\Source
 	 */
 	public function create_source( $args, $mode = '' ) {
 		return $this->sources->create( $args, $this->get_api_options( $mode ) );
@@ -345,13 +340,10 @@ class WC_Stripe_Gateway {
 	}
 
 	public function fetch_payment_methods( $customer_id, $mode = '', $type = 'card' ) {
-		return $this->paymentMethods->all(
-			array(
-				'customer' => $customer_id,
-				'type'     => $type,
-			),
-			$this->get_api_options( $mode )
-		);
+		return $this->paymentMethods->all( array(
+			'customer' => $customer_id,
+			'type'     => $type
+		), $this->get_api_options( $mode ) );
 	}
 
 	public function register_domain( $domain, $mode = '' ) {
@@ -370,8 +362,8 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\ApplePayDomain $domain
-	 * @param string                 $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\ApplePayDomain $domain
+	 * @param string                                       $mode
 	 *
 	 * @since 3.1.6
 	 */
@@ -384,13 +376,10 @@ class WC_Stripe_Gateway {
 	}
 
 	public function create_webhook( $url, $events, $mode = '' ) {
-		return $this->webhookEndpoints->create(
-			array(
-				'url'            => $url,
-				'enabled_events' => $events,
-			),
-			$this->get_api_options( $mode )
-		);
+		return $this->webhookEndpoints->create( array(
+			'url'            => $url,
+			'enabled_events' => $events
+		), $this->get_api_options( $mode ) );
 	}
 
 	public function update_webhook( $id, $params, $mode = '' ) {
@@ -419,10 +408,10 @@ class WC_Stripe_Gateway {
 	 */
 	private function get_error_message( $err ) {
 		$message = '';
-		if ( is_a( $err, '\Stripe\Exception\ApiErrorException' ) ) {
+		if ( is_a( $err, '\PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException' ) ) {
 			$err = $err->getError();
 		}
-		if ( is_array( $err ) || $err instanceof \Stripe\ErrorObject ) {
+		if ( is_array( $err ) || $err instanceof \PaymentPlugins\Vendor\Stripe\ErrorObject ) {
 			$this->messages = ! $this->messages ? wc_stripe_get_error_messages() : $this->messages;
 			$keys           = array();
 			if ( isset( $err['code'] ) ) {
@@ -459,13 +448,13 @@ class WC_Stripe_Gateway {
 
 	/**
 	 *
-	 * @param \Stripe\Exception\ApiErrorException $e
-	 * @param string                              $code
+	 * @param \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e
+	 * @param string                                                    $code
 	 *
 	 * @since 3.1.1
 	 */
 	public function get_wp_error( $e, $code = 'stripe-error' ) {
-		if ( ( $json_body = $e->getJsonBody() ) ) {
+		if ( $json_body = $e->getJsonBody() ) {
 			$err = $json_body['error'];
 		} else {
 			$err = '';
@@ -483,7 +472,7 @@ class WC_Stripe_Gateway {
 	public function mode( $mode ) {
 		if ( $mode instanceof WC_Order ) {
 			$this->mode = wc_stripe_order_mode( $mode );
-		} elseif ( $mode instanceof \Stripe\ApiResource ) {
+		} elseif ( $mode instanceof \PaymentPlugins\Vendor\Stripe\ApiResource ) {
 			if ( isset( $mode->livemode ) ) {
 				$this->mode === $mode->livemode ? 'live' : 'test';
 			}
@@ -493,5 +482,4 @@ class WC_Stripe_Gateway {
 
 		return $this;
 	}
-
 }

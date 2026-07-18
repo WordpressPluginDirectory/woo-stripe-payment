@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A dispute occurs when a customer questions your charge with their card issuer.
@@ -23,7 +22,7 @@ namespace Stripe;
  * @property (object{due_by: null|int, enhanced_eligibility: (object{visa_compelling_evidence_3?: (object{required_actions: string[], status: string}&StripeObject), visa_compliance?: (object{status: string}&StripeObject)}&StripeObject), has_evidence: bool, past_due: bool, submission_count: int}&StripeObject) $evidence_details
  * @property bool $is_charge_refundable If true, it's still possible to refund the disputed payment. After the payment has been fully refunded, no further funds are withdrawn from your Stripe account as a result of this dispute.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $network_reason_code Network-dependent reason code for the dispute.
  * @property null|PaymentIntent|string $payment_intent ID of the PaymentIntent that's disputed.
  * @property null|(object{amazon_pay?: (object{dispute_type: null|string}&StripeObject), card?: (object{brand: string, case_type: string, network_reason_code: null|string}&StripeObject), klarna?: (object{chargeback_loss_reason_code?: string, reason_code: null|string}&StripeObject), paypal?: (object{case_id: null|string, reason_code: null|string}&StripeObject), type: string}&StripeObject) $payment_method_details
@@ -33,9 +32,7 @@ namespace Stripe;
 class Dispute extends ApiResource
 {
     const OBJECT_NAME = 'dispute';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const REASON_BANK_CANNOT_PROCESS = 'bank_cannot_process';
     const REASON_CHECK_RETURNED = 'check_returned';
     const REASON_CREDIT_NOT_PROCESSED = 'credit_not_processed';
@@ -50,7 +47,6 @@ class Dispute extends ApiResource
     const REASON_PRODUCT_UNACCEPTABLE = 'product_unacceptable';
     const REASON_SUBSCRIPTION_CANCELED = 'subscription_canceled';
     const REASON_UNRECOGNIZED = 'unrecognized';
-
     const STATUS_LOST = 'lost';
     const STATUS_NEEDS_RESPONSE = 'needs_response';
     const STATUS_PREVENTED = 'prevented';
@@ -59,7 +55,6 @@ class Dispute extends ApiResource
     const STATUS_WARNING_NEEDS_RESPONSE = 'warning_needs_response';
     const STATUS_WARNING_UNDER_REVIEW = 'warning_under_review';
     const STATUS_WON = 'won';
-
     /**
      * Returns a list of your disputes.
      *
@@ -73,10 +68,8 @@ class Dispute extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the dispute with the given ID.
      *
@@ -89,13 +82,11 @@ class Dispute extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * When you get a dispute, contacting your customer is always the best first step.
      * If that doesn’t work, you can submit evidence to help us resolve the dispute in
@@ -119,14 +110,11 @@ class Dispute extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -140,7 +128,6 @@ class Dispute extends ApiResource
         $url = $this->instanceUrl() . '/close';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

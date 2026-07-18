@@ -39,6 +39,9 @@ class CheckoutFormValidation extends AbstractRoute {
 			 * by the method WC_Checkout::validate_posted_data
 			 */
 			$method->getClosure( $checkout )( $data, $errors );
+
+			//do_action( 'woocommerce_after_checkout_validation', $data, $errors );
+
 			if ( $errors->has_errors() ) {
 				return [
 					'success'  => false,
@@ -47,7 +50,10 @@ class CheckoutFormValidation extends AbstractRoute {
 			}
 
 			return [
-				'success' => true
+				'success'  => false,
+				'messages' => [
+					__( 'Please fill out all required fields before proceeding with payment.', 'woo-stripe-payment' )
+				]
 			];
 		} catch ( \ReflectionException $e ) {
 			wc_stripe_log_error( 'Error loading WC_Checkout for form validation.' );

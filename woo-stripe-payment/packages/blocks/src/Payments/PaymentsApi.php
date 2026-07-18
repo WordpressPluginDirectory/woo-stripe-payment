@@ -281,11 +281,15 @@ class PaymentsApi {
 				'mode'           => wc_stripe_mode(),
 				'publishableKey' => wc_stripe_get_publishable_key(),
 				'stripeParams'   => [
-					'stripeAccount' => wc_stripe_get_account_id(),
-					'apiVersion'    => wc_stripe_get_container()->get( 'API_VERSION' ),
-					'betas'         => [
+					'stripeAccount'  => wc_stripe_get_account_id(),
+					'betas'          => [
 						'deferred_intent_blik_beta_1',
 						'disable_deferred_intent_client_validation_beta_1'
+					],
+					'developerTools' => [
+						'assistant' => [
+							'enabled' => false
+						]
 					]
 				],
 				'version'        => $this->container->get( 'VERSION' ),

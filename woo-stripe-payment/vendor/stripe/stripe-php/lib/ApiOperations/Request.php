@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\ApiOperations;
+namespace PaymentPlugins\Vendor\Stripe\ApiOperations;
 
 /**
  * Trait for resources that need to make API requests.
@@ -12,17 +12,17 @@ trait Request
     /**
      * @param null|array|mixed $params The list of parameters to validate
      *
-     * @throws \Stripe\Exception\InvalidArgumentException if $params exists and is not an array
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException if $params exists and is not an array
      */
     protected static function _validateParams($params = null)
     {
         if ($params && !\is_array($params)) {
             $message = 'You must pass an array as the first argument to Stripe API '
                 . 'method calls.  (HINT: an example call to create a charge '
-                . "would be: \"Stripe\\Charge::create(['amount' => 100, "
+                . "would be: \"PaymentPlugins\\Vendor\\Stripe\\Charge::create(['amount' => 100, "
                 . "'currency' => 'usd', 'source' => 'tok_1234'])\")";
 
-            throw new \Stripe\Exception\InvalidArgumentException($message);
+            throw new \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException($message);
         }
     }
 
@@ -36,7 +36,7 @@ trait Request
      *
      * @return array tuple containing (the JSON response, $options)
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     protected function _request($method, $url, $params = [], $options = null, $usage = [], $apiMode = 'v1')
     {
@@ -49,23 +49,23 @@ trait Request
 
     /**
      * @param string $url URL for the request
-     * @param class-string< \Stripe\Collection|\Stripe\SearchResult > $resultClass indicating what type of paginated result is returned
+     * @param class-string< \Stripe\Collection|\PaymentPlugins\Vendor\Stripe\SearchResult > $resultClass indicating what type of paginated result is returned
      * @param null|array $params list of parameters for the request
      * @param null|array|string $options
      * @param string[] $usage names of tracked behaviors associated with this request
      *
-     * @return \Stripe\Collection|\Stripe\SearchResult
+     * @return \PaymentPlugins\Vendor\Stripe\Collection|\PaymentPlugins\Vendor\Stripe\SearchResult
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     protected static function _requestPage($url, $resultClass, $params = null, $options = null, $usage = [])
     {
         self::_validateParams($params);
 
         list($response, $opts) = static::_staticRequest('get', $url, $params, $options, $usage);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         if (!$obj instanceof $resultClass) {
-            throw new \Stripe\Exception\UnexpectedValueException(
+            throw new \PaymentPlugins\Vendor\Stripe\Exception\UnexpectedValueException(
                 'Expected type ' . $resultClass . ', got "' . \get_class($obj) . '" instead.'
             );
         }
@@ -83,7 +83,7 @@ trait Request
      * @param null|array|string $options
      * @param string[] $usage names of tracked behaviors associated with this request
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     protected function _requestStream($method, $url, $readBodyChunk, $params = [], $options = null, $usage = [])
     {
@@ -101,13 +101,13 @@ trait Request
      *
      * @return array tuple containing (the JSON response, $options)
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     protected static function _staticRequest($method, $url, $params, $options, $usage = [], $apiMode = 'v1')
     {
-        $opts = \Stripe\Util\RequestOptions::parse($options);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($options);
         $baseUrl = isset($opts->apiBase) ? $opts->apiBase : static::baseUrl();
-        $requestor = new \Stripe\ApiRequestor($opts->apiKey, $baseUrl);
+        $requestor = new \PaymentPlugins\Vendor\Stripe\ApiRequestor($opts->apiKey, $baseUrl);
         list($response, $opts->apiKey) = $requestor->request($method, $url, $params, $opts->headers, $apiMode, $usage);
         $opts->discardNonPersistentHeaders();
 
@@ -122,13 +122,13 @@ trait Request
      * @param null|array|string $options
      * @param string[] $usage names of tracked behaviors associated with this request
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     protected static function _staticStreamingRequest($method, $url, $readBodyChunk, $params, $options, $usage = [])
     {
-        $opts = \Stripe\Util\RequestOptions::parse($options);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($options);
         $baseUrl = isset($opts->apiBase) ? $opts->apiBase : static::baseUrl();
-        $requestor = new \Stripe\ApiRequestor($opts->apiKey, $baseUrl);
+        $requestor = new \PaymentPlugins\Vendor\Stripe\ApiRequestor($opts->apiKey, $baseUrl);
         $requestor->requestStream($method, $url, $readBodyChunk, $params, $opts->headers);
     }
 }

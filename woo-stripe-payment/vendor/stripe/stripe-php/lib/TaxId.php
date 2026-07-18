@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * You can add one or multiple tax IDs to a <a href="https://docs.stripe.com/api/customers">customer</a> or account.
@@ -25,7 +24,6 @@ namespace Stripe;
 class TaxId extends ApiResource
 {
     const OBJECT_NAME = 'tax_id';
-
     const TYPE_AD_NRT = 'ad_nrt';
     const TYPE_AE_TRN = 'ae_trn';
     const TYPE_AL_TIN = 'al_tin';
@@ -139,7 +137,6 @@ class TaxId extends ApiResource
     const TYPE_ZA_VAT = 'za_vat';
     const TYPE_ZM_TIN = 'zm_tin';
     const TYPE_ZW_TIN = 'zw_tin';
-
     /**
      * Creates a new account or customer <code>tax_id</code> object.
      *
@@ -154,14 +151,11 @@ class TaxId extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Deletes an existing account or customer <code>tax_id</code> object.
      *
@@ -175,14 +169,11 @@ class TaxId extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of tax IDs.
      *
@@ -196,10 +187,8 @@ class TaxId extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves an account or customer <code>tax_id</code> object.
      *
@@ -212,13 +201,11 @@ class TaxId extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     const VERIFICATION_STATUS_PENDING = 'pending';
     const VERIFICATION_STATUS_UNAVAILABLE = 'unavailable';
     const VERIFICATION_STATUS_UNVERIFIED = 'unverified';

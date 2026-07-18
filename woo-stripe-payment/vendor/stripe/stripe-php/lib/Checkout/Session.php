@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe\Checkout;
+namespace PaymentPlugins\Vendor\Stripe\Checkout;
 
 /**
  * A Checkout Session represents your customer's session as they pay for
@@ -22,115 +21,103 @@ namespace Stripe\Checkout;
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property null|(object{enabled: bool}&\Stripe\StripeObject) $adaptive_pricing Settings for price localization with <a href="https://docs.stripe.com/payments/checkout/adaptive-pricing">Adaptive Pricing</a>.
- * @property null|(object{recovery: null|(object{allow_promotion_codes: bool, enabled: bool, expires_at: null|int, url: null|string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $after_expiration When set, provides configuration for actions to take if this Checkout Session expires.
+ * @property null|(object{enabled: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject) $adaptive_pricing Settings for price localization with <a href="https://docs.stripe.com/payments/checkout/adaptive-pricing">Adaptive Pricing</a>.
+ * @property null|(object{recovery: null|(object{allow_promotion_codes: bool, enabled: bool, expires_at: null|int, url: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $after_expiration When set, provides configuration for actions to take if this Checkout Session expires.
  * @property null|bool $allow_promotion_codes Enables user redeemable promotion codes.
  * @property null|int $amount_subtotal Total of all items before discounts or taxes are applied.
  * @property null|int $amount_total Total of all items after discounts and taxes are applied.
- * @property (object{enabled: bool, liability: null|(object{account?: string|\Stripe\Account, type: string}&\Stripe\StripeObject), provider: null|string, status: null|string}&\Stripe\StripeObject) $automatic_tax
+ * @property (object{enabled: bool, liability: null|(object{account?: string|\PaymentPlugins\Vendor\Stripe\Account, type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), provider: null|string, status: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $automatic_tax
  * @property null|string $billing_address_collection Describes whether Checkout should collect the customer's billing address. Defaults to <code>auto</code>.
- * @property null|(object{background_color: string, border_style: string, button_color: string, display_name: string, font_family: string, icon: null|(object{file?: string, type: string, url?: string}&\Stripe\StripeObject), logo: null|(object{file?: string, type: string, url?: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $branding_settings
+ * @property null|(object{background_color: string, border_style: string, button_color: string, display_name: string, font_family: string, icon: null|(object{file?: string, type: string, url?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), logo: null|(object{file?: string, type: string, url?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $branding_settings
  * @property null|string $cancel_url If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.
  * @property null|string $client_reference_id A unique string to reference the Checkout Session. This can be a customer ID, a cart ID, or similar, and can be used to reconcile the Session with your internal systems.
  * @property null|string $client_secret The client secret of your Checkout Session. Applies to Checkout Sessions with <code>ui_mode: embedded</code> or <code>ui_mode: custom</code>. For <code>ui_mode: embedded</code>, the client secret is to be used when initializing Stripe.js embedded checkout. For <code>ui_mode: custom</code>, use the client secret with <a href="https://docs.stripe.com/js/custom_checkout/init">initCheckout</a> on your front end.
- * @property null|(object{business_name: null|string, individual_name: null|string, shipping_details: null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject), name: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $collected_information Information about the customer collected within the Checkout Session.
- * @property null|(object{promotions: null|string, terms_of_service: null|string}&\Stripe\StripeObject) $consent Results of <code>consent_collection</code> for this session.
- * @property null|(object{payment_method_reuse_agreement: null|(object{position: string}&\Stripe\StripeObject), promotions: null|string, terms_of_service: null|string}&\Stripe\StripeObject) $consent_collection When set, provides configuration for the Checkout Session to gather active consent from customers.
+ * @property null|(object{business_name: null|string, individual_name: null|string, shipping_details: null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), name: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $collected_information Information about the customer collected within the Checkout Session.
+ * @property null|(object{promotions: null|string, terms_of_service: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $consent Results of <code>consent_collection</code> for this session.
+ * @property null|(object{payment_method_reuse_agreement: null|(object{position: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), promotions: null|string, terms_of_service: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $consent_collection When set, provides configuration for the Checkout Session to gather active consent from customers.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property null|string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
- * @property null|(object{amount_subtotal: int, amount_total: int, fx_rate: string, source_currency: string}&\Stripe\StripeObject) $currency_conversion Currency conversion details for <a href="https://docs.stripe.com/payments/checkout/adaptive-pricing">Adaptive Pricing</a> sessions created before 2025-03-31.
- * @property ((object{dropdown?: (object{default_value: null|string, options: (object{label: string, value: string}&\Stripe\StripeObject)[], value: null|string}&\Stripe\StripeObject), key: string, label: (object{custom: null|string, type: string}&\Stripe\StripeObject), numeric?: (object{default_value: null|string, maximum_length: null|int, minimum_length: null|int, value: null|string}&\Stripe\StripeObject), optional: bool, text?: (object{default_value: null|string, maximum_length: null|int, minimum_length: null|int, value: null|string}&\Stripe\StripeObject), type: string}&\Stripe\StripeObject))[] $custom_fields Collect additional information from your customer using custom fields. Up to 3 fields are supported. You can't set this parameter if <code>ui_mode</code> is <code>custom</code>.
- * @property (object{after_submit: null|(object{message: string}&\Stripe\StripeObject), shipping_address: null|(object{message: string}&\Stripe\StripeObject), submit: null|(object{message: string}&\Stripe\StripeObject), terms_of_service_acceptance: null|(object{message: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $custom_text
- * @property null|string|\Stripe\Customer $customer The ID of the customer for this Session. For Checkout Sessions in <code>subscription</code> mode or Checkout Sessions with <code>customer_creation</code> set as <code>always</code> in <code>payment</code> mode, Checkout will create a new customer object based on information provided during the payment flow unless an existing customer was provided when the Session was created.
+ * @property null|(object{amount_subtotal: int, amount_total: int, fx_rate: string, source_currency: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $currency_conversion Currency conversion details for <a href="https://docs.stripe.com/payments/checkout/adaptive-pricing">Adaptive Pricing</a> sessions created before 2025-03-31.
+ * @property ((object{dropdown?: (object{default_value: null|string, options: (object{label: string, value: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)[], value: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), key: string, label: (object{custom: null|string, type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), numeric?: (object{default_value: null|string, maximum_length: null|int, minimum_length: null|int, value: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), optional: bool, text?: (object{default_value: null|string, maximum_length: null|int, minimum_length: null|int, value: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject))[] $custom_fields Collect additional information from your customer using custom fields. Up to 3 fields are supported. You can't set this parameter if <code>ui_mode</code> is <code>custom</code>.
+ * @property (object{after_submit: null|(object{message: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), shipping_address: null|(object{message: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), submit: null|(object{message: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), terms_of_service_acceptance: null|(object{message: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $custom_text
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\Customer $customer The ID of the customer for this Session. For Checkout Sessions in <code>subscription</code> mode or Checkout Sessions with <code>customer_creation</code> set as <code>always</code> in <code>payment</code> mode, Checkout will create a new customer object based on information provided during the payment flow unless an existing customer was provided when the Session was created.
  * @property null|string $customer_account The ID of the account for this Session.
  * @property null|string $customer_creation Configure whether a Checkout Session creates a Customer when the Checkout Session completes.
- * @property null|(object{address: null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\Stripe\StripeObject), business_name: null|string, email: null|string, individual_name: null|string, name: null|string, phone: null|string, tax_exempt: null|string, tax_ids: null|((object{type: string, value: null|string}&\Stripe\StripeObject))[]}&\Stripe\StripeObject) $customer_details The customer details including the customer's tax exempt status and the customer's tax IDs. Customer's address details are not present on Sessions in <code>setup</code> mode.
+ * @property null|(object{address: null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), business_name: null|string, email: null|string, individual_name: null|string, name: null|string, phone: null|string, tax_exempt: null|string, tax_ids: null|((object{type: string, value: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject))[]}&\PaymentPlugins\Vendor\Stripe\StripeObject) $customer_details The customer details including the customer's tax exempt status and the customer's tax IDs. Customer's address details are not present on Sessions in <code>setup</code> mode.
  * @property null|string $customer_email If provided, this value will be used when the Customer object is created. If not provided, customers will be asked to enter their email address. Use this parameter to prefill customer data if you already have an email on file. To access information about the customer once the payment flow is complete, use the <code>customer</code> attribute.
- * @property null|((object{coupon: null|string|\Stripe\Coupon, promotion_code: null|string|\Stripe\PromotionCode}&\Stripe\StripeObject))[] $discounts List of coupons and promotion codes attached to the Checkout Session.
+ * @property null|((object{coupon: null|string|\PaymentPlugins\Vendor\Stripe\Coupon, promotion_code: null|string|\PaymentPlugins\Vendor\Stripe\PromotionCode}&\PaymentPlugins\Vendor\Stripe\StripeObject))[] $discounts List of coupons and promotion codes attached to the Checkout Session.
  * @property null|string[] $excluded_payment_method_types A list of the types of payment methods (e.g., <code>card</code>) that should be excluded from this Checkout Session. This should only be used when payment methods for this Checkout Session are managed through the <a href="https://dashboard.stripe.com/settings/payment_methods">Stripe Dashboard</a>.
  * @property int $expires_at The timestamp at which the Checkout Session will expire.
- * @property null|string|\Stripe\Invoice $invoice ID of the invoice created by the Checkout Session, if it exists.
- * @property null|(object{enabled: bool, invoice_data: (object{account_tax_ids: null|(string|\Stripe\TaxId)[], custom_fields: null|(object{name: string, value: string}&\Stripe\StripeObject)[], description: null|string, footer: null|string, issuer: null|(object{account?: string|\Stripe\Account, type: string}&\Stripe\StripeObject), metadata: null|\Stripe\StripeObject, rendering_options: null|(object{amount_tax_display: null|string, template: null|string}&\Stripe\StripeObject)}&\Stripe\StripeObject)}&\Stripe\StripeObject) $invoice_creation Details on the state of invoice creation for the Checkout Session.
- * @property null|\Stripe\Collection<\Stripe\LineItem> $line_items The line items purchased by the customer.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\Invoice $invoice ID of the invoice created by the Checkout Session, if it exists.
+ * @property null|(object{enabled: bool, invoice_data: (object{account_tax_ids: null|(string|\PaymentPlugins\Vendor\Stripe\TaxId)[], custom_fields: null|(object{name: string, value: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)[], description: null|string, footer: null|string, issuer: null|(object{account?: string|\PaymentPlugins\Vendor\Stripe\Account, type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), metadata: null|\PaymentPlugins\Vendor\Stripe\StripeObject, rendering_options: null|(object{amount_tax_display: null|string, template: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $invoice_creation Details on the state of invoice creation for the Checkout Session.
+ * @property null|\PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\LineItem> $line_items The line items purchased by the customer.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $locale The IETF language tag of the locale Checkout is displayed in. If blank or <code>auto</code>, the browser's locale is used.
- * @property null|\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|\PaymentPlugins\Vendor\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $mode The mode of the Checkout Session.
- * @property null|(object{business?: (object{enabled: bool, optional: bool}&\Stripe\StripeObject), individual?: (object{enabled: bool, optional: bool}&\Stripe\StripeObject)}&\Stripe\StripeObject) $name_collection
- * @property null|((object{adjustable_quantity: null|(object{enabled: bool, maximum: null|int, minimum: null|int}&\Stripe\StripeObject), price: string, quantity: int}&\Stripe\StripeObject))[] $optional_items The optional items presented to the customer at checkout.
+ * @property null|(object{business?: (object{enabled: bool, optional: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject), individual?: (object{enabled: bool, optional: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $name_collection
+ * @property null|((object{adjustable_quantity: null|(object{enabled: bool, maximum: null|int, minimum: null|int}&\PaymentPlugins\Vendor\Stripe\StripeObject), price: string, quantity: int}&\PaymentPlugins\Vendor\Stripe\StripeObject))[] $optional_items The optional items presented to the customer at checkout.
  * @property null|string $origin_context Where the user is coming from. This informs the optimizations that are applied to the session.
- * @property null|string|\Stripe\PaymentIntent $payment_intent The ID of the PaymentIntent for Checkout Sessions in <code>payment</code> mode. You can't confirm or cancel the PaymentIntent for a Checkout Session. To cancel, <a href="https://docs.stripe.com/api/checkout/sessions/expire">expire the Checkout Session</a> instead.
- * @property null|string|\Stripe\PaymentLink $payment_link The ID of the Payment Link that created this Session.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\PaymentIntent $payment_intent The ID of the PaymentIntent for Checkout Sessions in <code>payment</code> mode. You can't confirm or cancel the PaymentIntent for a Checkout Session. To cancel, <a href="https://docs.stripe.com/api/checkout/sessions/expire">expire the Checkout Session</a> instead.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\PaymentLink $payment_link The ID of the Payment Link that created this Session.
  * @property null|string $payment_method_collection Configure whether a Checkout Session should collect a payment method. Defaults to <code>always</code>.
- * @property null|(object{id: string, parent: null|string}&\Stripe\StripeObject) $payment_method_configuration_details Information about the payment method configuration used for this Checkout session if using dynamic payment methods.
- * @property null|(object{acss_debit?: (object{currency?: string, mandate_options?: (object{custom_mandate_url?: string, default_for?: string[], interval_description: null|string, payment_schedule: null|string, transaction_type: null|string}&\Stripe\StripeObject), setup_future_usage?: string, target_date?: string, verification_method?: string}&\Stripe\StripeObject), affirm?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), afterpay_clearpay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), alipay?: (object{setup_future_usage?: string}&\Stripe\StripeObject), alma?: (object{capture_method?: string}&\Stripe\StripeObject), amazon_pay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), au_becs_debit?: (object{setup_future_usage?: string, target_date?: string}&\Stripe\StripeObject), bacs_debit?: (object{mandate_options?: (object{reference_prefix?: string}&\Stripe\StripeObject), setup_future_usage?: string, target_date?: string}&\Stripe\StripeObject), bancontact?: (object{setup_future_usage?: string}&\Stripe\StripeObject), billie?: (object{capture_method?: string}&\Stripe\StripeObject), boleto?: (object{expires_after_days: int, setup_future_usage?: string}&\Stripe\StripeObject), card?: (object{capture_method?: string, installments?: (object{enabled?: bool}&\Stripe\StripeObject), request_extended_authorization?: string, request_incremental_authorization?: string, request_multicapture?: string, request_overcapture?: string, request_three_d_secure: string, restrictions?: (object{brands_blocked?: string[]}&\Stripe\StripeObject), setup_future_usage?: string, statement_descriptor_suffix_kana?: string, statement_descriptor_suffix_kanji?: string}&\Stripe\StripeObject), cashapp?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), customer_balance?: (object{bank_transfer?: (object{eu_bank_transfer?: (object{country: string}&\Stripe\StripeObject), requested_address_types?: string[], type: null|string}&\Stripe\StripeObject), funding_type: null|string, setup_future_usage?: string}&\Stripe\StripeObject), eps?: (object{setup_future_usage?: string}&\Stripe\StripeObject), fpx?: (object{setup_future_usage?: string}&\Stripe\StripeObject), giropay?: (object{setup_future_usage?: string}&\Stripe\StripeObject), grabpay?: (object{setup_future_usage?: string}&\Stripe\StripeObject), ideal?: (object{setup_future_usage?: string}&\Stripe\StripeObject), kakao_pay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), klarna?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), konbini?: (object{expires_after_days: null|int, setup_future_usage?: string}&\Stripe\StripeObject), kr_card?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), link?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), mobilepay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), multibanco?: (object{setup_future_usage?: string}&\Stripe\StripeObject), naver_pay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), oxxo?: (object{expires_after_days: int, setup_future_usage?: string}&\Stripe\StripeObject), p24?: (object{setup_future_usage?: string}&\Stripe\StripeObject), payco?: (object{capture_method?: string}&\Stripe\StripeObject), paynow?: (object{setup_future_usage?: string}&\Stripe\StripeObject), paypal?: (object{capture_method?: string, preferred_locale: null|string, reference: null|string, setup_future_usage?: string}&\Stripe\StripeObject), payto?: (object{mandate_options?: (object{amount: null|int, amount_type: null|string, end_date: null|string, payment_schedule: null|string, payments_per_period: null|int, purpose: null|string, start_date: null|string}&\Stripe\StripeObject), setup_future_usage?: string}&\Stripe\StripeObject), pix?: (object{amount_includes_iof?: string, expires_after_seconds: null|int, setup_future_usage?: string}&\Stripe\StripeObject), revolut_pay?: (object{capture_method?: string, setup_future_usage?: string}&\Stripe\StripeObject), samsung_pay?: (object{capture_method?: string}&\Stripe\StripeObject), satispay?: (object{capture_method?: string}&\Stripe\StripeObject), sepa_debit?: (object{mandate_options?: (object{reference_prefix?: string}&\Stripe\StripeObject), setup_future_usage?: string, target_date?: string}&\Stripe\StripeObject), sofort?: (object{setup_future_usage?: string}&\Stripe\StripeObject), swish?: (object{reference: null|string}&\Stripe\StripeObject), twint?: (object{setup_future_usage?: string}&\Stripe\StripeObject), us_bank_account?: (object{financial_connections?: (object{filters?: (object{account_subcategories?: string[]}&\Stripe\StripeObject), permissions?: string[], prefetch: null|string[], return_url?: string}&\Stripe\StripeObject), setup_future_usage?: string, target_date?: string, verification_method?: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $payment_method_options Payment-method-specific configuration for the PaymentIntent or SetupIntent of this CheckoutSession.
+ * @property null|(object{id: string, parent: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $payment_method_configuration_details Information about the payment method configuration used for this Checkout session if using dynamic payment methods.
+ * @property null|(object{acss_debit?: (object{currency?: string, mandate_options?: (object{custom_mandate_url?: string, default_for?: string[], interval_description: null|string, payment_schedule: null|string, transaction_type: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string, target_date?: string, verification_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), affirm?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), afterpay_clearpay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), alipay?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), alma?: (object{capture_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), amazon_pay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), au_becs_debit?: (object{setup_future_usage?: string, target_date?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), bacs_debit?: (object{mandate_options?: (object{reference_prefix?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string, target_date?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), bancontact?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), billie?: (object{capture_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), boleto?: (object{expires_after_days: int, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), card?: (object{capture_method?: string, installments?: (object{enabled?: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject), request_extended_authorization?: string, request_incremental_authorization?: string, request_multicapture?: string, request_overcapture?: string, request_three_d_secure: string, restrictions?: (object{brands_blocked?: string[]}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string, statement_descriptor_suffix_kana?: string, statement_descriptor_suffix_kanji?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), cashapp?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), customer_balance?: (object{bank_transfer?: (object{eu_bank_transfer?: (object{country: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), requested_address_types?: string[], type: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), funding_type: null|string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), eps?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), fpx?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), giropay?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), grabpay?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), ideal?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), kakao_pay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), klarna?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), konbini?: (object{expires_after_days: null|int, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), kr_card?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), link?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), mobilepay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), multibanco?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), naver_pay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), oxxo?: (object{expires_after_days: int, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), p24?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), payco?: (object{capture_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), paynow?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), paypal?: (object{capture_method?: string, preferred_locale: null|string, reference: null|string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), payto?: (object{mandate_options?: (object{amount: null|int, amount_type: null|string, end_date: null|string, payment_schedule: null|string, payments_per_period: null|int, purpose: null|string, start_date: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), pix?: (object{amount_includes_iof?: string, expires_after_seconds: null|int, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), revolut_pay?: (object{capture_method?: string, setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), samsung_pay?: (object{capture_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), satispay?: (object{capture_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), sepa_debit?: (object{mandate_options?: (object{reference_prefix?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string, target_date?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), sofort?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), swish?: (object{reference: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject), twint?: (object{setup_future_usage?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), us_bank_account?: (object{financial_connections?: (object{filters?: (object{account_subcategories?: string[]}&\PaymentPlugins\Vendor\Stripe\StripeObject), permissions?: string[], prefetch: null|string[], return_url?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject), setup_future_usage?: string, target_date?: string, verification_method?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $payment_method_options Payment-method-specific configuration for the PaymentIntent or SetupIntent of this CheckoutSession.
  * @property string[] $payment_method_types A list of the types of payment methods (e.g. card) this Checkout Session is allowed to accept.
  * @property string $payment_status The payment status of the Checkout Session, one of <code>paid</code>, <code>unpaid</code>, or <code>no_payment_required</code>. You can use this value to decide when to fulfill your customer's order.
- * @property null|(object{update_shipping_details: null|string}&\Stripe\StripeObject) $permissions <p>This property is used to set up permissions for various actions (e.g., update) on the CheckoutSession object.</p><p>For specific permissions, please refer to their dedicated subsections, such as <code>permissions.update_shipping_details</code>.</p>
- * @property null|(object{enabled: bool}&\Stripe\StripeObject) $phone_number_collection
- * @property null|(object{presentment_amount: int, presentment_currency: string}&\Stripe\StripeObject) $presentment_details
+ * @property null|(object{update_shipping_details: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $permissions <p>This property is used to set up permissions for various actions (e.g., update) on the CheckoutSession object.</p><p>For specific permissions, please refer to their dedicated subsections, such as <code>permissions.update_shipping_details</code>.</p>
+ * @property null|(object{enabled: bool}&\PaymentPlugins\Vendor\Stripe\StripeObject) $phone_number_collection
+ * @property null|(object{presentment_amount: int, presentment_currency: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $presentment_details
  * @property null|string $recovered_from The ID of the original expired Checkout Session that triggered the recovery flow.
  * @property null|string $redirect_on_completion This parameter applies to <code>ui_mode: embedded</code>. Learn more about the <a href="https://docs.stripe.com/payments/checkout/custom-success-page?payment-ui=embedded-form">redirect behavior</a> of embedded sessions. Defaults to <code>always</code>.
  * @property null|string $return_url Applies to Checkout Sessions with <code>ui_mode: embedded</code> or <code>ui_mode: custom</code>. The URL to redirect your customer back to after they authenticate or cancel their payment on the payment method's app or site.
- * @property null|(object{allow_redisplay_filters: null|string[], payment_method_remove: null|string, payment_method_save: null|string}&\Stripe\StripeObject) $saved_payment_method_options Controls saved payment method settings for the session. Only available in <code>payment</code> and <code>subscription</code> mode.
- * @property null|string|\Stripe\SetupIntent $setup_intent The ID of the SetupIntent for Checkout Sessions in <code>setup</code> mode. You can't confirm or cancel the SetupIntent for a Checkout Session. To cancel, <a href="https://docs.stripe.com/api/checkout/sessions/expire">expire the Checkout Session</a> instead.
- * @property null|(object{allowed_countries: string[]}&\Stripe\StripeObject) $shipping_address_collection When set, provides configuration for Checkout to collect a shipping address from a customer.
- * @property null|(object{amount_subtotal: int, amount_tax: int, amount_total: int, shipping_rate: null|string|\Stripe\ShippingRate, taxes?: ((object{amount: int, rate: \Stripe\TaxRate, taxability_reason: null|string, taxable_amount: null|int}&\Stripe\StripeObject))[]}&\Stripe\StripeObject) $shipping_cost The details of the customer cost of shipping, including the customer chosen ShippingRate.
- * @property ((object{shipping_amount: int, shipping_rate: string|\Stripe\ShippingRate}&\Stripe\StripeObject))[] $shipping_options The shipping rate options applied to this Session.
+ * @property null|(object{allow_redisplay_filters: null|string[], payment_method_remove: null|string, payment_method_save: null|string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $saved_payment_method_options Controls saved payment method settings for the session. Only available in <code>payment</code> and <code>subscription</code> mode.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\SetupIntent $setup_intent The ID of the SetupIntent for Checkout Sessions in <code>setup</code> mode. You can't confirm or cancel the SetupIntent for a Checkout Session. To cancel, <a href="https://docs.stripe.com/api/checkout/sessions/expire">expire the Checkout Session</a> instead.
+ * @property null|(object{allowed_countries: string[]}&\PaymentPlugins\Vendor\Stripe\StripeObject) $shipping_address_collection When set, provides configuration for Checkout to collect a shipping address from a customer.
+ * @property null|(object{amount_subtotal: int, amount_tax: int, amount_total: int, shipping_rate: null|string|\PaymentPlugins\Vendor\Stripe\ShippingRate, taxes?: ((object{amount: int, rate: \PaymentPlugins\Vendor\Stripe\TaxRate, taxability_reason: null|string, taxable_amount: null|int}&\PaymentPlugins\Vendor\Stripe\StripeObject))[]}&\PaymentPlugins\Vendor\Stripe\StripeObject) $shipping_cost The details of the customer cost of shipping, including the customer chosen ShippingRate.
+ * @property ((object{shipping_amount: int, shipping_rate: string|\PaymentPlugins\Vendor\Stripe\ShippingRate}&\PaymentPlugins\Vendor\Stripe\StripeObject))[] $shipping_options The shipping rate options applied to this Session.
  * @property null|string $status The status of the Checkout Session, one of <code>open</code>, <code>complete</code>, or <code>expired</code>.
  * @property null|string $submit_type Describes the type of transaction being performed by Checkout in order to customize relevant text on the page, such as the submit button. <code>submit_type</code> can only be specified on Checkout Sessions in <code>payment</code> mode. If blank or <code>auto</code>, <code>pay</code> is used.
- * @property null|string|\Stripe\Subscription $subscription The ID of the <a href="https://docs.stripe.com/api/subscriptions">Subscription</a> for Checkout Sessions in <code>subscription</code> mode.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\Subscription $subscription The ID of the <a href="https://docs.stripe.com/api/subscriptions">Subscription</a> for Checkout Sessions in <code>subscription</code> mode.
  * @property null|string $success_url The URL the customer will be directed to after the payment or subscription creation is successful.
- * @property null|(object{enabled: bool, required: string}&\Stripe\StripeObject) $tax_id_collection
- * @property null|(object{amount_discount: int, amount_shipping: null|int, amount_tax: int, breakdown?: (object{discounts: (object{amount: int, discount: \Stripe\Discount}&\Stripe\StripeObject)[], taxes: ((object{amount: int, rate: \Stripe\TaxRate, taxability_reason: null|string, taxable_amount: null|int}&\Stripe\StripeObject))[]}&\Stripe\StripeObject)}&\Stripe\StripeObject) $total_details Tax and discount details for the computed total amount.
+ * @property null|(object{enabled: bool, required: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $tax_id_collection
+ * @property null|(object{amount_discount: int, amount_shipping: null|int, amount_tax: int, breakdown?: (object{discounts: (object{amount: int, discount: \PaymentPlugins\Vendor\Stripe\Discount}&\PaymentPlugins\Vendor\Stripe\StripeObject)[], taxes: ((object{amount: int, rate: \PaymentPlugins\Vendor\Stripe\TaxRate, taxability_reason: null|string, taxable_amount: null|int}&\PaymentPlugins\Vendor\Stripe\StripeObject))[]}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $total_details Tax and discount details for the computed total amount.
  * @property null|string $ui_mode The UI mode of the Session. Defaults to <code>hosted</code>.
  * @property null|string $url The URL to the Checkout Session. Applies to Checkout Sessions with <code>ui_mode: hosted</code>. Redirect customers to this URL to take them to Checkout. If you’re using <a href="https://docs.stripe.com/payments/checkout/custom-domains">Custom Domains</a>, the URL will use your subdomain. Otherwise, it’ll use <code>checkout.stripe.com.</code> This value is only present when the session is active.
- * @property null|(object{link?: (object{display?: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $wallet_options Wallet-specific configuration for this Checkout Session.
+ * @property null|(object{link?: (object{display?: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $wallet_options Wallet-specific configuration for this Checkout Session.
  */
-class Session extends \Stripe\ApiResource
+class Session extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'checkout.session';
-
-    use \Stripe\ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const BILLING_ADDRESS_COLLECTION_AUTO = 'auto';
     const BILLING_ADDRESS_COLLECTION_REQUIRED = 'required';
-
     const CUSTOMER_CREATION_ALWAYS = 'always';
     const CUSTOMER_CREATION_IF_REQUIRED = 'if_required';
-
     const MODE_PAYMENT = 'payment';
     const MODE_SETUP = 'setup';
     const MODE_SUBSCRIPTION = 'subscription';
-
     const ORIGIN_CONTEXT_MOBILE_APP = 'mobile_app';
     const ORIGIN_CONTEXT_WEB = 'web';
-
     const PAYMENT_METHOD_COLLECTION_ALWAYS = 'always';
     const PAYMENT_METHOD_COLLECTION_IF_REQUIRED = 'if_required';
-
     const PAYMENT_STATUS_NO_PAYMENT_REQUIRED = 'no_payment_required';
     const PAYMENT_STATUS_PAID = 'paid';
     const PAYMENT_STATUS_UNPAID = 'unpaid';
-
     const REDIRECT_ON_COMPLETION_ALWAYS = 'always';
     const REDIRECT_ON_COMPLETION_IF_REQUIRED = 'if_required';
     const REDIRECT_ON_COMPLETION_NEVER = 'never';
-
     const STATUS_COMPLETE = 'complete';
     const STATUS_EXPIRED = 'expired';
     const STATUS_OPEN = 'open';
-
     const SUBMIT_TYPE_AUTO = 'auto';
     const SUBMIT_TYPE_BOOK = 'book';
     const SUBMIT_TYPE_DONATE = 'donate';
     const SUBMIT_TYPE_PAY = 'pay';
     const SUBMIT_TYPE_SUBSCRIBE = 'subscribe';
-
     const UI_MODE_CUSTOM = 'custom';
     const UI_MODE_EMBEDDED = 'embedded';
     const UI_MODE_HOSTED = 'hosted';
-
     /**
      * Creates a Checkout Session object.
      *
@@ -139,37 +126,32 @@ class Session extends \Stripe\ApiResource
      *
      * @return Session the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of Checkout Sessions.
      *
      * @param null|array{created?: array|int, customer?: string, customer_account?: string, customer_details?: array{email: string}, ending_before?: string, expand?: string[], limit?: int, payment_intent?: string, payment_link?: string, starting_after?: string, status?: string, subscription?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<Session> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<Session> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a Checkout Session object.
      *
@@ -178,17 +160,15 @@ class Session extends \Stripe\ApiResource
      *
      * @return Session
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates a Checkout Session object.
      *
@@ -201,53 +181,47 @@ class Session extends \Stripe\ApiResource
      *
      * @return Session the updated resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
      *
      * @return Session the expired session
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function expire($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/expire';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param string $id
      * @param null|array $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<\Stripe\LineItem> list of line items
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\LineItem> list of line items
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function allLineItems($id, $params = null, $opts = null)
     {
         $url = static::resourceUrl($id) . '/line_items';
         list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * An AccountSession allows a Connect platform to grant access to a connected account in Connect embedded components.
@@ -23,7 +22,6 @@ namespace Stripe;
 class AccountSession extends ApiResource
 {
     const OBJECT_NAME = 'account_session';
-
     /**
      * Creates a AccountSession object that includes a single-use token that the
      * platform can use on their front-end to grant client-side API access.
@@ -39,11 +37,9 @@ class AccountSession extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

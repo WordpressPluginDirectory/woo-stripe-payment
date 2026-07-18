@@ -87,8 +87,8 @@ class WC_Stripe_Payment_Balance {
 	}
 
 	/**
-	 * @since 3.3.35
 	 * @return void
+	 * @since 3.3.35
 	 */
 	public function save() {
 		$this->update_meta_data( true );

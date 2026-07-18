@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Exception;
+namespace PaymentPlugins\Vendor\Stripe\Exception;
 
 /**
  * PermissionException is thrown in cases where access was attempted on a

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Radar;
+namespace PaymentPlugins\Vendor\Stripe\Radar;
 
 /**
  * Value list items allow you to add specific values to a given Radar value list, which can then be used in rules.
@@ -17,7 +17,7 @@ namespace Stripe\Radar;
  * @property string $value The value of the item.
  * @property string $value_list The identifier of the value list this item belongs to.
  */
-class ValueListItem extends \Stripe\ApiResource
+class ValueListItem extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'radar.value_list_item';
 
@@ -30,7 +30,7 @@ class ValueListItem extends \Stripe\ApiResource
      *
      * @return ValueListItem the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -38,7 +38,7 @@ class ValueListItem extends \Stripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -53,7 +53,7 @@ class ValueListItem extends \Stripe\ApiResource
      *
      * @return ValueListItem the deleted resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {
@@ -74,15 +74,15 @@ class ValueListItem extends \Stripe\ApiResource
      * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, value?: string, value_list: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<ValueListItem> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<ValueListItem> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -93,11 +93,11 @@ class ValueListItem extends \Stripe\ApiResource
      *
      * @return ValueListItem
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

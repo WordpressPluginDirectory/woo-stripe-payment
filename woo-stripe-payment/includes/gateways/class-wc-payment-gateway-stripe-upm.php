@@ -237,8 +237,8 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param                            $method_id
-	 * @param \Stripe\PaymentMethod|null $method_details
+	 * @param                                                  $method_id
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentMethod|null $method_details
 	 *
 	 * @return void|\WC_Payment_Token_Stripe
 	 */
@@ -423,7 +423,7 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 		return true;
 	}
 
-	public function map_payment_config_to_payment_methods( \Stripe\PaymentMethodConfiguration $config ) {
+	public function map_payment_config_to_payment_methods( \PaymentPlugins\Vendor\Stripe\PaymentMethodConfiguration $config ) {
 		$payment_methods         = array();
 		$supported_payment_types = array();
 		// loop through options and turn on/off payment methods
@@ -483,12 +483,12 @@ class WC_Payment_Gateway_Stripe_UPM extends WC_Payment_Gateway_Stripe {
 	}
 
 	/**
-	 * @param \WC_Stripe_Account_Settings $account_settings
-	 * @param \Stripe\Account             $account
-	 * @param string                      $mode
+	 * @param \WC_Stripe_Account_Settings           $account_settings
+	 * @param \PaymentPlugins\Vendor\Stripe\Account $account
+	 * @param string                                $mode
 	 *
 	 * @return void
-	 * @throws \Stripe\Exception\ApiErrorException
+	 * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException
 	 */
 	public function handle_connection_success( $account_settings, $mode ) {
 		if ( stripe_wc()->api_settings->has_secret_key( $mode ) ) {

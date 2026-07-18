@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * This object represents files hosted on Stripe's servers. You can upload
@@ -28,7 +27,6 @@ namespace Stripe;
 class File extends ApiResource
 {
     const OBJECT_NAME = 'file';
-
     const PURPOSE_ACCOUNT_REQUIREMENT = 'account_requirement';
     const PURPOSE_ADDITIONAL_VERIFICATION = 'additional_verification';
     const PURPOSE_BUSINESS_ICON = 'business_icon';
@@ -50,7 +48,6 @@ class File extends ApiResource
     const PURPOSE_TERMINAL_READER_SPLASHSCREEN = 'terminal_reader_splashscreen';
     const PURPOSE_TERMINAL_WIFI_CERTIFICATE = 'terminal_wifi_certificate';
     const PURPOSE_TERMINAL_WIFI_PRIVATE_KEY = 'terminal_wifi_private_key';
-
     /**
      * Returns a list of the files that your account has access to. Stripe sorts and
      * returns the files by their creation dates, placing the most recently created
@@ -66,10 +63,8 @@ class File extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of an existing file object. After you supply a unique file
      * ID, Stripe returns the corresponding file object. Learn how to <a
@@ -84,23 +79,19 @@ class File extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     // This resource can have two different object names. In latter API
     // versions, only `file` is used, but since stripe-php may be used with
     // any API version, we need to support deserializing the older
     // `file_upload` object into the same class.
     const OBJECT_NAME_ALT = 'file_upload';
-
-    use ApiOperations\Create {
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Create {
         create as protected _create;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -111,14 +102,13 @@ class File extends ApiResource
      */
     public static function create($params = null, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         if (null === $opts->apiBase) {
             $opts->apiBase = Stripe::$apiUploadBase;
         }
         // Manually flatten params, otherwise curl's multipart encoder will
         // choke on nested arrays.
-        $flatParams = \array_column(Util\Util::flattenParams($params), 1, 0);
-
+        $flatParams = \array_column(\PaymentPlugins\Vendor\Stripe\Util\Util::flattenParams($params), 1, 0);
         return static::_create($flatParams, $opts);
     }
 }

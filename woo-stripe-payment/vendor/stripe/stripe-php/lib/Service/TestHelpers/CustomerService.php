@@ -2,25 +2,25 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class CustomerService extends \Stripe\Service\AbstractService
+class CustomerService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Create an incoming testmode bank transfer.
      *
      * @param string $id
      * @param null|array{amount: int, currency: string, expand?: string[], reference?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\CustomerCashBalanceTransaction
+     * @return \PaymentPlugins\Vendor\Stripe\CustomerCashBalanceTransaction
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function fundCashBalance($id, $params = null, $opts = null)
     {

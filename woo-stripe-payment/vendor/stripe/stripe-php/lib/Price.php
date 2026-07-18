@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Prices define the unit cost, currency, and (optional) billing cycle for both recurring and one-time purchases of products.
@@ -22,7 +21,7 @@ namespace Stripe;
  * @property null|(object{maximum: null|int, minimum: null|int, preset: null|int}&StripeObject) $custom_unit_amount When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $lookup_key A lookup key used to retrieve prices dynamically from a static string. This may be up to 200 characters.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $nickname A brief description of the price, hidden from customers.
  * @property Product|string $product The ID of the product this price is associated with.
  * @property null|(object{interval: string, interval_count: int, meter: null|string, trial_period_days: null|int, usage_type: string}&StripeObject) $recurring The recurring components of a price such as <code>interval</code> and <code>usage_type</code>.
@@ -37,22 +36,16 @@ namespace Stripe;
 class Price extends ApiResource
 {
     const OBJECT_NAME = 'price';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const BILLING_SCHEME_PER_UNIT = 'per_unit';
     const BILLING_SCHEME_TIERED = 'tiered';
-
     const TAX_BEHAVIOR_EXCLUSIVE = 'exclusive';
     const TAX_BEHAVIOR_INCLUSIVE = 'inclusive';
     const TAX_BEHAVIOR_UNSPECIFIED = 'unspecified';
-
     const TIERS_MODE_GRADUATED = 'graduated';
     const TIERS_MODE_VOLUME = 'volume';
-
     const TYPE_ONE_TIME = 'one_time';
     const TYPE_RECURRING = 'recurring';
-
     /**
      * Creates a new <a href="https://docs.stripe.com/api/prices">Price</a> for an
      * existing <a href="https://docs.stripe.com/api/products">Product</a>. The Price
@@ -69,14 +62,11 @@ class Price extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of your active prices, excluding <a
      * href="/docs/products-prices/pricing-models#inline-pricing">inline prices</a>.
@@ -92,10 +82,8 @@ class Price extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the price with the given ID.
      *
@@ -108,13 +96,11 @@ class Price extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified price by setting the values of the parameters passed. Any
      * parameters not provided are left unchanged.
@@ -131,14 +117,11 @@ class Price extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -150,7 +133,6 @@ class Price extends ApiResource
     public static function search($params = null, $opts = null)
     {
         $url = '/v1/prices/search';
-
         return static::_requestPage($url, SearchResult::class, $params, $opts);
     }
 }

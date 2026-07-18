@@ -2,6 +2,6 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Exception;
+namespace PaymentPlugins\Vendor\Stripe\Exception;
 
 class TemporarySessionExpiredException extends ApiErrorException {}

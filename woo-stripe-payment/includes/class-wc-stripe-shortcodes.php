@@ -41,7 +41,10 @@ class WC_Stripe_Shortcodes {
 		}
 		include_once stripe_wc()->plugin_path() . 'includes/shortcodes/class-wc-stripe-shortcode-payment-buttons.php';
 
-		return WC_Shortcodes::shortcode_wrapper( array( 'WC_Stripe_Shortcode_Payment_Buttons', $method ), $atts, $wrapper );
+		return WC_Shortcodes::shortcode_wrapper( array(
+			'WC_Stripe_Shortcode_Payment_Buttons',
+			$method
+		), $atts, $wrapper );
 	}
 
 }

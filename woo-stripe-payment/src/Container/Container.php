@@ -22,9 +22,9 @@ class Container {
 	/**
 	 * Register a service in the container.
 	 *
-	 * @param string   $id        Service identifier (typically the class name).
-	 * @param mixed    $value     Either a closure that returns the service instance, or the instance itself.
-	 * @param bool     $singleton Whether the service should be a singleton (default: true).
+	 * @param string $id Service identifier (typically the class name).
+	 * @param mixed  $value Either a closure that returns the service instance, or the instance itself.
+	 * @param bool   $singleton Whether the service should be a singleton (default: true).
 	 *
 	 * @return void
 	 */

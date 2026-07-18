@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Balance transactions represent funds moving through your Stripe account.
@@ -30,12 +29,10 @@ namespace Stripe;
 class BalanceTransaction extends ApiResource
 {
     const OBJECT_NAME = 'balance_transaction';
-
     const BALANCE_TYPE_ISSUING = 'issuing';
     const BALANCE_TYPE_PAYMENTS = 'payments';
     const BALANCE_TYPE_REFUND_AND_DISPUTE_PREFUNDING = 'refund_and_dispute_prefunding';
     const BALANCE_TYPE_RISK_RESERVED = 'risk_reserved';
-
     const TYPE_ADJUSTMENT = 'adjustment';
     const TYPE_ADVANCE = 'advance';
     const TYPE_ADVANCE_FUNDING = 'advance_funding';
@@ -82,7 +79,6 @@ class BalanceTransaction extends ApiResource
     const TYPE_TRANSFER_CANCEL = 'transfer_cancel';
     const TYPE_TRANSFER_FAILURE = 'transfer_failure';
     const TYPE_TRANSFER_REFUND = 'transfer_refund';
-
     /**
      * Returns a list of transactions that have contributed to the Stripe account
      * balance (e.g., charges, transfers, and so forth). The transactions are returned
@@ -101,10 +97,8 @@ class BalanceTransaction extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the balance transaction with the given ID.
      *
@@ -120,10 +114,9 @@ class BalanceTransaction extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

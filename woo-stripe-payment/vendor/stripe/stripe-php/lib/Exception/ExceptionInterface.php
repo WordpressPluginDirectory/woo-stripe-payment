@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Exception;
+namespace PaymentPlugins\Vendor\Stripe\Exception;
 
 // TODO: remove this check once we drop support for PHP 5
 if (\interface_exists(\Throwable::class, false)) {

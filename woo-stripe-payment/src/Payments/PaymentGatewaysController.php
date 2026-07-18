@@ -10,12 +10,16 @@ use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\Stripe\ServiceProvider;
 
 class PaymentGatewaysController {
-
 	private $registry;
-
 	private $context_handler;
-
 	private $check_payment_availability = false;
+
+	/**
+	 * Script handles enqueued by enqueue_scripts(), keyed by context.
+	 *
+	 * @var array
+	 */
+	private $enqueued_script_handles = [];
 
 	public function __construct( PaymentGatewayRegistry $registry, ContextHandler $context_handler ) {
 		$this->registry        = $registry;
@@ -25,68 +29,65 @@ class PaymentGatewaysController {
 	public function initialize( ServiceProvider $service_provider ) {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_minicart_scripts' ] );
-
+		add_action( 'woocommerce_blocks_enqueue_checkout_block_scripts_after', [
+			$this,
+			'maybe_dequeue_checkout_scripts'
+		] );
+		add_action( 'woocommerce_blocks_enqueue_cart_block_scripts_after', [ $this, 'maybe_dequeue_cart_scripts' ] );
 		add_action( 'woocommerce_stripe_payment_gateways_registration', [ $this, 'register_payment_gateways' ], 10, 2 );
-
 		add_filter( 'woocommerce_payment_gateways', function ( $gateways ) use ( $service_provider ) {
 			// ensure WC dependencies are always loaded before adding gateways.
 			$service_provider->include_woo_dependencies();
 
 			return $this->add_woocommerce_payment_gateway( $gateways );
 		} );
-
 		add_filter( 'woocommerce_available_payment_gateways', [ $this, 'filter_available_payment_gateways' ] );
-
 		add_action( 'wc_stripe_add_script_data', [ $this, 'add_payment_gateway_data' ], 10, 2 );
-
 		add_filter( 'wc_stripe_cart_data', [ $this, 'add_cart_data' ] );
 	}
 
 	public function get_payment_gateway_classes() {
-		return apply_filters(
-			'wc_stripe_payment_gateways',
-			array(
-				'WC_Payment_Gateway_Stripe_CC',
-				'WC_Payment_Gateway_Stripe_ApplePay',
-				'WC_Payment_Gateway_Stripe_GooglePay',
-				'WC_Payment_Gateway_Stripe_Payment_Request',
-				'WC_Payment_Gateway_Stripe_Afterpay',
-				'WC_Payment_Gateway_Stripe_Affirm',
-				'WC_Payment_Gateway_Stripe_ACH',
-				'WC_Payment_Gateway_Stripe_Ideal',
-				'WC_Payment_Gateway_Stripe_P24',
-				'WC_Payment_Gateway_Stripe_Klarna',
-				'WC_Payment_Gateway_Stripe_Bancontact',
-				'WC_Payment_Gateway_Stripe_EPS',
-				'WC_Payment_Gateway_Stripe_Multibanco',
-				'WC_Payment_Gateway_Stripe_Sepa',
-				'WC_Payment_Gateway_Stripe_WeChat',
-				'WC_Payment_Gateway_Stripe_FPX',
-				'WC_Payment_Gateway_Stripe_BECS',
-				'WC_Payment_Gateway_Stripe_Alipay',
-				'WC_Payment_Gateway_Stripe_GrabPay',
-				'WC_Payment_Gateway_Stripe_Boleto',
-				'WC_Payment_Gateway_Stripe_OXXO',
-				'WC_Payment_Gateway_Stripe_BLIK',
-				'WC_Payment_Gateway_Stripe_Konbini',
-				'WC_Payment_Gateway_Stripe_PayNow',
-				'WC_Payment_Gateway_Stripe_PromptPay',
-				'WC_Payment_Gateway_Stripe_Swish',
-				'WC_Payment_Gateway_Stripe_AmazonPay',
-				'WC_Payment_Gateway_Stripe_CashApp',
-				'WC_Payment_Gateway_Stripe_Revolut',
-				'WC_Payment_Gateway_Stripe_Zip',
-				'WC_Payment_Gateway_Stripe_MobilePay',
-				'WC_Payment_Gateway_Stripe_Twint',
-				'WC_Payment_Gateway_Stripe_PayByBank',
-				'WC_Payment_Gateway_Stripe_UPM',
-				'WC_Payment_Gateway_Stripe_Link',
-				'WC_Payment_Gateway_Stripe_Billie',
-				'WC_Payment_Gateway_Stripe_Satispay',
-				'WC_Payment_Gateway_Stripe_Scalapay',
-				'WC_Payment_Gateway_Stripe_MBWay'
-			)
-		);
+		return apply_filters( 'wc_stripe_payment_gateways', array(
+			'WC_Payment_Gateway_Stripe_CC',
+			'WC_Payment_Gateway_Stripe_ApplePay',
+			'WC_Payment_Gateway_Stripe_GooglePay',
+			'WC_Payment_Gateway_Stripe_Payment_Request',
+			'WC_Payment_Gateway_Stripe_Afterpay',
+			'WC_Payment_Gateway_Stripe_Affirm',
+			'WC_Payment_Gateway_Stripe_ACH',
+			'WC_Payment_Gateway_Stripe_Ideal',
+			'WC_Payment_Gateway_Stripe_P24',
+			'WC_Payment_Gateway_Stripe_Klarna',
+			'WC_Payment_Gateway_Stripe_Bancontact',
+			'WC_Payment_Gateway_Stripe_EPS',
+			'WC_Payment_Gateway_Stripe_Multibanco',
+			'WC_Payment_Gateway_Stripe_Sepa',
+			'WC_Payment_Gateway_Stripe_WeChat',
+			'WC_Payment_Gateway_Stripe_FPX',
+			'WC_Payment_Gateway_Stripe_BECS',
+			'WC_Payment_Gateway_Stripe_Alipay',
+			'WC_Payment_Gateway_Stripe_GrabPay',
+			'WC_Payment_Gateway_Stripe_Boleto',
+			'WC_Payment_Gateway_Stripe_OXXO',
+			'WC_Payment_Gateway_Stripe_BLIK',
+			'WC_Payment_Gateway_Stripe_Konbini',
+			'WC_Payment_Gateway_Stripe_PayNow',
+			'WC_Payment_Gateway_Stripe_PromptPay',
+			'WC_Payment_Gateway_Stripe_Swish',
+			'WC_Payment_Gateway_Stripe_AmazonPay',
+			'WC_Payment_Gateway_Stripe_CashApp',
+			'WC_Payment_Gateway_Stripe_Revolut',
+			'WC_Payment_Gateway_Stripe_Zip',
+			'WC_Payment_Gateway_Stripe_MobilePay',
+			'WC_Payment_Gateway_Stripe_Twint',
+			'WC_Payment_Gateway_Stripe_PayByBank',
+			'WC_Payment_Gateway_Stripe_UPM',
+			'WC_Payment_Gateway_Stripe_Link',
+			'WC_Payment_Gateway_Stripe_Billie',
+			'WC_Payment_Gateway_Stripe_Satispay',
+			'WC_Payment_Gateway_Stripe_Scalapay',
+			'WC_Payment_Gateway_Stripe_MBWay'
+		) );
 	}
 
 	private function add_woocommerce_payment_gateway( $gateways ) {
@@ -116,7 +117,6 @@ class PaymentGatewaysController {
 				add_action( 'woocommerce_update_options_payment_gateways_' . $gateway->id, function () use ( $gateway ) {
 					$this->process_payment_gateway_options( $gateway->id );
 				}, 50 );
-
 			}
 		}
 		do_action( 'wc_stripe_payment_gateways_registered', $registry );
@@ -124,42 +124,31 @@ class PaymentGatewaysController {
 
 	public function enqueue_scripts() {
 		$handles = [];
-
 		if ( $this->registry->is_empty() ) {
 			$this->registry->initialize();
 		}
-
 		$this->context_handler->initialize();
-
 		if ( $this->context_handler->has_context( [
 				'checkout',
 				'add_payment_method',
 				'order_pay'
 			] ) || apply_filters( 'wc_stripe_checkout_scripts', false ) ) {
 
-			// if this is the checkout block, and there is no checkout shortcode, return.
-			// order pay page doesn't use the checkout block so if this is the order pay page
-			// the scripts needs to be loaded.
-			if ( $this->context_handler->is_checkout_block()
-			     && ! $this->context_handler->is_checkout_shortcode()
-			     && ! $this->context_handler->is_order_pay() ) {
-				return;
-			}
 			if ( $this->context_handler->is_add_payment_method() ) {
 				$handles = $this->registry->get_add_payment_method_script_handles();
 			} else {
 				$handles = $this->registry->get_checkout_script_handles();
 				$handles = array_merge( $handles, $this->registry->get_express_checkout_script_handles() );
 			}
-		} elseif ( $this->context_handler->is_cart() && ! $this->context_handler->is_cart_block() ) {
+		} elseif ( $this->context_handler->is_cart() ) {
 			$handles = $this->registry->get_cart_script_handles();
 		} elseif ( $this->context_handler->is_product() ) {
 			$handles = $this->registry->get_product_script_handles();
 		} elseif ( $this->context_handler->is_shop() ) {
 			$handles = $this->registry->get_shop_script_handles();
 		}
-
 		if ( ! empty( $handles ) ) {
+			$this->enqueued_script_handles[ $this->context_handler->get_context() ] = $handles;
 			foreach ( $handles as $handle ) {
 				wp_enqueue_script( $handle );
 			}
@@ -168,13 +157,73 @@ class PaymentGatewaysController {
 		}
 	}
 
+	/**
+	 * Fires when the woocommerce/checkout block actually renders, mirroring how WC_Blocks'
+	 * own Checkout block dequeues its scripts (Checkout::enqueue_assets() / render()) instead
+	 * of trying to predict ahead of time whether the block or the classic shortcode will render.
+	 *
+	 * order-pay never uses the block (WC's own Checkout::render() falls back to the shortcode
+	 * for that endpoint), so scripts stay enqueued there.
+	 *
+	 * @return void
+	 */
+	public function maybe_dequeue_checkout_scripts() {
+		if ( ! $this->context_handler->is_order_pay() ) {
+			$this->dequeue_scripts_on_render( 'checkout' );
+		}
+	}
+
+	/**
+	 * Fires when the woocommerce/cart block actually renders.
+	 *
+	 * @return void
+	 */
+	public function maybe_dequeue_cart_scripts() {
+		$this->dequeue_scripts_on_render( 'cart' );
+	}
+
+	/**
+	 * Block themes render the full template -- including this block's render callback --
+	 * before <head>/wp_enqueue_scripts fires, so the dequeue must be deferred to a later
+	 * priority on the same hook enqueue_scripts() uses.
+	 *
+	 * Classic themes that embed this block inline in a page's content render it from
+	 * within the_content(), which happens after wp_enqueue_scripts has already fired (and
+	 * after our own enqueue_scripts() already ran) -- deferring there would never fire,
+	 * so dequeue immediately instead.
+	 *
+	 * @param string $context
+	 *
+	 * @return void
+	 */
+	private function dequeue_scripts_on_render( $context ) {
+		if ( did_action( 'wp_enqueue_scripts' ) ) {
+			$this->dequeue_scripts( $context );
+		} else {
+			add_action( 'wp_enqueue_scripts', function () use ( $context ) {
+				$this->dequeue_scripts( $context );
+			}, 20 );
+		}
+	}
+
+	/**
+	 * Dequeues the scripts enqueued by enqueue_scripts() for the given context.
+	 *
+	 * @param string $context
+	 *
+	 * @return void
+	 */
+	public function dequeue_scripts( $context ) {
+		if ( ! empty( $this->enqueued_script_handles[ $context ] ) ) {
+			foreach ( $this->enqueued_script_handles[ $context ] as $handle ) {
+				wp_dequeue_script( $handle );
+			}
+			wp_dequeue_style( 'wc-stripe-styles' );
+		}
+	}
+
 	public function enqueue_minicart_scripts() {
-		if ( ! $this->context_handler->is_checkout()
-		     && ! $this->context_handler->is_cart()
-		     && ! $this->context_handler->is_order_pay()
-		     && ! $this->context_handler->is_order_received()
-		     // don't load minicart on checkout block
-		     && ! $this->context_handler->is_checkout_block() ) {
+		if ( ! $this->context_handler->is_checkout() && ! $this->context_handler->is_cart() && ! $this->context_handler->is_order_pay() && ! $this->context_handler->is_order_received() && ! $this->context_handler->is_checkout_block() ) {
 			$handles = $this->registry->get_minicart_script_handles();
 			if ( ! empty( $handles ) ) {
 				foreach ( $handles as $handle ) {
@@ -201,23 +250,17 @@ class PaymentGatewaysController {
 		$data            = [];
 		$payment_methods = [];
 		$terms_rule      = stripe_wc()->advanced_settings->get_terms_display_rule();
-
 		foreach ( $this->registry->get_active_integrations() as $integration ) {
 			/**
 			 * @var AbstractGateway $integration
 			 */
-			$data[ $integration->id . '_data' ] = array_merge(
-				[
-					'paymentSections'   => $integration->get_option( 'payment_sections', [] ),
-					'paymentMethodType' => $integration->get_payment_method_type(),
-					'description'       => $integration->get_description(),
-					'hasPaymentTokens'  => ! is_add_payment_method_page() && ! empty( $integration->get_tokens() ),
-					'termsDisplayRule'  => $terms_rule
-				],
-				$integration->get_payment_method_data(),
-
-			);
-
+			$data[ $integration->id . '_data' ]  = array_merge( [
+				'paymentSections'   => $integration->get_option( 'payment_sections', [] ),
+				'paymentMethodType' => $integration->get_payment_method_type(),
+				'description'       => $integration->get_description(),
+				'hasPaymentTokens'  => ! is_add_payment_method_page() && ! empty( $integration->get_tokens() ),
+				'termsDisplayRule'  => $terms_rule
+			], $integration->get_payment_method_data() );
 			$payment_methods[ $integration->id ] = [
 				'enabled'           => wc_string_to_bool( $integration->enabled ),
 				'supports'          => $integration->supports,
@@ -232,11 +275,9 @@ class PaymentGatewaysController {
 		 * @version 4.0.0
 		 */
 		$data = apply_filters( 'wc_stripe_payment_gateway_data', $data, $this->registry, $context );
-
 		foreach ( $data as $id => $payment_gateway_data ) {
 			$asset_data->add( $id, $payment_gateway_data );
 		}
-
 		$asset_data->add( 'paymentMethods', $payment_methods );
 	}
 
@@ -251,27 +292,24 @@ class PaymentGatewaysController {
 	public function add_cart_data( $data ) {
 		$available_gateways     = WC()->payment_gateways()->get_available_payment_gateways();
 		$data['paymentMethods'] = [];
-
 		foreach ( $this->registry->get_registered_integrations() as $integration ) {
 			$data['paymentMethods'][ $integration->id ] = [
 				'id'        => $integration->id,
 				'enabled'   => \wc_string_to_bool( $integration->enabled ),
 				'available' => isset( $available_gateways[ $integration->id ] )
 			];
-
 			/**
 			 * The check_payment_availability property was added so that code in other locations could
 			 * affect if is_local_payment_available is calculated. A good example of this is in
 			 * PaymentPlugins\Stripe\Blocks\StoreApi\SchemaController.
 			 */
 			/*if ( $this->context_handler->is_checkout()
-			     || $this->context_handler->is_checkout_block()
-			     || $this->check_payment_availability ) {
-				if ( $integration instanceof \WC_Payment_Gateway_Stripe_Local_Payment ) {
-					$data['paymentMethods'][ $integration->id ]['available'] = $integration->is_local_payment_available();
-				}
-			}*/
-
+						 || $this->context_handler->is_checkout_block()
+						 || $this->check_payment_availability ) {
+						if ( $integration instanceof \WC_Payment_Gateway_Stripe_Local_Payment ) {
+							$data['paymentMethods'][ $integration->id ]['available'] = $integration->is_local_payment_available();
+						}
+					}*/
 		}
 
 		return $data;
@@ -300,7 +338,7 @@ class PaymentGatewaysController {
 			return;
 		}
 		/**
-		 * @var StripeClient $client
+		 * @var \StripeClient $client
 		 */
 		$client      = wc_stripe_get_container()->get( StripeClient::class );
 		$application = wc_stripe_get_container()->get( 'CLIENT_ID' );
@@ -340,16 +378,7 @@ class PaymentGatewaysController {
 						if ( ! isset( $pmc[ $pmc_key ] ) ) {
 							continue;
 						}
-						$result = $client->paymentMethodConfigurations->update(
-							$pmc->id,
-							[
-								$pmc_key => [
-									'display_preference' => [
-										'preference' => 'on'
-									]
-								]
-							]
-						);
+						$result = $client->paymentMethodConfigurations->update( $pmc->id, [ $pmc_key => [ 'display_preference' => [ 'preference' => 'on' ] ] ] );
 						if ( is_wp_error( $result ) ) {
 							wc_stripe_log_error( sprintf( 'Error updating payment method configuration %s. %s', $pmc->id, $result->get_error_message() ) );
 						} else {
@@ -359,6 +388,5 @@ class PaymentGatewaysController {
 				}
 			}
 		}
-
 	}
 }

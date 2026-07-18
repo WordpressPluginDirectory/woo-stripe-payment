@@ -15,7 +15,7 @@ $tab_active = false;
         </div>
         <div class="wc-stripe-header__logo-stripe">
             <span class="wc-stripe-header__poweredby"><?php echo esc_html__( 'Powered by', 'woo-stripe-payment' ) ?></span>&nbsp;&nbsp;
-            <img alt="Stripe"
+            <img alt="PaymentPlugins\Vendor\Stripe"
                  src="<?php echo stripe_wc()->assets()->assets_url( 'img/stripe_logo.svg' ) ?>"/>
         </div>
     </div>

@@ -39,7 +39,7 @@ class WC_Payment_Gateway_Stripe_BECS extends WC_Payment_Gateway_Stripe_Local_Pay
 			__(
 				'By providing your bank account details and confirming this payment, you agree to this 
 		Direct Debit Request and the %1$sDirect Debit Request service agreement%2$s, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct 
-		Debit User ID number 507156 ("Stripe") to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %3$s 
+		Debit User ID number 507156 ("PaymentPlugins\Vendor\Stripe") to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %3$s 
 		(the "Merchant") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an 
 		authorised signatory on the account listed above.',
 				'woo-stripe-payment'

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Climate;
+namespace PaymentPlugins\Vendor\Stripe\Service\Climate;
 
 /**
  * Service factory class for API resources in the Climate namespace.
@@ -11,7 +11,7 @@ namespace Stripe\Service\Climate;
  * @property ProductService $products
  * @property SupplierService $suppliers
  */
-class ClimateServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class ClimateServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

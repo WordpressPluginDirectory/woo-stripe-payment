@@ -163,6 +163,18 @@ abstract class WC_Payment_Token_Stripe extends WC_Payment_Token {
 		$this->set_prop( 'brand', $value );
 	}
 
+	/**
+	 * Relative path, from the plugin's assets directory, to this token's icon file.
+	 * Subclasses whose brand value doesn't map to a real icon file (e.g. free-text bank
+	 * names) should override this to return a static icon instead.
+	 *
+	 * @return string
+	 * @since 4.0.8
+	 */
+	public function get_icon_file() {
+		return sprintf( 'img/%s.svg', strtolower( $this->get_brand( 'edit' ) ) );
+	}
+
 	public function get_html_classes() {
 		return '';
 	}

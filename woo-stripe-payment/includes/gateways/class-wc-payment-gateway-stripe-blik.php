@@ -27,7 +27,7 @@ class WC_Payment_Gateway_Stripe_BLIK extends WC_Payment_Gateway_Stripe_Local_Pay
 		$this->method_title       = __( 'BLIK (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'BLIK gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/blik.svg' );
+		$this->icon = $this->assets->assets_url( 'img/blik.svg' );
 	}
 
 }

@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A PaymentIntent guides you through the process of collecting a payment from your customer.
@@ -41,7 +40,7 @@ namespace Stripe;
  * @property null|(object{advice_code?: string, charge?: string, code?: string, decline_code?: string, doc_url?: string, message?: string, network_advice_code?: string, network_decline_code?: string, param?: string, payment_intent?: PaymentIntent, payment_method?: PaymentMethod, payment_method_type?: string, request_log_url?: string, setup_intent?: SetupIntent, source?: Account|BankAccount|Card|Source, type: string}&StripeObject) $last_payment_error The payment error encountered in the previous PaymentIntent confirmation. It will be cleared if the PaymentIntent is later updated for any reason.
  * @property null|Charge|string $latest_charge ID of the latest <a href="https://docs.stripe.com/api/charges">Charge object</a> created by this PaymentIntent. This property is <code>null</code> until PaymentIntent confirmation is attempted.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Learn more about <a href="https://docs.stripe.com/payments/payment-intents/creating-payment-intents#storing-information-in-metadata">storing information in metadata</a>.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Learn more about <a href="https://docs.stripe.com/payments/payment-intents/creating-payment-intents#storing-information-in-metadata">storing information in metadata</a>.
  * @property null|(object{alipay_handle_redirect?: (object{native_data: null|string, native_url: null|string, return_url: null|string, url: null|string}&StripeObject), boleto_display_details?: (object{expires_at: null|int, hosted_voucher_url: null|string, number: null|string, pdf: null|string}&StripeObject), card_await_notification?: (object{charge_attempt_at: null|int, customer_approval_required: null|bool}&StripeObject), cashapp_handle_redirect_or_display_qr_code?: (object{hosted_instructions_url: string, mobile_auth_url: string, qr_code: (object{expires_at: int, image_url_png: string, image_url_svg: string}&StripeObject)}&StripeObject), display_bank_transfer_instructions?: (object{amount_remaining: null|int, currency: null|string, financial_addresses?: ((object{aba?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: string, account_number: string, account_type: string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), bank_name: string, routing_number: string}&StripeObject), iban?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), bic: string, country: string, iban: string}&StripeObject), sort_code?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: string, account_number: string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), sort_code: string}&StripeObject), spei?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), bank_code: string, bank_name: string, clabe: string}&StripeObject), supported_networks?: string[], swift?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: string, account_number: string, account_type: string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), bank_name: string, swift_code: string}&StripeObject), type: string, zengin?: (object{account_holder_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), account_holder_name: null|string, account_number: null|string, account_type: null|string, bank_address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&StripeObject), bank_code: null|string, bank_name: null|string, branch_code: null|string, branch_name: null|string}&StripeObject)}&StripeObject))[], hosted_instructions_url: null|string, reference: null|string, type: string}&StripeObject), konbini_display_details?: (object{expires_at: int, hosted_voucher_url: null|string, stores: (object{familymart: null|(object{confirmation_number?: string, payment_code: string}&StripeObject), lawson: null|(object{confirmation_number?: string, payment_code: string}&StripeObject), ministop: null|(object{confirmation_number?: string, payment_code: string}&StripeObject), seicomart: null|(object{confirmation_number?: string, payment_code: string}&StripeObject)}&StripeObject)}&StripeObject), multibanco_display_details?: (object{entity: null|string, expires_at: null|int, hosted_voucher_url: null|string, reference: null|string}&StripeObject), oxxo_display_details?: (object{expires_after: null|int, hosted_voucher_url: null|string, number: null|string}&StripeObject), paynow_display_qr_code?: (object{data: string, hosted_instructions_url: null|string, image_url_png: string, image_url_svg: string}&StripeObject), pix_display_qr_code?: (object{data?: string, expires_at?: int, hosted_instructions_url?: string, image_url_png?: string, image_url_svg?: string}&StripeObject), promptpay_display_qr_code?: (object{data: string, hosted_instructions_url: string, image_url_png: string, image_url_svg: string}&StripeObject), redirect_to_url?: (object{return_url: null|string, url: null|string}&StripeObject), swish_handle_redirect_or_display_qr_code?: (object{hosted_instructions_url: string, mobile_auth_url: string, qr_code: (object{data: string, image_url_png: string, image_url_svg: string}&StripeObject)}&StripeObject), type: string, use_stripe_sdk?: StripeObject, verify_with_microdeposits?: (object{arrival_date: int, hosted_verification_url: string, microdeposit_type: null|string}&StripeObject), wechat_pay_display_qr_code?: (object{data: string, hosted_instructions_url: string, image_data_url: string, image_url_png: string, image_url_svg: string}&StripeObject), wechat_pay_redirect_to_android_app?: (object{app_id: string, nonce_str: string, package: string, partner_id: string, prepay_id: string, sign: string, timestamp: string}&StripeObject), wechat_pay_redirect_to_ios_app?: (object{native_url: string}&StripeObject)}&StripeObject) $next_action If present, this property tells you what actions you need to take in order for your customer to fulfill a payment using the provided source.
  * @property null|Account|string $on_behalf_of You can specify the settlement merchant as the connected account using the <code>on_behalf_of</code> attribute on the charge. See the PaymentIntents <a href="/payments/connected-accounts">use case for connected accounts</a> for details.
  * @property null|(object{customer_reference: null|string, order_reference: null|string}&StripeObject) $payment_details
@@ -65,10 +64,8 @@ namespace Stripe;
 class PaymentIntent extends ApiResource
 {
     const OBJECT_NAME = 'payment_intent';
-
-    use ApiOperations\NestedResource;
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\NestedResource;
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const CANCELLATION_REASON_ABANDONED = 'abandoned';
     const CANCELLATION_REASON_AUTOMATIC = 'automatic';
     const CANCELLATION_REASON_DUPLICATE = 'duplicate';
@@ -77,17 +74,13 @@ class PaymentIntent extends ApiResource
     const CANCELLATION_REASON_FRAUDULENT = 'fraudulent';
     const CANCELLATION_REASON_REQUESTED_BY_CUSTOMER = 'requested_by_customer';
     const CANCELLATION_REASON_VOID_INVOICE = 'void_invoice';
-
     const CAPTURE_METHOD_AUTOMATIC = 'automatic';
     const CAPTURE_METHOD_AUTOMATIC_ASYNC = 'automatic_async';
     const CAPTURE_METHOD_MANUAL = 'manual';
-
     const CONFIRMATION_METHOD_AUTOMATIC = 'automatic';
     const CONFIRMATION_METHOD_MANUAL = 'manual';
-
     const SETUP_FUTURE_USAGE_OFF_SESSION = 'off_session';
     const SETUP_FUTURE_USAGE_ON_SESSION = 'on_session';
-
     const STATUS_CANCELED = 'canceled';
     const STATUS_PROCESSING = 'processing';
     const STATUS_REQUIRES_ACTION = 'requires_action';
@@ -95,7 +88,6 @@ class PaymentIntent extends ApiResource
     const STATUS_REQUIRES_CONFIRMATION = 'requires_confirmation';
     const STATUS_REQUIRES_PAYMENT_METHOD = 'requires_payment_method';
     const STATUS_SUCCEEDED = 'succeeded';
-
     /**
      * Creates a PaymentIntent object.
      *
@@ -120,14 +112,11 @@ class PaymentIntent extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of PaymentIntents.
      *
@@ -141,10 +130,8 @@ class PaymentIntent extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of a PaymentIntent that has previously been created.
      *
@@ -164,13 +151,11 @@ class PaymentIntent extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates properties on a PaymentIntent object without confirming.
      *
@@ -192,14 +177,11 @@ class PaymentIntent extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -213,10 +195,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/apply_customer_balance';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -230,10 +210,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/cancel';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -247,10 +225,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/capture';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -264,10 +240,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/confirm';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -281,10 +255,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/increment_authorization';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -298,10 +270,8 @@ class PaymentIntent extends ApiResource
         $url = $this->instanceUrl() . '/verify_microdeposits';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -313,12 +283,9 @@ class PaymentIntent extends ApiResource
     public static function search($params = null, $opts = null)
     {
         $url = '/v1/payment_intents/search';
-
         return static::_requestPage($url, SearchResult::class, $params, $opts);
     }
-
     const PATH_AMOUNT_DETAILS_LINE_ITEMS = '/amount_details_line_items';
-
     /**
      * @param string $id the ID of the payment intent on which to retrieve the payment intent amount details line items
      * @param null|array $params

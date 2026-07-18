@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\ApiOperations;
+namespace PaymentPlugins\Vendor\Stripe\ApiOperations;
 
 /**
  * Trait for retrievable singleton resources. Adds a `retrieve()` static method to the
@@ -16,11 +16,11 @@ trait SingletonRetrieve
      *
      * @return static
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static(null, $opts);
         $instance->refresh();
 

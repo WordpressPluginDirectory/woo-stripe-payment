@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PaymentPlugins\Stripe\CartFlows\PaymentGateways;
-
 
 use PaymentPlugins\Stripe\CartFlows\Constants;
 use PaymentPlugins\Stripe\Client\StripeClient;
@@ -12,26 +10,20 @@ use PaymentPlugins\Stripe\Client\StripeClient;
  * @package PaymentPlugins\Stripe\CartFlows\PaymentGateways
  */
 class BasePaymentGateway {
-
 	protected $name;
-
 	protected $supports_api_refund = true;
-
 	/**
 	 * @var \WC_Stripe_Payment_Intent
 	 */
 	protected $payment_controller;
-
 	/**
-	 * @var StripeClient
+	 * @var \StripeClient
 	 */
 	protected $client;
-
 	/**
 	 * @var \WC_Payment_Gateway_Stripe
 	 */
 	protected $payment_method;
-
 	private $logger;
 
 	public function __construct( \Cartflows_Logger $logger ) {
@@ -65,10 +57,8 @@ class BasePaymentGateway {
 	 */
 	public function process_offer_payment( \WC_Order $order, array $product ) {
 		$this->init_payment_client( $order->get_payment_method() );
-
 		$this->payment_method->set_payment_method_token( $order->get_meta( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ) );
-
-		if ( ( $payment_intent = $order->get_meta( Constants::CARTFLOWS_PAYMENT_INTENT_ID . $product['step_id'] ) ) ) {
+		if ( $payment_intent = $order->get_meta( Constants::CARTFLOWS_PAYMENT_INTENT_ID . $product['step_id'] ) ) {
 			$intent = $this->client->paymentIntents->retrieve( $payment_intent );
 		} else {
 			// If customer doesn't exist on order, create a customer ID and attach payment method.
@@ -81,17 +71,13 @@ class BasePaymentGateway {
 					return false;
 				}
 			}
-
 			$intent = $this->create_payment_intent( $order, $product );
 		}
-
 		if ( is_wp_error( $intent ) ) {
 			return false;
 		}
-
 		$order->update_meta_data( Constants::CARTFLOWS_PAYMENT_INTENT_ID . $product['step_id'], $intent->id );
 		$order->save();
-
 		// check if intent needs confirmation
 		if ( $intent->status === \WC_Stripe_Constants::REQUIRES_CONFIRMATION ) {
 			$intent = $this->client->paymentIntents->confirm( $intent->id );
@@ -99,7 +85,6 @@ class BasePaymentGateway {
 				return false;
 			}
 		}
-
 		if ( $intent->status === \WC_Stripe_Constants::REQUIRES_ACTION ) {
 			// send json response so Stripe can handle 3DS
 			wp_send_json( array(
@@ -107,7 +92,6 @@ class BasePaymentGateway {
 				'redirect' => $this->payment_method->get_payment_intent_checkout_url( $intent, $order )
 			) );
 		}
-
 		if ( in_array( $intent->status, array(
 			\WC_Stripe_Constants::SUCCEEDED,
 			\WC_Stripe_Constants::REQUIRES_CAPTURE
@@ -117,7 +101,6 @@ class BasePaymentGateway {
 
 			return true;
 		}
-
 	}
 
 	/**
@@ -139,7 +122,6 @@ class BasePaymentGateway {
 		);
 		$this->payment_controller->add_order_shipping_address( $args, $order );
 		$this->payment_controller->add_order_metadata( $args, $order );
-
 		$args = apply_filters( 'wc_stripe_payment_intent_args', $args, $order, $this->payment_controller );
 
 		return $this->client->paymentIntents->create( $args );
@@ -175,7 +157,6 @@ class BasePaymentGateway {
 		if ( ! is_wp_error( $result ) ) {
 			$order->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, $result->id );
 			$order->save();
-
 			// save the payment method.
 			$result = $this->payment_method->create_payment_method( $order->get_meta( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN ), $result->id );
 		}

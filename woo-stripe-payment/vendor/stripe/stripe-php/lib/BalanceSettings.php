@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Options for customizing account balances and payout settings for a Stripe platform’s connected accounts.
@@ -13,9 +12,7 @@ namespace Stripe;
 class BalanceSettings extends SingletonApiResource
 {
     const OBJECT_NAME = 'balance_settings';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * Retrieves balance settings for a given connected account.  Related guide: <a
      * href="/connect/authentication">Making API calls for connected accounts</a>.
@@ -28,13 +25,11 @@ class BalanceSettings extends SingletonApiResource
      */
     public static function retrieve($opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static(null, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates balance settings for a given connected account.  Related guide: <a
      * href="/connect/authentication">Making API calls for connected accounts</a>.
@@ -51,11 +46,9 @@ class BalanceSettings extends SingletonApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

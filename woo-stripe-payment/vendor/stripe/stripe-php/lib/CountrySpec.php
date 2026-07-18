@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Stripe needs to collect certain pieces of information about each account
@@ -15,7 +14,7 @@ namespace Stripe;
  * @property string $id Unique identifier for the object. Represented as the ISO country code for this country.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property string $default_currency The default currency for this country. This applies to both payment methods and bank accounts.
- * @property StripeObject $supported_bank_account_currencies Currencies that can be accepted in the specific country (for transfers).
+ * @property \StripeObject $supported_bank_account_currencies Currencies that can be accepted in the specific country (for transfers).
  * @property string[] $supported_payment_currencies Currencies that can be accepted in the specified country (for payments).
  * @property string[] $supported_payment_methods Payment methods available in the specified country. You may need to enable some payment methods (e.g., <a href="https://stripe.com/docs/ach">ACH</a>) on your account before they appear in this list. The <code>stripe</code> payment method refers to <a href="https://stripe.com/docs/connect/destination-charges">charging through your platform</a>.
  * @property string[] $supported_transfer_countries Countries that can accept transfers from the specified country.
@@ -24,7 +23,6 @@ namespace Stripe;
 class CountrySpec extends ApiResource
 {
     const OBJECT_NAME = 'country_spec';
-
     /**
      * Lists all Country Spec objects available in the API.
      *
@@ -38,10 +36,8 @@ class CountrySpec extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Returns a Country Spec for a given Country code.
      *
@@ -54,10 +50,9 @@ class CountrySpec extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

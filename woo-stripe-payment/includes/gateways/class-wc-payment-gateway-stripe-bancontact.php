@@ -32,7 +32,7 @@ class WC_Payment_Gateway_Stripe_Bancontact extends WC_Payment_Gateway_Stripe_Loc
 		$this->method_title       = __( 'Bancontact (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Bancontact gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/bancontact.svg' );
+		$this->icon = $this->assets->assets_url( 'img/bancontact.svg' );
 	}
 
 }

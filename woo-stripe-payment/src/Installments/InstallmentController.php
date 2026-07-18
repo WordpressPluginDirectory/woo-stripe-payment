@@ -9,32 +9,28 @@ use PaymentPlugins\Stripe\Installments\Filters\PreOrdersFilter;
 use PaymentPlugins\Stripe\Installments\Filters\SubscriptionFilter;
 use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
 use PaymentPlugins\Stripe\Payments\PaymentGatewayRegistry;
-use Stripe\PaymentIntent;
+use PaymentPlugins\Vendor\Stripe\PaymentIntent;
 
 class InstallmentController {
-
 	/**
-	 * @var StripeClient
+	 * @var \StripeClient
 	 */
 	private $client;
-
 	/**
 	 * @var \WC_Stripe_Advanced_Settings
 	 */
 	private $advanced_settings;
-
 	/**
 	 * @var \WC_Stripe_Account_Settings
 	 */
 	private $account_settings;
-
 	/**
 	 * @var \PaymentPlugins\Stripe\Installments\InstallmentFormatter
 	 */
 	private $formatter;
 
 	/**
-	 * @param StripeClient                 $client
+	 * @param \StripeClient                $client
 	 * @param \WC_Stripe_Advanced_Settings $advanced_settings
 	 * @param \WC_Stripe_Account_Settings  $account_settings
 	 */
@@ -54,7 +50,6 @@ class InstallmentController {
 			add_filter( 'wc_stripe_payment_gateway_data', [ $this, 'add_installment_data' ], 10, 3 );
 			add_action( 'woocommerce_checkout_update_order_review', [ $this, 'on_update_order_review' ] );
 		}
-
 		if ( is_admin() ) {
 			add_action( 'woocommerce_update_options_checkout_stripe_advanced', function () {
 				//$this->process_advanced_settings_options();
@@ -65,8 +60,10 @@ class InstallmentController {
 	private function is_active() {
 		$country = $this->account_settings->get_account_country( wc_stripe_mode() );
 
-		return wc_string_to_bool( $this->advanced_settings->get_option( 'installments' ) )
-		       && \in_array( $country, [ 'MX', 'BR' ] );
+		return wc_string_to_bool( $this->advanced_settings->get_option( 'installments' ) ) && \in_array( $country, [
+				'MX',
+				'BR'
+			] );
 	}
 
 	public function is_available( $order = null ) {
@@ -119,9 +116,9 @@ class InstallmentController {
 	}
 
 	/**
-	 * @param \WC_Order                  $order
-	 * @param \WC_Payment_Gateway_Stripe $payment_method
-	 * @param \Stripe\Charge             $charge
+	 * @param \WC_Order                            $order
+	 * @param \WC_Payment_Gateway_Stripe           $payment_method
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
 	 */
 	public function add_order_meta( $order, $payment_method, $charge ) {
 		if ( ! empty( $charge->payment_method_details->card->installments->plan ) ) {
@@ -162,8 +159,8 @@ class InstallmentController {
 	}
 
 	/**
-	 * @param                      $args
-	 * @param Stripe\PaymentIntent $intent
+	 * @param                                             $args
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent
 	 */
 	public function add_confirmation_args( $args, $intent ) {
 		if ( ! empty( $intent->payment_method_options->card->installments->available_plans ) ) {
@@ -192,33 +189,24 @@ class InstallmentController {
 		if ( ! $context->is_checkout() && ! $context->is_order_pay() ) {
 			return $data;
 		}
-
 		if ( ! isset( $data['stripe_cc_data'] ) ) {
 			return $data;
 		}
-
 		/**
 		 * @var \WC_Payment_Gateway_Stripe_CC $card_gateway
 		 */
 		$card_gateway = $registry->get( 'stripe_cc' );
-
 		// Installments are only supported by the Payment Element
 		if ( $card_gateway && ! $card_gateway->is_payment_element_active() ) {
 			return $data;
 		}
-
 		$order = $context->is_order_pay() ? $context->get_order_from_query() : null;
-
 		if ( ! $this->is_available( $order ) ) {
 			return $data;
 		}
-
 		$intent = $this->get_or_create_installment_intent( $order );
-
 		if ( $intent && ! is_wp_error( $intent ) ) {
-			$data['stripe_cc_data']['installments'] = [
-				'clientSecret' => $intent->client_secret,
-			];
+			$data['stripe_cc_data']['installments'] = [ 'clientSecret' => $intent->client_secret ];
 		}
 
 		return $data;
@@ -246,18 +234,15 @@ class InstallmentController {
 	 */
 	public function maybe_update_installment_intent() {
 		remove_action( 'woocommerce_after_calculate_totals', [ $this, 'maybe_update_installment_intent' ] );
-
 		$existing = \WC_Stripe_Utils::get_payment_intent_from_session();
 		if ( ! $existing ) {
 			return;
 		}
-
 		$params = $this->get_installment_intent_params();
-
 		if ( $this->intent_needs_update( $existing, $params ) ) {
 			$intent = $this->client->paymentIntents->update( $existing->id, [
 				'amount'   => $params['amount'],
-				'currency' => $params['currency'],
+				'currency' => $params['currency']
 			] );
 			if ( ! is_wp_error( $intent ) ) {
 				\WC_Stripe_Utils::save_payment_intent_to_session( $intent );
@@ -271,12 +256,11 @@ class InstallmentController {
 	 *
 	 * @param \WC_Order|null $order
 	 *
-	 * @return \Stripe\PaymentIntent|\WP_Error|null
+	 * @return \PaymentPlugins\Vendor\Stripe\PaymentIntent|\WP_Error|null
 	 * @since 4.0.0
 	 */
 	public function get_or_create_installment_intent( $order = null ) {
 		$params = $this->get_installment_intent_params( $order );
-
 		if ( $order ) {
 			$existing = $order->get_meta( \WC_Stripe_Constants::PAYMENT_INTENT );
 			if ( $existing ) {
@@ -285,7 +269,6 @@ class InstallmentController {
 		} else {
 			$existing = \WC_Stripe_Utils::get_payment_intent_from_session();
 		}
-
 		if ( $existing ) {
 			$intent = $this->client->paymentIntents->retrieve( $existing->id );
 			if ( ! is_wp_error( $intent ) && ! in_array( $intent->status, [
@@ -296,7 +279,7 @@ class InstallmentController {
 				if ( $this->intent_needs_update( $intent, $params ) ) {
 					$intent = $this->client->paymentIntents->update( $intent->id, [
 						'amount'   => $params['amount'],
-						'currency' => $params['currency'],
+						'currency' => $params['currency']
 					] );
 					if ( ! is_wp_error( $intent ) ) {
 						\WC_Stripe_Utils::save_payment_intent_to_session( $intent, $order );
@@ -306,9 +289,7 @@ class InstallmentController {
 				return $intent;
 			}
 		}
-
 		$intent = $this->client->paymentIntents->create( $params );
-
 		if ( ! is_wp_error( $intent ) ) {
 			\WC_Stripe_Utils::save_payment_intent_to_session( $intent, $order );
 		}
@@ -320,8 +301,8 @@ class InstallmentController {
 	 * Determines if an existing payment intent needs to be updated by comparing
 	 * a hash of the current parameters against the intent's values.
 	 *
-	 * @param \Stripe\PaymentIntent|\stdClass $intent
-	 * @param array                           $params
+	 * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent|\stdClass $intent
+	 * @param array                                                 $params
 	 *
 	 * @return bool
 	 * @since 4.0.0
@@ -344,13 +325,8 @@ class InstallmentController {
 	private function get_installment_intent_params( $order = null ) {
 		$params = [
 			'payment_method_types'   => [ 'card' ],
-			'payment_method_options' => [
-				'card' => [
-					'installments' => [ 'enabled' => true ],
-				],
-			],
+			'payment_method_options' => [ 'card' => [ 'installments' => [ 'enabled' => true ] ] ]
 		];
-
 		/**
 		 * @var AbstractGateway $card_gateway
 		 */
@@ -358,7 +334,6 @@ class InstallmentController {
 		if ( $card_gateway && $card_gateway->get_option( 'force_3d_secure', 'no' ) === 'yes' ) {
 			$params['payment_method_options']['card']['request_three_d_secure'] = 'any';
 		}
-
 		if ( $order ) {
 			$params['amount']   = wc_stripe_add_number_precision( $order->get_total(), $order->get_currency() );
 			$params['currency'] = $order->get_currency();
@@ -404,7 +379,7 @@ class InstallmentController {
 		 * Loop through the modes and enable installments
 		 */
 		/**
-		 * @var StripeClient $client
+		 * @var \StripeClient $client
 		 */
 		$client      = wc_stripe_get_container()->get( StripeClient::class );
 		$application = wc_stripe_get_container()->get( 'CLIENT_ID' );
@@ -429,5 +404,4 @@ class InstallmentController {
 			}
 		}
 	}
-
 }

@@ -315,7 +315,7 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 	}
 
 	public function get_connect_url() {
-		return \Stripe\OAuth::authorizeUrl( array(
+		return \PaymentPlugins\Vendor\Stripe\OAuth::authorizeUrl( array(
 			'response_type'  => 'code',
 			'client_id'      => stripe_wc()->client_id,
 			'stripe_landing' => 'login',
@@ -344,8 +344,8 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 	 * @param string $mode
 	 * @param array  $events
 	 *
-	 * @return bool|\Stripe\WebhookEndpoint
-	 * @throws \Stripe\Exception\ApiErrorException
+	 * @return bool|\PaymentPlugins\Vendor\Stripe\WebhookEndpoint
+	 * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException
 	 * @since 3.3.13
 	 */
 	public function create_webhook( $mode, $events = array() ) {

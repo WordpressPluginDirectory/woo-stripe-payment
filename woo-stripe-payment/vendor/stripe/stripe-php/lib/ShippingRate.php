@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Shipping rates describe the price of shipping presented to your customers and
@@ -16,7 +15,7 @@ namespace Stripe;
  * @property null|string $display_name The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
  * @property null|(object{amount: int, currency: string, currency_options?: StripeObject}&StripeObject) $fixed_amount
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $tax_behavior Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of <code>inclusive</code>, <code>exclusive</code>, or <code>unspecified</code>.
  * @property null|string|TaxCode $tax_code A <a href="https://docs.stripe.com/tax/tax-categories">tax code</a> ID. The Shipping tax code is <code>txcd_92010001</code>.
  * @property string $type The type of calculation to use on the shipping rate.
@@ -24,15 +23,11 @@ namespace Stripe;
 class ShippingRate extends ApiResource
 {
     const OBJECT_NAME = 'shipping_rate';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const TAX_BEHAVIOR_EXCLUSIVE = 'exclusive';
     const TAX_BEHAVIOR_INCLUSIVE = 'inclusive';
     const TAX_BEHAVIOR_UNSPECIFIED = 'unspecified';
-
     const TYPE_FIXED_AMOUNT = 'fixed_amount';
-
     /**
      * Creates a new shipping rate object.
      *
@@ -47,14 +42,11 @@ class ShippingRate extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of your shipping rates.
      *
@@ -68,10 +60,8 @@ class ShippingRate extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Returns the shipping rate object with the given ID.
      *
@@ -84,13 +74,11 @@ class ShippingRate extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates an existing shipping rate object.
      *
@@ -106,11 +94,9 @@ class ShippingRate extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

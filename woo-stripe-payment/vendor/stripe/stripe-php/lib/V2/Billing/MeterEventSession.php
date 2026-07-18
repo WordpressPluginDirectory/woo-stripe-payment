@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\V2\Billing;
+namespace PaymentPlugins\Vendor\Stripe\V2\Billing;
 
 /**
  * A Meter Event Session is an authentication session for the high-throughput meter event API. Meter Event Sessions provide temporary authentication tokens with expiration times, enabling secure and efficient bulk submission of usage events.
@@ -14,7 +14,7 @@ namespace Stripe\V2\Billing;
  * @property int $expires_at The time at which this session will expire.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  */
-class MeterEventSession extends \Stripe\ApiResource
+class MeterEventSession extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'v2.billing.meter_event_session';
 }

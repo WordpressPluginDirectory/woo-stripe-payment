@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * [Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the <a href="https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api">FX Quotes API</a> instead.
@@ -36,12 +35,11 @@ namespace Stripe;
  *
  * @property string $id Unique identifier for the object. Represented as the three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a> in lowercase.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property StripeObject $rates Hash where the keys are supported currencies and the values are the exchange rate at which the base id currency converts to the key currency.
+ * @property \StripeObject $rates Hash where the keys are supported currencies and the values are the exchange rate at which the base id currency converts to the key currency.
  */
 class ExchangeRate extends ApiResource
 {
     const OBJECT_NAME = 'exchange_rate';
-
     /**
      * [Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the
      * <a
@@ -63,10 +61,8 @@ class ExchangeRate extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * [Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the
      * <a
@@ -87,10 +83,9 @@ class ExchangeRate extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

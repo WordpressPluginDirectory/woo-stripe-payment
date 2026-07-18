@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Exception\OAuth;
+namespace PaymentPlugins\Vendor\Stripe\Exception\OAuth;
 
 /**
  * UnsupportedGrantTypeException is thrown when an unuspported grant type

@@ -4,7 +4,7 @@
  *
  */
 defined( 'ABSPATH' ) || exit;
-$user      = wp_get_current_user();
+$user = wp_get_current_user();
 ?>
 <div class="wc-stripe-main__page">
     <div class="wc-stripe-main__container">
@@ -31,7 +31,8 @@ $user      = wp_get_current_user();
                             <h3><?php esc_html_e( 'Documentation', 'woo-stripe-payment' ) ?></h3>
                             <div class="icon-container documentation">
                                 <!--<span class="dashicons dashicons-admin-users"></span>-->
-                                <img class="icon" src="<?php echo stripe_wc()->assets_url( 'img/documentation.svg' ) ?>"/>
+                                <img class="icon"
+                                     src="<?php echo stripe_wc()->assets_url( 'img/documentation.svg' ) ?>"/>
                             </div>
                             <div class="card-header">
                                 <p>
@@ -66,7 +67,8 @@ $user      = wp_get_current_user();
                             <h3><?php esc_html_e( 'Payment Plugins for PayPal WooCommerce', 'woo-stripe-payment' ) ?></h3>
                             <div class="icon-container paypal">
                                 <!--<span class="dashicons dashicons-admin-users"></span>-->
-                                <img class="icon" src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-color.svg"/>
+                                <img class="icon"
+                                     src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-color.svg"/>
                             </div>
                             <div class="card-header">
                                 <p>
@@ -76,7 +78,8 @@ $user      = wp_get_current_user();
                                 </p>
                                 <form id="plugin-filter">
                                     <a class="<?php echo $plugins->paypal->installed ? 'activate-now' : 'install-now' ?> button"
-                                       href="<?php echo $plugins->paypal->installed ? esc_url( $plugins->paypal->activate_url ) : esc_url( $plugins->paypal->install_url ) ?>" data-slug="<?php echo esc_attr( $slug ) ?>"><?php $plugins->paypal->installed ? esc_html_e( 'Activate',
+                                       href="<?php echo $plugins->paypal->installed ? esc_url( $plugins->paypal->activate_url ) : esc_url( $plugins->paypal->install_url ) ?>"
+                                       data-slug="<?php echo esc_attr( $slug ) ?>"><?php $plugins->paypal->installed ? esc_html_e( 'Activate',
 											'woo-stripe-payment' )
 											: esc_html_e( 'Install Now', 'woo-stripe-payment' ) ?></a>
                                 </form>

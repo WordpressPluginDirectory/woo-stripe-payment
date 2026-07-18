@@ -1,11 +1,11 @@
 <?php
 
-namespace Stripe\Util;
+namespace PaymentPlugins\Vendor\Stripe\Util;
 
 /**
- * @phpstan-type RequestOptionsArray array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_context?: string|\Stripe\StripeContext, stripe_version?: string, api_base?: string, max_network_retries?: int, headers?: Array }
+ * @phpstan-type RequestOptionsArray array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_context?: string|\PaymentPlugins\Vendor\Stripe\StripeContext, stripe_version?: string, api_base?: string, max_network_retries?: int, headers?: Array }
  *
- * @psalm-type RequestOptionsArray = array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_context?: string|\Stripe\StripeContext, stripe_version?: string, api_base?: string, max_network_retries?: int, headers?: Array }
+ * @psalm-type RequestOptionsArray = array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_context?: string|\PaymentPlugins\Vendor\Stripe\StripeContext, stripe_version?: string, api_base?: string, max_network_retries?: int, headers?: Array }
  */
 class RequestOptions
 {
@@ -109,7 +109,7 @@ class RequestOptions
      *
      * @return RequestOptions
      *
-     * @throws \Stripe\Exception\InvalidArgumentException
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException
      */
     public static function parse($options, $strict = false)
     {
@@ -126,7 +126,7 @@ class RequestOptions
                 $message = 'Do not pass a string for request options. If you want to set the '
                     . 'API key, pass an array like ["api_key" => <apiKey>] instead.';
 
-                throw new \Stripe\Exception\InvalidArgumentException($message);
+                throw new \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException($message);
             }
 
             return new RequestOptions($options, [], null);
@@ -182,7 +182,7 @@ class RequestOptions
             if ($strict && !empty($options)) {
                 $message = 'Got unexpected keys in options array: ' . \implode(', ', \array_keys($options));
 
-                throw new \Stripe\Exception\InvalidArgumentException($message);
+                throw new \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException($message);
             }
 
             return new RequestOptions($key, $headers, $base, $maxNetworkRetries);
@@ -193,7 +193,7 @@ class RequestOptions
             . 'per-request options, which must be an array. (HINT: you can set '
             . 'a global apiKey by "Stripe::setApiKey(<apiKey>)")';
 
-        throw new \Stripe\Exception\InvalidArgumentException($message);
+        throw new \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException($message);
     }
 
     /** @return string */

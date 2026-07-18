@@ -39,7 +39,7 @@ class WC_Payment_Token_Stripe_CC extends WC_Payment_Token_Stripe {
 			if ( isset( $details['card'] ) ) {
 				$card = $details['card'];
 			}
-			if ( $details instanceof \Stripe\Card ) {
+			if ( $details instanceof \PaymentPlugins\Vendor\Stripe\Card ) {
 				$card = $details;
 			}
 			$this->set_brand( $card['brand'] );
@@ -87,6 +87,10 @@ class WC_Payment_Token_Stripe_CC extends WC_Payment_Token_Stripe {
 
 	public function get_html_classes() {
 		return sprintf( '%s', str_replace( ' ', '', strtolower( $this->get_prop( 'brand' ) ) ) );
+	}
+
+	public function get_icon_file() {
+		return sprintf( 'img/cards/%s.svg', strtolower( $this->get_brand( 'edit' ) ) );
 	}
 
 	public function get_card_type( $context = 'view' ) {

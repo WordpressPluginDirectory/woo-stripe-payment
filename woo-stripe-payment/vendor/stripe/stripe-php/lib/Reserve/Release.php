@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Reserve;
+namespace PaymentPlugins\Vendor\Stripe\Reserve;
 
 /**
  * ReserveReleases represent the release of funds from a ReserveHold.
@@ -14,14 +14,14 @@ namespace Stripe\Reserve;
  * @property string $created_by Indicates which party created this ReserveRelease.
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property null|\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|\PaymentPlugins\Vendor\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $reason The reason for the ReserveRelease, indicating why the funds were released.
  * @property int $released_at The release timestamp of the funds.
  * @property null|Hold|string $reserve_hold The ReserveHold this ReserveRelease is associated with.
  * @property null|Plan|string $reserve_plan The ReservePlan ID this ReserveRelease is associated with. This field is only populated if a ReserveRelease is created by a ReservePlan disable operation, or from a scheduled ReservedHold expiry.
- * @property null|(object{dispute?: string|\Stripe\Dispute, refund?: string|\Stripe\Refund, type: string}&\Stripe\StripeObject) $source_transaction
+ * @property null|(object{dispute?: string|\PaymentPlugins\Vendor\Stripe\Dispute, refund?: string|\PaymentPlugins\Vendor\Stripe\Refund, type: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $source_transaction
  */
-class Release extends \Stripe\ApiResource
+class Release extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'reserve.release';
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\ApiOperations;
+namespace PaymentPlugins\Vendor\Stripe\ApiOperations;
 
 /**
  * Trait for deletable resources. Adds a `delete()` method to the class.
@@ -15,7 +15,7 @@ trait Delete
      *
      * @return static the deleted resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {

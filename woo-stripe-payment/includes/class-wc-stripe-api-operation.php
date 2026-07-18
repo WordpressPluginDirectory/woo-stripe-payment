@@ -15,7 +15,7 @@ class WC_Stripe_API_Operation {
 
 	/**
 	 *
-	 * @var \Stripe\StripeClient
+	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient
 	 */
 	private $client;
 
@@ -27,7 +27,7 @@ class WC_Stripe_API_Operation {
 
 	/**
 	 *
-	 * @var \Stripe\Service\AbstractService
+	 * @var \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 	 */
 	private $service;
 
@@ -45,9 +45,9 @@ class WC_Stripe_API_Operation {
 
 	/**
 	 *
-	 * @param WC_Stripe_Gateway    $gateway
-	 * @param \Stripe\StripeClient $client
-	 * @param string               $property
+	 * @param WC_Stripe_Gateway                          $gateway
+	 * @param \PaymentPlugins\Vendor\Stripe\StripeClient $client
+	 * @param string                                     $property
 	 *
 	 * @throws InvalidArgumentException
 	 */
@@ -92,11 +92,11 @@ class WC_Stripe_API_Operation {
 			$args = apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method );
 
 			return $this->service->{$method}( ...$this->prepare_request_args( $args, $method ) );
-		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e ) {
 			return $this->gateway->get_wp_error( $e, $this->property . '-error' );
-		} catch ( \Stripe\Exception\UnexpectedValueException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\UnexpectedValueException $e ) {
 			return new WP_Error( 'stripe-error', $e->getMessage(), $e );
-		} catch ( \Stripe\Exception\InvalidArgumentException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException $e ) {
 			return new WP_Error( 'stripe-error', $e->getMessage(), $e );
 		}
 	}
@@ -157,7 +157,11 @@ class WC_Stripe_API_Operation {
 				if ( $idx !== null ) {
 					$params       = $args[ $idx ] ?? [];
 					$params       = is_array( $params ) ? $params : [];
-					$params       = $this->add_expanded_properties( $params, [ 'latest_charge', 'latest_charge.refunds', 'payment_method' ] );
+					$params       = $this->add_expanded_properties( $params, [
+						'latest_charge',
+						'latest_charge.refunds',
+						'payment_method'
+					] );
 					$args[ $idx ] = $this->sanitize_intent_params( $params, $method );
 				}
 				break;

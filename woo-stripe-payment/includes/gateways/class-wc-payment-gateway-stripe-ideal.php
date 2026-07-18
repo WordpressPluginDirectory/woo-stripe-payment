@@ -31,7 +31,7 @@ class WC_Payment_Gateway_Stripe_Ideal extends WC_Payment_Gateway_Stripe_Local_Pa
 		$this->method_title       = __( 'iDEAL (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Ideal gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/' . $this->get_option( 'icon' ) . '.svg' );
+		$this->icon = $this->assets->assets_url( 'img/' . $this->get_option( 'icon' ) . '.svg' );
 	}
 
 	public function get_local_payment_settings() {

@@ -141,9 +141,9 @@ class CartShipping extends AbstractCart {
 		// Rate IDs always have exactly one colon, so more than one colon means a package index is present.
 		// The index can be an integer (WC default) or a word string (e.g. WC Subscriptions recurring cart key).
 		if ( substr_count( $shipping_method, ':' ) > 1 ) {
-			$pos                               = strpos( $shipping_method, ':' );
-			$index                             = substr( $shipping_method, 0, $pos );
-			$id                                = substr( $shipping_method, $pos + 1 );
+			$pos   = strpos( $shipping_method, ':' );
+			$index = substr( $shipping_method, 0, $pos );
+			$id    = substr( $shipping_method, $pos + 1 );
 		} else {
 			$index = 0;
 			$id    = $shipping_method;

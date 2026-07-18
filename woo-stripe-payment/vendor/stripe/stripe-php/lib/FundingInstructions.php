@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Each customer has a <a href="https://docs.stripe.com/api/customers/object#customer_object-balance"><code>balance</code></a> that is

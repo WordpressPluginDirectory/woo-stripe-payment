@@ -27,7 +27,7 @@ class WC_Payment_Gateway_Stripe_PayNow extends WC_Payment_Gateway_Stripe_Local_P
 		$this->method_title       = __( 'PayNow (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'PayNow gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/paynow.svg' );
+		$this->icon = $this->assets->assets_url( 'img/paynow.svg' );
 	}
 
 }

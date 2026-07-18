@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Tokenization is the process Stripe uses to collect sensitive card or bank
@@ -39,12 +38,10 @@ namespace Stripe;
 class Token extends ApiResource
 {
     const OBJECT_NAME = 'token';
-
     const TYPE_ACCOUNT = 'account';
     const TYPE_BANK_ACCOUNT = 'bank_account';
     const TYPE_CARD = 'card';
     const TYPE_PII = 'pii';
-
     /**
      * Creates a single-use token that represents a bank account’s details. You can use
      * this token with any v1 API method in place of a bank account dictionary. You can
@@ -64,14 +61,11 @@ class Token extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Retrieves the token with the given ID.
      *
@@ -84,10 +78,9 @@ class Token extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

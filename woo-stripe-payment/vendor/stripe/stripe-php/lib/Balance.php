@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * This is an object representing your Stripe balance. You can retrieve it to see
@@ -24,7 +23,6 @@ namespace Stripe;
 class Balance extends SingletonApiResource
 {
     const OBJECT_NAME = 'balance';
-
     /**
      * Retrieves the current account balance, based on the authentication that was used
      * to make the request.  For a sample request, see <a
@@ -39,10 +37,9 @@ class Balance extends SingletonApiResource
      */
     public static function retrieve($opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static(null, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

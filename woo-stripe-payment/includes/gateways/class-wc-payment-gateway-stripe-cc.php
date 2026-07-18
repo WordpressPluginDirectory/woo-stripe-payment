@@ -154,18 +154,24 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	public function get_element_options( $options = array() ) {
 		if ( $this->is_custom_form_active() || ! $this->is_payment_element_active() ) {
 			$options = array( 'locale' => wc_stripe_get_site_locale() );
+
 			if ( $this->is_custom_form_active() ) {
 				$options = array_merge(
 					$this->get_custom_form()['elementOptions'],
-					$options
+					$options,
 				);
 			}
+
+			$options = array_merge(
+				$options,
+				wc_stripe_get_container()->get( PaymentIntentController::class )->get_element_options()
+			);
 
 			return apply_filters( 'wc_stripe_get_element_options', $options, $this );
 		} elseif ( $this->is_payment_element_active() ) {
 			$options                       = wc_stripe_get_container()->get( PaymentIntentController::class )->get_element_options();
 			$options['paymentMethodTypes'] = array( 'card' );
-			if ( $this->is_link_enabled() ) {
+			if ( $this->is_link_enabled() && ! is_add_payment_method_page() ) {
 				$options['paymentMethodTypes'][] = 'link';
 			}
 			$options['appearance'] = array( 'theme' => $this->get_option( 'theme', 'stripe' ) );

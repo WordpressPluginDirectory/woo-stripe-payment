@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\V2\Core;
+namespace PaymentPlugins\Vendor\Stripe\Service\V2\Core;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class EventDestinationService extends \Stripe\Service\AbstractService
+class EventDestinationService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Lists all event destinations.
      *
      * @param null|array{include?: string[], limit?: int} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Collection<\Stripe\V2\Core\EventDestination>
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Collection<\PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -30,11 +30,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      * Create a new event destination.
      *
      * @param null|array{description?: string, enabled_events: string[], event_payload: string, events_from?: string[], include?: string[], metadata?: array<string, string>, name: string, snapshot_api_version?: string, type: string, amazon_eventbridge?: array{aws_account_id: string, aws_region: string}, webhook_endpoint?: array{url: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\EventDestination
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -46,11 +46,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\DeletedObject
+     * @return \PaymentPlugins\Vendor\Stripe\V2\DeletedObject
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($id, $params = null, $opts = null)
     {
@@ -62,11 +62,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\EventDestination
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function disable($id, $params = null, $opts = null)
     {
@@ -78,11 +78,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\EventDestination
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function enable($id, $params = null, $opts = null)
     {
@@ -94,11 +94,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\Event
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\Event
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function ping($id, $params = null, $opts = null)
     {
@@ -110,11 +110,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{include?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\EventDestination
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -126,11 +126,11 @@ class EventDestinationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{description?: string, enabled_events?: string[], include?: string[], metadata?: array<string, null|string>, name?: string, webhook_endpoint?: array{url: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\V2\Core\EventDestination
+     * @return \PaymentPlugins\Vendor\Stripe\V2\Core\EventDestination
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

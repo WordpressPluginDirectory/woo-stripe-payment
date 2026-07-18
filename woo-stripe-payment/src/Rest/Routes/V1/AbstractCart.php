@@ -78,7 +78,7 @@ abstract class AbstractCart extends AbstractRoute {
 	 * Validate payment method
 	 *
 	 * @param string           $payment_method Payment method ID
-	 * @param \WP_REST_Request $request        Request object
+	 * @param \WP_REST_Request $request Request object
 	 *
 	 * @return bool
 	 */

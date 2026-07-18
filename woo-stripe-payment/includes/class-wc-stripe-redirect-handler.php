@@ -86,7 +86,7 @@ class WC_Stripe_Redirect_Handler {
 			 */
 			$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ];
 
-			if ( $result instanceof \Stripe\SetupIntent ) {
+			if ( $result instanceof \PaymentPlugins\Vendor\Stripe\SetupIntent ) {
 				$payment_method->set_setup_intent( $result );
 			}
 
@@ -112,7 +112,7 @@ class WC_Stripe_Redirect_Handler {
 			} elseif ( in_array( $result->status, array( 'requires_payment_method', 'failed' ) ) ) {
 				wc_add_notice( __( 'Payment authorization failed. Please select another payment method.', 'woo-stripe-payment' ), 'error' );
 				wc_stripe_log_info( sprintf( 'User cancelled their payment and has been redirected to the checkout page. Payment Method: %s. Order ID: %s', $payment_method->id, $order->get_id() ) );
-				if ( $result instanceof \Stripe\PaymentIntent ) {
+				if ( $result instanceof \PaymentPlugins\Vendor\Stripe\PaymentIntent ) {
 					$order->update_meta_data( WC_Stripe_Constants::PAYMENT_INTENT, WC_Stripe_Utils::sanitize_intent( $result->toArray() ) );
 				} else {
 					$order->delete_meta_data( WC_Stripe_Constants::SOURCE_ID );

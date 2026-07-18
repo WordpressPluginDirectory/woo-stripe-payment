@@ -44,11 +44,11 @@ class PaymentGateways {
 
 	private function get_payment_gateways() {
 		return [
-			'stripe_cc'              => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\CreditCardGateway',
-			'stripe_googlepay'       => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\GooglePayGateway',
-			'stripe_applepay'        => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\ApplePayGateway',
+			'stripe_cc'        => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\CreditCardGateway',
+			'stripe_googlepay' => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\GooglePayGateway',
+			'stripe_applepay'  => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\ApplePayGateway',
 			//'stripe_payment_request' => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\PaymentRequestGateway',
-			'stripe_upm'             => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\UniversalPaymentGateway'
+			'stripe_upm'       => 'PaymentPlugins\Stripe\WooFunnels\Upsell\PaymentGateways\UniversalPaymentGateway'
 		];
 	}
 
@@ -92,10 +92,10 @@ class PaymentGateways {
 	/**
 	 * Maybe setup the WooFunnels upsell if the charge has not been captured.
 	 *
-	 * @param \Stripe\Charge $charge
-	 * @param \WC_Order      $order
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+	 * @param \WC_Order                            $order
 	 */
-	public function maybe_setup_upsell( \Stripe\Charge $charge, \WC_Order $order ) {
+	public function maybe_setup_upsell( \PaymentPlugins\Vendor\Stripe\Charge $charge, \WC_Order $order ) {
 		$payment_method = $order->get_payment_method();
 		if ( ! $charge->captured && $this->is_supported_gateway( $payment_method ) ) {
 			$payment_gateway = $this->get_wfocu_payment_gateway( $payment_method );

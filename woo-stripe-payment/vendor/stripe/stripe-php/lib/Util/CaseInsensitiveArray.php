@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Util;
+namespace PaymentPlugins\Vendor\Stripe\Util;
 
 /**
  * CaseInsensitiveArray is an array-like class that ignores case for keys.

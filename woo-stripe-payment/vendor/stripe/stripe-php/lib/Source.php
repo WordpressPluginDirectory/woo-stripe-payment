@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * <code>Source</code> objects allow you to accept a variety of payment methods. They
@@ -59,24 +58,19 @@ namespace Stripe;
 class Source extends ApiResource
 {
     const OBJECT_NAME = 'source';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const ALLOW_REDISPLAY_ALWAYS = 'always';
     const ALLOW_REDISPLAY_LIMITED = 'limited';
     const ALLOW_REDISPLAY_UNSPECIFIED = 'unspecified';
-
     const FLOW_CODE_VERIFICATION = 'code_verification';
     const FLOW_NONE = 'none';
     const FLOW_RECEIVER = 'receiver';
     const FLOW_REDIRECT = 'redirect';
-
     const STATUS_CANCELED = 'canceled';
     const STATUS_CHARGEABLE = 'chargeable';
     const STATUS_CONSUMED = 'consumed';
     const STATUS_FAILED = 'failed';
     const STATUS_PENDING = 'pending';
-
     const TYPE_ACH_CREDIT_TRANSFER = 'ach_credit_transfer';
     const TYPE_ACH_DEBIT = 'ach_debit';
     const TYPE_ACSS_DEBIT = 'acss_debit';
@@ -96,10 +90,8 @@ class Source extends ApiResource
     const TYPE_SOFORT = 'sofort';
     const TYPE_THREE_D_SECURE = 'three_d_secure';
     const TYPE_WECHAT = 'wechat';
-
     const USAGE_REUSABLE = 'reusable';
     const USAGE_SINGLE_USE = 'single_use';
-
     /**
      * Creates a new source object.
      *
@@ -114,14 +106,11 @@ class Source extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Retrieves an existing source object. Supply the unique source ID from a source
      * creation request and Stripe will return the corresponding up-to-date source
@@ -136,13 +125,11 @@ class Source extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified source by setting the values of the parameters passed. Any
      * parameters not provided will be left unchanged.
@@ -164,16 +151,12 @@ class Source extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
-    use ApiOperations\NestedResource;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\NestedResource;
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -186,33 +169,24 @@ class Source extends ApiResource
     public function detach($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $id = $this['id'];
         if (!$id) {
             $class = static::class;
-            $msg = "Could not determine which URL to request: {$class} instance "
-             . "has invalid ID: {$id}";
-
+            $msg = "Could not determine which URL to request: {$class} instance " . "has invalid ID: {$id}";
             throw new Exception\UnexpectedValueException($msg, null);
         }
-
         if ($this['customer']) {
             $base = Customer::classUrl();
-            $parentExtn = \urlencode(Util\Util::utf8($this['customer']));
-            $extn = \urlencode(Util\Util::utf8($id));
+            $parentExtn = \urlencode(\PaymentPlugins\Vendor\Stripe\Util\Util::utf8($this['customer']));
+            $extn = \urlencode(\PaymentPlugins\Vendor\Stripe\Util\Util::utf8($id));
             $url = "{$base}/{$parentExtn}/sources/{$extn}";
-
             list($response, $opts) = $this->_request('delete', $url, $params, $opts);
             $this->refreshFrom($response, $opts);
-
             return $this;
         }
-        $message = 'This source object does not appear to be currently attached '
-               . 'to a customer object.';
-
+        $message = 'This source object does not appear to be currently attached ' . 'to a customer object.';
         throw new Exception\UnexpectedValueException($message);
     }
-
     /**
      * @param string $id
      * @param null|array $params
@@ -226,12 +200,10 @@ class Source extends ApiResource
     {
         $url = static::resourceUrl($id) . '/source_transactions';
         list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -245,7 +217,6 @@ class Source extends ApiResource
         $url = $this->instanceUrl() . '/verify';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

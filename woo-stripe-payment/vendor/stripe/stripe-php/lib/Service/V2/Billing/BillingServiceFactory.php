@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\V2\Billing;
+namespace PaymentPlugins\Vendor\Stripe\Service\V2\Billing;
 
 /**
  * Service factory class for API resources in the Billing namespace.
@@ -12,7 +12,7 @@ namespace Stripe\Service\V2\Billing;
  * @property MeterEventSessionService $meterEventSession
  * @property MeterEventStreamService $meterEventStream
  */
-class BillingServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class BillingServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

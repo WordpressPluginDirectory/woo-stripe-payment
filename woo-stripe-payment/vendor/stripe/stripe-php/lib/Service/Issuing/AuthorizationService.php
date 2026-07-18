@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Issuing;
+namespace PaymentPlugins\Vendor\Stripe\Service\Issuing;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class AuthorizationService extends \Stripe\Service\AbstractService
+class AuthorizationService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Issuing <code>Authorization</code> objects. The objects are
@@ -17,11 +17,11 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      * object appearing first.
      *
      * @param null|array{card?: string, cardholder?: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, status?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Collection<\Stripe\Issuing\Authorization>
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<\PaymentPlugins\Vendor\Stripe\Issuing\Authorization>
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -40,11 +40,11 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{amount?: int, expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Authorization
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Authorization
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function approve($id, $params = null, $opts = null)
     {
@@ -63,11 +63,11 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Authorization
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Authorization
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function decline($id, $params = null, $opts = null)
     {
@@ -79,11 +79,11 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Authorization
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Authorization
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -97,11 +97,11 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Issuing\Authorization
+     * @return \PaymentPlugins\Vendor\Stripe\Issuing\Authorization
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

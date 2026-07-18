@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Forwarding;
+namespace PaymentPlugins\Vendor\Stripe\Forwarding;
 
 /**
  * Instructs Stripe to make a request on your behalf using the destination URL. The destination URL
@@ -26,15 +26,15 @@ namespace Stripe\Forwarding;
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property null|\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|\PaymentPlugins\Vendor\Stripe\StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $payment_method The PaymentMethod to insert into the forwarded request. Forwarding previously consumed PaymentMethods is allowed.
  * @property string[] $replacements The field kinds to be replaced in the forwarded request.
- * @property null|(object{destination_duration: int, destination_ip_address: string}&\Stripe\StripeObject) $request_context Context about the request from Stripe's servers to the destination endpoint.
- * @property null|(object{body: string, headers: (object{name: string, value: string}&\Stripe\StripeObject)[], http_method: string}&\Stripe\StripeObject) $request_details The request that was sent to the destination endpoint. We redact any sensitive fields.
- * @property null|(object{body: string, headers: (object{name: string, value: string}&\Stripe\StripeObject)[], status: int}&\Stripe\StripeObject) $response_details The response that the destination endpoint returned to us. We redact any sensitive fields.
+ * @property null|(object{destination_duration: int, destination_ip_address: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $request_context Context about the request from Stripe's servers to the destination endpoint.
+ * @property null|(object{body: string, headers: (object{name: string, value: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)[], http_method: string}&\PaymentPlugins\Vendor\Stripe\StripeObject) $request_details The request that was sent to the destination endpoint. We redact any sensitive fields.
+ * @property null|(object{body: string, headers: (object{name: string, value: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)[], status: int}&\PaymentPlugins\Vendor\Stripe\StripeObject) $response_details The response that the destination endpoint returned to us. We redact any sensitive fields.
  * @property null|string $url The destination URL for the forwarded request. Must be supported by the config.
  */
-class Request extends \Stripe\ApiResource
+class Request extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'forwarding.request';
 
@@ -46,7 +46,7 @@ class Request extends \Stripe\ApiResource
      *
      * @return Request the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -54,7 +54,7 @@ class Request extends \Stripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -66,15 +66,15 @@ class Request extends \Stripe\ApiResource
      * @param null|array{created?: array{gt?: int, gte?: int, lt?: int, lte?: int}, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<Request> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<Request> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -85,11 +85,11 @@ class Request extends \Stripe\ApiResource
      *
      * @return Request
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

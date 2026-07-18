@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * A <code>Transfer</code> object is created when you move funds between Stripe accounts as
@@ -27,7 +26,7 @@ namespace Stripe;
  * @property null|Account|string $destination ID of the Stripe account the transfer was sent to.
  * @property null|Charge|string $destination_payment If the destination is a Stripe account, this will be the ID of the payment that the destination account received for the transfer.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property Collection<TransferReversal> $reversals A list of reversals that have been applied to the transfer.
  * @property bool $reversed Whether the transfer has been fully reversed. If the transfer is only partially reversed, this attribute will still be false.
  * @property null|Charge|string $source_transaction ID of the charge that was used to fund the transfer. If null, the transfer was funded from the available balance.
@@ -37,14 +36,11 @@ namespace Stripe;
 class Transfer extends ApiResource
 {
     const OBJECT_NAME = 'transfer';
-
-    use ApiOperations\NestedResource;
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\NestedResource;
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const SOURCE_TYPE_BANK_ACCOUNT = 'bank_account';
     const SOURCE_TYPE_CARD = 'card';
     const SOURCE_TYPE_FPX = 'fpx';
-
     /**
      * To send funds from your Stripe account to a connected account, you create a new
      * transfer object. Your <a href="#balance">Stripe balance</a> must be able to
@@ -61,14 +57,11 @@ class Transfer extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of existing transfers sent to connected accounts. The transfers
      * are returned in sorted order, with the most recently created transfers appearing
@@ -84,10 +77,8 @@ class Transfer extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of an existing transfer. Supply the unique transfer ID
      * from either a transfer creation request or the transfer list, and Stripe will
@@ -102,13 +93,11 @@ class Transfer extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified transfer by setting the values of the parameters passed.
      * Any parameters not provided will be left unchanged.
@@ -127,16 +116,12 @@ class Transfer extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     const PATH_REVERSALS = '/reversals';
-
     /**
      * @param string $id the ID of the transfer on which to retrieve the transfer reversals
      * @param null|array $params
@@ -150,7 +135,6 @@ class Transfer extends ApiResource
     {
         return self::_allNestedResources($id, static::PATH_REVERSALS, $params, $opts);
     }
-
     /**
      * @param string $id the ID of the transfer on which to create the transfer reversal
      * @param null|array $params
@@ -164,7 +148,6 @@ class Transfer extends ApiResource
     {
         return self::_createNestedResource($id, static::PATH_REVERSALS, $params, $opts);
     }
-
     /**
      * @param string $id the ID of the transfer to which the transfer reversal belongs
      * @param string $reversalId the ID of the transfer reversal to retrieve
@@ -179,7 +162,6 @@ class Transfer extends ApiResource
     {
         return self::_retrieveNestedResource($id, static::PATH_REVERSALS, $reversalId, $params, $opts);
     }
-
     /**
      * @param string $id the ID of the transfer to which the transfer reversal belongs
      * @param string $reversalId the ID of the transfer reversal to update

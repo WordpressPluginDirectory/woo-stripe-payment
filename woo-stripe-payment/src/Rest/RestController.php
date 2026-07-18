@@ -24,8 +24,8 @@ class RestController {
 	private $excluded = [];
 
 	/**
-	 * @param array $routes    Array of route instances
-	 * @param array $excluded  Array of route class names to exclude from script data
+	 * @param array $routes Array of route instances
+	 * @param array $excluded Array of route class names to exclude from script data
 	 */
 	public function __construct( array $routes, array $excluded = [] ) {
 		$this->routes   = $routes;

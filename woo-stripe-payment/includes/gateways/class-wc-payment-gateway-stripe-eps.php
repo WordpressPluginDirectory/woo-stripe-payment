@@ -28,7 +28,7 @@ class WC_Payment_Gateway_Stripe_EPS extends WC_Payment_Gateway_Stripe_Local_Paym
 		$this->method_title       = __( 'EPS (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'EPS gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/eps.svg' );
+		$this->icon = $this->assets->assets_url( 'img/eps.svg' );
 	}
 
 }

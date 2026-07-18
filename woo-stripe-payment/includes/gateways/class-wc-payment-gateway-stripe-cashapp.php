@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Stripe_CashApp extends WC_Payment_Gateway_Stripe_Local_
 		$this->method_title       = __( 'Cash App (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'Cash App gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/cashapp.svg' );
+		$this->icon = $this->assets->assets_url( 'img/cashapp.svg' );
 	}
 
 }

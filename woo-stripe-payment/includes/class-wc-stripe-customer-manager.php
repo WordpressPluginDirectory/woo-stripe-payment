@@ -71,7 +71,7 @@ class WC_Stripe_Customer_Manager {
 	 *
 	 * @param WC_Customer $customer
 	 *
-	 * @return \Stripe\Customer|WP_Error
+	 * @return \PaymentPlugins\Vendor\Stripe\Customer|WP_Error
 	 */
 	public function create_customer( $customer, $mode = null ) {
 		return wc_stripe_get_container()
@@ -186,7 +186,7 @@ class WC_Stripe_Customer_Manager {
 			$payment_gateways = wc_stripe_get_payment_gateways();
 			foreach ( $payment_methods->data as $payment_method ) {
 				/**
-				 * @var \Stripe\PaymentMethod $payment_method
+				 * @var \PaymentPlugins\Vendor\Stripe\PaymentMethod $payment_method
 				 */
 				if ( $payment_method->type === 'card' ) {
 					$gateway_id = 'stripe_cc';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * Abstract base class for all service factories used to expose service
@@ -17,7 +17,7 @@ abstract class AbstractServiceFactory
     use ServiceNavigatorTrait;
 
     /**
-     * @param \Stripe\StripeClientInterface $client
+     * @param \PaymentPlugins\Vendor\Stripe\StripeClientInterface $client
      */
     public function __construct($client)
     {

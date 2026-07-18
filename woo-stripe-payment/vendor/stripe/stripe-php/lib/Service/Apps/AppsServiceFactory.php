@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Apps;
+namespace PaymentPlugins\Vendor\Stripe\Service\Apps;
 
 /**
  * Service factory class for API resources in the Apps namespace.
  *
  * @property SecretService $secrets
  */
-class AppsServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class AppsServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

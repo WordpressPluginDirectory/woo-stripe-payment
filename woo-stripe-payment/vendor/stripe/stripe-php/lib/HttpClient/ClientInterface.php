@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\HttpClient;
+namespace PaymentPlugins\Vendor\Stripe\HttpClient;
 
 interface ClientInterface
 {
@@ -17,8 +17,8 @@ interface ClientInterface
      * @return array an array whose first element is raw request body, second
      *    element is HTTP status code and third array of HTTP headers
      *
-     * @throws \Stripe\Exception\ApiConnectionException
-     * @throws \Stripe\Exception\UnexpectedValueException
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiConnectionException
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\UnexpectedValueException
      */
     public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null);
 }

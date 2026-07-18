@@ -50,6 +50,24 @@ class BNPLMessageController {
 		add_action( 'woocommerce_single_product_summary', [ $this, 'render_product_below_price' ], 15 );
 		add_action( 'woocommerce_after_add_to_cart_button', [ $this, 'render_product_below_add_to_cart' ], 5 );
 
+		// Block-based Single Product templates render the Product Price block directly,
+		// bypassing the relative hook order above_price/below_price rely on. WooCommerce
+		// bridges woocommerce_single_product_summary as a single buffer placed before the
+		// price/summary block, so both locations end up rendering in the same spot.
+		// Inject directly into the block instead, and tell WooCommerce's compatibility
+		// layer to drop the classic-hook version on block templates so it isn't duplicated.
+		//
+		// The same Product Price/Product Button blocks are also used directly by
+		// Product Collection-based Archive/Shop templates, which never fire the classic
+		// woocommerce_after_shop_loop_item_title/woocommerce_after_shop_loop_item hooks
+		// our shop rendering otherwise relies on.
+		add_filter( 'render_block_woocommerce/product-price', [ $this, 'render_block_product_price' ], 10, 3 );
+		add_filter( 'render_block_woocommerce/product-button', [ $this, 'render_block_product_button' ], 10, 3 );
+		add_filter( 'woocommerce_blocks_hook_compatibility_additional_data', [
+			$this,
+			'remove_block_template_duplicate_hooks'
+		], 10, 2 );
+
 		// Cart page hooks
 		add_action( 'woocommerce_cart_totals_after_order_total', [ $this, 'render_cart_below_total' ] );
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_cart_below_checkout_button' ], 21 );
@@ -138,6 +156,21 @@ class BNPLMessageController {
 			return;
 		}
 
+		$this->push_shop_product_data( $product );
+	}
+
+	/**
+	 * Adds BNPL script data for a shop-loop product, shared by both the classic
+	 * woocommerce_shop_loop hook and the block-based Archive/Shop template path
+	 * (render_block_product_price()/render_block_product_button()), which resolves
+	 * the product from the block's own postId context instead, since Product
+	 * Collection templates never fire that classic hook.
+	 *
+	 * @param \WC_Product $product
+	 *
+	 * @return void
+	 */
+	private function push_shop_product_data( \WC_Product $product ) {
 		/**
 		 * Filters the list of BNPL gateways that support messaging for a specific product.
 		 *
@@ -155,8 +188,15 @@ class BNPLMessageController {
 
 		/** @var AssetDataApi $asset_data */
 		$asset_data = wc_stripe_get_container()->get( AssetDataApi::class );
-		$data       = $asset_data->get( 'bnplShopProducts' );
-		$data[]     = [
+		$data       = $asset_data->get( 'bnplShopProducts', [] );
+
+		foreach ( $data as $entry ) {
+			if ( $entry['id'] === $product->get_id() ) {
+				return;
+			}
+		}
+
+		$data[] = [
 			'id'             => $product->get_id(),
 			'price'          => $product->get_price(),
 			'priceCents'     => wc_stripe_add_number_precision( $product->get_price() ),
@@ -195,11 +235,15 @@ class BNPLMessageController {
 		}
 
 		if ( $this->get_location( 'bnpl_shop_location', 'below_price' ) === $location ) {
-			printf(
-				'<div id="wc-stripe-bnpl-shop-msg-%d" class="wc-stripe-bnpl-shop-message"></div>',
-				$product->get_id()
-			);
+			echo $this->get_shop_message_container( $product->get_id() );
 		}
+	}
+
+	private function get_shop_message_container( $product_id ) {
+		return sprintf(
+			'<div id="wc-stripe-bnpl-shop-msg-%d" class="wc-stripe-bnpl-shop-message"></div>',
+			$product_id
+		);
 	}
 
 	/**
@@ -303,8 +347,150 @@ class BNPLMessageController {
 
 	private function render_product_location( $location ) {
 		if ( $this->get_location( 'bnpl_product_location', 'below_price' ) === $location ) {
-			printf( '<div id="wc-stripe-bnpl-product-msg" class="wc-stripe-bnpl-product-message" style="display:none"></div>' );
+			echo $this->get_product_message_container();
 		}
+	}
+
+	private function get_product_message_container() {
+		return '<div id="wc-stripe-bnpl-product-msg" class="wc-stripe-bnpl-product-message" style="display:none"></div>';
+	}
+
+	/**
+	 * Injects the BNPL message container directly into the rendered Product Price block,
+	 * so above_price/below_price positioning is respected on block-based Single Product
+	 * templates, and below_price positioning is respected on block-based Archive/Shop
+	 * templates (Product Collection with an inherited query).
+	 *
+	 * @param string    $block_content
+	 * @param array     $block
+	 * @param \WP_Block $instance
+	 *
+	 * @return string
+	 */
+	public function render_block_product_price( $block_content, $block, $instance ) {
+		if ( is_product() ) {
+			if ( ! empty( $instance->context['query'] ) ) {
+				// Part of a query loop (Related Products, Upsells, etc.), not the main product.
+				return $block_content;
+			}
+
+			return $this->inject_product_price_container( $block_content );
+		}
+
+		if ( $this->is_main_shop_loop( $block ) ) {
+			return $this->inject_shop_container( $block_content, $instance->context['postId'] ?? '', 'below_price' );
+		}
+
+		return $block_content;
+	}
+
+	/**
+	 * Injects the BNPL message container after the rendered Product Button block,
+	 * for the after_button shop location on block-based Archive/Shop templates.
+	 *
+	 * @param string    $block_content
+	 * @param array     $block
+	 * @param \WP_Block $instance
+	 *
+	 * @return string
+	 */
+	public function render_block_product_button( $block_content, $block, $instance ) {
+		if ( $this->is_main_shop_loop( $block ) ) {
+			return $this->inject_shop_container( $block_content, $instance->context['postId'] ?? '', 'after_button' );
+		}
+
+		return $block_content;
+	}
+
+	private function inject_product_price_container( $block_content ) {
+		$location = $this->get_location( 'bnpl_product_location', 'below_price' );
+
+		if ( $location === 'above_price' ) {
+			return $this->get_product_message_container() . $block_content;
+		}
+
+		if ( $location === 'below_price' ) {
+			return $block_content . $this->get_product_message_container();
+		}
+
+		return $block_content;
+	}
+
+	/**
+	 * True when the block is part of the Archive/Shop template's own inherited query
+	 * loop (the real shop grid), as opposed to a secondary Product Collection instance
+	 * placed elsewhere on the same page (e.g. a "Best Sellers" block).
+	 *
+	 * isInherited is the attribute WooCommerce's own ArchiveProductTemplatesCompatibility
+	 * injects onto every descendant block of an inherited-query Products/Product Collection
+	 * block (recursively, via the render_block_data filter, before blocks render) -- the
+	 * same signal its own inject_hooks() relies on. $instance->context['query']['inherit']
+	 * looked like the equivalent signal but isn't reliably populated across WC versions
+	 * (confirmed empty on WC 9.7.1), so read the attribute WC's compatibility layer sets
+	 * directly instead of re-deriving it from context propagation.
+	 *
+	 * @param array $block
+	 *
+	 * @return bool
+	 */
+	private function is_main_shop_loop( $block ) {
+		return ( is_shop() || is_product_taxonomy() ) && ! empty( $block['attrs']['isInherited'] );
+	}
+
+	private function inject_shop_container( $block_content, $product_id, $location ) {
+		if ( ! $product_id || $this->get_location( 'bnpl_shop_location', 'below_price' ) !== $location ) {
+			return $block_content;
+		}
+
+		$product = wc_get_product( $product_id );
+
+		if ( ! $product instanceof \WC_Product ) {
+			return $block_content;
+		}
+
+		$this->push_shop_product_data( $product );
+
+		return $block_content . $this->get_shop_message_container( $product->get_id() );
+	}
+
+	/**
+	 * Prevents the classic hook-based rendering from also firing on block-based
+	 * templates, since render_block_product_price()/render_block_product_button()
+	 * already handle those cases directly: woocommerce_single_product_summary on
+	 * block-based Single Product templates, and woocommerce_after_shop_loop_item_title/
+	 * woocommerce_after_shop_loop_item on block-based Archive/Shop templates.
+	 *
+	 * @param array  $data
+	 * @param string $class_name
+	 *
+	 * @return array
+	 */
+	public function remove_block_template_duplicate_hooks( $data, $class_name ) {
+		if ( $class_name === 'SingleProductTemplateCompatibility' ) {
+			$data[] = [
+				'hook'     => 'woocommerce_single_product_summary',
+				'function' => [ $this, 'render_product_above_price' ],
+				'priority' => 8,
+			];
+			$data[] = [
+				'hook'     => 'woocommerce_single_product_summary',
+				'function' => [ $this, 'render_product_below_price' ],
+				'priority' => 15,
+			];
+		} elseif ( $class_name === 'ArchiveProductTemplatesCompatibility' ) {
+			$data[] = [
+				'hook'     => 'woocommerce_after_shop_loop_item_title',
+				'function' => [ $this, 'render_shop_below_price' ],
+				'priority' => 20,
+			];
+			$data[] = [
+				'hook'     => 'woocommerce_after_shop_loop_item',
+				'function' => [ $this, 'render_shop_after_button' ],
+				'priority' => 15,
+			];
+		}
+
+		return $data;
 	}
 
 	// -------------------------------------------------------------------------

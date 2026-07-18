@@ -2,9 +2,9 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Events;
+namespace PaymentPlugins\Vendor\Stripe\Events;
 
-class V2CoreAccountLinkReturnedEventNotification extends \Stripe\V2\Core\EventNotification
+class V2CoreAccountLinkReturnedEventNotification extends \PaymentPlugins\Vendor\Stripe\V2\Core\EventNotification
 {
     const LOOKUP_TYPE = 'v2.core.account_link.returned';
 
@@ -13,7 +13,7 @@ class V2CoreAccountLinkReturnedEventNotification extends \Stripe\V2\Core\EventNo
      *
      * @return V2CoreAccountLinkReturnedEvent
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function fetchEvent()
     {

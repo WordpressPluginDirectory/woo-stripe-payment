@@ -25,7 +25,7 @@ class AfterpayPayment extends AbstractStripeLocalPayment {
 
 	protected function get_payment_method_icon() {
 		return array(
-			'id' => $this->get_name(),
+			'id'  => $this->get_name(),
 			'alt' => 'Afterpay',
 			'src' => stripe_wc()->assets_url( "img/{$this->get_setting('icon', 'afterpay')}.svg" )
 		);

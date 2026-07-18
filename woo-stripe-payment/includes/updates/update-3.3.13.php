@@ -37,7 +37,7 @@ foreach ( array( 'live', 'test' ) as $mode ) {
 		if ( ! is_wp_error( $webhooks ) ) {
 			foreach ( $webhooks->data as $webhook ) {
 				/**
-				 * @var \Stripe\WebhookEndpoint $webhook
+				 * @var \PaymentPlugins\Vendor\Stripe\WebhookEndpoint $webhook
 				 */
 				if ( $webhook->url === $url ) {
 					wc_stripe_update_option_3_3_13( $settings, "webhook_id_{$mode}", $webhook->id );

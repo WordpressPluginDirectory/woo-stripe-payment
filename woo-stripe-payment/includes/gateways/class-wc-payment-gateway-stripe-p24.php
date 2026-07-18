@@ -27,6 +27,6 @@ class WC_Payment_Gateway_Stripe_P24 extends WC_Payment_Gateway_Stripe_Local_Paym
 		$this->method_title       = __( 'Przelewy24 (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'P24 gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/p24.svg' );
+		$this->icon = $this->assets->assets_url( 'img/p24.svg' );
 	}
 }

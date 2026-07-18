@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Radar;
+namespace PaymentPlugins\Vendor\Stripe\Radar;
 
 /**
  * An early fraud warning indicates that the card issuer has notified us that a
@@ -13,13 +13,13 @@ namespace Stripe\Radar;
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property bool $actionable An EFW is actionable if it has not received a dispute and has not been fully refunded. You may wish to proactively refund a charge that receives an EFW, in order to avoid receiving a dispute later.
- * @property string|\Stripe\Charge $charge ID of the charge this early fraud warning is for, optionally expanded.
+ * @property string|\PaymentPlugins\Vendor\Stripe\Charge $charge ID of the charge this early fraud warning is for, optionally expanded.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property string $fraud_type The type of fraud labelled by the issuer. One of <code>card_never_received</code>, <code>fraudulent_card_application</code>, <code>made_with_counterfeit_card</code>, <code>made_with_lost_card</code>, <code>made_with_stolen_card</code>, <code>misc</code>, <code>unauthorized_use_of_card</code>.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property null|string|\Stripe\PaymentIntent $payment_intent ID of the Payment Intent this early fraud warning is for, optionally expanded.
+ * @property null|string|\PaymentPlugins\Vendor\Stripe\PaymentIntent $payment_intent ID of the Payment Intent this early fraud warning is for, optionally expanded.
  */
-class EarlyFraudWarning extends \Stripe\ApiResource
+class EarlyFraudWarning extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'radar.early_fraud_warning';
 
@@ -37,15 +37,15 @@ class EarlyFraudWarning extends \Stripe\ApiResource
      * @param null|array{charge?: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, payment_intent?: string, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<EarlyFraudWarning> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<EarlyFraudWarning> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -60,11 +60,11 @@ class EarlyFraudWarning extends \Stripe\ApiResource
      *
      * @return EarlyFraudWarning
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

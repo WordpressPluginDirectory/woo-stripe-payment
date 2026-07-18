@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers\Treasury;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers\Treasury;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class ReceivedDebitService extends \Stripe\Service\AbstractService
+class ReceivedDebitService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Use this endpoint to simulate a test mode ReceivedDebit initiated by a third
@@ -17,11 +17,11 @@ class ReceivedDebitService extends \Stripe\Service\AbstractService
      * parties.
      *
      * @param null|array{amount: int, currency: string, description?: string, expand?: string[], financial_account: string, initiating_payment_method_details?: array{type: string, us_bank_account?: array{account_holder_name?: string, account_number?: string, routing_number?: string}}, network: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Treasury\ReceivedDebit
+     * @return \PaymentPlugins\Vendor\Stripe\Treasury\ReceivedDebit
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

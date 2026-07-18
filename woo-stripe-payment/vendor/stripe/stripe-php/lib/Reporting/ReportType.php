@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Reporting;
+namespace PaymentPlugins\Vendor\Stripe\Reporting;
 
 /**
  * The Report Type resource corresponds to a particular type of report, such as
@@ -24,7 +24,7 @@ namespace Stripe\Reporting;
  * @property int $updated When this Report Type was latest updated. Measured in seconds since the Unix epoch.
  * @property int $version Version of the Report Type. Different versions report with the same ID will have the same purpose, but may take different run parameters or have different result schemas.
  */
-class ReportType extends \Stripe\ApiResource
+class ReportType extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'reporting.report_type';
 
@@ -34,15 +34,15 @@ class ReportType extends \Stripe\ApiResource
      * @param null|array{expand?: string[]} $params
      * @param null|array|string $opts
      *
-     * @return \Stripe\Collection<ReportType> of ApiResources
+     * @return \PaymentPlugins\Vendor\Stripe\Collection<ReportType> of ApiResources
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \Stripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \PaymentPlugins\Vendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -54,11 +54,11 @@ class ReportType extends \Stripe\ApiResource
      *
      * @return ReportType
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \Stripe\Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

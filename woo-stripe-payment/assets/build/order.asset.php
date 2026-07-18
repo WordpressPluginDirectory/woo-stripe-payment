@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-stripe-actions', 'wc-stripe-utils', 'wp-api-fetch'), 'version' => '0f8b479b6e3400aa7624');
+<?php return array('dependencies' => array('wc-stripe-actions', 'wc-stripe-utils', 'wp-api-fetch'), 'version' => 'dd1a2138a44c44c0c6f9');

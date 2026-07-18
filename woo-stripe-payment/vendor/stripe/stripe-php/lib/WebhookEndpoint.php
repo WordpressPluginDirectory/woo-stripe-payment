@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * You can configure <a href="https://docs.stripe.com/webhooks/">webhook endpoints</a> via the API to be
@@ -21,7 +20,7 @@ namespace Stripe;
  * @property null|string $description An optional description of what the webhook is used for.
  * @property string[] $enabled_events The list of events to enable for this endpoint. <code>['*']</code> indicates that all events are enabled, except those that require explicit selection.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $secret The endpoint's secret, used to generate <a href="https://docs.stripe.com/webhooks/signatures">webhook signatures</a>. Only returned at creation.
  * @property string $status The status of the webhook. It can be <code>enabled</code> or <code>disabled</code>.
  * @property string $url The URL of the webhook endpoint.
@@ -29,9 +28,7 @@ namespace Stripe;
 class WebhookEndpoint extends ApiResource
 {
     const OBJECT_NAME = 'webhook_endpoint';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * A webhook endpoint must have a <code>url</code> and a list of
      * <code>enabled_events</code>. You may optionally specify the Boolean
@@ -54,14 +51,11 @@ class WebhookEndpoint extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * You can also delete webhook endpoints via the <a
      * href="https://dashboard.stripe.com/account/webhooks">webhook endpoint
@@ -77,14 +71,11 @@ class WebhookEndpoint extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of your webhook endpoints.
      *
@@ -98,10 +89,8 @@ class WebhookEndpoint extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the webhook endpoint with the given ID.
      *
@@ -114,13 +103,11 @@ class WebhookEndpoint extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the webhook endpoint. You may edit the <code>url</code>, the list of
      * <code>enabled_events</code>, and the status of your endpoint.
@@ -137,11 +124,9 @@ class WebhookEndpoint extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

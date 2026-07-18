@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Stripe_PromptPay extends WC_Payment_Gateway_Stripe_Loca
 		$this->method_title       = __( 'PromptPay (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'PromptPay gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/promptpay.svg' );
+		$this->icon = $this->assets->assets_url( 'img/promptpay.svg' );
 	}
 
 	public function hooks() {

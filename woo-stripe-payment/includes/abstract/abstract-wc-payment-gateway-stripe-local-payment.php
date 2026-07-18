@@ -75,8 +75,8 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 
 	/**
 	 *
-	 * @param \Stripe\Source $source
-	 * @param WC_Order       $order
+	 * @param \PaymentPlugins\Vendor\Stripe\Source $source
+	 * @param WC_Order                             $order
 	 */
 	public function get_source_redirect_url( $source, $order ) {
 		return $source->redirect->url;
@@ -219,16 +219,15 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 	public function is_local_payment_available() {
 		global $wp;
 		$_available = false;
+		$total      = $this->get_order_total();
 		if ( isset( $wp->query_vars['order-pay'] ) ) {
 			$order           = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
 			$currency        = $order->get_currency();
 			$billing_country = $order->get_billing_country();
-			$total           = $order->get_total();
 		} else {
 			$currency        = get_woocommerce_currency();
 			$customer        = WC()->customer;
 			$billing_country = $customer ? $customer->get_billing_country() : null;
-			$total           = WC()->cart ? WC()->cart->total : 0;
 			if ( ! $billing_country ) {
 				$billing_country = WC()->countries->get_base_country();
 			}

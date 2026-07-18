@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Util;
+namespace PaymentPlugins\Vendor\Stripe\Util;
 
 /**
  * A basic random generator. This is in a separate class so we the generator

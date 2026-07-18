@@ -23,9 +23,9 @@ class NumberUtil {
 	}
 
 	/**
-	 * @param float $value
+	 * @param float  $value
 	 * @param string $currency
-	 * @param int $decimals
+	 * @param int    $decimals
 	 *
 	 * @return string
 	 */

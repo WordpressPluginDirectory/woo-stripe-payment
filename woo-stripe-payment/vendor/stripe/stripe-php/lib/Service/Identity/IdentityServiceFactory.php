@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\Identity;
+namespace PaymentPlugins\Vendor\Stripe\Service\Identity;
 
 /**
  * Service factory class for API resources in the Identity namespace.
@@ -10,7 +10,7 @@ namespace Stripe\Service\Identity;
  * @property VerificationReportService $verificationReports
  * @property VerificationSessionService $verificationSessions
  */
-class IdentityServiceFactory extends \Stripe\Service\AbstractServiceFactory
+class IdentityServiceFactory extends \PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

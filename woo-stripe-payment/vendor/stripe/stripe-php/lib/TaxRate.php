@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Tax rates can be applied to <a href="/invoicing/taxes/tax-rates">invoices</a>, <a href="/billing/taxes/tax-rates">subscriptions</a> and <a href="/payments/checkout/use-manual-tax-rates">Checkout Sessions</a> to collect tax.
@@ -31,19 +30,15 @@ namespace Stripe;
 class TaxRate extends ApiResource
 {
     const OBJECT_NAME = 'tax_rate';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const JURISDICTION_LEVEL_CITY = 'city';
     const JURISDICTION_LEVEL_COUNTRY = 'country';
     const JURISDICTION_LEVEL_COUNTY = 'county';
     const JURISDICTION_LEVEL_DISTRICT = 'district';
     const JURISDICTION_LEVEL_MULTIPLE = 'multiple';
     const JURISDICTION_LEVEL_STATE = 'state';
-
     const RATE_TYPE_FLAT_AMOUNT = 'flat_amount';
     const RATE_TYPE_PERCENTAGE = 'percentage';
-
     const TAX_TYPE_AMUSEMENT_TAX = 'amusement_tax';
     const TAX_TYPE_COMMUNICATIONS_TAX = 'communications_tax';
     const TAX_TYPE_GST = 'gst';
@@ -58,7 +53,6 @@ class TaxRate extends ApiResource
     const TAX_TYPE_SALES_TAX = 'sales_tax';
     const TAX_TYPE_SERVICE_TAX = 'service_tax';
     const TAX_TYPE_VAT = 'vat';
-
     /**
      * Creates a new tax rate.
      *
@@ -73,14 +67,11 @@ class TaxRate extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of your tax rates. Tax rates are returned sorted by creation
      * date, with the most recently created tax rates appearing first.
@@ -95,10 +86,8 @@ class TaxRate extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a tax rate with the given ID.
      *
@@ -111,13 +100,11 @@ class TaxRate extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates an existing tax rate.
      *
@@ -133,11 +120,9 @@ class TaxRate extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

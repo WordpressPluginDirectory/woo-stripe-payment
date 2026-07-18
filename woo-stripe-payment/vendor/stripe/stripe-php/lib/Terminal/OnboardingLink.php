@@ -2,18 +2,18 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Terminal;
+namespace PaymentPlugins\Vendor\Stripe\Terminal;
 
 /**
  * Returns redirect links used for onboarding onto Tap to Pay on iPhone.
  *
  * @property string $object
- * @property (object{apple_terms_and_conditions: null|(object{allow_relinking: null|bool, merchant_display_name: string}&\Stripe\StripeObject)}&\Stripe\StripeObject) $link_options Link type options associated with the current onboarding link object.
+ * @property (object{apple_terms_and_conditions: null|(object{allow_relinking: null|bool, merchant_display_name: string}&\PaymentPlugins\Vendor\Stripe\StripeObject)}&\PaymentPlugins\Vendor\Stripe\StripeObject) $link_options Link type options associated with the current onboarding link object.
  * @property string $link_type The type of link being generated.
  * @property null|string $on_behalf_of Stripe account ID to generate the link for.
  * @property string $redirect_url The link passed back to the user for their onboarding.
  */
-class OnboardingLink extends \Stripe\ApiResource
+class OnboardingLink extends \PaymentPlugins\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'terminal.onboarding_link';
 
@@ -26,7 +26,7 @@ class OnboardingLink extends \Stripe\ApiResource
      *
      * @return OnboardingLink the created resource
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -34,7 +34,7 @@ class OnboardingLink extends \Stripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;

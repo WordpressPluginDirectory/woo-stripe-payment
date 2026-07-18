@@ -13,14 +13,17 @@ class OrderMetadata {
 
 	private function initialize() {
 		add_action( 'wc_stripe_save_order_meta', [ $this, 'save_order_metadata' ], 10, 4 );
-		add_action( 'woocommerce_subscriptions_paid_for_failed_renewal_order', [ $this, 'maybe_update_payment_method' ], 10, 2 );
+		add_action( 'woocommerce_subscriptions_paid_for_failed_renewal_order', [
+			$this,
+			'maybe_update_payment_method'
+		], 10, 2 );
 	}
 
 	/**
-	 * @param \WC_Order                  $order
-	 * @param \WC_Payment_Gateway_Stripe $payment_method
-	 * @param \Stripe\Charge             $charge
-	 * @param \WC_Payment_Token_Stripe   $token
+	 * @param \WC_Order                            $order
+	 * @param \WC_Payment_Gateway_Stripe           $payment_method
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+	 * @param \WC_Payment_Token_Stripe             $token
 	 *
 	 * @return void
 	 * @throws \WC_Data_Exception
@@ -78,20 +81,29 @@ class OrderMetadata {
 				 */
 				$subscription->set_payment_method( $payment_method->id );
 				/**
-				 * The token's gateway ID may not match the payment method's ID, like when iDEAL is used
-				 * for a subscription, but it's actually SEPA that will process all the renewals. In that case,
-				 * use the token's gateway ID.
+				 * $token is null for gateways that don't support 'subscriptions' (@see
+				 * WooCommerceSubscriptionsTrait) - no payment method was tokenized for them since
+				 * they'll always be manually renewed, so there's no token-specific meta to save.
 				 */
-				if ( $token->get_gateway_id() !== $payment_method->id ) {
-					$subscription->set_payment_method( $token->get_gateway_id() );
+				if ( $token ) {
+					/**
+					 * The token's gateway ID may not match the payment method's ID, like when iDEAL is used
+					 * for a subscription, but it's actually SEPA that will process all the renewals. In that case,
+					 * use the token's gateway ID.
+					 */
+					if ( $token->get_gateway_id() !== $payment_method->id ) {
+						$subscription->set_payment_method( $token->get_gateway_id() );
+					}
+					$subscription->set_payment_method_title( $token->get_payment_method_title() );
+					$subscription->update_meta_data( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );
+					if ( $payment_method->is_mandate_required( $order ) ) {
+						$subscription->update_meta_data( \WC_Stripe_Constants::STRIPE_MANDATE, $order->get_meta( \WC_Stripe_Constants::STRIPE_MANDATE ) );
+					}
+				} else {
+					$subscription->set_payment_method_title( $payment_method->get_title() );
 				}
-				$subscription->set_payment_method_title( $token->get_payment_method_title() );
 				$subscription->update_meta_data( \WC_Stripe_Constants::MODE, wc_stripe_mode() );
-				$subscription->update_meta_data( \WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );
 				$subscription->update_meta_data( \WC_Stripe_Constants::CUSTOMER_ID, wc_stripe_get_customer_id( $order->get_user_id() ) );
-				if ( $payment_method->is_mandate_required( $order ) ) {
-					$subscription->update_meta_data( \WC_Stripe_Constants::STRIPE_MANDATE, $order->get_meta( \WC_Stripe_Constants::STRIPE_MANDATE ) );
-				}
 				$subscription->save();
 			}
 		}

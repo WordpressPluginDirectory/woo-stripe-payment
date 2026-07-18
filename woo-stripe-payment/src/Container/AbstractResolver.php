@@ -28,7 +28,7 @@ abstract class AbstractResolver {
 	/**
 	 * Constructor.
 	 *
-	 * @param mixed $value     Either a closure or the value itself.
+	 * @param mixed $value Either a closure or the value itself.
 	 * @param bool  $singleton Whether to cache the resolved value.
 	 */
 	public function __construct( $value, $singleton ) {

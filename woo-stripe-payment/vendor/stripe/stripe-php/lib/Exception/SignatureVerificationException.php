@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Exception;
+namespace PaymentPlugins\Vendor\Stripe\Exception;
 
 /**
  * SignatureVerificationException is thrown when the signature verification for

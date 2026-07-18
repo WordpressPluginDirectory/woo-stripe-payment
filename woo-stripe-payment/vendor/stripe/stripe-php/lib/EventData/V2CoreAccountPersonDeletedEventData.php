@@ -2,9 +2,9 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\EventData;
+namespace PaymentPlugins\Vendor\Stripe\EventData;
 
 /**
  * @property string $account_id The ID of the v2 account.
  */
-class V2CoreAccountPersonDeletedEventData extends \Stripe\StripeObject {}
+class V2CoreAccountPersonDeletedEventData extends \PaymentPlugins\Vendor\Stripe\StripeObject {}

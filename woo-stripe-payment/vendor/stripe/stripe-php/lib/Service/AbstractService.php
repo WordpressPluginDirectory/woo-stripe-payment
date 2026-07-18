@@ -1,6 +1,6 @@
 <?php
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * Abstract base class for all services.
@@ -8,19 +8,19 @@ namespace Stripe\Service;
 abstract class AbstractService
 {
     /**
-     * @var \Stripe\StripeClientInterface
+     * @var \PaymentPlugins\Vendor\Stripe\StripeClientInterface
      */
     protected $client;
 
     /**
-     * @var \Stripe\StripeStreamingClientInterface
+     * @var \PaymentPlugins\Vendor\Stripe\StripeStreamingClientInterface
      */
     protected $streamingClient;
 
     /**
      * Initializes a new instance of the {@link AbstractService} class.
      *
-     * @param \Stripe\StripeClientInterface $client
+     * @param \PaymentPlugins\Vendor\Stripe\StripeClientInterface $client
      */
     public function __construct($client)
     {
@@ -31,7 +31,7 @@ abstract class AbstractService
     /**
      * Gets the client used by this service to send requests.
      *
-     * @return \Stripe\StripeClientInterface
+     * @return \PaymentPlugins\Vendor\Stripe\StripeClientInterface
      */
     public function getClient()
     {
@@ -41,7 +41,7 @@ abstract class AbstractService
     /**
      * Gets the client used by this service to send requests.
      *
-     * @return \Stripe\StripeStreamingClientInterface
+     * @return \PaymentPlugins\Vendor\Stripe\StripeStreamingClientInterface
      */
     public function getStreamingClient()
     {
@@ -96,7 +96,7 @@ abstract class AbstractService
             if (null === $id || '' === \trim($id)) {
                 $msg = 'The resource ID cannot be null or whitespace.';
 
-                throw new \Stripe\Exception\InvalidArgumentException($msg);
+                throw new \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException($msg);
             }
         }
 

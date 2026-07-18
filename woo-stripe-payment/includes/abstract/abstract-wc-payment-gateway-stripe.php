@@ -113,7 +113,7 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	protected $saved_payment_methods_label = '';
 
 	/**
-	 * @var \Stripe\SetupIntent
+	 * @var \PaymentPlugins\Vendor\Stripe\SetupIntent
 	 */
 	protected $setup_intent;
 
@@ -300,14 +300,18 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	}
 
 	public function get_payment_element_options() {
-		return array();
+		return [
+			'layout' => [
+				'type' => 'tabs'
+			]
+		];
 	}
 
 	/**
 	 * Save the Stripe data to the order.
 	 *
-	 * @param WC_Order       $order
-	 * @param \Stripe\Charge $charge
+	 * @param WC_Order                             $order
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
 	 */
 	public function save_order_meta( $order, $charge ) {
 		/**
@@ -322,10 +326,10 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 		$order->update_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );
 
 		/**
-		 * @param WC_Order                  $order
-		 * @param WC_Payment_Gateway_Stripe $this
-		 * @param \Stripe\Charge            $charge
-		 * @param \WC_Payment_Token         $token
+		 * @param WC_Order                             $order
+		 * @param WC_Payment_Gateway_Stripe            $this
+		 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+		 * @param \WC_Payment_Token                    $token
 		 *
 		 * @since 3.2.7
 		 */
@@ -337,7 +341,7 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	/**
 	 * Given a charge object, return the ID of the payment method used for the charge.
 	 *
-	 * @param \Stripe\Charge $charge
+	 * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
 	 *
 	 * @since 3.0.6
 	 */
@@ -468,9 +472,9 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 					);
 
 					/**
-					 * @var WC_Order                   $order
-					 * @var \Stripe\Charge             $charge
-					 * @Var \WC_Payment_Gateway_Stripe $this
+					 * @var WC_Order                             $order
+					 * @var \PaymentPlugins\Vendor\Stripe\Charge $charge
+					 * @Var \WC_Payment_Gateway_Stripe           $this
 					 */
 					$result = apply_filters( 'wc_stripe_capture_charge_failed', $result, $order, $amount, $this );
 				}
@@ -508,7 +512,7 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	 * @param String $charge_id
 	 * @param String $mode
 	 *
-	 * @return WP_Error|\Stripe\Charge
+	 * @return WP_Error|\PaymentPlugins\Vendor\Stripe\Charge
 	 */
 	public function retrieve_charge( $charge_id, $mode = '' ) {
 		return $this->gateway->charges->mode( $mode )->retrieve( $charge_id );
@@ -516,8 +520,8 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 
 	/**
 	 *
-	 * @param string             $method_id
-	 * @param \Stripe\Card|array $method_details
+	 * @param string                                   $method_id
+	 * @param \PaymentPlugins\Vendor\Stripe\Card|array $method_details
 	 */
 	public function get_payment_token( $method_id, $method_details = null ) {
 		$class_name = 'WC_Payment_Token_' . $this->token_type;
@@ -900,12 +904,14 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	public function save_zero_total_meta( $order, $token = null ) {
 		if ( $this->payment_token_object ) {
 			$token = $this->payment_token_object;
-		} else {
-			$token = ! $token ? $this->get_token( $this->payment_method_token, $order->get_user_id() ) : $token;
+		} elseif ( ! $token ) {
+			$token = $this->payment_method_token ? $this->get_token( $this->payment_method_token, $order->get_user_id() ) : null;
 		}
-		$order->set_payment_method_title( $token->get_payment_method_title( $this->get_option( 'method_format' ) ) );
+		$order->set_payment_method_title( $token ? $token->get_payment_method_title( $this->get_option( 'method_format' ) ) : $this->get_title() );
 		$order->update_meta_data( WC_Stripe_Constants::MODE, wc_stripe_mode() );
-		$order->update_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );
+		if ( $token ) {
+			$order->update_meta_data( WC_Stripe_Constants::PAYMENT_METHOD_TOKEN, $token->get_token() );
+		}
 		if ( $order->get_customer_id() ) {
 			$order->update_meta_data( WC_Stripe_Constants::CUSTOMER_ID, wc_stripe_get_customer_id( $order->get_user_id() ) );
 		}
@@ -1349,6 +1355,20 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	 */
 	protected function is_processing_scheduled_payment() {
 		return doing_action( 'woocommerce_scheduled_subscription_payment_' . $this->id );
+	}
+
+	/**
+	 * WC_Payment_Gateway::get_order_total() reads WC()->cart->total directly with no null check on
+	 * WC()->cart, which isn't initialized on admin/non-frontend requests. Guard it here rather than
+	 * in parent::get_order_total() itself, since that's WooCommerce core.
+	 *
+	 * @return float
+	 * @since 4.0.7
+	 */
+	protected function get_order_total() {
+		$total = ( WC()->cart || absint( get_query_var( 'order-pay' ) ) ) ? parent::get_order_total() : 0;
+
+		return apply_filters( 'wc_stripe_payment_gateway_order_total', $total, $this );
 	}
 
 	/**

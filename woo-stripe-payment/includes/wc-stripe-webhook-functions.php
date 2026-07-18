@@ -1,15 +1,14 @@
 <?php
+
 /**
  * @package PaymentPlugins\Functions
  */
-
-defined( 'ABSPATH' ) || exit();
-
+defined( 'ABSPATH' ) || exit;
 /**
  *
- * @param \Stripe\PaymentIntent $intent
- * @param WP_REST_Request       $request
- * @param \Stripe\Event         $event
+ * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $intent
+ * @param WP_REST_Request                             $request
+ * @param \PaymentPlugins\Vendor\Stripe\Event         $event
  *
  * @since   3.1.0
  * @package PaymentPlugins\Functions
@@ -22,19 +21,16 @@ function wc_stripe_process_payment_intent_succeeded( $intent, $request, $event )
 
 		return;
 	}
-
 	/**
 	 * @var \WC_Payment_Gateway_Stripe $payment_method
 	 */
 	$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ] ?? null;
-
 	if ( $payment_method instanceof WC_Payment_Gateway_Stripe ) {
 		if ( $payment_method->has_order_lock( $order ) || $order->get_date_paid() ) {
 			wc_stripe_log_info( sprintf( 'payment_intent.succeeded event received. Intent has been completed for order %s. Event exited.', $order->get_id() ) );
 
 			return;
 		}
-
 		/**
 		 * We want to defer the processing of any credit card payments to prevent race conditions. The Stripe webhook can be
 		 * received while the checkout process is still running.
@@ -59,15 +55,14 @@ function wc_stripe_process_payment_intent_succeeded( $intent, $request, $event )
 
 /**
  *
- * @param \Stripe\Charge  $charge
- * @param WP_REST_Request $request
+ * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
+ * @param WP_REST_Request                      $request
  *
  * @since   3.1.1
  * @package PaymentPlugins\Functions
  */
 function wc_stripe_process_charge_failed( $charge, $request ) {
 	$order = wc_get_order( wc_stripe_filter_order_id( $charge->metadata['order_id'], $charge ) );
-
 	if ( $order ) {
 		$payment_methods = WC()->payment_gateways()->payment_gateways();
 		if ( isset( $payment_methods[ $order->get_payment_method() ] ) ) {
@@ -90,7 +85,7 @@ function wc_stripe_process_charge_failed( $charge, $request ) {
  * Function that processes the charge.refund webhook. If the refund is created in the Stripe dashboard, a
  * refund will be created in the WC system to keep WC and Stripe in sync.
  *
- * @param \Stripe\Charge $charge
+ * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
  *
  * @since 3.2.15
  */
@@ -111,16 +106,21 @@ function wc_stripe_process_create_refund( $charge ) {
 		 * @var \PaymentPlugins\Stripe\Client\StripeClient $client
 		 */
 		$client   = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class );
-		$response = $client->mode( $order )->refunds->all( array( 'charge' => $charge->id ) );
-		$refunds  = $response->data;
+		$response = $client->mode( $charge )->refunds->all( array( 'charge' => $charge->id ) );
+		if ( is_wp_error( $response ) ) {
+			throw new Exception( sprintf( 'Could not retrieve refunds for charge %s. Error: %s', $charge->id, $response->get_error_message() ) );
+		}
+		$refunds = $response->data;
+		if ( empty( $refunds ) || ! is_array( $refunds ) ) {
+			return;
+		}
 		usort( $refunds, function ( $a, $b ) {
 			// sort so refund with most recent created timestamp is first
 			return $a->created < $b->created ? 1 : - 1;
 		} );
 		$refund = $refunds[0];
-
 		/**
-		 * @var \Stripe\Refund $refund
+		 * @var \PaymentPlugins\Vendor\Stripe\Refund $refund
 		 */
 		// refund was not created via WC
 		if ( ! isset( $refund->metadata['order_id'], $refund->metadata['created_via'] ) ) {
@@ -131,19 +131,16 @@ function wc_stripe_process_create_refund( $charge ) {
 				'refund_payment' => false
 			);
 			// if the order has been fully refunded, items should be re-stocked
-			if ( $order->get_total() == ( $args['amount'] + $order->get_total_refunded() ) ) {
+			if ( $order->get_total() == $args['amount'] + $order->get_total_refunded() ) {
 				$args['restock_items'] = true;
 				$line_items            = array();
 				foreach ( $order->get_items() as $item_id => $item ) {
-					$line_items[ $item_id ] = array(
-						'qty' => $item->get_quantity()
-					);
+					$line_items[ $item_id ] = array( 'qty' => $item->get_quantity() );
 				}
 				$args['line_items'] = $line_items;
 			}
 			// create the refund
 			$result = wc_create_refund( $args );
-
 			// Update the refund in Stripe with metadata
 			if ( ! is_wp_error( $result ) ) {
 				$client = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class )->mode( $mode );
@@ -176,7 +173,7 @@ function wc_stripe_process_create_refund( $charge ) {
 }
 
 /**
- * @param Stripe\Dispute $dispute
+ * @param \PaymentPlugins\Vendor\Stripe\Dispute $dispute
  */
 function wc_stripe_charge_dispute_created( $dispute ) {
 	if ( stripe_wc()->advanced_settings->is_dispute_created_enabled() ) {
@@ -186,9 +183,7 @@ function wc_stripe_charge_dispute_created( $dispute ) {
 		} else {
 			$current_status = $order->get_status();
 			$message        = sprintf( __( 'A dispute has been created for charge %1$s. Dispute status: %2$s.', 'woo-stripe-payment' ), $dispute->charge, strtoupper( $dispute->status ) );
-			$order->update_status( apply_filters( 'wc_stripe_dispute_created_order_status', stripe_wc()->advanced_settings->get_option( 'dispute_created_status', 'on-hold' ), $dispute, $order ),
-				$message );
-
+			$order->update_status( apply_filters( 'wc_stripe_dispute_created_order_status', stripe_wc()->advanced_settings->get_option( 'dispute_created_status', 'on-hold' ), $dispute, $order ), $message );
 			/**
 			 * @var \PaymentPlugins\Stripe\Client\StripeClient $client
 			 */
@@ -206,7 +201,7 @@ function wc_stripe_charge_dispute_created( $dispute ) {
 }
 
 /**
- * @param Stripe\Dispute $dispute
+ * @param \PaymentPlugins\Vendor\Stripe\Dispute $dispute
  */
 function wc_stripe_charge_dispute_closed( $dispute ) {
 	if ( stripe_wc()->advanced_settings->is_dispute_closed_enabled() ) {
@@ -238,7 +233,7 @@ function wc_stripe_charge_dispute_closed( $dispute ) {
 }
 
 /**
- * @param Stripe\Review $review
+ * @param \PaymentPlugins\Vendor\Stripe\Review $review
  */
 function wc_stripe_review_opened( $review ) {
 	if ( stripe_wc()->advanced_settings->is_review_opened_enabled() ) {
@@ -248,12 +243,7 @@ function wc_stripe_review_opened( $review ) {
 			// In some cases, Stripe does not provide the charge ID in the Review object.
 			$pi = $review->payment_intent;
 			if ( $pi ) {
-
-				$payment_intent = wc_stripe_get_container()
-					->get( \PaymentPlugins\Stripe\Client\StripeClient::class )
-					->mode( $review )
-					->paymentIntents
-					->retrieve( $pi );
+				$payment_intent = wc_stripe_get_container()->get( \PaymentPlugins\Stripe\Client\StripeClient::class )->mode( $review )->paymentIntents->retrieve( $pi );
 				if ( ! is_wp_error( $payment_intent ) && isset( $payment_intent->metadata['order_id'] ) ) {
 					$order = wc_get_order( $payment_intent->metadata['order_id'] );
 				}
@@ -269,7 +259,7 @@ function wc_stripe_review_opened( $review ) {
 }
 
 /**
- * @param Stripe\Review $review
+ * @param \PaymentPlugins\Vendor\Stripe\Review $review
  */
 function wc_stripe_review_closed( $review ) {
 	if ( stripe_wc()->advanced_settings->is_review_closed_enabled() ) {
@@ -303,7 +293,7 @@ function wc_stripe_review_closed( $review ) {
 }
 
 /**
- * @param \Stripe\PaymentIntent $payment_intent
+ * @param \PaymentPlugins\Vendor\Stripe\PaymentIntent $payment_intent
  */
 function wc_stripe_process_requires_action( $payment_intent ) {
 	if ( isset( $payment_intent->metadata['gateway_id'], $payment_intent->metadata['order_id'] ) ) {
@@ -330,7 +320,7 @@ function wc_stripe_process_requires_action( $payment_intent ) {
 }
 
 /**
- * @param Stripe\Charge $charge
+ * @param \PaymentPlugins\Vendor\Stripe\Charge $charge
  */
 function wc_stripe_process_charge_pending( $charge ) {
 	if ( isset( $charge->metadata['gateway_id'], $charge->metadata['order_id'] ) ) {

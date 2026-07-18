@@ -14,7 +14,7 @@ namespace PaymentPlugins\Stripe\Client;
 class ClientOperation {
 
 	/**
-	 * @var \Stripe\StripeClient
+	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient
 	 */
 	private $client;
 
@@ -24,7 +24,7 @@ class ClientOperation {
 	private $property;
 
 	/**
-	 * @var \Stripe\Service\AbstractService
+	 * @var \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 	 */
 	private $service;
 
@@ -44,14 +44,14 @@ class ClientOperation {
 	private $messages = [];
 
 	/**
-	 * @param \Stripe\StripeClient $client
-	 * @param string               $property
-	 * @param string               $secret_key
-	 * @param string               $mode
+	 * @param \PaymentPlugins\Vendor\Stripe\StripeClient $client
+	 * @param string                                     $property
+	 * @param string                                     $secret_key
+	 * @param string                                     $mode
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( \Stripe\StripeClient $client, string $property, ?string $secret_key = '', ?string $mode = '' ) {
+	public function __construct( \PaymentPlugins\Vendor\Stripe\StripeClient $client, string $property, ?string $secret_key = '', ?string $mode = '' ) {
 		$this->client     = $client;
 		$this->property   = $property;
 		$this->secret_key = $secret_key ?? '';
@@ -97,11 +97,11 @@ class ClientOperation {
 			$args = \apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method );
 
 			return $this->service->{$method}( ...$this->prepare_request_args( $args, $method ) );
-		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e ) {
 			return $this->get_wp_error( $e, $this->property . '-error' );
-		} catch ( \Stripe\Exception\UnexpectedValueException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\UnexpectedValueException $e ) {
 			return new \WP_Error( 'stripe-error', $e->getMessage(), $e );
-		} catch ( \Stripe\Exception\InvalidArgumentException $e ) {
+		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\InvalidArgumentException $e ) {
 			return new \WP_Error( 'stripe-error', $e->getMessage(), $e );
 		}
 	}
@@ -119,13 +119,13 @@ class ClientOperation {
 	}
 
 	/**
-	 * @param \Stripe\Exception\ApiErrorException $e
-	 * @param string                              $code
+	 * @param \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e
+	 * @param string                                                    $code
 	 *
 	 * @return \WP_Error
 	 * @since 4.0.0
 	 */
-	public function get_wp_error( \Stripe\Exception\ApiErrorException $e, string $code = 'stripe-error' ): \WP_Error {
+	public function get_wp_error( \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e, string $code = 'stripe-error' ): \WP_Error {
 		$err = ( $json_body = $e->getJsonBody() ) ? $json_body['error'] : '';
 
 		return \apply_filters( 'wc_stripe_api_get_wp_error', new \WP_Error( $code, $this->get_error_message( $err ), $err ), $e, $code );
@@ -247,10 +247,10 @@ class ClientOperation {
 	 */
 	private function get_error_message( $err ): string {
 		$message = '';
-		if ( is_a( $err, '\Stripe\Exception\ApiErrorException' ) ) {
+		if ( is_a( $err, '\PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException' ) ) {
 			$err = $err->getError();
 		}
-		if ( is_array( $err ) || $err instanceof \Stripe\ErrorObject ) {
+		if ( is_array( $err ) || $err instanceof \PaymentPlugins\Vendor\Stripe\ErrorObject ) {
 			$this->messages = $this->messages ?: \wc_stripe_get_error_messages();
 			$keys           = [];
 			if ( isset( $err['code'] ) ) {

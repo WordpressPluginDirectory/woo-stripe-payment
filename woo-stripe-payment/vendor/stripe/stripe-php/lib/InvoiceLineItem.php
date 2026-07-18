@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * Invoice Line Items represent the individual lines within an <a href="https://docs.stripe.com/api/invoices">invoice</a> and only exist within the context of an invoice.
@@ -19,7 +18,7 @@ namespace Stripe;
  * @property (Discount|string)[] $discounts The discounts applied to the invoice line item. Line item discounts are applied before invoice discounts. Use <code>expand[]=discounts</code> to expand each discount.
  * @property null|string $invoice The ID of the invoice that contains this line item.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with <code>type=subscription</code>, <code>metadata</code> reflects the current metadata from the subscription associated with the line item, unless the invoice line was directly updated with different metadata after creation.
+ * @property \StripeObject $metadata Set of <a href="https://docs.stripe.com/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with <code>type=subscription</code>, <code>metadata</code> reflects the current metadata from the subscription associated with the line item, unless the invoice line was directly updated with different metadata after creation.
  * @property null|(object{invoice_item_details: null|(object{invoice_item: string, proration: bool, proration_details: null|(object{credited_items: null|(object{invoice: string, invoice_line_items: string[]}&StripeObject)}&StripeObject), subscription: null|string}&StripeObject), subscription_item_details: null|(object{invoice_item: null|string, proration: bool, proration_details: null|(object{credited_items: null|(object{invoice: string, invoice_line_items: string[]}&StripeObject)}&StripeObject), subscription: null|string, subscription_item: string}&StripeObject), type: string}&StripeObject) $parent The parent that generated this line item.
  * @property (object{end: int, start: int}&StripeObject) $period
  * @property null|((object{amount: int, credit_balance_transaction?: null|Billing\CreditBalanceTransaction|string, discount?: Discount|string, type: string}&StripeObject))[] $pretax_credit_amounts Contains pretax credit amounts (ex: discount, credit grants, etc) that apply to this line item.
@@ -32,9 +31,7 @@ namespace Stripe;
 class InvoiceLineItem extends ApiResource
 {
     const OBJECT_NAME = 'line_item';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     /**
      * Updates an invoice’s line item. Some fields, such as <code>tax_amounts</code>,
      * only live on the invoice line item, so they can only be updated through this
@@ -55,11 +52,9 @@ class InvoiceLineItem extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

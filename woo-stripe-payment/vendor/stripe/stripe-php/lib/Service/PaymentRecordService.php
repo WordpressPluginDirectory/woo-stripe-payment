@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service;
+namespace PaymentPlugins\Vendor\Stripe\Service;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
@@ -17,11 +17,11 @@ class PaymentRecordService extends AbstractService
      * report Payment  Records in a terminal state directly, through this method.
      *
      * @param null|array{amount_requested: array{currency: string, value: int}, customer_details?: array{customer?: string, email?: string, name?: string, phone?: string}, customer_presence?: string, description?: string, expand?: string[], failed?: array{failed_at: int}, guaranteed?: array{guaranteed_at: int}, initiated_at: int, metadata?: null|array<string, string>, outcome?: string, payment_method_details: array{billing_details?: array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, email?: string, name?: string, phone?: string}, custom?: array{display_name?: string, type?: string}, payment_method?: string, type?: string}, processor_details?: array{custom?: array{payment_reference: string}, type: string}, shipping_details?: array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, name?: string, phone?: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPayment($params = null, $opts = null)
     {
@@ -35,11 +35,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{description?: string, expand?: string[], failed?: array{failed_at: int}, guaranteed?: array{guaranteed_at: int}, initiated_at: int, metadata?: null|array<string, string>, outcome?: string, payment_method_details?: array{billing_details?: array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, email?: string, name?: string, phone?: string}, custom?: array{display_name?: string, type?: string}, payment_method?: string, type?: string}, shipping_details?: array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, name?: string, phone?: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPaymentAttempt($id, $params = null, $opts = null)
     {
@@ -52,11 +52,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{canceled_at: int, expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPaymentAttemptCanceled($id, $params = null, $opts = null)
     {
@@ -69,11 +69,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], failed_at: int, metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPaymentAttemptFailed($id, $params = null, $opts = null)
     {
@@ -86,11 +86,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], guaranteed_at: int, metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPaymentAttemptGuaranteed($id, $params = null, $opts = null)
     {
@@ -102,11 +102,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{customer_details?: array{customer?: string, email?: string, name?: string, phone?: string}, description?: null|string, expand?: string[], metadata?: null|array<string, string>, shipping_details?: null|array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, name?: string, phone?: string}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportPaymentAttemptInformational($id, $params = null, $opts = null)
     {
@@ -119,11 +119,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{amount?: array{currency: string, value: int}, expand?: string[], initiated_at?: int, metadata?: null|array<string, string>, outcome: string, processor_details: array{custom?: array{refund_reference: string}, type: string}, refunded: array{refunded_at: int}} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reportRefund($id, $params = null, $opts = null)
     {
@@ -135,11 +135,11 @@ class PaymentRecordService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\PaymentRecord
+     * @return \PaymentPlugins\Vendor\Stripe\PaymentRecord
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Service\TestHelpers\Terminal;
+namespace PaymentPlugins\Vendor\Stripe\Service\TestHelpers\Terminal;
 
 /**
  * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
  * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class ReaderService extends \Stripe\Service\AbstractService
+class ReaderService extends \PaymentPlugins\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Presents a payment method on a simulated reader. Can be used to simulate
@@ -17,11 +17,11 @@ class ReaderService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{amount_tip?: int, card?: array{cvc?: string, exp_month: int, exp_year: int, number: string}, card_present?: array{number?: string}, expand?: string[], interac_present?: array{number?: string}, type?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Terminal\Reader
+     * @return \PaymentPlugins\Vendor\Stripe\Terminal\Reader
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function presentPaymentMethod($id, $params = null, $opts = null)
     {
@@ -34,11 +34,11 @@ class ReaderService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], skip_non_required_inputs?: string} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Terminal\Reader
+     * @return \PaymentPlugins\Vendor\Stripe\Terminal\Reader
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function succeedInputCollection($id, $params = null, $opts = null)
     {
@@ -51,11 +51,11 @@ class ReaderService extends \Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\PaymentPlugins\Vendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \Stripe\Terminal\Reader
+     * @return \PaymentPlugins\Vendor\Stripe\Terminal\Reader
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function timeoutInputCollection($id, $params = null, $opts = null)
     {

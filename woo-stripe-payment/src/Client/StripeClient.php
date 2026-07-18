@@ -9,62 +9,62 @@ namespace PaymentPlugins\Stripe\Client;
  * @author  Payment Plugins
  * @package PaymentPlugins\Stripe\Client
  *
- * @property \Stripe\Service\AccountLinkService                        $accountLinks
- * @property \Stripe\Service\AccountService                            $accounts
- * @property \Stripe\Service\AccountSessionService                     $accountSessions
- * @property \Stripe\Service\ApplePayDomainService                     $applePayDomains
- * @property \Stripe\Service\ApplicationFeeService                     $applicationFees
- * @property \Stripe\Service\BalanceService                            $balance
- * @property \Stripe\Service\BalanceTransactionService                 $balanceTransactions
- * @property \Stripe\Service\BillingPortal\BillingPortalServiceFactory $billingPortal
- * @property \Stripe\Service\ChargeService                             $charges
- * @property \Stripe\Service\Checkout\CheckoutServiceFactory           $checkout
- * @property \Stripe\Service\CountrySpecService                        $countrySpecs
- * @property \Stripe\Service\CouponService                             $coupons
- * @property \Stripe\Service\CreditNoteService                         $creditNotes
- * @property \Stripe\Service\CustomerService                           $customers
- * @property \Stripe\Service\DisputeService                            $disputes
- * @property \Stripe\Service\EphemeralKeyService                       $ephemeralKeys
- * @property \Stripe\Service\EventService                              $events
- * @property \Stripe\Service\ExchangeRateService                       $exchangeRates
- * @property \Stripe\Service\FileLinkService                           $fileLinks
- * @property \Stripe\Service\FileService                               $files
- * @property \Stripe\Service\InvoiceItemService                        $invoiceItems
- * @property \Stripe\Service\InvoiceService                            $invoices
- * @property \Stripe\Service\Issuing\IssuingServiceFactory             $issuing
- * @property \Stripe\Service\MandateService                            $mandates
- * @property \Stripe\Service\OrderReturnService                        $orderReturns
- * @property \Stripe\Service\OrderService                              $orders
- * @property \Stripe\Service\PaymentIntentService                      $paymentIntents
- * @property \Stripe\Service\PaymentMethodService                      $paymentMethods
- * @property \Stripe\Service\PaymentMethodDomainService                $paymentMethodDomains
- * @property \Stripe\Service\PayoutService                             $payouts
- * @property \Stripe\Service\PlanService                               $plans
- * @property \Stripe\Service\PriceService                              $prices
- * @property \Stripe\Service\ProductService                            $products
- * @property \Stripe\Service\Radar\RadarServiceFactory                 $radar
- * @property \Stripe\Service\RefundService                             $refunds
- * @property \Stripe\Service\Reporting\ReportingServiceFactory         $reporting
- * @property \Stripe\Service\ReviewService                             $reviews
- * @property \Stripe\Service\SetupIntentService                        $setupIntents
- * @property \Stripe\Service\Sigma\SigmaServiceFactory                 $sigma
- * @property \Stripe\Service\SkuService                                $skus
- * @property \Stripe\Service\SourceService                             $sources
- * @property \Stripe\Service\SubscriptionItemService                   $subscriptionItems
- * @property \Stripe\Service\SubscriptionScheduleService               $subscriptionSchedules
- * @property \Stripe\Service\SubscriptionService                       $subscriptions
- * @property \Stripe\Service\TaxRateService                            $taxRates
- * @property \Stripe\Service\Terminal\TerminalServiceFactory           $terminal
- * @property \Stripe\Service\TokenService                              $tokens
- * @property \Stripe\Service\TopupService                              $topups
- * @property \Stripe\Service\TransferService                           $transfers
- * @property \Stripe\Service\WebhookEndpointService                    $webhookEndpoints
- * @property \Stripe\Service\PaymentMethodConfigurationService         $paymentMethodConfigurations
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountLinkService                        $accountLinks
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountService                            $accounts
+ * @property \PaymentPlugins\Vendor\Stripe\Service\AccountSessionService                     $accountSessions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ApplePayDomainService                     $applePayDomains
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ApplicationFeeService                     $applicationFees
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BalanceService                            $balance
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BalanceTransactionService                 $balanceTransactions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\BillingPortal\BillingPortalServiceFactory $billingPortal
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ChargeService                             $charges
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Checkout\CheckoutServiceFactory           $checkout
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CountrySpecService                        $countrySpecs
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CouponService                             $coupons
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CreditNoteService                         $creditNotes
+ * @property \PaymentPlugins\Vendor\Stripe\Service\CustomerService                           $customers
+ * @property \PaymentPlugins\Vendor\Stripe\Service\DisputeService                            $disputes
+ * @property \PaymentPlugins\Vendor\Stripe\Service\EphemeralKeyService                       $ephemeralKeys
+ * @property \PaymentPlugins\Vendor\Stripe\Service\EventService                              $events
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ExchangeRateService                       $exchangeRates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\FileLinkService                           $fileLinks
+ * @property \PaymentPlugins\Vendor\Stripe\Service\FileService                               $files
+ * @property \PaymentPlugins\Vendor\Stripe\Service\InvoiceItemService                        $invoiceItems
+ * @property \PaymentPlugins\Vendor\Stripe\Service\InvoiceService                            $invoices
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Issuing\IssuingServiceFactory             $issuing
+ * @property \PaymentPlugins\Vendor\Stripe\Service\MandateService                            $mandates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\OrderReturnService                        $orderReturns
+ * @property \PaymentPlugins\Vendor\Stripe\Service\OrderService                              $orders
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentIntentService                      $paymentIntents
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodService                      $paymentMethods
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodDomainService                $paymentMethodDomains
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PayoutService                             $payouts
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PlanService                               $plans
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PriceService                              $prices
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ProductService                            $products
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Radar\RadarServiceFactory                 $radar
+ * @property \PaymentPlugins\Vendor\Stripe\Service\RefundService                             $refunds
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Reporting\ReportingServiceFactory         $reporting
+ * @property \PaymentPlugins\Vendor\Stripe\Service\ReviewService                             $reviews
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SetupIntentService                        $setupIntents
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Sigma\SigmaServiceFactory                 $sigma
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SkuService                                $skus
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SourceService                             $sources
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionItemService                   $subscriptionItems
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionScheduleService               $subscriptionSchedules
+ * @property \PaymentPlugins\Vendor\Stripe\Service\SubscriptionService                       $subscriptions
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TaxRateService                            $taxRates
+ * @property \PaymentPlugins\Vendor\Stripe\Service\Terminal\TerminalServiceFactory           $terminal
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TokenService                              $tokens
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TopupService                              $topups
+ * @property \PaymentPlugins\Vendor\Stripe\Service\TransferService                           $transfers
+ * @property \PaymentPlugins\Vendor\Stripe\Service\WebhookEndpointService                    $webhookEndpoints
+ * @property \PaymentPlugins\Vendor\Stripe\Service\PaymentMethodConfigurationService         $paymentMethodConfigurations
  */
 class StripeClient {
 
 	/**
-	 * @var \Stripe\StripeClient
+	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient
 	 */
 	private $stripe_client;
 
@@ -86,8 +86,8 @@ class StripeClient {
 	public function __construct( string $mode = '', string $secret_key = '', array $config = [] ) {
 		$this->mode          = $mode;
 		$this->secret_key    = $secret_key;
-		$this->stripe_client = new \Stripe\StripeClient( array_merge( $this->get_client_config(), $config ) );
-		\Stripe\Stripe::setAppInfo( 'WordPress woo-stripe-payment', \stripe_wc()->version(), 'https://wordpress.org/plugins/woo-stripe-payment/', 'pp_partner_FdPtriN2Q7JLOe' );
+		$this->stripe_client = new \PaymentPlugins\Vendor\Stripe\StripeClient( array_merge( $this->get_client_config(), $config ) );
+		\PaymentPlugins\Vendor\Stripe\Stripe::setAppInfo( 'WordPress woo-stripe-payment', \stripe_wc()->version(), 'https://wordpress.org/plugins/woo-stripe-payment/', 'pp_partner_FdPtriN2Q7JLOe' );
 	}
 
 	/**
@@ -106,7 +106,7 @@ class StripeClient {
 	}
 
 	/**
-	 * @param string|\WC_Order|\Stripe\ApiResource $mode
+	 * @param string|\WC_Order|\PaymentPlugins\Vendor\Stripe\ApiResource $mode
 	 *
 	 * @return $this
 	 * @since 4.0.0
@@ -114,7 +114,7 @@ class StripeClient {
 	public function mode( $mode ): self {
 		if ( $mode instanceof \WC_Order ) {
 			$this->mode = \wc_stripe_order_mode( $mode );
-		} elseif ( $mode instanceof \Stripe\ApiResource ) {
+		} elseif ( $mode instanceof \PaymentPlugins\Vendor\Stripe\ApiResource ) {
 			if ( isset( $mode->livemode ) ) {
 				$this->mode = $mode->livemode ? 'live' : 'test';
 			}

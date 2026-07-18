@@ -40,7 +40,7 @@ class WC_Payment_Gateway_Stripe_WeChat extends WC_Payment_Gateway_Stripe_Local_P
 		$this->method_title       = __( 'WeChat (Stripe) by Payment Plugins', 'woo-stripe-payment' );
 		$this->method_description = __( 'WeChat gateway that integrates with your Stripe account.', 'woo-stripe-payment' );
 		parent::__construct( ...$args );
-		$this->icon               = $this->assets->assets_url( 'img/wechat.svg' );
+		$this->icon = $this->assets->assets_url( 'img/wechat.svg' );
 	}
 
 	public function init_form_fields() {

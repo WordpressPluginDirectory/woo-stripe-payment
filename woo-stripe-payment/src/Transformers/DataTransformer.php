@@ -21,19 +21,21 @@ class DataTransformer {
 	 */
 	public function transform_cart( $cart ) {
 		$currency = get_woocommerce_currency();
+		$packages = $this->get_cart_shipping_packages( $cart );
 
 		$data = [
 			'total'                  => NumberUtil::round( $cart->get_total( 'float' ), 2 ),
 			'subtotal'               => NumberUtil::round( $cart->get_subtotal(), 2 ),
 			'totalCents'             => wc_stripe_add_number_precision( $cart->get_total( 'float' ), $currency ),
 			'subtotalCents'          => wc_stripe_add_number_precision( $cart->get_subtotal(), $currency ),
+			'needsPayment'           => $cart->needs_payment(),
 			'needsShipping'          => $cart->needs_shipping(),
 			'isEmpty'                => $cart->is_empty(),
 			'currency'               => $currency,
 			'countryCode'            => WC()->countries ? WC()->countries->get_base_country() : wc_get_base_location()['country'],
 			'lineItems'              => $this->get_line_items_from_cart( $cart ),
-			'shippingOptions'        => $this->get_shipping_options_from_cart( $cart ),
-			'selectedShippingMethod' => $this->get_selected_shipping_method()
+			'shippingOptions'        => $this->get_shipping_options_from_packages( $cart, $packages ),
+			'selectedShippingMethod' => $this->get_selected_shipping_method( $packages )
 		];
 
 		return apply_filters( 'wc_stripe_cart_data', $data, $cart );
@@ -119,6 +121,7 @@ class DataTransformer {
 			'currency'        => $order->get_currency(),
 			'total'           => NumberUtil::round( $order->get_total(), 2 ),
 			'totalCents'      => wc_stripe_add_number_precision( $order->get_total(), $order->get_currency() ),
+			'needsPayment'    => $order->needs_payment(),
 			'lineItems'       => $this->get_line_items_from_order( $order ),
 			'shippingOptions' => [],
 			'billing_address' => [
@@ -148,39 +151,21 @@ class DataTransformer {
 	 */
 	public function transform_customer( $customer ) {
 		return [
-			'customer_id'      => $customer->get_id(),
-			'billing_address'  => [
-				'name'       => sprintf(
+			'billing_address' => [
+				'name'      => sprintf(
 					'%1$s %2$s',
 					$customer->get_billing_first_name(),
 					$customer->get_billing_last_name()
 				),
-				'first_name' => $customer->get_billing_first_name(),
-				'last_name'  => $customer->get_billing_last_name(),
-				'email'      => $customer->get_billing_email(),
-				'phone'      => $customer->get_billing_phone(),
-				'address_1'  => $customer->get_billing_address_1(),
-				'address_2'  => $customer->get_billing_address_2(),
-				'city'       => $customer->get_billing_city(),
-				'state'      => $customer->get_billing_state(),
-				'postcode'   => $customer->get_billing_postcode(),
-				'country'    => $customer->get_billing_country(),
+				'email'     => $customer->get_billing_email(),
+				'phone'     => $customer->get_billing_phone(),
+				'address_1' => $customer->get_billing_address_1(),
+				'address_2' => $customer->get_billing_address_2(),
+				'city'      => $customer->get_billing_city(),
+				'state'     => $customer->get_billing_state(),
+				'postcode'  => $customer->get_billing_postcode(),
+				'country'   => $customer->get_billing_country(),
 			],
-			'shipping_address' => [
-				'name'       => sprintf(
-					'%1$s %2$s',
-					$customer->get_shipping_first_name(),
-					$customer->get_shipping_last_name()
-				),
-				'first_name' => $customer->get_shipping_first_name(),
-				'last_name'  => $customer->get_shipping_last_name(),
-				'address_1'  => $customer->get_shipping_address_1(),
-				'address_2'  => $customer->get_shipping_address_2(),
-				'city'       => $customer->get_shipping_city(),
-				'state'      => $customer->get_shipping_state(),
-				'postcode'   => $customer->get_shipping_postcode(),
-				'country'    => $customer->get_shipping_country(),
-			]
 		];
 	}
 
@@ -359,23 +344,42 @@ class DataTransformer {
 	}
 
 	/**
-	 * Get generic shipping options from cart
+	 * Get the shipping packages for the cart, so they can be shared between
+	 * get_shipping_options_from_packages() and get_selected_shipping_method() - both need to
+	 * agree on the same package indices, or the "selected" shipping option id sent to wallets
+	 * like Google Pay won't match any of the ids in the offered shippingOptions list.
 	 *
 	 * @param \WC_Cart|null $cart
 	 *
 	 * @return array
 	 */
-	private function get_shipping_options_from_cart( $cart ) {
+	private function get_cart_shipping_packages( $cart ) {
 		if ( ! $cart || ! $cart->needs_shipping() ) {
 			return [];
 		}
 
-		$options  = [];
 		$packages = WC()->shipping()->get_packages();
 		if ( empty( $packages ) ) {
 			$packages = WC()->shipping()->calculate_shipping( $cart->get_shipping_packages() );
 		}
-		$packages = apply_filters( 'wc_stripe_cart_shipping_packages', $packages );
+
+		return apply_filters( 'wc_stripe_cart_shipping_packages', $packages );
+	}
+
+	/**
+	 * Get generic shipping options from cart
+	 *
+	 * @param \WC_Cart|null $cart
+	 * @param array         $packages
+	 *
+	 * @return array
+	 */
+	private function get_shipping_options_from_packages( $cart, $packages ) {
+		if ( empty( $packages ) ) {
+			return [];
+		}
+
+		$options  = [];
 		$incl_tax = wc_tax_enabled() && $cart->display_prices_including_tax();
 		$currency = get_woocommerce_currency();
 
@@ -415,14 +419,20 @@ class DataTransformer {
 	/**
 	 * Get selected shipping method ID
 	 *
+	 * @param array $packages
+	 *
 	 * @return string
 	 */
-	private function get_selected_shipping_method() {
-		if ( ! WC()->session ) {
+	private function get_selected_shipping_method( $packages ) {
+		if ( ! WC()->session || empty( $packages ) ) {
 			return '';
 		}
 
 		$chosen_methods = WC()->session->get( 'chosen_shipping_methods', [] );
+		// Only consider entries that correspond to an actual package built above - e.g. WooCommerce
+		// Subscriptions also stores chosen methods for its own recurring cart packages under this
+		// same session key, keyed differently than the numeric package indices used here.
+		$chosen_methods = array_intersect_key( $chosen_methods, $packages );
 
 		foreach ( $chosen_methods as $idx => $method ) {
 			return sprintf( '%s:%s', $idx, $method );

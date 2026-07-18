@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
+    'PaymentPlugins\\Vendor\\Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
     'PaymentPlugins\\Stripe\\WooFunnels\\' => array($baseDir . '/packages/woofunnels/src'),
     'PaymentPlugins\\Stripe\\WooCommerceTMExtraProductOptions\\' => array($baseDir . '/packages/woocommerce-tm-extra-product-options/src'),
     'PaymentPlugins\\Stripe\\WooCommerceSubscriptions\\' => array($baseDir . '/packages/subscriptions/src'),

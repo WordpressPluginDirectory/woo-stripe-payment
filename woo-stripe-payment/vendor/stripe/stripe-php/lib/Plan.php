@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace Stripe;
+namespace PaymentPlugins\Vendor\Stripe;
 
 /**
  * You can now model subscriptions more flexibly using the <a href="https://api.stripe.com#prices">Prices API</a>. It replaces the Plans API and is backwards compatible to simplify your migration.
@@ -38,23 +37,17 @@ namespace Stripe;
 class Plan extends ApiResource
 {
     const OBJECT_NAME = 'plan';
-
-    use ApiOperations\Update;
-
+    use \PaymentPlugins\Vendor\Stripe\ApiOperations\Update;
     const BILLING_SCHEME_PER_UNIT = 'per_unit';
     const BILLING_SCHEME_TIERED = 'tiered';
-
     const INTERVAL_DAY = 'day';
     const INTERVAL_MONTH = 'month';
     const INTERVAL_WEEK = 'week';
     const INTERVAL_YEAR = 'year';
-
     const TIERS_MODE_GRADUATED = 'graduated';
     const TIERS_MODE_VOLUME = 'volume';
-
     const USAGE_TYPE_LICENSED = 'licensed';
     const USAGE_TYPE_METERED = 'metered';
-
     /**
      * You can now model subscriptions more flexibly using the <a href="#prices">Prices
      * API</a>. It replaces the Plans API and is backwards compatible to simplify your
@@ -71,14 +64,11 @@ class Plan extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Deleting plans means new subscribers can’t be added. Existing subscribers aren’t
      * affected.
@@ -93,14 +83,11 @@ class Plan extends ApiResource
     public function delete($params = null, $opts = null)
     {
         self::_validateParams($params);
-
         $url = $this->instanceUrl();
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * Returns a list of your plans.
      *
@@ -114,10 +101,8 @@ class Plan extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the plan with the given ID.
      *
@@ -130,13 +115,11 @@ class Plan extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \PaymentPlugins\Vendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified plan by setting the values of the parameters passed. Any
      * parameters not provided are left unchanged. By design, you cannot change a
@@ -154,11 +137,9 @@ class Plan extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \PaymentPlugins\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

@@ -2,9 +2,9 @@
 
 // File generated from our OpenAPI spec
 
-namespace Stripe\Events;
+namespace PaymentPlugins\Vendor\Stripe\Events;
 
-class V1BillingMeterNoMeterFoundEventNotification extends \Stripe\V2\Core\EventNotification
+class V1BillingMeterNoMeterFoundEventNotification extends \PaymentPlugins\Vendor\Stripe\V2\Core\EventNotification
 {
     const LOOKUP_TYPE = 'v1.billing.meter.no_meter_found';
 
@@ -13,7 +13,7 @@ class V1BillingMeterNoMeterFoundEventNotification extends \Stripe\V2\Core\EventN
      *
      * @return V1BillingMeterNoMeterFoundEvent
      *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     * @throws \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function fetchEvent()
     {
