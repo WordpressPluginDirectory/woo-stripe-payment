@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Payment Plugins for Stripe WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Plugins for Stripe WooCommerce 4.0.8\n"
+"Project-Id-Version: Payment Plugins for Stripe WooCommerce 4.0.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-17T17:26:57+00:00\n"
+"POT-Creation-Date: 2026-08-06T21:34:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -374,13 +374,13 @@ msgstr ""
 
 #: includes/admin/meta-boxes/views/html-charge-data-subview.php:26
 #: includes/admin/settings/class-wc-stripe-api-settings.php:44
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:177
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:195
 msgid "Live"
 msgstr ""
 
 #: includes/admin/meta-boxes/views/html-charge-data-subview.php:26
 #: includes/admin/settings/class-wc-stripe-api-settings.php:43
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:177
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:195
 msgid "Test"
 msgstr ""
 
@@ -892,7 +892,7 @@ msgid "We make it easy to connect Stripe to your site. Click the Connect button 
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-api-settings.php:87
-#: includes/admin/settings/class-wc-stripe-api-settings.php:427
+#: includes/admin/settings/class-wc-stripe-api-settings.php:448
 msgid "Test Publishable Key"
 msgstr ""
 
@@ -901,7 +901,7 @@ msgid "Your publishable key is used to initialize Stripe assets."
 msgstr ""
 
 #: includes/admin/settings/class-wc-stripe-api-settings.php:99
-#: includes/admin/settings/class-wc-stripe-api-settings.php:419
+#: includes/admin/settings/class-wc-stripe-api-settings.php:440
 msgid "Test Secret Key"
 msgstr ""
 
@@ -1003,12 +1003,12 @@ msgstr ""
 msgid "Your Stripe account has been connected to your WooCommerce store. You may now accept payments in Live and Test mode."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-api-settings.php:419
+#: includes/admin/settings/class-wc-stripe-api-settings.php:440
 #, php-format
 msgid "Live mode keys are not allowed in the \"%s field."
 msgstr ""
 
-#: includes/admin/settings/class-wc-stripe-api-settings.php:427
+#: includes/admin/settings/class-wc-stripe-api-settings.php:448
 #, php-format
 msgid "Live mode keys are not allowed in the \"%s\" field."
 msgstr ""
@@ -1631,11 +1631,11 @@ msgstr ""
 msgid "Credit card gateway that integrates with your Stripe account."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:297
+#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:309
 msgid "Only the Stripe payment form and inline form can be used while Link is enabled."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:308
+#: includes/gateways/class-wc-payment-gateway-stripe-cc.php:320
 #: packages/blocks/src/Payments/Gateways/CreditCardPayment.php:56
 msgid "Save Card"
 msgstr ""
@@ -3507,69 +3507,69 @@ msgstr ""
 msgid "Unknown task: %s"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:99
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:100
 #, php-format
 msgid "Error fetching domains for %s mode: %s"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:120
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:121
 #, php-format
 msgid "Error creating domain %s for %s mode: %s"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:123
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:125
 #, php-format
 msgid "Domain %s registered successfully. You can confirm in your Stripe Dashboard at %s."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:131
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:132
 #, php-format
 msgid "Error updating domain %s for %s mode: %s"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:133
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:135
 #, php-format
 msgid "Domain %s enabled successfully for %s mode."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:148
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:166
 msgid "You must configure your secret key before creating webhooks."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:162
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:180
 msgid "There is already a webhook configured for this site. If you want to delete the webhook, login to your Stripe Dashboard."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:176
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:194
 #, php-format
 msgid "Webhook created in Stripe for %s environment. You can test your webhook by logging in to the Stripe dashboard"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:211
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:229
 msgid "You must enter your API keys or connect the plugin before performing a connection test."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:219
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:237
 #, php-format
 msgid "Mode: %s. Invalid secret key. Please check your entry."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:238
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:256
 #, php-format
 msgid "Mode: %s. Invalid publishable key. Please check your entry."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:251
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:269
 #, php-format
 msgid "Connection test to Stripe was successful. Mode: %s."
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:272
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:290
 #, php-format
 msgid "Error creating payment method configuration. Reason: %s"
 msgstr ""
 
-#: src/Rest/Routes/V1/Admin/GatewaySettings.php:295
+#: src/Rest/Routes/V1/Admin/GatewaySettings.php:313
 msgid "Error retrieving payment method config. Check logs for more details."
 msgstr ""
 

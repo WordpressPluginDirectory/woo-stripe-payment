@@ -77,10 +77,11 @@ class GatewaySettings extends AbstractAdminRoute {
 			}
 		}
 
-		$server_name = ! empty( $request['hostname'] ) ? $request['hostname'] : $_SERVER['SERVER_NAME'];
-		$server_name = apply_filters( 'wc_stripe_apple_pay_domain', $server_name );
-		$domains     = [ $server_name ];
-		$messages    = [];
+		$server_name  = ! empty( $request['hostname'] ) ? $request['hostname'] : $_SERVER['SERVER_NAME'];
+		$server_name  = apply_filters( 'wc_stripe_apple_pay_domain', $server_name );
+		$domains      = [ $server_name ];
+		$messages     = [];
+		$api_settings = stripe_wc()->api_settings;
 
 		foreach ( [ 'test', 'live' ] as $mode ) {
 			$api_key = wc_stripe_get_secret_key( $mode );
@@ -118,20 +119,37 @@ class GatewaySettings extends AbstractAdminRoute {
 					] );
 					if ( \is_wp_error( $response ) ) {
 						$messages[] = sprintf( __( 'Error creating domain %s for %s mode: %s', 'woo-stripe-payment' ), $domain_name, $mode, $response->get_error_message() );
-					} else {
-						$messages[] = sprintf(
-							__( 'Domain %s registered successfully. You can confirm in your Stripe Dashboard at %s.', 'woo-stripe-payment' ),
-							$domain_name,
-							'https://dashboard.stripe.com/settings/payment_method_domains'
-						);
+						continue;
 					}
+					$messages[] = sprintf(
+						__( 'Domain %s registered successfully. You can confirm in your Stripe Dashboard at %s.', 'woo-stripe-payment' ),
+						$domain_name,
+						'https://dashboard.stripe.com/settings/payment_method_domains'
+					);
 				} else {
 					$response = $this->client->mode( $mode )->paymentMethodDomains->update( $result->id, [ 'enabled' => true ] );
 					if ( \is_wp_error( $response ) ) {
 						$messages[] = sprintf( __( 'Error updating domain %s for %s mode: %s', 'woo-stripe-payment' ), $domain_name, $mode, $response->get_error_message() );
-					} else {
-						$messages[] = sprintf( __( 'Domain %s enabled successfully for %s mode.', 'woo-stripe-payment' ), $domain_name, $mode );
+						continue;
 					}
+					$messages[] = sprintf( __( 'Domain %s enabled successfully for %s mode.', 'woo-stripe-payment' ), $domain_name, $mode );
+				}
+
+				$api_settings->set_payment_method_domain_id( $mode, $response->id );
+
+				// Stripe's cached Apple Pay/Google Pay status on the domain can go stale even though the domain
+				// itself is valid. Re-validating after every create/update keeps the payment method statuses in sync.
+				$validated = $this->client->mode( $mode )->paymentMethodDomains->validate( $response->id );
+				if ( \is_wp_error( $validated ) ) {
+					wc_stripe_log_error( sprintf( 'Error validating payment method domain %1$s for %2$s mode: %3$s', $domain_name, $mode, $validated->get_error_message() ) );
+				} elseif ( isset( $validated->apple_pay->status ) && $validated->apple_pay->status !== 'active' ) {
+					wc_stripe_log_error( sprintf(
+						'Apple Pay status for payment method domain %1$s in %2$s mode is "%3$s". %4$s',
+						$domain_name,
+						$mode,
+						$validated->apple_pay->status,
+						isset( $validated->apple_pay->status_details->error_message ) ? $validated->apple_pay->status_details->error_message : ''
+					) );
 				}
 			}
 		}

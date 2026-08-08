@@ -12,6 +12,17 @@ class PaymentIntent {
 
 	private $request;
 
+	/**
+	 * Guards against re-entrant calculate_totals() calls. Some third-party plugins (e.g. German
+	 * Market) query get_available_payment_gateways() from a woocommerce_cart_calculate_fees
+	 * callback; since that hook fires from within calculate_totals(), and is_available() can reach
+	 * get_recurring_cart_total() below, an unguarded nested call recalculates totals -> re-fires
+	 * woocommerce_cart_calculate_fees -> re-enters is_available() indefinitely.
+	 *
+	 * @since 4.0.9
+	 */
+	private $calculating_recurring_total = false;
+
 	public function __construct( FrontendRequests $request ) {
 		$this->request = $request;
 		$this->initialize();
@@ -235,7 +246,15 @@ class PaymentIntent {
 		}
 		if ( ( empty( WC()->cart->recurring_carts ) || ! is_array( WC()->cart->recurring_carts ) )
 		     && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			WC()->cart->calculate_totals();
+			if ( $this->calculating_recurring_total ) {
+				return 0;
+			}
+			$this->calculating_recurring_total = true;
+			try {
+				WC()->cart->calculate_totals();
+			} finally {
+				$this->calculating_recurring_total = false;
+			}
 		}
 		if ( empty( WC()->cart->recurring_carts ) || ! is_array( WC()->cart->recurring_carts ) ) {
 			return 0;

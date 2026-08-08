@@ -68,26 +68,11 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 	}
 
 	public function get_payment_method_data() {
-		return array_merge(
+		$data = array_merge(
 			parent::get_payment_method_data(),
 			[
 				'cardFormType'         => $this->get_active_card_form_type(),
-				'inlineFormOptions'    => $this->get_card_form_options(),
 				'paymentElementActive' => $this->is_payment_element_active(),
-				'customFieldOptions'   => $this->get_card_custom_field_options(),
-				'cardIcons'            => array(
-					'visa'       => $this->assets->assets_url( 'img/cards/visa.svg' ),
-					'amex'       => $this->assets->assets_url( 'img/cards/amex.svg' ),
-					'mastercard' => $this->assets->assets_url( 'img/cards/mastercard.svg' ),
-					'discover'   => $this->assets->assets_url( 'img/cards/discover.svg' ),
-					'diners'     => $this->assets->assets_url( 'img/cards/diners.svg' ),
-					'jcb'        => $this->assets->assets_url( 'img/cards/jcb.svg' ),
-					'unionpay'   => $this->assets->assets_url( 'img/cards/china_union_pay.svg' ),
-					'unknown'    => $this->get_custom_form()['cardBrand'],
-				),
-				'html'                 => [
-					'card_brand' => sprintf( '<img id="wc-stripe-card" src="%s" />', $this->get_custom_form()['cardBrand'] )
-				],
 				'noticeLocation'       => $this->get_option( 'notice_location' ),
 				'noticeSelector'       => $this->get_notice_css_selector(),
 				'installments'         => [
@@ -95,6 +80,33 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 				],
 			]
 		);
+
+		// inlineFormOptions is only consumed by InlineCreditCardGateway.js, which is only
+		// instantiated when cardFormType === 'inline'.
+		if ( $this->get_active_card_form_type() === 'inline' ) {
+			$data['inlineFormOptions'] = $this->get_card_form_options();
+		}
+
+		// cardIcons/html/customFieldOptions are only consumed by CustomCreditCardGateway.js,
+		// which is only instantiated when the custom form is active (cardFormType === 'custom').
+		if ( $this->is_custom_form_active() ) {
+			$data['customFieldOptions'] = $this->get_card_custom_field_options();
+			$data['cardIcons']          = array(
+				'visa'       => $this->assets->assets_url( 'img/cards/visa.svg' ),
+				'amex'       => $this->assets->assets_url( 'img/cards/amex.svg' ),
+				'mastercard' => $this->assets->assets_url( 'img/cards/mastercard.svg' ),
+				'discover'   => $this->assets->assets_url( 'img/cards/discover.svg' ),
+				'diners'     => $this->assets->assets_url( 'img/cards/diners.svg' ),
+				'jcb'        => $this->assets->assets_url( 'img/cards/jcb.svg' ),
+				'unionpay'   => $this->assets->assets_url( 'img/cards/china_union_pay.svg' ),
+				'unknown'    => $this->get_custom_form()['cardBrand'],
+			);
+			$data['html'] = [
+				'card_brand' => sprintf( '<img id="wc-stripe-card" src="%s" />', $this->get_custom_form()['cardBrand'] )
+			];
+		}
+
+		return $data;
 	}
 
 	/**

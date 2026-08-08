@@ -32,9 +32,11 @@ class Package extends AbstractPackage {
 		$assets = new AssetsApi(
 			dirname( __DIR__ ) . '/',
 			trailingslashit( plugin_dir_url( __DIR__ ) ),
-			stripe_wc()->version()
+			$this->container->get( 'VERSION' )
 		);
-		$assets->register_style( 'wc-stripe-german-market', 'build/styles.css' );
-		$assets->register_script( 'wc-stripe-german-market-checkout', 'build/checkout.js' );
+		add_action( 'init', function () use ( $assets ) {
+			$assets->register_style( 'wc-stripe-german-market', 'build/styles.css' );
+			$assets->register_script( 'wc-stripe-german-market-checkout', 'build/checkout.js' );
+		} );
 	}
 }

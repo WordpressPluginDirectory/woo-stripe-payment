@@ -292,10 +292,16 @@ class PaymentGatewaysController {
 	public function add_cart_data( $data ) {
 		$available_gateways     = WC()->payment_gateways()->get_available_payment_gateways();
 		$data['paymentMethods'] = [];
-		foreach ( $this->registry->get_registered_integrations() as $integration ) {
+		// get_active_integrations() already filters to enabled gateways, so disabled ones are
+		// omitted entirely rather than included with enabled: false. The only consumer,
+		// Cart.js's isPaymentMethodAvailable(), does this.data.paymentMethods?.[id]?.available
+		// ?? false - a missing entry already resolves to false, so there's nothing to gain
+		// from including disabled gateways.
+		foreach ( $this->registry->get_active_integrations() as $integration ) {
+			// 'id' is intentionally omitted - the array is already keyed by it, and the only
+			// consumer (Cart.js's isPaymentMethodAvailable()) looks up by key and reads
+			// nothing but .available.
 			$data['paymentMethods'][ $integration->id ] = [
-				'id'        => $integration->id,
-				'enabled'   => \wc_string_to_bool( $integration->enabled ),
 				'available' => isset( $available_gateways[ $integration->id ] )
 			];
 			/**

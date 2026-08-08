@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-stripe-core-vendors', 'jquery', 'wc-stripe-actions', 'wc-stripe-cart', 'wc-stripe-checkout-fields', 'wc-stripe-order', 'wc-stripe-product', 'wc-stripe-sdk', 'wc-stripe-utils', 'wp-api-fetch'), 'version' => 'd3a3a2623e7e493e9202');
+<?php return array('dependencies' => array('wc-stripe-core-vendors', 'jquery', 'wc-stripe-actions', 'wc-stripe-cart', 'wc-stripe-checkout-fields', 'wc-stripe-order', 'wc-stripe-product', 'wc-stripe-sdk', 'wc-stripe-utils', 'wp-api-fetch'), 'version' => '7460265995f11d316037');

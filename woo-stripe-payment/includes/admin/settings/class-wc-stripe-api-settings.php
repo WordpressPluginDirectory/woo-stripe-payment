@@ -396,6 +396,27 @@ class WC_Stripe_API_Settings extends WC_Stripe_Settings_API {
 		return $this->get_option( "webhook_id_{$mode}", null );
 	}
 
+	/**
+	 * @param string $mode
+	 *
+	 * @return string|null
+	 * @since 4.0.9
+	 */
+	public function get_payment_method_domain_id( $mode ) {
+		return $this->get_option( "payment_method_domain_{$mode}", null );
+	}
+
+	/**
+	 * @param string $mode
+	 * @param string $id
+	 *
+	 * @since 4.0.9
+	 */
+	public function set_payment_method_domain_id( $mode, $id ) {
+		$this->settings["payment_method_domain_{$mode}"] = $id;
+		update_option( $this->get_option_key(), $this->settings );
+	}
+
 	public function get_account_id( $mode = '' ) {
 		if ( ! $mode ) {
 			$mode = wc_stripe_mode();

@@ -1,0 +1,2 @@
+(()=>{"use strict";var e={n:t=>{var r=t&&t.__esModule?()=>t.default:()=>t;return e.d(r,{a:r}),r},d:(t,r)=>{for(var a in r)e.o(r,a)&&!e.o(t,a)&&Object.defineProperty(t,a,{enumerable:!0,get:r[a]})},o:(e,t)=>Object.prototype.hasOwnProperty.call(e,t)};const t=window.wcStripe.actions;var r=e.n(t);"undefined"!=typeof wc_stripe_german_market_params&&"on"===wc_stripe_german_market_params.second_checkout&&r().addFilter("wc_stripe_should_create_payment_method",e=>(e||(e=!0),e)),(this.wcStripe=this.wcStripe||{}).checkout={}})();
+//# sourceMappingURL=checkout.js.map
