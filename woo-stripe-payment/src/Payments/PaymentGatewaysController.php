@@ -259,7 +259,8 @@ class PaymentGatewaysController {
 				'paymentMethodType' => $integration->get_payment_method_type(),
 				'description'       => $integration->get_description(),
 				'hasPaymentTokens'  => ! is_add_payment_method_page() && ! empty( $integration->get_tokens() ),
-				'termsDisplayRule'  => $terms_rule
+				'termsDisplayRule'  => $terms_rule,
+				'isVoucher'         => $integration->is_voucher_payment,
 			], $integration->get_payment_method_data() );
 			$payment_methods[ $integration->id ] = [
 				'enabled'           => wc_string_to_bool( $integration->enabled ),

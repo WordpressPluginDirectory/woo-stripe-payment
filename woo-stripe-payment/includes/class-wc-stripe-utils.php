@@ -330,4 +330,20 @@ class WC_Stripe_Utils {
 		return $order;
 	}
 
+	/**
+	 * Returns false if the order is in a status that a webhook (immediate or deferred) should never complete
+	 * payment on, e.g. an order a merchant has already cancelled or refunded should not be reactivated by a
+	 * delayed or out-of-order payment_intent.succeeded webhook. Deliberately a blocklist, not an allowlist -
+	 * merchants and 3rd party plugins commonly add custom "awaiting payment" statuses, and an allowlist would
+	 * silently stop completing orders sitting in any status we didn't think to include.
+	 *
+	 * @param WC_Order $order
+	 *
+	 * @return bool
+	 * @since 4.0.10
+	 */
+	public static function can_process_webhook_payment( $order ) {
+		return ! $order->has_status( apply_filters( 'wc_stripe_webhook_blocked_order_statuses', array( 'cancelled', 'refunded' ), $order ) );
+	}
+
 }

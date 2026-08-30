@@ -86,6 +86,10 @@ class WC_Stripe_Redirect_Handler {
 			 */
 			$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ];
 
+			if ( ! $payment_method instanceof WC_Payment_Gateway_Stripe ) {
+				return;
+			}
+
 			if ( $result instanceof \PaymentPlugins\Vendor\Stripe\SetupIntent ) {
 				$payment_method->set_setup_intent( $result );
 			}
@@ -134,9 +138,16 @@ class WC_Stripe_Redirect_Handler {
 				if ( ! $payment_method->has_order_lock( $order ) && ! $order->get_date_paid() ) {
 					$payment_method->set_order_lock( $order );
 					$payment_method->set_payment_method_id( $result->payment_method->id );
-					$result = $payment_method->process_payment( $order_id );
+					$intent_id = $result->id;
+					$result    = $payment_method->process_payment( $order_id );
 					if ( $result['result'] === 'success' ) {
 						$redirect = $result['redirect'];
+						// The redirect completed the order before the deferred webhook ran; no need for it to fire.
+						WC()->queue()->cancel( 'wc_stripe_process_deferred_webhook', array(
+							'type'           => 'payment_intent.succeeded',
+							'order_id'       => $order_id,
+							'payment_intent' => $intent_id,
+						), '' );
 					}
 				}
 			} elseif ( $result->status === 'processing' && isset( $result->latest_charge ) ) {

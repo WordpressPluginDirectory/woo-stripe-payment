@@ -205,7 +205,8 @@ class AssetDataController {
 
 		if ( $this->context->is_order_pay() ) {
 			$order = $this->context->get_order_from_query();
-			if ( $order ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( $order instanceof \WC_Order ) && $order->key_is_valid( wc_clean( wp_unslash( $_GET['key'] ?? '' ) ) ) ) {
 				$this->asset_data->add( 'order', $this->transformer->transform_order( $order ) );
 			}
 		}
@@ -241,25 +242,17 @@ class AssetDataController {
 				]
 			]
 		] );
-		// addressLocales is only consumed by CheckoutFields::isValidAddress(), which only runs in
-		// checkout/express-checkout contexts - product/cart/mini-cart pages get billing/shipping
-		// directly from the wallet (Apple Pay/Google Pay/Link), so no locale validation is needed there.
-		if ( $this->context->is_checkout() ) {
-			$this->asset_data->add( 'addressLocales', wp_json_encode( WC()->countries->get_country_locale() ) );
-		} else {
-			$this->asset_data->add( 'addressLocales', wp_json_encode( new \stdClass() ) );
-		}
 		// errorMessages and requiredFields are only consumed by gateway instance code
 		// (BaseGateway.js / AbstractExpressGateway.js), so both are dead weight on any page
 		// where no gateway is actually rendering. Checkout/order-pay/add-payment-method always
 		// have a gateway present; product/cart only if a gateway is actually rendering a button
 		// there; mini-cart gateways can render (and trigger a payment attempt) from any page.
 		$has_payment_gateway_context = $this->context->is_checkout()
-		                                || $this->context->is_order_pay()
-		                                || $this->context->is_add_payment_method()
-		                                || ( $this->context->is_product() && $this->payment_registry->get_product_payment_gateways() )
-		                                || ( $this->context->is_cart() && $this->payment_registry->get_cart_payment_gateways() )
-		                                || $this->has_minicart_gateways_enabled();
+		                               || $this->context->is_order_pay()
+		                               || $this->context->is_add_payment_method()
+		                               || ( $this->context->is_product() && $this->payment_registry->get_product_payment_gateways() )
+		                               || ( $this->context->is_cart() && $this->payment_registry->get_cart_payment_gateways() )
+		                               || $this->has_minicart_gateways_enabled();
 
 		if ( $has_payment_gateway_context ) {
 			$this->asset_data->add( 'errorMessages', wc_stripe_get_error_messages() );

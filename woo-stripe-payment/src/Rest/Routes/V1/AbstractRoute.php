@@ -164,8 +164,9 @@ abstract class AbstractRoute {
 	 * @param \WP_REST_Request $request
 	 */
 	protected function populate_post_data( \WP_REST_Request $request ) {
-		$_POST    = array_merge( $_POST, $request->get_json_params() );
-		$_REQUEST = array_merge( $_REQUEST, $request->get_json_params() );
+		$json_params = $request->get_json_params() ?? [];
+		$_POST       = array_merge( $_POST, $json_params );
+		$_REQUEST    = array_merge( $_REQUEST, $json_params );
 	}
 
 }

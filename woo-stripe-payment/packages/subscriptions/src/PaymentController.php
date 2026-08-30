@@ -135,6 +135,34 @@ class PaymentController extends AbstractPaymentController {
 			}
 		}
 
+		/**
+		 * If still empty, let 3rd party code (e.g. a migration compat class for another plugin) supply a
+		 * fallback payment method ID, such as one stored outside the order/subscription meta this plugin owns.
+		 *
+		 * @param string        $payment_method_id
+		 * @param WC_Order      $order
+		 * @param WC_Subscription|null $subscription
+		 *
+		 * @since 4.0.10
+		 */
+		if ( empty( $args['payment_method'] ) ) {
+			$payment_method_id = apply_filters( 'wc_stripe_subscription_renewal_payment_method_fallback', '', $order, $subscription );
+			if ( $payment_method_id ) {
+				$payment_method = $gateway->client->mode( $order )->paymentMethods->retrieve( $payment_method_id );
+				if ( ! is_wp_error( $payment_method ) ) {
+					$args['payment_method'] = $payment_method->id;
+					$args['customer']       = $payment_method->customer;
+					$update_subscription    = true;
+					if ( ! $subscription ) {
+						$subscription_id = $order->get_meta( '_subscription_renewal' );
+						if ( $subscription_id ) {
+							$subscription = wcs_get_subscription( absint( $subscription_id ) );
+						}
+					}
+				}
+			}
+		}
+
 		$retry_mgr = RetryManager::instance();
 		$intent    = $gateway->client->mode( $order )->paymentIntents->create( $args );
 		if ( is_wp_error( $intent ) ) {

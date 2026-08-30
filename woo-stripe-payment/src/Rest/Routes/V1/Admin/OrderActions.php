@@ -109,6 +109,21 @@ class OrderActions extends AbstractAdminRoute {
 	}
 
 	private function process_payment( \WP_REST_Request $request ) {
+		/**
+		 * Unlike the checkout page, this modal doesn't get a fresh page load between attempts, so a notice
+		 * added by a failed attempt (e.g. a decline) would otherwise sit in the WC session and short-circuit
+		 * every subsequent admin payment attempt via the wc_notice_count() guard in
+		 * WC_Payment_Gateway_Stripe::process_payment() - not just for this order, but for any order the same
+		 * admin user tries next, since the notice store is session-scoped, not order-scoped. A stale session
+		 * payment intent needs clearing for the same reason; see can_use_payment_intent().
+		 *
+		 * @since 4.0.11
+		 */
+		if ( WC()->session ) {
+			wc_clear_notices();
+		}
+		\WC_Stripe_Utils::delete_payment_intent_to_session();
+
 		$order_id     = absint( $request->get_param( 'order_id' ) );
 		$payment_type = $request->get_param( 'payment_type' );
 		$order        = wc_get_order( $order_id );
@@ -138,7 +153,7 @@ class OrderActions extends AbstractAdminRoute {
 
 		$order->delete_meta_data( \WC_Stripe_Constants::PAYMENT_INTENT_ID );
 
-		if ( isset( $request['payment_intent'] ) ) {
+		if ( ! empty( $request['payment_intent'] ) ) {
 			$order->update_meta_data( \WC_Stripe_Constants::PAYMENT_INTENT_ID, $request['payment_intent'] );
 		}
 

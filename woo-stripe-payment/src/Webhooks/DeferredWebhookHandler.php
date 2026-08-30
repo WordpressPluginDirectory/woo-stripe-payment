@@ -19,8 +19,9 @@ class DeferredWebhookHandler {
 					 */
 					$payment_method = $payment_gateways[ $order->get_payment_method() ] ?? null;
 					if ( $payment_method ) {
-						// The order has already been processed, exit here.
-						if ( $payment_method->has_order_lock( $order ) || $order->get_date_paid() ) {
+						// The order has already been processed, or is in a status that should never be
+						// reactivated by a delayed/out-of-order webhook (e.g. cancelled, refunded).
+						if ( $payment_method->has_order_lock( $order ) || $order->get_date_paid() || ! \WC_Stripe_Utils::can_process_webhook_payment( $order ) ) {
 							return;
 						}
 						$payment_method->set_order_lock( $order );

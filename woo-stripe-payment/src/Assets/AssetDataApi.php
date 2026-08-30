@@ -18,6 +18,16 @@ class AssetDataApi {
 		unset( $this->data[ $key ] );
 	}
 
+	/**
+	 * Removes all stored data.
+	 *
+	 * @return void
+	 * @since 4.0.10
+	 */
+	public function clear() {
+		$this->data = [];
+	}
+
 	public function get_data() {
 		return $this->data;
 	}

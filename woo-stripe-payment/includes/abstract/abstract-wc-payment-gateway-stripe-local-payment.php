@@ -220,8 +220,8 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		global $wp;
 		$_available = false;
 		$total      = $this->get_order_total();
-		if ( isset( $wp->query_vars['order-pay'] ) ) {
-			$order           = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
+		$order = isset( $wp->query_vars['order-pay'] ) ? wc_get_order( absint( $wp->query_vars['order-pay'] ) ) : false;
+		if ( $order instanceof \WC_Order ) {
 			$currency        = $order->get_currency();
 			$billing_country = $order->get_billing_country();
 		} else {

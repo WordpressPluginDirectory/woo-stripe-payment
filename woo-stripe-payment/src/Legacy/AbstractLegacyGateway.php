@@ -3,8 +3,6 @@
 namespace PaymentPlugins\Stripe\Legacy;
 
 use PaymentPlugins\Stripe\Payments\Gateways\AbstractGateway;
-use PaymentPlugins\Stripe\WooCommercePreOrders\PreOrdersController;
-use PaymentPlugins\Stripe\WooCommerceSubscriptions\SubscriptionsController;
 
 /**
  * Legacy and deprecated methods are kept here to keep the new AbstractGateway clean. This class ensures compatability
@@ -461,18 +459,8 @@ abstract class AbstractLegacyGateway extends AbstractGateway {
 
 	/**
 	 *
-	 * @param WC_Order $order
-	 *
-	 * @deprecated 4.0.0
-	 */
-	public function process_pre_order_payment( $order ) {
-		wc_stripe_get_container()->get( PreOrdersController::class )->process_pre_order_payment( $order, $this );
-	}
-
-	/**
-	 *
-	 * @param array           $payment_meta
-	 * @param WC_Subscription $subscription
+	 * @param array            $payment_meta
+	 * @param \WC_Subscription $subscription
 	 *
 	 * @deprecated
 	 */
@@ -480,28 +468,4 @@ abstract class AbstractLegacyGateway extends AbstractGateway {
 		return $payment_meta;
 	}
 
-	/**
-	 *
-	 * @param float     $amount
-	 * @param \WC_Order $order
-	 *
-	 * @deprecated 4.0.0
-	 */
-	public function scheduled_subscription_payment( $amount, $order ) {
-		wc_stripe_get_container()
-			->get( SubscriptionsController::class )
-			->scheduled_subscription_payment( $amount, $order, $this );
-	}
-
-	/**
-	 * @param \WC_Subscription $subscription
-	 * @param \WC_Order        $order
-	 *
-	 * @deprecated 4.0.0
-	 */
-	public function update_failing_payment_method( $subscription, $order ) {
-		wc_stripe_get_container()
-			->get( SubscriptionsController::class )
-			->update_failing_payment_method( $subscription, $order );
-	}
 }

@@ -57,6 +57,8 @@ class SubscriptionsController {
 		add_filter( 'wc_stripe_bnpl_shop_message_gateways', [ $this, 'filter_shop_message_gateways' ], 10, 2 );
 
 		add_filter( 'wc_stripe_cart_shipping_packages', [ $this, 'get_shipping_packages' ] );
+
+		add_action( 'woocommerce_subscriptions_paid_for_failed_renewal_order', [ $this, 'maybe_update_payment_method' ], 10, 2 );
 	}
 
 	public function register_gateways( PaymentGatewayRegistry $registry ) {
@@ -184,6 +186,30 @@ class SubscriptionsController {
 				}
 			}
 			$subscription->save();
+		}
+	}
+
+	/**
+	 *
+	 * @param \WC_Order        $renewal_order
+	 * @param \WC_Subscription $subscription
+	 *
+	 * @return void
+	 */
+	public function maybe_update_payment_method( $renewal_order, $subscription ) {
+		// The subscription is manual, so it's _payment_method might be deactivated.
+		if ( $subscription && $subscription->is_manual() ) {
+			$payment_methods = WC()->payment_gateways()->payment_gateways();
+			$payment_method  = $payment_methods[ $renewal_order->get_payment_method() ] ?? null;
+			// The renewal payment method was paid for using this plugin. Make sure the subscription's
+			// _payment_method gets updated to.
+			if ( $payment_method && $payment_method instanceof \WC_Payment_Gateway_Stripe ) {
+				if ( $subscription->get_payment_method() !== $payment_method->id ) {
+					$subscription->set_payment_method( $payment_method->id );
+					$subscription->save();
+					$this->update_failing_payment_method( $subscription, $renewal_order, $payment_method );
+				}
+			}
 		}
 	}
 

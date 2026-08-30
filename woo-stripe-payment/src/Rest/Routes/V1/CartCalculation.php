@@ -64,8 +64,31 @@ class CartCalculation extends AbstractCart {
 		$filter_fn = function ( $cart_id ) {
 			return $cart_id . '_wc_stripe_calculation';
 		};
+
+		// This request only simulates adding a product to determine totals; none of it should
+		// be visible to the customer as a real cart change. Three separate side effects have to
+		// be suppressed for that:
+		// - WC_Cart_Session::set_session() only writes to WC()->session in memory - the actual
+		//   DB write happens once, on shutdown, via WC_Session_Handler::save_data(). Removing it
+		//   makes it safe to skip re-syncing totals after we remove our temporary item below,
+		//   since nothing will read or persist them.
+		// - woocommerce_add_to_cart triggers WC_Cart_Session::maybe_set_cart_cookies()
+		//   immediately, which would set woocommerce_items_in_cart/woocommerce_cart_hash
+		//   cookies reflecting the temporary item before it's removed.
+		// - woocommerce_add_to_cart/woocommerce_cart_item_removed both trigger
+		//   WC_Cart_Session::persistent_cart_update(), writing the simulated cart to usermeta
+		//   for logged-in users.
+		if ( WC()->session && method_exists( WC()->session, 'save_data' ) ) {
+			remove_action( 'shutdown', [ WC()->session, 'save_data' ], 20 );
+		}
+		add_filter( 'woocommerce_set_cookie_enabled', '__return_false' );
+		add_filter( 'woocommerce_persistent_cart_enabled', '__return_false' );
+
 		try {
 			add_filter( 'woocommerce_cart_id', $filter_fn );
+			// add_to_cart() already triggers WC_Cart's own calculate_totals() via the
+			// woocommerce_add_to_cart hook (registered in WC_Cart::__construct()), so totals
+			// are current below without an explicit call.
 			$cart_item_key = WC()->cart->add_to_cart( $product_id, $qty, $variation_id, $variation );
 
 			if ( ! $cart_item_key ) {
@@ -75,10 +98,6 @@ class CartCalculation extends AbstractCart {
 					[ 'status' => 400 ]
 				);
 			}
-
-
-			// Calculate totals with product included
-			WC()->cart->calculate_totals();
 
 			// Transform cart data
 			$data_transformer = new DataTransformer();
@@ -90,9 +109,15 @@ class CartCalculation extends AbstractCart {
 			wc_stripe_log_error( sprintf( 'Error performing cart calculation: %s', $e->getMessage() ) );
 		} finally {
 			remove_filter( 'woocommerce_cart_id', $filter_fn );
-			// Always remove the item we added
+			// woocommerce_set_cookie_enabled/woocommerce_persistent_cart_enabled are deliberately
+			// left disabled for the rest of this request, same as the shutdown removal above -
+			// this is a single-purpose AJAX bridge call, so nothing downstream needs them back.
+			// Always remove the item we added. Suppressing WC_Cart's own recalculation-on-removal
+			// (triggered via the woocommerce_cart_item_removed hook) is left off for the same
+			// reason - nothing reads or persists the result, and nothing else removes a cart item
+			// in this request that would need the hook restored.
 			if ( $cart_item_key ) {
-				// cart totals are re-calculated when an item is removed from the cart.
+				remove_action( 'woocommerce_cart_item_removed', [ WC()->cart, 'calculate_totals' ], 20 );
 				WC()->cart->remove_cart_item( $cart_item_key );
 			}
 		}

@@ -38,6 +38,65 @@ class WC_Stripe_Gateway_Conversion {
 			case 'stripe_payment_request':
 				$payment_method = 'stripe_googlepay';
 				break;
+			// @since 4.0.10 - eh-stripe-payment-gateway conversions.
+			case 'eh_stripe_pay':
+			case 'eh_stripe_checkout':
+				$payment_method = 'stripe_cc';
+				break;
+			case 'eh_affirm_stripe':
+				$payment_method = 'stripe_affirm';
+				break;
+			case 'eh_afterpay_stripe':
+				$payment_method = 'stripe_afterpay';
+				break;
+			case 'eh_alipay_stripe':
+				$payment_method = 'stripe_alipay';
+				break;
+			case 'eh_amazon_pay_stripe':
+				$payment_method = 'stripe_amazonpay';
+				break;
+			case 'eh_bancontact_stripe':
+				$payment_method = 'stripe_bancontact';
+				break;
+			case 'eh_becs_stripe':
+				$payment_method = 'stripe_becs';
+				break;
+			case 'eh_boleto_stripe':
+				$payment_method = 'stripe_boleto';
+				break;
+			case 'eh_eps_stripe':
+				$payment_method = 'stripe_eps';
+				break;
+			case 'eh_fpx_stripe':
+				$payment_method = 'stripe_fpx';
+				break;
+			case 'eh_grabpay_stripe':
+				$payment_method = 'stripe_grabpay';
+				break;
+			case 'eh_ideal_stripe':
+				$payment_method = 'stripe_ideal';
+				break;
+			case 'eh_klarna_stripe':
+				$payment_method = 'stripe_klarna';
+				break;
+			case 'eh_multibanco_stripe':
+				$payment_method = 'stripe_multibanco';
+				break;
+			case 'eh_oxxo_stripe':
+				$payment_method = 'stripe_oxxo';
+				break;
+			case 'eh_revolut_pay_stripe':
+				$payment_method = 'stripe_revolut';
+				break;
+			case 'eh_sepa_stripe':
+				$payment_method = 'stripe_sepa';
+				break;
+			case 'eh_wechat_stripe':
+				$payment_method = 'stripe_wechat';
+				break;
+			case 'eh_pay_by_bank_stripe':
+				$payment_method = 'stripe_paybybank';
+				break;
 		}
 		// Another Stripe plugin is active, don't convert $payment_method as that could affect
 		// checkout functionality.

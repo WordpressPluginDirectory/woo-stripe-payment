@@ -51,9 +51,9 @@ class InstallmentController {
 			add_action( 'woocommerce_checkout_update_order_review', [ $this, 'on_update_order_review' ] );
 		}
 		if ( is_admin() ) {
-			add_action( 'woocommerce_update_options_checkout_stripe_advanced', function () {
-				//$this->process_advanced_settings_options();
-			}, 50 );
+			/*add_action( 'woocommerce_update_options_checkout_stripe_advanced', function () {
+
+			}, 50 );*/
 		}
 	}
 
@@ -200,7 +200,14 @@ class InstallmentController {
 		if ( $card_gateway && ! $card_gateway->is_payment_element_active() ) {
 			return $data;
 		}
-		$order = $context->is_order_pay() ? $context->get_order_from_query() : null;
+		$order = null;
+		if ( $context->is_order_pay() ) {
+			$order = $context->get_order_from_query();
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ! ( $order instanceof \WC_Order ) || ! $order->key_is_valid( wc_clean( wp_unslash( $_GET['key'] ?? '' ) ) ) ) {
+				return $data;
+			}
+		}
 		if ( ! $this->is_available( $order ) ) {
 			return $data;
 		}

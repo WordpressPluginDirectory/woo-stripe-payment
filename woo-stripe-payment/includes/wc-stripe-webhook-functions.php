@@ -26,29 +26,66 @@ function wc_stripe_process_payment_intent_succeeded( $intent, $request, $event )
 	 */
 	$payment_method = WC()->payment_gateways()->payment_gateways()[ $order->get_payment_method() ] ?? null;
 	if ( $payment_method instanceof WC_Payment_Gateway_Stripe ) {
-		if ( $payment_method->has_order_lock( $order ) || $order->get_date_paid() ) {
-			wc_stripe_log_info( sprintf( 'payment_intent.succeeded event received. Intent has been completed for order %s. Event exited.', $order->get_id() ) );
+		if ( $order->get_date_paid() ) {
+			wc_stripe_log_info( sprintf( 'payment_intent.succeeded event received for order %s, but the order has already been paid (date_paid is set). Event exited.', $order->get_id() ) );
+
+			return;
+		}
+		if ( ! WC_Stripe_Utils::can_process_webhook_payment( $order ) ) {
+			wc_stripe_log_info( sprintf( "payment_intent.succeeded event received for order %s, but the order's status ('%s') is blocked from being processed by a webhook. Event exited.", $order->get_id(), $order->get_status() ) );
 
 			return;
 		}
 		/**
-		 * We want to defer the processing of any credit card payments to prevent race conditions. The Stripe webhook can be
-		 * received while the checkout process is still running.
+		 * We want to defer the processing of any payment method that can also complete via a synchronous
+		 * checkout flow (card confirmation, or a redirect return) to prevent race conditions. The Stripe webhook
+		 * can be received while that other flow is still running.
+		 *
+		 * The order lock is intentionally not checked here. A lock only means a synchronous flow has started,
+		 * not that it will finish, e.g. an interrupted redirect return can leave a lock behind with nothing to
+		 * release it. The deferred handler re-checks the lock when it actually runs, by which point a lock left
+		 * behind by an interrupted flow has expired, so a stalled synchronous flow can't permanently disarm this
+		 * fallback.
+		 *
+		 * Payment methods that are only ever completed by the webhook (synchronous === false, e.g. ACH, SEPA,
+		 * OXXO) have no such flow to race against, so they're processed immediately, still gated on the lock.
 		 */
-		if ( $payment_method->get_payment_method_type() === 'card' ) {
+		if ( $payment_method->synchronous ) {
 			WC()->queue()->schedule_single( time() + 2 * MINUTE_IN_SECONDS, 'wc_stripe_process_deferred_webhook', array(
 				'type'           => $event->type,
 				'order_id'       => $order->get_id(),
 				'payment_intent' => $intent->id
 			) );
-		} else {
-			$payment_method->set_order_lock( $order );
-			$order->update_meta_data( WC_Stripe_Constants::PAYMENT_INTENT, WC_Stripe_Utils::sanitize_intent( $intent->toArray() ) );
-			$result = $payment_method->payment_controller->process_payment( $order );
-			if ( ! is_wp_error( $result ) && $result->complete_payment ) {
-				$payment_method->payment_controller->payment_complete( $order, $result->charge );
-				$order->add_order_note( __( 'payment_intent.succeeded webhook received. Payment has been completed.', 'woo-stripe-payment' ) );
-			}
+
+			return;
+		}
+
+		/**
+		 * class-wc-stripe-redirect-handler.php is actively used by many currently-offered gateways (Affirm,
+		 * Klarna, Afterpay, etc.) — those are synchronous === true and are handled by the defer branch above,
+		 * not this one.
+		 *
+		 * This check guards a narrower case. Most synchronous === false gateways confirm in-page via
+		 * confirmPayment({ redirect: 'if_required' }) and never reach the redirect handler at all, and the
+		 * voucher gateways (OXXO, Konbini, Boleto, Multibanco) go through the separate process_voucher_redirect()
+		 * path instead of the branches below. But a synchronous === false gateway with a genuine off-site
+		 * redirect flow would still return around the same time this webhook fires, and could hit the redirect
+		 * handler's 'processing' branch. The lock check below is what prevents that collision from
+		 * double-completing the order. No currently-offered synchronous === false gateway has that redirect
+		 * flow, but the check stays in case one does in the future.
+		 */
+		if ( $payment_method->has_order_lock( $order ) ) {
+			wc_stripe_log_info( sprintf( 'payment_intent.succeeded event received for order %s, but the order is currently locked by another process. Event exited.', $order->get_id() ) );
+
+			return;
+		}
+
+		$payment_method->set_order_lock( $order );
+		$order->update_meta_data( WC_Stripe_Constants::PAYMENT_INTENT, WC_Stripe_Utils::sanitize_intent( $intent->toArray() ) );
+		$result = $payment_method->payment_controller->process_payment( $order );
+		if ( ! is_wp_error( $result ) && $result->complete_payment ) {
+			$payment_method->payment_controller->payment_complete( $order, $result->charge );
+			$order->add_order_note( __( 'payment_intent.succeeded webhook received. Payment has been completed.', 'woo-stripe-payment' ) );
 		}
 	}
 }
@@ -72,9 +109,9 @@ function wc_stripe_process_charge_failed( $charge, $request ) {
 			 */
 			$payment_method = $payment_methods[ $order->get_payment_method() ];
 			// only update order status if this is an asynchronous payment method,
-			// and there is no completed date on the order. If there is a complete date it
+			// and there is no paid date on the order. If there is a paid date it
 			// means payment_complete was called on the order at some point
-			if ( $payment_method instanceof WC_Payment_Gateway_Stripe && ! $payment_method->synchronous && ! $order->get_date_completed() ) {
+			if ( $payment_method instanceof WC_Payment_Gateway_Stripe && ! $payment_method->synchronous && ! $order->get_date_paid() ) {
 				$order->update_status( apply_filters( 'wc_stripe_charge_failed_status', 'failed' ), $charge->failure_message );
 			}
 		}

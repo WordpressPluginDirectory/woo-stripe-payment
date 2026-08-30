@@ -13,10 +13,6 @@ class OrderMetadata {
 
 	private function initialize() {
 		add_action( 'wc_stripe_save_order_meta', [ $this, 'save_order_metadata' ], 10, 4 );
-		add_action( 'woocommerce_subscriptions_paid_for_failed_renewal_order', [
-			$this,
-			'maybe_update_payment_method'
-		], 10, 2 );
 	}
 
 	/**
@@ -114,6 +110,8 @@ class OrderMetadata {
 	 * @param \WC_Subscription $subscription
 	 *
 	 * @return void
+	 * @deprecated 4.0.11
+	 *
 	 */
 	public function maybe_update_payment_method( $renewal_order, $subscription ) {
 		// The subscription is manual, so it's _payment_method might be deactivated.

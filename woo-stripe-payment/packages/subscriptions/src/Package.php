@@ -7,6 +7,7 @@ use PaymentPlugins\Stripe\ContextHandler;
 use PaymentPlugins\Stripe\Packages\AbstractPackage;
 use PaymentPlugins\Stripe\Payments\PaymentGatewayRegistry;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\ChangePaymentGatewayController;
+use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\MigrationCompat;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\OrderMetadata;
 use PaymentPlugins\Stripe\WooCommerceSubscriptions\Controllers\PaymentIntent;
 
@@ -34,6 +35,9 @@ class Package extends AbstractPackage {
 		$this->container->register( ChangePaymentGatewayController::class, function ( $container ) {
 			return new ChangePaymentGatewayController();
 		} );
+		$this->container->register( MigrationCompat::class, function ( $container ) {
+			return new MigrationCompat();
+		} );
 		$this->container->register( SubscriptionsController::class, function ( $container ) {
 			return new SubscriptionsController(
 				new PaymentController(),
@@ -52,6 +56,7 @@ class Package extends AbstractPackage {
 	public function initialize() {
 		$this->container->get( PaymentIntent::class );
 		$this->container->get( OrderMetadata::class );
+		$this->container->get( MigrationCompat::class );
 		$this->container->get( SubscriptionsController::class )->initialize();
 		$this->container->get( ChangePaymentGatewayController::class )->initialize();
 		$this->container->get( FrontendScripts::class )->initialize();
