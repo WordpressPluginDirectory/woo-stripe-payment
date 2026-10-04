@@ -123,6 +123,19 @@ abstract class AbstractStripePayment extends AbstractPaymentMethodType {
 		return [];
 	}
 
+	/**
+	 * Override to register a Store API cart/extensions update callback for this payment method
+	 * (POST /wc/store/v1/cart/extensions, routed by this method's get_name() as the namespace) -
+	 * see SchemaController::register_payment_gateway_data(). For pushing payment-method-owned UI
+	 * state (e.g. a "save payment method" checkbox) to the server outside the normal
+	 * cart/checkout request flow.
+	 *
+	 * @return callable|null
+	 */
+	public function get_update_callback() {
+		return null;
+	}
+
 	protected function get_script_translations() {
 		return [];
 	}

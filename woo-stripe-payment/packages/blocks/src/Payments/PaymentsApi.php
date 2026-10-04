@@ -179,7 +179,8 @@ class PaymentsApi {
 			return new Gateways\UniversalPayment(
 				$container->get( 'BLOCK_ASSETS' ),
 				$container->get( PaymentIntentController::class ),
-				$container->get( InstallmentController::class )
+				$container->get( InstallmentController::class ),
+				$container->get( \PaymentPlugins\Stripe\AdaptivePricing\UPMCheckoutSessionController::class )
 			);
 		} );
 	}
@@ -292,10 +293,17 @@ class PaymentsApi {
 						]
 					]
 				],
-				'version'        => $this->container->get( 'VERSION' ),
-				'assetsUrl'      => stripe_wc()->assets_url(),
-				'currency'       => get_woocommerce_currency(),
-				'cardIcons'      => array(
+				'version'            => $this->container->get( 'VERSION' ),
+				'assetsUrl'          => stripe_wc()->assets_url(),
+				'currency'           => get_woocommerce_currency(),
+				/**
+				 * Stripe's currency-exponent exceptions (see wc_stripe_get_currencies()), keyed by currency
+				 * code. WooCommerce's own Decimals setting is merchant-configurable and independent of
+				 * Stripe's expected minor unit for a currency (e.g. HUF); Blocks payment methods use this
+				 * to rescale the native cartTotal to Stripe's precision before sending it as an amount.
+				 */
+				'currencyMinorUnits' => wc_stripe_get_currencies(),
+				'cardIcons'          => array(
 					'visa'       => $assets_url . 'visa.svg',
 					'amex'       => $assets_url . 'amex.svg',
 					'mastercard' => $assets_url . 'mastercard.svg',

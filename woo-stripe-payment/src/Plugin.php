@@ -116,6 +116,10 @@ class Plugin {
 		// Register plugin version as a simple value
 		$this->container->register( 'VERSION', $this->version );
 		$this->container->register( 'API_VERSION', '2026-02-25.clover' );
+		// Stripe API betas required by the Adaptive Pricing CheckoutSession server-update flow.
+		// Sent per-request (see CheckoutSessionController), not globally - an un-enrolled beta in
+		// the version header can be rejected on unrelated requests.
+		$this->container->register( 'REQUEST_HEADERS', [ 'checkout_server_update_beta' => 'v1' ] );
 		$this->container->register( 'CLIENT_ID', 'ca_Gp4vLOJiqHJLZGxakHW7JdbBlcgWK8Up' );
 
 		// Register plugin paths

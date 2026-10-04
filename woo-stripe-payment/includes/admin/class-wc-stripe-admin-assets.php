@@ -142,7 +142,18 @@ class WC_Stripe_Admin_Assets {
 							'name'  => $user->get( 'first_name' ) . ' ' . $user->get( 'last_name' ),
 							'email' => $user->get( 'user_email' )
 						],
-						'help_widget' => $help_widget
+						'help_widget' => $help_widget,
+						'i18n'        => [
+							'save'                                          => __( 'Save', 'woo-stripe-payment' ),
+							'cancel'                                        => __( 'Cancel', 'woo-stripe-payment' ),
+							'reset'                                         => __( 'Reset', 'woo-stripe-payment' ),
+							'adaptive_pricing_title'                       => __( 'Adaptive Pricing', 'woo-stripe-payment' ),
+							'adaptive_pricing_enabled'                     => __( 'Enabled', 'woo-stripe-payment' ),
+							'adaptive_pricing_enabled_desc'                => __( 'Convert prices to the customer\'s local currency at checkout using Stripe-provided exchange rates.', 'woo-stripe-payment' ),
+							'adaptive_pricing_currency_selector_position'  => __( 'Currency Selector Position', 'woo-stripe-payment' ),
+							'adaptive_pricing_position_above'              => __( 'Above Payment Methods', 'woo-stripe-payment' ),
+							'adaptive_pricing_position_below'              => __( 'Below Payment Methods', 'woo-stripe-payment' ),
+						]
 					)
 				);
 			}

@@ -106,11 +106,11 @@ class WC_Stripe_Product_Gateway_Option {
 	 * @param mixed  $default
 	 */
 	public function get_option( $key, $default = null ) {
-		if ( ! isset( $this->settings[ $key ] ) && null != $default ) {
+		if ( ! isset( $this->settings[ $key ] ) && null !== $default ) {
 			$this->settings[ $key ] = $default;
 		}
 
-		return $this->settings[ $key ];
+		return $this->settings[ $key ] ?? $default;
 	}
 
 	public function set_option( $key, $value ) {

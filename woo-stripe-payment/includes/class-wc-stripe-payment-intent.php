@@ -164,7 +164,7 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 					strtolower( $order->get_currency() ),
 					$this->get_payment_method_charge_type(),
 					wc_stripe_get_customer_id( $order->get_user_id() ),
-					$this->payment_method->get_payment_method_from_request()
+					$this->payment_method->get_payment_method_from_request( $order )
 				) );
 				$intent_hash = implode( '_', array(
 					$intent['amount'],
@@ -322,7 +322,7 @@ class WC_Stripe_Payment_Intent extends WC_Stripe_Payment {
 	 * @see WC_Stripe_Payment::add_order_payment_method()
 	 */
 	public function add_order_payment_method( &$args, $order ) {
-		$args['payment_method'] = $this->payment_method->get_payment_method_from_request();
+		$args['payment_method'] = $this->payment_method->get_payment_method_from_request( $order );
 		if ( empty( $args['payment_method'] ) ) {
 			unset( $args['payment_method'] );
 		}

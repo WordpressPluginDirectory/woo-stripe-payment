@@ -29,7 +29,7 @@ class ChangePaymentGatewayController {
 			}
 			if ( $payment_method->should_use_saved_payment_method() ) {
 				$this->token = PaymentMethodUtils::get_payment_token(
-					$payment_method->get_payment_method_from_request(),
+					$payment_method->get_payment_method_from_request( $subscription ),
 					$subscription->get_customer_id()
 				);
 				if ( $this->token && $this->token instanceof \WC_Payment_Token_Stripe ) {

@@ -7,6 +7,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @package PaymentPlugins\Classes
  * @author  PaymentPlugins
+ * @deprecated
  */
 class WC_Stripe_Frontend_Scripts {
 

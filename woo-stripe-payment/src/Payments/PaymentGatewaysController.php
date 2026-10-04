@@ -137,13 +137,17 @@ class PaymentGatewaysController {
 			if ( $this->context_handler->is_add_payment_method() ) {
 				$handles = $this->registry->get_add_payment_method_script_handles();
 			} else {
-				$handles = $this->registry->get_checkout_script_handles();
-				$handles = array_merge( $handles, $this->registry->get_express_checkout_script_handles() );
+				$handles         = $this->registry->get_checkout_script_handles();
+				$express_handles = $this->registry->get_express_checkout_script_handles();
+				$handles         = array_merge( $handles, $express_handles );
+				$handles         = $this->maybe_add_skeleton_handle( $handles, (bool) $express_handles, 'express_checkout' );
 			}
 		} elseif ( $this->context_handler->is_cart() ) {
 			$handles = $this->registry->get_cart_script_handles();
+			$handles = $this->maybe_add_skeleton_handle( $handles, (bool) $handles, 'cart' );
 		} elseif ( $this->context_handler->is_product() ) {
 			$handles = $this->registry->get_product_script_handles();
+			$handles = $this->maybe_add_skeleton_handle( $handles, (bool) $handles, 'product' );
 		} elseif ( $this->context_handler->is_shop() ) {
 			$handles = $this->registry->get_shop_script_handles();
 		}
@@ -155,6 +159,24 @@ class PaymentGatewaysController {
 			wp_enqueue_style( 'wc-stripe-styles' );
 			wp_style_add_data( 'wc-stripe-styles', 'rtl', 'replace' );
 		}
+	}
+
+	/**
+	 * Appends the express button skeleton loader handle when the context has express
+	 * buttons and the skeleton hasn't been filtered off for that context.
+	 *
+	 * @param array  $handles     Script handles being enqueued for the context.
+	 * @param bool   $has_express Whether the context actually renders express buttons.
+	 * @param string $context     One of: express_checkout, product, cart.
+	 *
+	 * @return array
+	 */
+	private function maybe_add_skeleton_handle( $handles, $has_express, $context ) {
+		if ( $has_express && apply_filters( 'wc_stripe_express_checkout_skeleton', true, $context ) ) {
+			$handles[] = 'wc-stripe-express-checkout-skeleton';
+		}
+
+		return $handles;
 	}
 
 	/**
@@ -360,17 +382,22 @@ class PaymentGatewaysController {
 				// fetch the payment method configurations
 				$result = $client->paymentMethodConfigurations->all( [ 'limit' => 50 ] );
 				if ( ! is_wp_error( $result ) && ! empty( $result->data ) ) {
-					// find the default configuration or the config associated with the application
-					$pmc = null;
+					// Find the config associated with the application - always takes priority,
+					// regardless of result order, since Stripe rejects updates to a configuration
+					// we don't own. Test mode allows manually-entered API keys (no OAuth
+					// application context), so fall back to an unowned default configuration
+					// there - but never one owned by a different application.
+					$pmc         = null;
+					$default_pmc = null;
 					foreach ( $result->data as $item ) {
 						if ( $item->application == $application ) {
 							$pmc = $item;
 							break;
-						} elseif ( $mode === 'test' && $item->is_default ) {
-							$pmc = $item;
-							break;
+						} elseif ( $mode === 'test' && empty( $item->application ) && $item->is_default ) {
+							$default_pmc = $default_pmc ?: $item;
 						}
 					}
+					$pmc = $pmc ?: $default_pmc;
 					if ( $pmc ) {
 						switch ( $gateway->id ) {
 							case 'stripe_applepay':

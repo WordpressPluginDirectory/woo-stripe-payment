@@ -19,6 +19,11 @@ class WC_Stripe_Constants {
 
 	const PAYMENT_INTENT = '_payment_intent';
 
+	/**
+	 * @since 4.0.15
+	 */
+	const CHECKOUT_SESSION_ID = '_stripe_checkout_session_id';
+
 	const MODE = '_wc_stripe_mode';
 
 	const CHARGE_STATUS = '_wc_stripe_charge_status';

@@ -59,6 +59,8 @@ class SubscriptionsController {
 		add_filter( 'wc_stripe_cart_shipping_packages', [ $this, 'get_shipping_packages' ] );
 
 		add_action( 'woocommerce_subscriptions_paid_for_failed_renewal_order', [ $this, 'maybe_update_payment_method' ], 10, 2 );
+
+		add_filter( 'wc_stripe_adaptive_pricing_is_available', [ $this, 'maybe_disable_adaptive_pricing' ] );
 	}
 
 	public function register_gateways( PaymentGatewayRegistry $registry ) {
@@ -114,6 +116,27 @@ class SubscriptionsController {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * A change-payment-method request only tokenizes a payment method - it never charges the
+	 * subscription's own total, which is why process_payment() above routes it to
+	 * process_change_payment_method() instead of a normal payment. Adaptive Pricing's
+	 * checkout-session flow doesn't have a concept of "tokenize with no charge", so it's vetoed
+	 * here the same way PreOrdersController vetoes a charge-upon-release pre-order - otherwise
+	 * is_available()'s order-based total check (the subscription's real recurring total, not $0)
+	 * would let it through.
+	 *
+	 * @param bool $available
+	 *
+	 * @return bool
+	 */
+	public function maybe_disable_adaptive_pricing( $available ) {
+		if ( $available && $this->is_change_payment_method_request() ) {
+			return false;
+		}
+
+		return $available;
 	}
 
 	/**

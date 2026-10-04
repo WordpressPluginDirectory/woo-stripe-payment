@@ -119,5 +119,28 @@ return array(
 		'description'       => __( 'When true, the Payment Methods render as standalone buttons with space in between them.', 'woo-stripe-payment' ),
 		'desc_tip'          => true,
 		'custom_attributes' => array( 'data-show-if' => array( 'layout_type' => 'accordion' ) ),
+	),
+	'adaptive_pricing_section'          => array(
+		'title' => __( 'Adaptive Pricing', 'woo-stripe-payment' ),
+		'type'  => 'title'
+	),
+	'adaptive_pricing_config'           => array(
+		'type'              => 'react_app',
+		'title'             => __( 'Adaptive Pricing', 'woo-stripe-payment' ),
+		'label'             => __( 'Configure Adaptive Pricing', 'woo-stripe-payment' ),
+		'class'             => 'showAdaptivePricingModal',
+		'app_id'            => 'adaptive-pricing-app',
+		'default'           => array(
+			'enabled'                    => 'no',
+			'currency_selector_position' => 'above_payment_methods',
+		),
+		'sanitize_callback' => function ( $value ) {
+			if ( ! is_array( $value ) ) {
+				return array();
+			}
+
+			return array_map( 'wc_clean', array_map( 'stripslashes', $value ) );
+		},
+		'description'       => __( 'If enabled, prices are converted to the customer\'s local currency at checkout using Stripe-provided exchange rates.', 'woo-stripe-payment' )
 	)
 );

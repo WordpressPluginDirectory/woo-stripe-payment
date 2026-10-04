@@ -112,5 +112,3 @@ class WC_Stripe_Admin_Settings {
 	}
 
 }
-
-WC_Stripe_Admin_Settings::init();

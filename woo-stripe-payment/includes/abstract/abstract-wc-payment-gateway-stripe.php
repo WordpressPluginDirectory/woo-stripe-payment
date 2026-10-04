@@ -561,14 +561,24 @@ abstract class WC_Payment_Gateway_Stripe extends AbstractLegacyGateway {
 	/**
 	 * Returns the payment method the customer wants to use.
 	 * This can be a saved payment method or a new payment method.
+	 *
+	 * @param \WC_Order|null $order The order the payment method will be used for, used to scope a
+	 *                              saved payment method to its owner. Falls back to the current
+	 *                              user when no order is available yet.
 	 */
-	public function get_payment_method_from_request() {
+	public function get_payment_method_from_request( $order = null ) {
 		// check if customer is using a saved payment method.
 		if ( $this->should_use_saved_payment_method() ) {
-			$id    = \wc_clean( \wp_unslash( $_POST["wc-{$this->id}-payment-token"] ) );
-			$token = \WC_Payment_Tokens::get( (int) $id );
+			$id       = \wc_clean( \wp_unslash( $_POST["wc-{$this->id}-payment-token"] ) );
+			$token    = \WC_Payment_Tokens::get( (int) $id );
+			$owner_id = $order instanceof \WC_Order ? $order->get_customer_id() : get_current_user_id();
+			// The id is request-supplied, so fail closed unless the token belongs to the order's
+			// customer (or current user) and was saved by this gateway.
+			if ( ! $token || (int) $token->get_user_id() !== $owner_id ) {
+				return '';
+			}
 
-			return $token ? $token->get_token() : '';
+			return $token->get_token();
 		}
 		if ( $this->payment_method_token ) {
 			return $this->payment_method_token;

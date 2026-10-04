@@ -43,6 +43,13 @@ class Package extends AbstractPackage {
 				);
 			}
 		} );
+
+		// CheckoutWC renders the checkout express area inside its own layout with its own
+		// loading state; skip our skeleton there. Other contexts (product, cart) are
+		// unaffected by CheckoutWC and keep it.
+		add_filter( 'wc_stripe_express_checkout_skeleton', function ( $enabled, $context ) {
+			return 'express_checkout' === $context ? false : $enabled;
+		}, 10, 2 );
 	}
 
 	public function initialize() {

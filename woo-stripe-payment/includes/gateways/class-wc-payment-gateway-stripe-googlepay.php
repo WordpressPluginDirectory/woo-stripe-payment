@@ -42,6 +42,10 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 		$this->supports[] = 'wc_stripe_mini_cart_checkout';
 	}
 
+	protected function get_element_selector() {
+		return "#wc-{$this->id}-checkout-button";
+	}
+
 	public function get_checkout_script_handles() {
 		$this->assets->register_script( 'wc-stripe-googlepay-checkout', 'build/googlepay-checkout.js' );
 
@@ -95,7 +99,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 			parent::get_payment_method_data(),
 			[
 				'button'       => [
-					'height' => (int) $this->get_option( 'button_height', 40 ),
+					'height' => (int) $this->get_option( 'button_height', 50 ),
 					'radius' => $this->get_option( 'button_radius', 4 ) . 'px',
 					'theme'  => $this->get_option( 'button_theme', 'black' ),
 					'type'   => $this->get_option( 'button_type_checkout', 'buy' )

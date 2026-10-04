@@ -35,6 +35,10 @@ class WC_Payment_Gateway_Stripe_ApplePay extends WC_Payment_Gateway_Stripe {
 		$this->icon = $this->assets->assets_url( 'img/applepay.svg' );
 	}
 
+	protected function get_element_selector() {
+		return "#wc-{$this->id}-checkout-button";
+	}
+
 	public function get_checkout_script_handles() {
 		$this->assets->register_script( 'wc-stripe-applepay-checkout', 'build/applepay-checkout.js' );
 
@@ -79,7 +83,7 @@ class WC_Payment_Gateway_Stripe_ApplePay extends WC_Payment_Gateway_Stripe {
 			parent::get_payment_method_data(),
 			[
 				'button'       => [
-					'height' => (int) $this->get_option( 'button_height', 40 ),
+					'height' => (int) $this->get_option( 'button_height', 50 ),
 					'radius' => $this->get_option( 'button_radius', 4 ) . 'px',
 					'theme'  => $this->get_option( 'button_theme', 'black' ),
 					'type'   => $this->get_option( 'button_type_checkout', 'plain' )

@@ -18,7 +18,12 @@ class PaymentController extends AbstractPaymentController {
 	 */
 	public function process_payment( \WC_Order $order, AbstractGateway $payment_method ) {
 		if ( $payment_method->should_use_saved_payment_method() ) {
-			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request();
+			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request( $order );
+			if ( ! $payment_method->payment_method_token ) {
+				wc_add_notice( __( 'The selected payment method is invalid.', 'woo-stripe-payment' ), 'error' );
+
+				return array( 'result' => 'error' );
+			}
 		} else {
 			// a new payment method is required so create a setup intent.
 			$result = $this->process_setup_intent( $order, $payment_method );

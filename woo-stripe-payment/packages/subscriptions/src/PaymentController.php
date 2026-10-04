@@ -18,7 +18,12 @@ class PaymentController extends AbstractPaymentController {
 		$result = null;
 		// 1. If the customer is using a saved payment method, a setup intent is not needed.
 		if ( $payment_method->should_use_saved_payment_method() ) {
-			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request();
+			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request( $order );
+			if ( ! $payment_method->payment_method_token ) {
+				wc_add_notice( __( 'The selected payment method is invalid.', 'woo-stripe-payment' ), 'error' );
+
+				return array( 'result' => 'error' );
+			}
 		} else {
 			$result = $this->process_setup_intent( $order, $payment_method );
 			// If it's a redirect array or error, return early.
@@ -42,14 +47,19 @@ class PaymentController extends AbstractPaymentController {
 	 */
 	public function process_change_payment_method( \WC_Order $subscription, AbstractGateway $payment_method ) {
 		if ( ! $payment_method->should_use_saved_payment_method() ) {
-			$result = $payment_method->save_payment_method( $payment_method->get_payment_method_from_request(), $subscription );
+			$result = $payment_method->save_payment_method( $payment_method->get_payment_method_from_request( $subscription ), $subscription );
 			if ( is_wp_error( $result ) ) {
 				wc_add_notice( sprintf( __( 'Error saving payment method for subscription. Reason: %s', 'woo-stripe-payment' ), $result->get_error_message() ), 'error' );
 
 				return array( 'result' => 'error' );
 			}
 		} else {
-			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request();
+			$payment_method->payment_method_token = $payment_method->get_payment_method_from_request( $subscription );
+			if ( ! $payment_method->payment_method_token ) {
+				wc_add_notice( __( 'The selected payment method is invalid.', 'woo-stripe-payment' ), 'error' );
+
+				return array( 'result' => 'error' );
+			}
 		}
 		$token = $payment_method->get_token( $payment_method->payment_method_token, $subscription->get_user_id() );
 

@@ -127,5 +127,3 @@ class WC_Stripe_Admin_User_Edit {
 	}
 
 }
-
-WC_Stripe_Admin_User_Edit::init();

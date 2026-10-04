@@ -48,16 +48,42 @@ class ExpressButtonController {
 
 	public function handle_checkout_page_found() {
 		$this->settings = \WFACP_Common::get_page_settings( \WFACP_Common::get_id() );
-		if ( $this->has_express_buttons() ) {
-			$this->assets->enqueue_style( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout-styles.css' );
-			$this->assets->enqueue_script( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout.js' );
 
-			foreach ( $this->get_payment_gateways() as $gateway ) {
-				add_action( 'wfacp_smart_button_container_' . $gateway->id, function () use ( $gateway ) {
-					$this->render_express_buttons( $gateway );
-				} );
-			}
+		if ( ! $this->has_express_buttons() ) {
+			return;
 		}
+
+		// Our express buttons render on this page either way (in the banner, or in
+		// FunnelKit's smart button area), so the layout styles always apply.
+		$this->assets->enqueue_style( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout-styles.css' );
+
+		// The rest only applies when FunnelKit renders its own smart button area (with
+		// its own loading state) and fires the `wfacp_smart_button_container_*` hooks.
+		// With smart buttons off, our normal express banner + skeleton render instead.
+		if ( ! \wc_string_to_bool( $this->settings['enable_smart_buttons'] ?? 'false' ) ) {
+			return;
+		}
+
+		// Don't run our skeleton loader on top of FunnelKit's own loading state.
+		add_filter( 'wc_stripe_express_checkout_skeleton', [ $this, 'disable_express_skeleton' ], 10, 2 );
+
+		$this->assets->enqueue_script( 'wc-stripe-woofunnels-checkout', 'build/wc-stripe-woofunnels-checkout.js' );
+
+		foreach ( $this->get_payment_gateways() as $gateway ) {
+			add_action( 'wfacp_smart_button_container_' . $gateway->id, function () use ( $gateway ) {
+				$this->render_express_buttons( $gateway );
+			} );
+		}
+	}
+
+	/**
+	 * @param bool   $enabled
+	 * @param string $context
+	 *
+	 * @return bool
+	 */
+	public function disable_express_skeleton( $enabled, $context ) {
+		return 'express_checkout' === $context ? false : $enabled;
 	}
 
 	private function has_express_buttons() {
@@ -116,9 +142,13 @@ class ExpressButtonController {
 	 * @return void
 	 */
 	private function render_express_buttons( $gateway ) {
+		// FunnelKit forces `iframe { height: 100% !important }` on smart button containers,
+		// overriding the height Stripe sets on the Express Checkout Element. Expose the
+		// gateway's configured button height so the stylesheet can pin it back.
+		$button_height = max( 40, min( 55, (int) $gateway->get_option( 'button_height', 50 ) ) );
 		?>
-        <div class="wc-stripe-checkout-banner-gateway banner_payment_method_<?php echo esc_attr( $gateway->id ) ?>">
-
+        <div class="wc-stripe-checkout-banner-gateway banner_payment_method_<?php echo esc_attr( $gateway->id ) ?>"
+             style="--wc-stripe-express-btn-h:<?php echo esc_attr( $button_height ) ?>px">
         </div>
 		<?php
 	}

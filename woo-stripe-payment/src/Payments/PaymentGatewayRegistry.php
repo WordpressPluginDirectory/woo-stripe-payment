@@ -212,11 +212,25 @@ class PaymentGatewayRegistry extends BaseRegistry {
 			/**
 			 * @var AbstractGateway $integration
 			 */
-			$handles = array_merge( $handles, $integration->get_checkout_script_handles() );
-
 			if ( $integration->supports( 'tokenization' ) && ! wp_script_is( 'woocommerce-tokenization-form', 'enqueued' ) ) {
 				$integration->tokenization_script();
 			}
+
+			/**
+			 * Filters whether an integration's own checkout script handles should be enqueued.
+			 * Used by Adaptive Pricing (CheckoutSessionController) to skip loading a gateway's own
+			 * script when its checkout-session-driven shared element is handling it instead.
+			 *
+			 * @param bool            $enqueue
+			 * @param AbstractGateway $integration
+			 *
+			 * @since 4.0.15
+			 */
+			if ( ! apply_filters( 'wc_stripe_enqueue_checkout_script_handles', true, $integration ) ) {
+				continue;
+			}
+
+			$handles = array_merge( $handles, $integration->get_checkout_script_handles() );
 		}
 
 		return $handles;

@@ -147,12 +147,16 @@ class WC_Payment_Gateway_Stripe_Link extends \WC_Payment_Gateway_Stripe {
 			parent::get_payment_method_data(),
 			[
 				'button'                => [
-					'height' => (int) $this->get_option( 'button_height', 40 ),
+					'height' => (int) $this->get_option( 'button_height', 50 ),
 					'radius' => $this->get_option( 'button_radius', 4 ) . 'px',
 				],
 				'paymentElementOptions' => []
 			]
 		);
+	}
+
+	protected function get_element_selector() {
+		return "#wc-{$this->id}-checkout-button";
 	}
 
 	public function get_checkout_script_handles() {

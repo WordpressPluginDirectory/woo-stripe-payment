@@ -31,6 +31,7 @@ class FrontendScripts {
 		$this->assets->register_script( 'wc-stripe-sdk', 'build/stripe-sdk.js' );
 		$this->assets->register_script( 'wc-stripe-checkout-fields', 'build/checkout-fields.js' );
 		$this->assets->register_script( 'wc-stripe-dom-events', 'build/dom-events.js' );
+		$this->assets->register_script( 'wc-stripe-checkout-session', 'build/checkout-session.js' );
 
 		$this->assets->register_script( 'wc-stripe-controllers', 'build/controllers.js' );
 		$this->assets->register_script( 'wc-stripe-gateways', 'build/gateways.js' );
@@ -42,6 +43,16 @@ class FrontendScripts {
 
 		// BNPL script
 		$this->assets->register_script( 'wc-stripe-bnpl-messages', 'build/bnpl-messages.js' );
+
+		// Adaptive Pricing - initializes the CheckoutSession core class on the checkout page.
+		$this->assets->register_script( 'wc-stripe-checkout-session', 'build/checkout-session.js' );
+
+		// Adaptive Pricing (Phase 1) - Universal Payment Method checkout, enqueued in place of
+		// wc-stripe-upm-checkout when Adaptive Pricing is enabled.
+		$this->assets->register_script( 'wc-stripe-upm-checkout-session', 'build/upm-checkout-session.js' );
+
+		// Express checkout banner skeleton loader
+		$this->assets->register_script( 'wc-stripe-express-checkout-skeleton', 'build/express-checkout-skeleton.js' );
 
 		$this->assets->register_style( 'wc-stripe-styles', 'build/styles.css' );
 	}

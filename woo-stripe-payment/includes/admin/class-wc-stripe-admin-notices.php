@@ -64,5 +64,3 @@ class WC_Stripe_Admin_Notices {
 	}
 }
 
-\PaymentPlugins\WC_Stripe_Admin_Notices::init();
-

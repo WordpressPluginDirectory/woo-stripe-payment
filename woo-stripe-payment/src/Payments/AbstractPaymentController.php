@@ -19,7 +19,7 @@ abstract class AbstractPaymentController {
 			$setup_intent_id = $order->get_meta( WC_Stripe_Constants::SETUP_INTENT_ID );
 			if ( ! $setup_intent_id ) {
 				// create the setup intent
-				$payment_method_id = $payment_method->get_payment_method_from_request();
+				$payment_method_id = $payment_method->get_payment_method_from_request( $order );
 				$args              = [
 					'usage'                => 'off_session',
 					'payment_method_types' => [ $payment_method->get_payment_method_type() ],
@@ -82,7 +82,7 @@ abstract class AbstractPaymentController {
 				// only update setup intents that don't have a succeeded status.
 				if ( $setup_intent->status !== 'succeeded' ) {
 					$args         = [
-						'payment_method'       => $payment_method->get_payment_method_from_request(),
+						'payment_method'       => $payment_method->get_payment_method_from_request( $order ),
 						'payment_method_types' => [ $payment_method->get_payment_method_type() ]
 					];
 					$args         = apply_filters( 'wc_stripe_update_setup_intent_params', $args, $order );

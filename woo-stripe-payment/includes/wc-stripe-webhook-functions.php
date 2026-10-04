@@ -172,7 +172,14 @@ function wc_stripe_process_create_refund( $charge ) {
 				$args['restock_items'] = true;
 				$line_items            = array();
 				foreach ( $order->get_items() as $item_id => $item ) {
-					$line_items[ $item_id ] = array( 'qty' => $item->get_quantity() );
+					// The whole order is being refunded here, so each line refunds in full.
+					// refund_total/refund_tax are required by wc_create_refund() (reads refund_total
+					// without an isset() guard) to build the refund's line items.
+					$line_items[ $item_id ] = array(
+						'qty'          => $item->get_quantity(),
+						'refund_total' => $item->get_total(),
+						'refund_tax'   => $item->get_taxes()['total'],
+					);
 				}
 				$args['line_items'] = $line_items;
 			}

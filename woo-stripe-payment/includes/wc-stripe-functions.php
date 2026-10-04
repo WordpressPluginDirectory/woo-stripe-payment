@@ -1187,7 +1187,19 @@ function wc_stripe_get_checkout_fields() {
 	$fields = array();
 	$order  = false;
 	if ( ! empty( $wp->query_vars['order-pay'] ) ) {
-		$order = wc_get_order( absint( ( $wp->query_vars['order-pay'] ) ) );
+		$order = wc_get_order( absint( $wp->query_vars['order-pay'] ) );
+		/**
+		 * This array is localized to the frontend as `wc_stripe_checkout_fields`,
+		 * so only pre-fill from the order's stored billing/shipping details when the
+		 * requester actually holds the order key - otherwise any visitor hitting
+		 * /order-pay/{id}/ could read the customer's name, address, email and phone.
+		 * Falls back to the session values (as when there's no order). Matches
+		 * AbstractLegacyGateway / AssetDataController / redirect handler.
+		 */
+		if ( ! ( $order instanceof WC_Order )
+		     || ! $order->key_is_valid( wc_clean( wp_unslash( $_GET['key'] ?? '' ) ) ) ) {
+			$order = false;
+		}
 	}
 	foreach ( array( 'billing', 'shipping' ) as $key ) {
 		if ( ( $field_set = @WC()->checkout()->get_checkout_fields( $key ) ) ) {

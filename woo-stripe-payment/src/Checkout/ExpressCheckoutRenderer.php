@@ -77,8 +77,26 @@ class ExpressCheckoutRenderer {
 	public function render_express_checkout() {
 		$gateways = $this->registry->get_express_payment_gateways();
 		if ( $gateways ) {
-			\wc_stripe_get_template( 'checkout/checkout-banner.php', [ 'gateways' => $gateways ] );
+			\wc_stripe_get_template( 'checkout/checkout-banner.php', [
+				'gateways'      => $gateways,
+				'show_skeleton' => $this->is_skeleton_enabled( 'express_checkout' ),
+			] );
 		}
+	}
+
+	/**
+	 * Whether the express buttons for the given context should show skeleton
+	 * placeholders while they resolve their availability. Disable via the filter
+	 * when another plugin renders its own express area or loading state.
+	 *
+	 * @since 4.0.13
+	 *
+	 * @param string $context One of: express_checkout, product, cart.
+	 *
+	 * @return bool
+	 */
+	public function is_skeleton_enabled( $context ) {
+		return (bool) \apply_filters( 'wc_stripe_express_checkout_skeleton', true, $context );
 	}
 
 	/**
@@ -113,8 +131,9 @@ class ExpressCheckoutRenderer {
 		}
 
 		\wc_stripe_get_template( 'product/payment-methods.php', [
-			'position' => $this->product_button_position,
-			'gateways' => $sorted,
+			'position'      => $this->product_button_position,
+			'gateways'      => $sorted,
+			'show_skeleton' => $this->is_skeleton_enabled( 'product' ),
 		] );
 	}
 
@@ -125,9 +144,10 @@ class ExpressCheckoutRenderer {
 		$gateways = $this->registry->get_cart_payment_gateways();
 		if ( $gateways ) {
 			\wc_stripe_get_template( 'cart/payment-methods.php', [
-				'gateways'   => $gateways,
-				'after'      => $this->cart_button_position === 'after',
-				'cart_total' => \WC()->cart->get_total( 'float' ),
+				'gateways'      => $gateways,
+				'after'         => $this->cart_button_position === 'after',
+				'cart_total'    => \WC()->cart->get_total( 'float' ),
+				'show_skeleton' => $this->is_skeleton_enabled( 'cart' ),
 			] );
 		}
 	}

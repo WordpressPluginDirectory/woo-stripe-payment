@@ -67,6 +67,15 @@ class ContextHandler {
 			return;
 		}
 		/**
+		 * WooCommerce's conditional tags (is_checkout(), is_cart(), ...) are only defined once WC
+		 * has bootstrapped. Some requests reach 'wp' without that happening - feed URLs, a plugin
+		 * exiting early, a broken page-cache layer - and calling them would fatal. Bail without
+		 * locking $initialized so a later call retries if WC does come up.
+		 */
+		if ( ! function_exists( 'is_checkout' ) ) {
+			return;
+		}
+		/**
 		 * The main query/$post global are only guaranteed to be fully resolved once the 'wp' action
 		 * has fired (WP::main() runs query_posts()/register_globals() before firing it). If this runs
 		 * earlier - e.g. via is_context()'s lazy call, before 'wp' fires - don't lock the result in

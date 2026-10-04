@@ -36,6 +36,14 @@ class SchemaController {
 					}
 					$this->extend_schema->register_endpoint_data( $data );
 				}
+
+				$callback = $payment_method->get_update_callback();
+				if ( $callback ) {
+					$this->extend_schema->register_update_callback( [
+						'namespace' => $payment_method->get_name(),
+						'callback'  => $callback,
+					] );
+				}
 			}
 		}
 

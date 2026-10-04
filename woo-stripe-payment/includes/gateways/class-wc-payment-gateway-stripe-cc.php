@@ -109,6 +109,10 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 		return $data;
 	}
 
+	protected function get_element_selector() {
+		return $this->get_active_card_form_type() === 'custom' ? '#wc-stripe-cc-custom-form' : '#wc-stripe-card-element';
+	}
+
 	/**
 	 * @since 3.3.0
 	 */
@@ -206,6 +210,16 @@ class WC_Payment_Gateway_Stripe_CC extends WC_Payment_Gateway_Stripe {
 
 	public function is_payment_element_active() {
 		return $this->get_option( 'form_type' ) === 'payment';
+	}
+
+	/**
+	 * Only the Payment Element form (form_type=payment) is compatible with Adaptive Pricing's
+	 * shared checkout-session element - inline/custom forms use a legacy Card Element instead.
+	 *
+	 * @return bool
+	 */
+	public function is_adaptive_pricing_compatible() {
+		return $this->is_payment_element_active();
 	}
 
 	public function get_custom_form_template() {

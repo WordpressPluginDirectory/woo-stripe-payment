@@ -28,11 +28,54 @@ class WC_Stripe_Redirect_Handler {
 	 * @since 3.3.62
 	 */
 	public static function process_payment_redirect() {
-		if ( isset( $_GET['_stripe_payment_method'] ) ) {
+		if ( isset( $_GET['_stripe_checkout_session'], $_GET['order_id'], $_GET['key'] ) ) {
+			self::process_checkout_session_redirect();
+		} elseif ( isset( $_GET['_stripe_payment_method'] ) ) {
 			self::process_redirect();
 		} elseif ( isset( $_GET[ WC_Stripe_Constants::VOUCHER_PAYMENT ], $_GET['order_id'] ) ) {
 			self::process_voucher_redirect();
 		}
+	}
+
+	/**
+	 * Adaptive Pricing return: the URL carries no payment_intent (checkout.confirm() doesn't
+	 * append one), so resolve the session's PaymentIntent, put it on the order and in the query
+	 * vars, and hand off to the standard process_redirect() flow.
+	 *
+	 * @return void
+	 * @since 4.0.15
+	 */
+	private static function process_checkout_session_redirect() {
+		$order = wc_get_order( absint( wc_clean( wp_unslash( $_GET['order_id'] ) ) ) );
+		if ( ! $order instanceof WC_Order || ! $order->key_is_valid( wc_clean( wp_unslash( $_GET['key'] ) ) ) ) {
+			return;
+		}
+		$session_id = $order->get_meta( WC_Stripe_Constants::CHECKOUT_SESSION_ID );
+		if ( ! $session_id ) {
+			return;
+		}
+		$session = wc_stripe_get_container()
+			->get( \PaymentPlugins\Stripe\Client\StripeClient::class )
+			->mode( $order )
+			->checkout
+			->sessions
+			->retrieve( $session_id, array( 'expand' => array( 'payment_intent' ) ) );
+		if ( is_wp_error( $session ) || empty( $session->payment_intent ) ) {
+			// Payment already went through client-side; the checkout.session / payment_intent
+			// webhook still completes the order - get the customer to the order received page.
+			wp_safe_redirect( $order->get_checkout_order_received_url() );
+			exit();
+		}
+		$intent = $session->payment_intent;
+
+		$order->update_meta_data( WC_Stripe_Constants::PAYMENT_INTENT_ID, $intent->id );
+		$order->update_meta_data( WC_Stripe_Constants::MODE, $intent->livemode ? 'live' : 'test' );
+		$order->save();
+
+		$_GET['payment_intent']               = $intent->id;
+		$_GET['payment_intent_client_secret'] = $intent->client_secret;
+
+		self::process_redirect();
 	}
 
 	/**

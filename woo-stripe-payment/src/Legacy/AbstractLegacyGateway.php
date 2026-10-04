@@ -291,18 +291,28 @@ abstract class AbstractLegacyGateway extends AbstractGateway {
 	}
 
 	/**
+	 * @param \WC_Order|null $order The order the payment method will be used for, used to scope a
+	 *                              saved payment method to its owner.
+	 *
 	 * @return array|string|\WC_Stripe_Gateway|\WC_Stripe_Payment_Intent|null
 	 * @deprecated 4.0.0
 	 */
-	public function get_saved_source_id() {
+	public function get_saved_source_id( $order = null ) {
+		$owner_id = $order instanceof \WC_Order ? $order->get_customer_id() : get_current_user_id();
 		// Check if Blocks are being used
 		if ( ! empty( $_POST["wc-{$this->id}-payment-token"] ) ) {
-			$token = \WC_Payment_Tokens::get( wc_clean( $_POST["wc-{$this->id}-payment-token"] ) );
+			$token = \WC_Payment_Tokens::get( (int) wc_clean( $_POST["wc-{$this->id}-payment-token"] ) );
+			// The id is request-supplied, so fail closed unless the token belongs to the owner.
+			if ( ! $token || (int) $token->get_user_id() !== $owner_id ) {
+				return '';
+			}
 
 			return $token->get_token();
 		}
 		if ( ! empty( $_POST[ $this->saved_method_key ] ) && ! empty( $_POST[ $this->payment_type_key ] ) && 'saved' == $_POST[ $this->payment_type_key ] ) {
-			return wc_clean( $_POST[ $this->saved_method_key ] );
+			$token = wc_clean( $_POST[ $this->saved_method_key ] );
+
+			return \PaymentPlugins\Stripe\Utilities\PaymentMethodUtils::token_exists( $token, $owner_id ) ? $token : '';
 		}
 
 		return $this->payment_method_token;
@@ -380,7 +390,7 @@ abstract class AbstractLegacyGateway extends AbstractGateway {
 				return array( 'result' => 'error' );
 			}
 		} else {
-			$this->payment_method_token = $this->get_saved_source_id();
+			$this->payment_method_token = $this->get_saved_source_id( $subscription );
 		}
 		$token = $this->get_token( $this->payment_method_token, $subscription->get_user_id() );
 
@@ -446,7 +456,7 @@ abstract class AbstractLegacyGateway extends AbstractGateway {
 				return $this->get_order_error();
 			}
 		} else {
-			$this->payment_method_token = $this->get_saved_source_id();
+			$this->payment_method_token = $this->get_saved_source_id( $order );
 		}
 		\WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
 		$this->save_zero_total_meta( $order, $token );

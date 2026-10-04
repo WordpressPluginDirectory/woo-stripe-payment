@@ -16,9 +16,10 @@ class PaymentsApi {
 	}
 
 	public function initialize() {
-		add_filter( 'cartflows_offer_supported_payment_gateways', array( $this, 'add_payment_gateways' ) );
-		add_filter( 'wc_stripe_force_save_payment_method', array( $this, 'maybe_force_save_payment_method' ), 10, 3 );
-		add_filter( 'cartflows_offer_js_localize', array( $this, 'enqueue_scripts' ) );
+		add_filter( 'cartflows_offer_supported_payment_gateways', [ $this, 'add_payment_gateways' ] );
+		add_filter( 'cartflows_offer_supported_payment_gateway_slugs', [ $this, 'add_payment_gateway_slugs' ] );
+		add_filter( 'wc_stripe_force_save_payment_method', [ $this, 'maybe_force_save_payment_method' ], 10, 3 );
+		add_filter( 'cartflows_offer_js_localize', [ $this, 'enqueue_scripts' ] );
 	}
 
 	public function add_payment_gateways( $supported_gateways ) {
@@ -30,6 +31,19 @@ class PaymentsApi {
 		}
 
 		return $supported_gateways;
+	}
+
+	/**
+	 * @param array $slugs
+	 *
+	 * @return array
+	 */
+	public function add_payment_gateway_slugs( $slugs ) {
+		foreach ( $this->get_payment_method_ids() as $id ) {
+			$slugs[] = $id;
+		}
+
+		return $slugs;
 	}
 
 	/**

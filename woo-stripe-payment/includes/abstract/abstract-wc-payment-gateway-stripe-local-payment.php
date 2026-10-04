@@ -187,6 +187,10 @@ abstract class WC_Payment_Gateway_Stripe_Local_Payment extends WC_Payment_Gatewa
 		);
 	}
 
+	protected function get_element_selector() {
+		return "#wc_stripe_local_payment_{$this->id}";
+	}
+
 	/**
 	 * @return array[]
 	 * @deprecated 3.3.70

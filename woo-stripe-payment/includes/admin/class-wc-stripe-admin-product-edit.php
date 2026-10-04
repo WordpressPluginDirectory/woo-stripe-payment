@@ -44,5 +44,3 @@ class WC_Stripe_Admin_Product_Edit {
 	}
 
 }
-
-WC_Stripe_Admin_Product_Edit::init();

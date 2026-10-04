@@ -14,7 +14,7 @@ namespace PaymentPlugins\Stripe\Client;
 class ClientOperation {
 
 	/**
-	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient
+	 * @var \PaymentPlugins\Vendor\Stripe\StripeClient|\PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory
 	 */
 	private $client;
 
@@ -44,14 +44,19 @@ class ClientOperation {
 	private $messages = [];
 
 	/**
-	 * @param \PaymentPlugins\Vendor\Stripe\StripeClient $client
-	 * @param string                                     $property
-	 * @param string                                     $secret_key
-	 * @param string                                     $mode
+	 * $client is the top-level vendored StripeClient for a first-level property (e.g. "checkout"),
+	 * or an already-resolved service factory (e.g. CheckoutServiceFactory) when chaining into a
+	 * nested property (e.g. "sessions" on "checkout") via __get() below. Both expose a compatible
+	 * magic __get() that this class relies on to resolve $property.
+	 *
+	 * @param \PaymentPlugins\Vendor\Stripe\StripeClient|\PaymentPlugins\Vendor\Stripe\Service\AbstractServiceFactory $client
+	 * @param string                                                                                                  $property
+	 * @param string                                                                                                  $secret_key
+	 * @param string                                                                                                  $mode
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( \PaymentPlugins\Vendor\Stripe\StripeClient $client, string $property, ?string $secret_key = '', ?string $mode = '' ) {
+	public function __construct( $client, string $property, ?string $secret_key = '', ?string $mode = '' ) {
 		$this->client     = $client;
 		$this->property   = $property;
 		$this->secret_key = $secret_key ?? '';
@@ -68,6 +73,22 @@ class ClientOperation {
 
 	public function has_property( $key ) {
 		return null !== $this->client->__get( $key );
+	}
+
+	/**
+	 * Allows chaining into a nested service factory, e.g. $client->checkout->sessions, where
+	 * "checkout" resolves to a ClientOperation wrapping CheckoutServiceFactory, and this __get()
+	 * lets ->sessions resolve to a further ClientOperation wrapping the nested SessionService -
+	 * rather than an undefined-property warning, since ClientOperation has no real "sessions"
+	 * property of its own.
+	 *
+	 * @param string $key
+	 *
+	 * @return self
+	 * @throws \InvalidArgumentException
+	 */
+	public function __get( string $key ): self {
+		return new self( $this->service, $key, $this->secret_key, $this->mode );
 	}
 
 	/**
@@ -91,10 +112,11 @@ class ClientOperation {
 			 * @param array  $args The array of arguments that will be passed to the service method.
 			 * @param string $property The name of the service being called.
 			 * @param string $method The method of the service. Ex: create, delete, retrieve
+			 * @param string $mode The client mode, "live" or "test".
 			 *
 			 * @since 4.0.0
 			 */
-			$args = \apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method );
+			$args = \apply_filters( 'wc_stripe_api_request_args', $args, $this->property, $method, $this->mode );
 
 			return $this->service->{$method}( ...$this->prepare_request_args( $args, $method ) );
 		} catch ( \PaymentPlugins\Vendor\Stripe\Exception\ApiErrorException $e ) {

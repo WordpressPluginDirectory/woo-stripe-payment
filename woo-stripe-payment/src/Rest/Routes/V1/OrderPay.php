@@ -53,6 +53,41 @@ class OrderPay extends AbstractRoute {
 		$order->set_payment_method( $payment_method->id );
 		$payment_method->payment_controller->set_update_payment_intent( true );
 
+		/**
+		 * Same filter WC_Payment_Gateway_Stripe::process_payment() fires - lets 3rd party code
+		 * (e.g. CheckoutSessionController for Adaptive Pricing, or Subscriptions for a renewal
+		 * retry) short-circuit the standard PaymentIntent flow for order-pay requests too.
+		 */
+		$result = apply_filters( 'wc_stripe_process_payment_result', null, $order, $payment_method );
+
+		if ( is_wp_error( $result ) ) {
+			throw new \Exception( $result->get_error_message() );
+		}
+
+		if ( is_array( $result ) ) {
+			if ( ( $result['result'] ?? '' ) !== 'success' ) {
+				throw new \Exception( __( 'Unable to process payment for this order.', 'woo-stripe-payment' ) );
+			}
+
+			$redirect = $result['redirect'] ?? '';
+
+			return (object) [
+				'complete' => ! \WC_Stripe_Utils::redirect_url_has_hash( $redirect ),
+				'redirect' => $redirect,
+			];
+		}
+
+		if ( $payment_method->id === 'stripe_upm' ) {
+			/**
+			 * @var \WC_Payment_Gateway_Stripe_UPM $payment_method
+			 */
+			$payment_method->resolve_child_payment_gateway();
+			if ( $payment_method->get_child_payment_gateway() ) {
+				$payment_method->prepare_child_payment_gateway();
+				$payment_method = $payment_method->get_child_payment_gateway();
+			}
+		}
+
 		$result = $payment_method->payment_controller->process_payment( $order );
 
 		if ( is_wp_error( $result ) ) {

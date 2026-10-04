@@ -285,8 +285,16 @@ class WC_Stripe_Utils {
 
 		if ( isset( $payment_intent->metadata->order_id ) ) {
 			$order = wc_get_order( wc_stripe_filter_order_id( $payment_intent->metadata->order_id, $payment_intent ) );
-			if ( $order && $order->get_meta( WC_Stripe_Constants::PAYMENT_INTENT_ID ) === $payment_intent->id ) {
-				return $order;
+			if ( $order ) {
+				$order_intent_id = $order->get_meta( WC_Stripe_Constants::PAYMENT_INTENT_ID );
+				// Empty means nothing has claimed this order's intent yet (e.g. a checkout-session
+				// created PaymentIntent whose webhook can arrive before our own completion flow has
+				// set this meta) - trust the intent's own metadata in that case. A non-empty value
+				// that doesn't match is a real conflict (a stale/abandoned attempt vs. this order's
+				// current one) and should still fall through to the stricter lookup below.
+				if ( $order_intent_id === $payment_intent->id || empty( $order_intent_id ) ) {
+					return $order;
+				}
 			}
 		}
 

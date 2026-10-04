@@ -2,11 +2,14 @@
 
 namespace PaymentPlugins\Stripe;
 
+use PaymentPlugins\Stripe\AdaptivePricing\CheckoutSessionController;
+use PaymentPlugins\Stripe\AdaptivePricing\UPMCheckoutSessionController;
 use PaymentPlugins\Stripe\Admin\AdminPageController;
 use PaymentPlugins\Stripe\Admin\DashboardPage;
 use PaymentPlugins\Stripe\Assets\AssetDataApi;
 use PaymentPlugins\Stripe\Assets\AssetDataController;
 use PaymentPlugins\Stripe\Assets\AssetsApi;
+use PaymentPlugins\Stripe\Cart\CartController;
 use PaymentPlugins\Stripe\Checkout\ExpressCheckoutRenderer;
 use PaymentPlugins\Stripe\Client\StripeClient;
 use PaymentPlugins\Stripe\Container\Container;
@@ -68,6 +71,7 @@ class ServiceProvider {
 		$this->container->get( PaymentTokenController::class )->initialize();
 		$this->container->get( OrderAttributionController::class )->initialize();
 		$this->container->get( ExpressCheckoutRenderer::class )->initialize();
+		$this->container->get( CartController::class )->initialize();
 
 		if ( is_admin() ) {
 			$this->container->get( AdminPageController::class )->initialize();
@@ -102,14 +106,16 @@ class ServiceProvider {
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-payment-balance.php';
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-utils.php';
 
-		if ( is_admin() ) {
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-menus.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-welcome.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-assets.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-settings.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/meta-boxes/class-wc-stripe-admin-order-metaboxes.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/meta-boxes/class-wc-stripe-admin-meta-box-product-data.php';
-		}
+		// Always included, regardless of is_admin() - these classes are only actually invoked
+		// under their own is_admin() checks (either here or, for WC_Stripe_Admin_Settings, in its
+		// own file). is_admin() can evaluate differently between this early include and a later
+		// invocation point (e.g. a wp-load.php-only bootstrap path used by 3rd party
+		// site-management tools), which previously left the class undefined by the time it was
+		// called.
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-assets.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-settings.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/meta-boxes/class-wc-stripe-admin-order-metaboxes.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/meta-boxes/class-wc-stripe-admin-meta-box-product-data.php';
 
 		$this->container->register( \WC_Stripe_Admin_Assets::class, function () {
 			return new \WC_Stripe_Admin_Assets();
@@ -219,6 +225,9 @@ class ServiceProvider {
 		$this->container->register( ExpressCheckoutRenderer::class, function ( $container ) {
 			return new ExpressCheckoutRenderer( $container->get( PaymentGatewayRegistry::class ) );
 		} );
+		$this->container->register( CartController::class, function ( $container ) {
+			return new CartController();
+		} );
 	}
 
 	/**
@@ -246,6 +255,9 @@ class ServiceProvider {
 					$container->get( PaymentGatewayRegistry::class )
 				),
 				'order/pay'                => new Rest\Routes\V1\OrderPay(),
+				'checkout-session'         => new Rest\Routes\V1\CheckoutSession(
+					$container->get( CheckoutSessionController::class )
+				),
 				'webhook'                  => new Rest\Routes\V1\Webhook()
 			], [ Rest\Routes\V1\Webhook::class ] );
 		} );
@@ -273,6 +285,18 @@ class ServiceProvider {
 		$container->register( PaymentGatewaysController::class, function ( $container ) {
 			return new PaymentGatewaysController(
 				$container->get( PaymentGatewayRegistry::class ),
+				$container->get( ContextHandler::class )
+			);
+		} );
+		$this->container->register( CheckoutSessionController::class, function ( $container ) {
+			return new CheckoutSessionController(
+				$container->get( StripeClient::class ),
+				$container->get( ContextHandler::class )
+			);
+		} );
+		$this->container->register( UPMCheckoutSessionController::class, function ( $container ) {
+			return new UPMCheckoutSessionController(
+				$container->get( StripeClient::class ),
 				$container->get( ContextHandler::class )
 			);
 		} );
@@ -403,8 +427,12 @@ class ServiceProvider {
 		$this->container->get( PackageRegistry::class )->initialize();
 
 		if ( is_admin() ) {
+			\WC_Stripe_Admin_Settings::init();
 			\WC_Stripe_Admin_Order_Metaboxes::init();
-			WC_Stripe_Admin_Meta_Box_Product_Data::init();
+			\WC_Stripe_Admin_Product_Edit::init();
+			\WC_Stripe_Admin_User_Edit::init();
+			\PaymentPlugins\WC_Stripe_Admin_Meta_Box_Product_Data::init();
+			\PaymentPlugins\WC_Stripe_Admin_Notices::init();
 			$this->container->get( \WC_Stripe_Admin_Assets::class );
 		}
 	}
@@ -420,6 +448,9 @@ class ServiceProvider {
 		$this->container->get( \WC_Stripe_API_Request_Filter::class )->initialize();
 		$this->container->get( \WC_Stripe_Customer_Manager::class )->initialize();
 		$this->container->get( \PaymentPlugins\Stripe\Link\LinkIntegration::class )->initialize();
+		// Phase 1 (UPM-only) is active; Phase 2's CheckoutSessionController stays dormant/uninitialized
+		// for now - only one of the two should ever run at a time.
+		$this->container->get( UPMCheckoutSessionController::class )->initialize();
 
 		/**
 		 * Fires when the Stripe plugin container has been initialized.
@@ -518,11 +549,11 @@ class ServiceProvider {
 		// shortcodes
 		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/class-wc-stripe-shortcodes.php';
 
-		if ( is_admin() ) {
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-notices.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-user-edit.php';
-			include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-product-edit.php';
-		}
+		// admin code
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-notices.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-user-edit.php';
+		include_once WC_STRIPE_PLUGIN_FILE_PATH . 'includes/admin/class-wc-stripe-admin-product-edit.php';
+
 
 		$this->register_payment_gateways();
 		$this->register_settings();

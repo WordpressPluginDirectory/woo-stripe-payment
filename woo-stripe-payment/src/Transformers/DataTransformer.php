@@ -13,6 +13,14 @@ use PaymentPlugins\Stripe\Utilities\NumberUtil;
 class DataTransformer {
 
 	/**
+	 * Maximum number of shipping options that can be sent to Stripe's Express Checkout
+	 * Element. Stripe requires the shippingRates array to have fewer than 10 entries.
+	 *
+	 * @since 4.0.12
+	 */
+	const MAX_SHIPPING_OPTIONS = 10;
+
+	/**
 	 * Transform WooCommerce cart into Stripe data structure
 	 *
 	 * @param \WC_Cart $cart
@@ -413,7 +421,47 @@ class DataTransformer {
 			return $a['amountCents'] <=> $b['amountCents'];
 		} );
 
+		// Stripe's Express Checkout Element rejects a shippingRates array with 10 or more
+		// entries ("shippingRates should be an array of size less than 10"), which stalls
+		// the wallet payment sheet. Cap the list at 9, always keeping the currently selected
+		// method so its id still matches one of the offered options.
+		if ( count( $options ) >= self::MAX_SHIPPING_OPTIONS ) {
+			$options = $this->limit_shipping_options( $options, $this->get_selected_shipping_method( $packages ) );
+		}
+
 		return $options;
+	}
+
+	/**
+	 * Trim the shipping options list to Stripe's Express Checkout Element limit, retaining
+	 * the currently selected method.
+	 *
+	 * @param array  $options     Shipping options sorted by price, ascending.
+	 * @param string $selected_id Id of the currently selected shipping method, or ''.
+	 *
+	 * @return array
+	 */
+	private function limit_shipping_options( $options, $selected_id ) {
+		$max          = self::MAX_SHIPPING_OPTIONS - 1;
+		$selected_idx = '' !== $selected_id
+			? array_search( $selected_id, array_column( $options, 'id' ), true )
+			: false;
+
+		// Nothing selected, or the selected option is already within the cap - straight truncate.
+		if ( false === $selected_idx || $selected_idx < $max ) {
+			return array_slice( $options, 0, $max );
+		}
+
+		// Keep the cheapest options plus the selected one, preserving price order.
+		$selected = $options[ $selected_idx ];
+		$limited  = array_slice( $options, 0, $max - 1 );
+		$limited[] = $selected;
+
+		usort( $limited, function ( $a, $b ) {
+			return $a['amountCents'] <=> $b['amountCents'];
+		} );
+
+		return $limited;
 	}
 
 	/**

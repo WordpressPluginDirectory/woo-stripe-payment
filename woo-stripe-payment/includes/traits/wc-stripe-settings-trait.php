@@ -181,6 +181,62 @@ trait WC_Stripe_Settings_Trait {
 	}
 
 	/**
+	 * Renders a settings field that's configured via a React modal instead of inline form controls.
+	 * The modal (mounted into the `app_id` div) reads/writes the hidden inputs rendered here, which
+	 * are what actually get submitted with the settings form.
+	 *
+	 * @param string $key
+	 * @param array  $data
+	 *
+	 * @return string
+	 * @since 4.0.15
+	 */
+	public function generate_react_app_html( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$data      = wp_parse_args( $data, array(
+			'title'       => '',
+			'label'       => '',
+			'class'       => '',
+			'app_id'      => '',
+			'desc_tip'    => false,
+			'description' => ''
+		) );
+
+		$value          = $this->get_option( $key );
+		$default_values = $this->get_field_default( $this->form_fields[ $key ] );
+		if ( ! is_array( $value ) ) {
+			$value = array();
+		}
+		$value = array_merge( $default_values, $value );
+
+		ob_start();
+		?>
+        <tr valign="top">
+            <th scope="row" class="titledesc"><?php echo wp_kses_post( $data['title'] ) ?></th>
+            <td class="forminp">
+                <fieldset>
+                    <button type="button" class="button-secondary <?php echo esc_attr( $data['class'] ) ?>">
+						<?php echo wp_kses_post( $data['label'] ) ?>
+                    </button>
+                    <div id="<?php echo esc_attr( $data['app_id'] ) ?>"></div>
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $this->get_description_html( $data );
+					?>
+					<?php foreach ( $value as $k => $v ) : ?>
+                        <input type="hidden" name="<?php echo esc_attr( $field_key ) . '[' . esc_attr( $k ) . ']' ?>"
+                               value="<?php echo esc_attr( $v ) ?>"
+                               data-key="<?php echo esc_attr( $k ) ?>"
+                               data-default="<?php echo esc_attr( $default_values[ $k ] ?? '' ) ?>"/>
+					<?php endforeach; ?>
+                </fieldset>
+            </td>
+        </tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Added override to provide more control on which fields are saved and which are skipped.
 	 * This plugin
 	 * has custom setting fields like "paragraph" that are for info display only and not for saving.
